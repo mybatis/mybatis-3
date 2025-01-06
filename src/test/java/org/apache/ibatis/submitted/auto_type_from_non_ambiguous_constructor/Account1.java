@@ -16,7 +16,7 @@
 package org.apache.ibatis.submitted.auto_type_from_non_ambiguous_constructor;
 
 public record Account1(long accountId, String accountName, String accountType) {
-  public Account1(long accountId, String accountName, int accountTypeId) {
-    this(accountId, accountName, String.valueOf(accountTypeId));
+  public Account1(long accountId, String accountName, int accountType) {
+    this(accountId, accountName, String.valueOf(accountType));
   }
 }

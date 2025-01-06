@@ -103,4 +103,22 @@ class AutoTypeFromNonAmbiguousConstructorTest {
     }
   }
 
+  @Test
+  void testSucceedsWhenConstructorArgsAreInWrongOrderAndTypesAreNotProvided() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      Account4 account = mapper.getAccountWrongOrder(1);
+      Assertions.assertThat(account).isNotNull();
+      Assertions.assertThat(account.accountId()).isEqualTo(1);
+      Assertions.assertThat(account.accountName()).isEqualTo("Account 1");
+      Assertions.assertThat(account.accountDob()).isEqualTo("2025-01-05");
+
+      Mapper1 mapper1 = sqlSession.getMapper(Mapper1.class);
+      Account4 account4 = mapper1.getAccountWrongOrder(1);
+      Assertions.assertThat(account4).isNotNull();
+      Assertions.assertThat(account4.accountId()).isEqualTo(1);
+      Assertions.assertThat(account4.accountName()).isEqualTo("Account 1");
+      Assertions.assertThat(account4.accountDob()).isEqualTo("2025-01-05");
+    }
+  }
 }

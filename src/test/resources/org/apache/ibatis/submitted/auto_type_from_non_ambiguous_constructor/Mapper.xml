@@ -74,4 +74,17 @@
     <select id="getAccountPartialTypesProvided" resultMap="account3RM">
         <include refid="accountSelect"/>
     </select>
+
+    <resultMap id="account4RM" type="org.apache.ibatis.submitted.auto_type_from_non_ambiguous_constructor.Account4">
+        <constructor>
+            <idArg name="accountId" column="id"/>
+            <!-- these two are defined in wrong order -->
+            <arg name="accountDob" column="dob" />
+            <arg name="accountName" column="name"/>
+        </constructor>
+    </resultMap>
+
+    <select id="getAccountWrongOrder" resultMap="account4RM">
+        select id, name, type, date '2025-01-05' dob from account where id = #{id}
+    </select>
 </mapper>

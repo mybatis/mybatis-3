@@ -15,10 +15,8 @@
  */
 package org.apache.ibatis.builder;
 
-import java.lang.reflect.Constructor;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,7 +25,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.stream.Collectors;
 
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.decorators.LruCache;
@@ -468,76 +465,5 @@ public class MapperBuilderAssistant extends BaseBuilder {
       javaType = Object.class;
     }
     return javaType;
-  }
-
-  /**
-   * Attempts to assign a {@code javaType} to result mappings when it has been omitted, this is done based on matching
-   * constructors of the specified {@code resultType}
-   *
-   * @param resultType
-   *          the result type of the object to be built
-   * @param resultMappings
-   *          the current mappings
-   *
-   * @return null if there are no missing javaType mappings, or if no suitable mapping could be determined
-   *
-   * @see <a href="https://github.com/mybatis/mybatis-3/issues/2618">#2618</a>
-   */
-  public List<ResultMapping> autoTypeResultMappingsForUnknownJavaTypes(Class<?> resultType,
-      List<ResultMapping> resultMappings) {
-    final List<Class<?>> typesToMatch = resultMappings.stream().map(ResultMapping::getJavaType)
-        .collect(Collectors.toList());
-
-    // check if we have any undefined java types present, and try to set them automatically
-    if (typesToMatch.stream().noneMatch(type -> type == null || Object.class.equals(type))) {
-      return null;
-    }
-
-    final List<List<Class<?>>> matchingConstructors = Arrays.stream(resultType.getDeclaredConstructors())
-        .map(Constructor::getParameterTypes).filter(parameters -> parameters.length == resultMappings.size())
-        .map(Arrays::asList).collect(Collectors.toList());
-
-    List<Class<?>> matchingTypes = null;
-    for (List<Class<?>> actualTypes : matchingConstructors) {
-      boolean matchesType = true;
-      for (int j = 0; j < typesToMatch.size(); j++) {
-        final Class<?> type = typesToMatch.get(j);
-
-        // pre-filled a type, check if it matches the constructor
-        if (type != null && !Object.class.equals(type) && !type.equals(actualTypes.get(j))) {
-          matchesType = false;
-          break;
-        }
-      }
-
-      if (!matchesType) {
-        continue;
-      }
-
-      if (matchingTypes != null) {
-        // multiple matches found, abort as we cannot reliably guess the correct one.
-        matchingTypes = null;
-        break;
-      }
-
-      matchingTypes = actualTypes;
-    }
-
-    if (matchingTypes == null) {
-      return null;
-    }
-
-    final List<ResultMapping> adjustedAutoTypeResultMappings = new ArrayList<>();
-    for (int i = 0; i < resultMappings.size(); i++) {
-      ResultMapping otherMapping = resultMappings.get(i);
-      Class<?> identifiedMatchingJavaType = matchingTypes.get(i);
-
-      // given that we selected a new java type, overwrite the currently
-      // selected type handler so it can get retrieved again from the registry
-      adjustedAutoTypeResultMappings
-          .add(new ResultMapping.Builder(otherMapping).javaType(identifiedMatchingJavaType).typeHandler(null).build());
-    }
-
-    return adjustedAutoTypeResultMappings;
   }
 }

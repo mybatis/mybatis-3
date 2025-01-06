@@ -15,15 +15,7 @@
  */
 package org.apache.ibatis.submitted.auto_type_from_non_ambiguous_constructor;
 
-public interface Mapper {
+import java.time.LocalDate;
 
-  Account getAccountNonAmbiguous(long id);
-
-  Account getAccountJavaTypesMissing(long id);
-
-  Account2 getAccountExtraParameter(long id);
-
-  Account3 getAccountPartialTypesProvided(long id);
-
-  Account4 getAccountWrongOrder(int i);
+public record Account4(long accountId, String accountName, LocalDate accountDob) {
 }

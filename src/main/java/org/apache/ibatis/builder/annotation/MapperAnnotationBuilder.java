@@ -29,7 +29,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
@@ -64,6 +63,7 @@ import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.builder.CacheRefResolver;
 import org.apache.ibatis.builder.IncompleteElementException;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
+import org.apache.ibatis.builder.ResultMappingConstructorResolver;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
@@ -238,7 +238,7 @@ public class MapperAnnotationBuilder {
   private void applyResultMap(String resultMapId, Class<?> returnType, Arg[] args, Result[] results,
       TypeDiscriminator discriminator) {
     List<ResultMapping> resultMappings = new ArrayList<>();
-    applyConstructorArgs(args, returnType, resultMappings);
+    applyConstructorArgs(args, returnType, resultMappings, resultMapId);
     applyResults(results, returnType, resultMappings);
     Discriminator disc = applyDiscriminator(resultMapId, returnType, discriminator);
     // TODO add AutoMappingBehaviour
@@ -252,7 +252,7 @@ public class MapperAnnotationBuilder {
         String caseResultMapId = resultMapId + "-" + c.value();
         List<ResultMapping> resultMappings = new ArrayList<>();
         // issue #136
-        applyConstructorArgs(c.constructArgs(), resultType, resultMappings);
+        applyConstructorArgs(c.constructArgs(), resultType, resultMappings, resultMapId);
         applyResults(c.results(), resultType, resultMappings);
         // TODO add AutoMappingBehaviour
         assistant.addResultMap(caseResultMapId, c.type(), resultMapId, null, resultMappings, null);
@@ -514,7 +514,8 @@ public class MapperAnnotationBuilder {
     return result.one().select().length() > 0 || result.many().select().length() > 0;
   }
 
-  private void applyConstructorArgs(Arg[] args, Class<?> resultType, List<ResultMapping> resultMappings) {
+  private void applyConstructorArgs(Arg[] args, Class<?> resultType, List<ResultMapping> resultMappings,
+      String resultMapId) {
     final List<ResultMapping> mappings = new ArrayList<>();
     for (Arg arg : args) {
       List<ResultFlag> flags = new ArrayList<>();
@@ -532,8 +533,9 @@ public class MapperAnnotationBuilder {
       mappings.add(resultMapping);
     }
 
-    final List<ResultMapping> autoMappings = assistant.autoTypeResultMappingsForUnknownJavaTypes(resultType, mappings);
-    resultMappings.addAll(Objects.requireNonNullElse(autoMappings, mappings));
+    final ResultMappingConstructorResolver resolver = new ResultMappingConstructorResolver(configuration, mappings,
+        resultType, resultMapId);
+    resultMappings.addAll(resolver.resolveWithConstructor());
   }
 
   private String nullOrEmpty(String value) {
