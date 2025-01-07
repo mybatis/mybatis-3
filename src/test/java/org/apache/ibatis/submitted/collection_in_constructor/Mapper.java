@@ -41,4 +41,5 @@ public interface Mapper {
 
   List<Container1> getContainers();
 
+  List<Store10> getStores10();
 }
