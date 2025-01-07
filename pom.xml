@@ -106,7 +106,7 @@
     <dependency>
       <groupId>ognl</groupId>
       <artifactId>ognl</artifactId>
-      <version>3.4.4</version>
+      <version>3.4.5</version>
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
@@ -206,7 +206,7 @@
     </dependency>
     <dependency>
       <groupId>com.oracle.database.jdbc</groupId>
-      <artifactId>ojdbc8</artifactId>
+      <artifactId>ojdbc11</artifactId>
       <version>23.6.0.24.10</version>
       <scope>test</scope>
     </dependency>
@@ -304,7 +304,7 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.5.15</version>
+      <version>1.5.16</version>
       <scope>test</scope>
     </dependency>
     <dependency>
