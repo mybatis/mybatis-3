@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.session.Configuration;
 
 /**
@@ -50,8 +48,6 @@ public class ResultMap {
   }
 
   public static class Builder {
-    private static final Log log = LogFactory.getLog(Builder.class);
-
     private final ResultMap resultMap = new ResultMap();
 
     public Builder(Configuration configuration, String id, Class<?> type, List<ResultMapping> resultMappings) {
