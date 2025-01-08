@@ -19,6 +19,7 @@ import javax.sql.DataSource;
 
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.utility.DockerImageName;
 
 public final class PgContainer {
 
@@ -31,8 +32,9 @@ public final class PgContainer {
 
   private static PostgreSQLContainer<?> initContainer() {
     @SuppressWarnings("resource")
-    PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres").withDatabaseName(DB_NAME)
-        .withUsername(USERNAME).withPassword(PASSWORD);
+    PostgreSQLContainer<?> container = new PostgreSQLContainer<>(
+        DockerImageName.parse("postgres").withTag(PostgreSQLContainer.DEFAULT_TAG)).withDatabaseName(DB_NAME)
+            .withUsername(USERNAME).withPassword(PASSWORD);
     container.start();
     return container;
   }
