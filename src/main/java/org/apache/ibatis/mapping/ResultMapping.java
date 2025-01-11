@@ -262,8 +262,18 @@ public class ResultMapping {
     return foreignColumn;
   }
 
+  @Deprecated
+  public void setForeignColumn(String foreignColumn) {
+    this.foreignColumn = foreignColumn;
+  }
+
   public boolean isLazy() {
     return lazy;
+  }
+
+  @Deprecated
+  public void setLazy(boolean lazy) {
+    this.lazy = lazy;
   }
 
   public boolean isSimple() {
