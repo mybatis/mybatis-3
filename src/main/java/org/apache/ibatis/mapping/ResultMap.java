@@ -115,7 +115,7 @@ public class ResultMap {
           // #101
           Class<?> javaType = resultMapping.getJavaType();
           resultMap.hasResultMapsUsingConstructorCollection = resultMap.hasResultMapsUsingConstructorCollection
-              || (resultMapping.getNestedQueryId() == null && javaType != null
+              || (resultMapping.getNestedQueryId() == null && resultMapping.getTypeHandler() == null && javaType != null
                   && resultMap.configuration.getObjectFactory().isCollection(javaType));
         } else {
           resultMap.propertyResultMappings.add(resultMapping);
