@@ -88,6 +88,7 @@ public class ResultMapping {
       resultMapping.columnPrefix = otherMapping.columnPrefix;
       resultMapping.resultSet = otherMapping.resultSet;
       resultMapping.foreignColumn = otherMapping.foreignColumn;
+      resultMapping.lazy = otherMapping.lazy;
     }
 
     public Builder javaType(Class<?> javaType) {
