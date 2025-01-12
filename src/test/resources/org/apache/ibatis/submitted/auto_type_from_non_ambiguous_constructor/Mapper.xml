@@ -21,33 +21,33 @@
 
     <resultMap id="nonAmbiguousAccountRM" type="org.apache.ibatis.submitted.auto_type_from_non_ambiguous_constructor.Account">
         <constructor>
-            <idArg name="accountId" column="id" javaType="_long"/>
-            <arg name="accountName" column="name" javaType="java.lang.String"/>
-            <arg name="accountType" column="type" javaType="java.lang.String"/>
+            <idArg column="id" javaType="_long"/>
+            <arg column="name" javaType="java.lang.String"/>
+            <arg column="type" javaType="java.lang.String"/>
         </constructor>
     </resultMap>
 
     <resultMap id="accountRM" type="org.apache.ibatis.submitted.auto_type_from_non_ambiguous_constructor.Account">
         <constructor>
-            <idArg name="accountId" column="id"/>
-            <arg name="accountName" column="name"/>
-            <arg name="accountType" column="type"/>
+            <idArg column="id"/>
+            <arg column="name"/>
+            <arg column="type"/>
         </constructor>
     </resultMap>
 
     <resultMap id="account2RM" type="org.apache.ibatis.submitted.auto_type_from_non_ambiguous_constructor.Account2">
         <constructor>
-            <idArg name="accountId" column="id"/>
-            <arg name="accountName" column="name"/>
-            <arg name="accountType" column="type"/>
+            <idArg column="id"/>
+            <arg column="name"/>
+            <arg column="type"/>
         </constructor>
     </resultMap>
 
     <resultMap id="account3RM" type="org.apache.ibatis.submitted.auto_type_from_non_ambiguous_constructor.Account3">
         <constructor>
-            <idArg name="accountId" column="id"/>
-            <arg name="accountName" column="name" javaType="java.lang.String" />
-            <arg name="accountType" column="type"/>
+            <idArg column="id"/>
+            <arg column="name" javaType="java.lang.String" />
+            <arg column="type"/>
         </constructor>
     </resultMap>
 
