@@ -939,6 +939,32 @@ Because the column names in the results differ from the columns defined in the r
 </resultMap>
 ```
 
+#### Nested Cursor for Association
+
+Some databases can return `java.sql.ResultSet` as a column value.
+Here is the statement and result map.
+
+```xml
+<resultMap id="blogResult" type="Blog">
+  <id property="id" column="id" />
+  <result property="title" column="title" />
+  <association property="author" column="author" jdbcType="CURSOR">
+    <id property="id" column="id" />
+    <result property="username" column="username" />
+  </association>
+</resultMap>
+
+<select id="selectBlog" resultMap="blogResult">
+  select b.id, b.name, cursor(
+    select a.id, a.username from author a where b.author_id = a.id
+  ) author from blog b
+</select>
+```
+
+Compared to the examples in the previous section, the key difference is the `jdbcType` attribute in the `<association>` element.
+Its value `CURSOR` indicates that the value of the column `author` is nested cursor.
+
+
 #### Multiple ResultSets for Association
 
 | Attribute       | Description                                                                                                                                                                                       |
@@ -983,6 +1009,7 @@ Now we can specify that the data to fill the "author" association comes in the "
   </association>
 </resultMap>
 ```
+
 
 You've seen above how to deal with a "has one" type association. But what about "has many"? That's the subject of the next section.
 
@@ -1089,6 +1116,29 @@ Also, if you prefer the longer form that allows for more reusability of your res
   <result property="subject" column="subject"/>
   <result property="body" column="body"/>
 </resultMap>
+```
+
+#### Nested Cursor for Collection
+
+It might be obvious, but nested cursor can return multiple rows.
+Just like `<association>`, you just need to specify `jdbcType="CURSOR""` in the `<collection>` element.
+
+```xml
+<resultMap id="blogResult" type="Blog">
+  <id property="id" column="id" />
+  <result property="title" column="title" />
+  <collection property="posts" column="posts" jdbcType="CURSOR">
+    <id property="id" column="id" />
+    <result property="subject" column="subject" />
+    <result property="body" column="body" />
+  </collection>
+</resultMap>
+
+<select id="selectBlog" resultMap="blogResult">
+  select b.id, b.name, cursor(
+    select p.id, p.subject, p.body from post p where p.blog_id = b.id
+  ) posts from blog b
+</select>
 ```
 
 #### Multiple ResultSets for Collection
