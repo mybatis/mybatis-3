@@ -118,7 +118,7 @@ class ForceFlushOnSelectTest {
   }
 
   @Test
-  void selectShouldFlushLocalCacheIfFlushLocalCacheAtferEachStatementIsTrue() throws SQLException {
+  void selectShouldFlushLocalCacheIfFlushLocalCacheAfterEachStatementIsTrue() throws SQLException {
     sqlSessionFactory.getConfiguration().setLocalCacheScope(LocalCacheScope.STATEMENT);
     try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.SIMPLE)) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
