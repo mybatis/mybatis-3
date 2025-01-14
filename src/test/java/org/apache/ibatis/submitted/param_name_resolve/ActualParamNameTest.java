@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package org.apache.ibatis.submitted.param_name_resolve;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.Reader;
 import java.sql.Connection;
@@ -55,7 +55,7 @@ class ActualParamNameTest {
   }
 
   @Test
-  void testSingleListParameterWhenUseActualParamNameIsTrue() {
+  void singleListParameterWhenUseActualParamNameIsTrue() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       // use actual name
@@ -82,7 +82,7 @@ class ActualParamNameTest {
   }
 
   @Test
-  void testSingleArrayParameterWhenUseActualParamNameIsTrue() {
+  void singleArrayParameterWhenUseActualParamNameIsTrue() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       // use actual name

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 
 class FooMapperTest {
 
-  private final static String SQL_MAP_CONFIG = "org/apache/ibatis/submitted/null_associations/sqlmap.xml";
+  private static final String SQL_MAP_CONFIG = "org/apache/ibatis/submitted/null_associations/sqlmap.xml";
   private static SqlSession session;
   private static Connection conn;
 
@@ -54,7 +54,7 @@ class FooMapperTest {
   }
 
   @Test
-  void testNullAssociation() {
+  void nullAssociation() {
     final FooMapper mapper = session.getMapper(FooMapper.class);
     final Foo foo = new Foo(1L, null, true);
     mapper.insertFoo(foo);
@@ -66,7 +66,7 @@ class FooMapperTest {
   }
 
   @Test
-  void testNotNullAssociation() {
+  void notNullAssociation() {
     final FooMapper mapper = session.getMapper(FooMapper.class);
     final Bar bar = new Bar(1L, 2L, 3L);
     final Foo foo = new Foo(1L, bar, true);

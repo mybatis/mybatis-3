@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ class BlogTest {
   }
 
   @Test
-  void testSelectBlogWithPosts() {
+  void selectBlogWithPosts() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
       Blog result = mapper.selectBlogByPrimaryKey(1);
@@ -65,7 +65,7 @@ class BlogTest {
   }
 
   @Test
-  void testSelectBlogWithoutPosts() {
+  void selectBlogWithoutPosts() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
       Blog result = mapper.selectBlogByPrimaryKey(2);
@@ -76,7 +76,7 @@ class BlogTest {
   }
 
   @Test
-  void testSelectBlogWithPostsColumnPrefix() {
+  void selectBlogWithPostsColumnPrefix() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
       Blog result = mapper.selectBlogByPrimaryKeyColumnPrefix(1);
@@ -93,7 +93,7 @@ class BlogTest {
   }
 
   @Test
-  void testSelectBlogWithoutPostsColumnPrefix() {
+  void selectBlogWithoutPostsColumnPrefix() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
       Blog result = mapper.selectBlogByPrimaryKeyColumnPrefix(2);

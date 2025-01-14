@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ class CamelCaseMappingTest {
   }
 
   @Test
-  void testList() {
+  void list() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<Camel> list = sqlSession.selectList("org.apache.ibatis.submitted.camel.doSelect");
       Assertions.assertTrue(list.size() > 0);
@@ -53,7 +53,7 @@ class CamelCaseMappingTest {
   }
 
   @Test
-  void testMap() {
+  void map() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<Map<String, Object>> list = sqlSession.selectList("org.apache.ibatis.submitted.camel.doSelectMap");
       Assertions.assertTrue(list.size() > 0);

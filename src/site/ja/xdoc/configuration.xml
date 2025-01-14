@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2023 the original author or authors.
+       Copyright 2009-2025 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -200,10 +200,10 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
             </tr>
             <tr>
               <td>
-                multipleResultSetsEnabled
+                <strike>multipleResultSetsEnabled</strike>
               </td>
               <td>
-                １つのステートメントから複数の ResultSet を返すことを許可するかどうかを指定します（複数 ResultSet に対応したドライバが必要です）。
+                非推奨。この設定は何の効果もありません。
               </td>
               <td>
                 true | false
@@ -240,7 +240,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 true | false
               </td>
               <td>
-                False
+                false
               </td>
             </tr>
             <tr>
@@ -354,7 +354,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 true | false
               </td>
               <td>
-                False
+                false
               </td>
             </tr>
             <tr>
@@ -369,7 +369,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 true | false
               </td>
               <td>
-                True
+                true
               </td>
             </tr>
             <tr>
@@ -383,7 +383,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 true | false
               </td>
               <td>
-                False
+                false
               </td>
             </tr>
             <tr>
@@ -639,7 +639,6 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
   <setting name="cacheEnabled" value="true"/>
   <setting name="lazyLoadingEnabled" value="true"/>
   <setting name="aggressiveLazyLoading" value="true"/>
-  <setting name="multipleResultSetsEnabled" value="true"/>
   <setting name="useColumnLabel" value="true"/>
   <setting name="useGeneratedKeys" value="false"/>
   <setting name="autoMappingBehavior" value="PARTIAL"/>
@@ -1506,7 +1505,7 @@ public class StringTypeHandler extends BaseTypeHandler<String> {
         </p>
 
         <p>
-          MyBatis は、このタイプハンドラーの総称型（Genric Type）から適用対象の Java タイプを自動判定しますが、この動作をオーバーライドする方法が２つあります。
+          MyBatis は、このタイプハンドラーの総称型（Generic Type）から適用対象の Java タイプを自動判定しますが、この動作をオーバーライドする方法が２つあります。
         </p>
         <ul>
           <li>typeHandler 要素に javaType 属性を追加する（例：javaType="String"）
@@ -1776,8 +1775,8 @@ public class ExamplePlugin implements Interceptor {
           </li>
         </ul>
         <p>
-          SqlSessionFactoryBuilder に envrionment を渡すことで、どの環境に対する SqlSessionFactory をビルドするか指定することができます。
-          envrionment を引数に取るシグネチャは下記の２つです。
+          SqlSessionFactoryBuilder に environment を渡すことで、どの環境に対する SqlSessionFactory をビルドするか指定することができます。
+          environment を引数に取るシグネチャは下記の２つです。
         </p>
 
         <source><![CDATA[SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment);

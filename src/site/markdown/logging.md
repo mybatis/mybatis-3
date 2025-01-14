@@ -1,6 +1,8 @@
 title: MyBatis 3 | Logging
 author: Clinton Begin
 
+<h1 class="d-none">Avoid blank site</h1>
+
 ## Logging
 
 MyBatis provides logging information through the use of an internal log factory. The internal log factory will delegate logging information to one of the following log implementations:
@@ -114,7 +116,7 @@ If you want to tune the logging at a finer level you can turn logging on for spe
 </logger>
 ```
 
-By the contrary you may want want to enable logging for a group of mappers. In that case you should add as a logger the root package where your mappers reside:
+By the contrary you may want to enable logging for a group of mappers. In that case you should add as a logger the root package where your mappers reside:
 
 ```xml
 <logger name="org.mybatis.example">

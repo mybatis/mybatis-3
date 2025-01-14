@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -159,8 +161,8 @@ public final class TypeHandlerRegistry {
     register(JdbcType.TIME, new TimeOnlyTypeHandler());
 
     register(java.sql.Date.class, new SqlDateTypeHandler());
-    register(java.sql.Time.class, new SqlTimeTypeHandler());
-    register(java.sql.Timestamp.class, new SqlTimestampTypeHandler());
+    register(Time.class, new SqlTimeTypeHandler());
+    register(Timestamp.class, new SqlTimestampTypeHandler());
 
     register(String.class, JdbcType.SQLXML, new SqlxmlTypeHandler());
 
@@ -263,11 +265,13 @@ public final class TypeHandlerRegistry {
     if (type instanceof Class) {
       Class<?> clazz = (Class<?>) type;
       if (Enum.class.isAssignableFrom(clazz)) {
-        Class<?> enumClass = clazz.isAnonymousClass() ? clazz.getSuperclass() : clazz;
-        jdbcHandlerMap = getJdbcHandlerMapForEnumInterfaces(enumClass, enumClass);
+        if (clazz.isAnonymousClass()) {
+          return getJdbcHandlerMap(clazz.getSuperclass());
+        }
+        jdbcHandlerMap = getJdbcHandlerMapForEnumInterfaces(clazz, clazz);
         if (jdbcHandlerMap == null) {
-          register(enumClass, getInstance(enumClass, defaultEnumTypeHandler));
-          return typeHandlerMap.get(enumClass);
+          register(clazz, getInstance(clazz, defaultEnumTypeHandler));
+          return typeHandlerMap.get(clazz);
         }
       } else {
         jdbcHandlerMap = getJdbcHandlerMapForSuperclass(clazz);

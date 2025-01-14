@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -48,13 +48,13 @@ public class CustomObjectFactory implements ObjectFactory {
       Constructor<T> constructor;
       if (constructorArgTypes == null || constructorArgs == null) {
         constructor = type.getDeclaredConstructor();
-        if (!constructor.isAccessible()) {
+        if (!constructor.canAccess(null)) {
           constructor.setAccessible(true);
         }
         return constructor.newInstance();
       }
       constructor = type.getDeclaredConstructor(constructorArgTypes.toArray(new Class[constructorArgTypes.size()]));
-      if (!constructor.isAccessible()) {
+      if (!constructor.canAccess(null)) {
         constructor.setAccessible(true);
       }
       return constructor.newInstance(constructorArgs.toArray(new Object[constructorArgs.size()]));

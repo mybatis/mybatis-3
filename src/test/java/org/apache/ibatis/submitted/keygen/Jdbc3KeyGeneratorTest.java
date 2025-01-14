@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -289,10 +289,11 @@ class Jdbc3KeyGeneratorTest {
         CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
         Country country = new Country("China", "CN");
         when(() -> mapper.insertMultiParams_keyPropertyWithoutParamName(country, 1));
-        then(caughtException()).isInstanceOf(PersistenceException.class)
-            .hasMessageContaining("Could not determine which parameter to assign generated keys to. "
-                + "Note that when there are multiple parameters, 'keyProperty' must include the parameter name (e.g. 'param.id'). "
-                + "Specified key properties are [id] and available parameters are [");
+        then(caughtException()).isInstanceOf(PersistenceException.class).hasMessageContaining(
+            """
+                Could not determine which parameter to assign generated keys to. \
+                Note that when there are multiple parameters, 'keyProperty' must include the parameter name (e.g. 'param.id'). \
+                Specified key properties are [id] and available parameters are [""");
       } finally {
         sqlSession.rollback();
       }
@@ -306,10 +307,11 @@ class Jdbc3KeyGeneratorTest {
         CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
         Country country = new Country("China", "CN");
         when(() -> mapper.insertMultiParams_keyPropertyWithWrongParamName(country, 1));
-        then(caughtException()).isInstanceOf(PersistenceException.class)
-            .hasMessageContaining("Could not find parameter 'bogus'. "
-                + "Note that when there are multiple parameters, 'keyProperty' must include the parameter name (e.g. 'param.id'). "
-                + "Specified key properties are [bogus.id] and available parameters are [");
+        then(caughtException()).isInstanceOf(PersistenceException.class).hasMessageContaining(
+            """
+                Could not find parameter 'bogus'. \
+                Note that when there are multiple parameters, 'keyProperty' must include the parameter name (e.g. 'param.id'). \
+                Specified key properties are [bogus.id] and available parameters are [""");
       } finally {
         sqlSession.rollback();
       }

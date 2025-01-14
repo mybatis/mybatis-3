@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -86,7 +86,6 @@ class XmlConfigBuilderTest {
       assertThat(config.getProxyFactory()).isInstanceOf(JavassistProxyFactory.class);
       assertThat(config.isLazyLoadingEnabled()).isFalse();
       assertThat(config.isAggressiveLazyLoading()).isFalse();
-      assertThat(config.isMultipleResultSetsEnabled()).isTrue();
       assertThat(config.isUseColumnLabel()).isTrue();
       assertThat(config.isUseGeneratedKeys()).isFalse();
       assertThat(config.getDefaultExecutorType()).isEqualTo(ExecutorType.SIMPLE);
@@ -100,7 +99,7 @@ class XmlConfigBuilderTest {
       assertThat(config.getLazyLoadTriggerMethods())
           .isEqualTo(new HashSet<>(Arrays.asList("equals", "clone", "hashCode", "toString")));
       assertThat(config.isSafeResultHandlerEnabled()).isTrue();
-      assertThat(config.getDefaultScriptingLanuageInstance()).isInstanceOf(XMLLanguageDriver.class);
+      assertThat(config.getDefaultScriptingLanguageInstance()).isInstanceOf(XMLLanguageDriver.class);
       assertThat(config.isCallSettersOnNulls()).isFalse();
       assertNull(config.getLogPrefix());
       assertNull(config.getLogImpl());
@@ -156,18 +155,18 @@ class XmlConfigBuilderTest {
 
   @Test
   void registerJavaTypeInitializingTypeHandler() {
-    // @formatter:off
-    final String MAPPER_CONFIG = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
-        + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"https://mybatis.org/dtd/mybatis-3-config.dtd\">\n"
-        + "<configuration>\n"
-        + "  <typeHandlers>\n"
-        + "    <typeHandler javaType=\"org.apache.ibatis.builder.XmlConfigBuilderTest$MyEnum\"\n"
-        + "      handler=\"org.apache.ibatis.builder.XmlConfigBuilderTest$EnumOrderTypeHandler\"/>\n"
-        + "  </typeHandlers>\n"
-        + "</configuration>\n";
-    // @formatter:on
+    final String mapperConfig = """
+        <?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "https://mybatis.org/dtd/mybatis-3-config.dtd">
+        <configuration>
+          <typeHandlers>
+            <typeHandler javaType="org.apache.ibatis.builder.XmlConfigBuilderTest$MyEnum"
+                          handler="org.apache.ibatis.builder.XmlConfigBuilderTest$EnumOrderTypeHandler"/>
+          </typeHandlers>
+        </configuration>
+        """;
 
-    XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(MAPPER_CONFIG));
+    XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(mapperConfig));
     builder.parse();
 
     TypeHandlerRegistry typeHandlerRegistry = builder.getConfiguration().getTypeHandlerRegistry();
@@ -193,7 +192,6 @@ class XmlConfigBuilderTest {
       assertThat(config.getProxyFactory()).isInstanceOf(CglibProxyFactory.class);
       assertThat(config.isLazyLoadingEnabled()).isTrue();
       assertThat(config.isAggressiveLazyLoading()).isTrue();
-      assertThat(config.isMultipleResultSetsEnabled()).isFalse();
       assertThat(config.isUseColumnLabel()).isFalse();
       assertThat(config.isUseGeneratedKeys()).isTrue();
       assertThat(config.getDefaultExecutorType()).isEqualTo(ExecutorType.BATCH);
@@ -285,17 +283,17 @@ class XmlConfigBuilderTest {
 
   @Test
   void unknownSettings() {
-    // @formatter:off
-    final String MAPPER_CONFIG = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
-            + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"https://mybatis.org/dtd/mybatis-3-config.dtd\">\n"
-            + "<configuration>\n"
-            + "  <settings>\n"
-            + "    <setting name=\"foo\" value=\"bar\"/>\n"
-            + "  </settings>\n"
-            + "</configuration>\n";
-    // @formatter:on
+    final String mapperConfig = """
+        <?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "https://mybatis.org/dtd/mybatis-3-config.dtd">
+        <configuration>
+          <settings>
+            <setting name="foo" value="bar"/>
+          </settings>
+        </configuration>
+        """;
 
-    XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(MAPPER_CONFIG));
+    XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(mapperConfig));
     when(builder::parse);
     then(caughtException()).isInstanceOf(BuilderException.class)
         .hasMessageContaining("The setting foo is not known.  Make sure you spelled it correctly (case sensitive).");
@@ -303,17 +301,17 @@ class XmlConfigBuilderTest {
 
   @Test
   void unknownJavaTypeOnTypeHandler() {
-    // @formatter:off
-    final String MAPPER_CONFIG = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
-            + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"https://mybatis.org/dtd/mybatis-3-config.dtd\">\n"
-            + "<configuration>\n"
-            + "  <typeAliases>\n"
-            + "    <typeAlias type=\"a.b.c.Foo\"/>\n"
-            + "  </typeAliases>\n"
-            + "</configuration>\n";
-    // @formatter:on
+    final String mapperConfig = """
+        <?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "https://mybatis.org/dtd/mybatis-3-config.dtd">
+        <configuration>
+          <typeAliases>
+            <typeAlias type="a.b.c.Foo"/>
+          </typeAliases>
+        </configuration>
+        """;
 
-    XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(MAPPER_CONFIG));
+    XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(mapperConfig));
     when(builder::parse);
     then(caughtException()).isInstanceOf(BuilderException.class)
         .hasMessageContaining("Error registering typeAlias for 'null'. Cause: ");
@@ -321,21 +319,21 @@ class XmlConfigBuilderTest {
 
   @Test
   void propertiesSpecifyResourceAndUrlAtSameTime() {
-    // @formatter:off
-    final String MAPPER_CONFIG = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
-        + "<!DOCTYPE configuration PUBLIC \"-//mybatis.org//DTD Config 3.0//EN\" \"https://mybatis.org/dtd/mybatis-3-config.dtd\">\n"
-        + "<configuration>\n"
-        + "  <properties resource=\"a/b/c/foo.properties\" url=\"file:./a/b/c/jdbc.properties\"/>\n"
-        + "</configuration>\n";
-    // @formatter:on
+    final String mapperConfig = """
+        <?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "https://mybatis.org/dtd/mybatis-3-config.dtd">
+        <configuration>
+          <properties resource="a/b/c/foo.properties" url="file:./a/b/c/jdbc.properties"/>
+        </configuration>
+        """;
 
-    XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(MAPPER_CONFIG));
+    XMLConfigBuilder builder = new XMLConfigBuilder(new StringReader(mapperConfig));
     when(builder::parse);
     then(caughtException()).isInstanceOf(BuilderException.class).hasMessageContaining(
         "The properties element cannot specify both a URL and a resource based property file reference.  Please specify one or the other.");
   }
 
-  static class MySqlProvider {
+  static final class MySqlProvider {
     @SuppressWarnings("unused")
     public static String provideSql() {
       return "SELECT 1";

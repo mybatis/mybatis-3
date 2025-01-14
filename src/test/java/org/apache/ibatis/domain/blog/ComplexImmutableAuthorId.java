@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -55,13 +55,9 @@ public class ComplexImmutableAuthorId {
 
     final ComplexImmutableAuthorId that = (ComplexImmutableAuthorId) o;
 
-    if ((id != that.id) || (email != null ? !email.equals(that.email) : that.email != null)
-        || (password != null ? !password.equals(that.password) : that.password != null)
-        || (username != null ? !username.equals(that.username) : that.username != null)) {
-      return false;
-    }
-
-    return true;
+    return id == that.id && email != null ? email.equals(that.email)
+        : that.email == null && password != null ? password.equals(that.password)
+            : that.password == null && username != null ? username.equals(that.username) : that.username == null;
   }
 
   @Override

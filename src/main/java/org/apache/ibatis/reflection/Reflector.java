@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -43,7 +43,6 @@ import org.apache.ibatis.reflection.invoker.Invoker;
 import org.apache.ibatis.reflection.invoker.MethodInvoker;
 import org.apache.ibatis.reflection.invoker.SetFieldInvoker;
 import org.apache.ibatis.reflection.property.PropertyNamer;
-import org.apache.ibatis.util.MapUtil;
 
 /**
  * This class represents a cached set of class definition information that allows for easy mapping between property
@@ -155,7 +154,7 @@ public class Reflector {
 
   private void addMethodConflict(Map<String, List<Method>> conflictingMethods, String name, Method method) {
     if (isValidPropertyName(name)) {
-      List<Method> list = MapUtil.computeIfAbsent(conflictingMethods, name, k -> new ArrayList<>());
+      List<Method> list = conflictingMethods.computeIfAbsent(name, k -> new ArrayList<>());
       list.add(method);
     }
   }
@@ -243,7 +242,7 @@ public class Reflector {
         // modification of final fields through reflection (JSR-133). (JGB)
         // pr #16 - final static can only be set by the classloader
         int modifiers = field.getModifiers();
-        if ((!Modifier.isFinal(modifiers) || !Modifier.isStatic(modifiers))) {
+        if (!Modifier.isFinal(modifiers) || !Modifier.isStatic(modifiers)) {
           addSetField(field);
         }
       }
@@ -273,7 +272,7 @@ public class Reflector {
   }
 
   private boolean isValidPropertyName(String name) {
-    return (!name.startsWith("$") && !"serialVersionUID".equals(name) && !"class".equals(name));
+    return !name.startsWith("$") && !"serialVersionUID".equals(name) && !"class".equals(name);
   }
 
   /**
@@ -323,9 +322,7 @@ public class Reflector {
   private String getSignature(Method method) {
     StringBuilder sb = new StringBuilder();
     Class<?> returnType = method.getReturnType();
-    if (returnType != null) {
-      sb.append(returnType.getName()).append('#');
-    }
+    sb.append(returnType.getName()).append('#');
     sb.append(method.getName());
     Class<?>[] parameters = method.getParameterTypes();
     for (int i = 0; i < parameters.length; i++) {

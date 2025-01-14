@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import org.apache.ibatis.reflection.property.PropertyTokenizer;
  */
 public class MapWrapper extends BaseWrapper {
 
-  private final Map<String, Object> map;
+  protected final Map<String, Object> map;
 
   public MapWrapper(MetaObject metaObject, Map<String, Object> map) {
     super(metaObject);
@@ -38,18 +38,21 @@ public class MapWrapper extends BaseWrapper {
 
   @Override
   public Object get(PropertyTokenizer prop) {
-    if (prop.getIndex() != null) {
-      Object collection = resolveCollection(prop, map);
-      return getCollectionValue(prop, collection);
+    if (prop.hasNext()) {
+      return getChildValue(prop);
+    } else if (prop.getIndex() != null) {
+      return getCollectionValue(prop, resolveCollection(prop, map));
+    } else {
+      return map.get(prop.getName());
     }
-    return map.get(prop.getName());
   }
 
   @Override
   public void set(PropertyTokenizer prop, Object value) {
-    if (prop.getIndex() != null) {
-      Object collection = resolveCollection(prop, map);
-      setCollectionValue(prop, collection, value);
+    if (prop.hasNext()) {
+      setChildValue(prop, value);
+    } else if (prop.getIndex() != null) {
+      setCollectionValue(prop, resolveCollection(prop, map), value);
     } else {
       map.put(prop.getName(), value);
     }

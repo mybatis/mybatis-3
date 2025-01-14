@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -137,11 +137,11 @@ public class UnpooledDataSource implements DataSource {
     this.driverProperties = driverProperties;
   }
 
-  public synchronized String getDriver() {
+  public String getDriver() {
     return driver;
   }
 
-  public synchronized void setDriver(String driver) {
+  public void setDriver(String driver) {
     this.driver = driver;
   }
 
@@ -230,23 +230,25 @@ public class UnpooledDataSource implements DataSource {
     return connection;
   }
 
-  private synchronized void initializeDriver() throws SQLException {
-    if (!registeredDrivers.containsKey(driver)) {
-      Class<?> driverType;
-      try {
-        if (driverClassLoader != null) {
-          driverType = Class.forName(driver, true, driverClassLoader);
-        } else {
-          driverType = Resources.classForName(driver);
+  private void initializeDriver() throws SQLException {
+    try {
+      registeredDrivers.computeIfAbsent(driver, x -> {
+        Class<?> driverType;
+        try {
+          if (driverClassLoader != null) {
+            driverType = Class.forName(x, true, driverClassLoader);
+          } else {
+            driverType = Resources.classForName(x);
+          }
+          Driver driverInstance = (Driver) driverType.getDeclaredConstructor().newInstance();
+          DriverManager.registerDriver(new DriverProxy(driverInstance));
+          return driverInstance;
+        } catch (Exception e) {
+          throw new RuntimeException("Error setting driver on UnpooledDataSource.", e);
         }
-        // DriverManager requires the driver to be loaded via the system ClassLoader.
-        // https://www.kfu.com/~nsayer/Java/dyn-jdbc.html
-        Driver driverInstance = (Driver) driverType.getDeclaredConstructor().newInstance();
-        DriverManager.registerDriver(new DriverProxy(driverInstance));
-        registeredDrivers.put(driver, driverInstance);
-      } catch (Exception e) {
-        throw new SQLException("Error setting driver on UnpooledDataSource. Cause: " + e);
-      }
+      });
+    } catch (RuntimeException re) {
+      throw new SQLException("Error setting driver on UnpooledDataSource.", re.getCause());
     }
   }
 

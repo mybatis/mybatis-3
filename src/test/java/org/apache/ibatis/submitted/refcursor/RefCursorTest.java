@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ class RefCursorTest {
   }
 
   @Test
-  void testRefCursor1() {
+  void refCursor1() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       OrdersMapper mapper = sqlSession.getMapper(OrdersMapper.class);
       Map<String, Object> parameter = new HashMap<>();
@@ -77,7 +77,7 @@ class RefCursorTest {
   }
 
   @Test
-  void testRefCursor2() {
+  void refCursor2() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       OrdersMapper mapper = sqlSession.getMapper(OrdersMapper.class);
       Map<String, Object> parameter = new HashMap<>();

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,11 +15,13 @@
  */
 package org.apache.ibatis.executor;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,15 +31,22 @@ import javassist.util.proxy.Proxy;
 import javax.sql.DataSource;
 
 import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.builder.StaticSqlSource;
+import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.domain.blog.Author;
 import org.apache.ibatis.domain.blog.Blog;
 import org.apache.ibatis.domain.blog.Post;
 import org.apache.ibatis.domain.blog.Section;
+import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.ParameterMapping;
+import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.jdbc.JdbcTransaction;
+import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.TypeHandlerRegistry;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -54,7 +63,6 @@ class BaseExecutorTest extends BaseDataTest {
     config = new Configuration();
     config.setLazyLoadingEnabled(true);
     config.setUseGeneratedKeys(false);
-    config.setMultipleResultSetsEnabled(true);
     config.setUseColumnLabel(true);
     config.setDefaultStatementTimeout(5000);
     config.setDefaultFetchSize(100);
@@ -445,29 +453,167 @@ class BaseExecutorTest extends BaseDataTest {
   }
 
   @Test
-  void shouldClearDeferredLoads() throws Exception {
+  void shouldClearDeferredLoads() {
+    assertDoesNotThrow(() -> {
+
+      Executor executor = createExecutor(new JdbcTransaction(ds, null, false));
+      try {
+        MappedStatement selectBlog = ExecutorTestHelper.prepareComplexSelectBlogMappedStatement(config);
+        MappedStatement selectPosts = ExecutorTestHelper.prepareSelectPostsForBlogMappedStatement(config);
+        config.addMappedStatement(selectBlog);
+        config.addMappedStatement(selectPosts);
+        MappedStatement selectAuthor = ExecutorTestHelper.prepareSelectOneAuthorMappedStatement(config);
+        MappedStatement insertAuthor = ExecutorTestHelper.prepareInsertAuthorMappedStatement(config);
+
+        // generate DeferredLoads
+        executor.query(selectPosts, 1, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
+
+        Author author = new Author(-1, "someone", "******", "someone@apache.org", null, Section.NEWS);
+        executor.update(insertAuthor, author);
+        executor.query(selectAuthor, -1, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
+        executor.flushStatements();
+        executor.rollback(true);
+      } finally {
+        executor.rollback(true);
+        executor.close(false);
+      }
+    });
+  }
+
+  @Test
+  void createCacheKeyWithAdditionalParameter() {
+    TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
+
+    MappedStatement mappedStatement = new MappedStatement.Builder(config, "testSelect",
+        new StaticSqlSource(config, "some select statement"), SqlCommandType.SELECT).build();
+
+    Object parameterObject = 1;
+
+    BoundSql boundSql = new BoundSql(config, "some select statement", new ArrayList<ParameterMapping>() {
+      private static final long serialVersionUID = 1L;
+
+      {
+        add(new ParameterMapping.Builder(config, "id", registry.getTypeHandler(int.class)).build());
+      }
+    }, parameterObject) {
+      {
+        setAdditionalParameter("id", 2);
+      }
+    };
 
     Executor executor = createExecutor(new JdbcTransaction(ds, null, false));
-    try {
-      MappedStatement selectBlog = ExecutorTestHelper.prepareComplexSelectBlogMappedStatement(config);
-      MappedStatement selectPosts = ExecutorTestHelper.prepareSelectPostsForBlogMappedStatement(config);
-      config.addMappedStatement(selectBlog);
-      config.addMappedStatement(selectPosts);
-      MappedStatement selectAuthor = ExecutorTestHelper.prepareSelectOneAuthorMappedStatement(config);
-      MappedStatement insertAuthor = ExecutorTestHelper.prepareInsertAuthorMappedStatement(config);
+    CacheKey cacheKey = executor.createCacheKey(mappedStatement, parameterObject, RowBounds.DEFAULT, boundSql);
 
-      // generate DeferredLoads
-      executor.query(selectPosts, 1, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
+    CacheKey expected = new CacheKey();
+    expected.update(mappedStatement.getId());
+    expected.update(RowBounds.DEFAULT.getOffset());
+    expected.update(RowBounds.DEFAULT.getLimit());
+    expected.update(boundSql.getSql());
+    expected.update(2);
 
-      Author author = new Author(-1, "someone", "******", "someone@apache.org", null, Section.NEWS);
-      executor.update(insertAuthor, author);
-      executor.query(selectAuthor, -1, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER);
-      executor.flushStatements();
-      executor.rollback(true);
-    } finally {
-      executor.rollback(true);
-      executor.close(false);
-    }
+    assertEquals(expected, cacheKey);
+  }
+
+  @Test
+  void createCacheKeyWithNull() {
+    TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
+
+    MappedStatement mappedStatement = new MappedStatement.Builder(config, "testSelect",
+        new StaticSqlSource(config, "some select statement"), SqlCommandType.SELECT).build();
+
+    Object parameterObject = null;
+
+    BoundSql boundSql = new BoundSql(config, "some select statement", new ArrayList<ParameterMapping>() {
+      private static final long serialVersionUID = 1L;
+
+      {
+        add(new ParameterMapping.Builder(config, "id", registry.getTypeHandler(int.class)).build());
+      }
+    }, parameterObject);
+
+    Executor executor = createExecutor(new JdbcTransaction(ds, null, false));
+    CacheKey cacheKey = executor.createCacheKey(mappedStatement, parameterObject, RowBounds.DEFAULT, boundSql);
+
+    CacheKey expected = new CacheKey();
+    expected.update(mappedStatement.getId());
+    expected.update(RowBounds.DEFAULT.getOffset());
+    expected.update(RowBounds.DEFAULT.getLimit());
+    expected.update(boundSql.getSql());
+    expected.update(null);
+
+    assertEquals(expected, cacheKey);
+  }
+
+  @Test
+  void createCacheKeyWithTypeHandler() {
+    TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
+
+    MappedStatement mappedStatement = new MappedStatement.Builder(config, "testSelect",
+        new StaticSqlSource(config, "some select statement"), SqlCommandType.SELECT).build();
+
+    Object parameterObject = 1;
+
+    BoundSql boundSql = new BoundSql(config, "some select statement", new ArrayList<ParameterMapping>() {
+      private static final long serialVersionUID = 1L;
+
+      {
+        add(new ParameterMapping.Builder(config, "id", registry.getTypeHandler(int.class)).build());
+      }
+    }, parameterObject);
+
+    Executor executor = createExecutor(new JdbcTransaction(ds, null, false));
+    CacheKey cacheKey = executor.createCacheKey(mappedStatement, parameterObject, RowBounds.DEFAULT, boundSql);
+
+    CacheKey expected = new CacheKey();
+    expected.update(mappedStatement.getId());
+    expected.update(RowBounds.DEFAULT.getOffset());
+    expected.update(RowBounds.DEFAULT.getLimit());
+    expected.update(boundSql.getSql());
+    expected.update(1);
+
+    assertEquals(expected, cacheKey);
+  }
+
+  @Test
+  void createCacheKeyWithMetaObject() {
+    TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
+
+    MappedStatement mappedStatement = new MappedStatement.Builder(config, "testSelect",
+        new StaticSqlSource(config, "some select statement"), SqlCommandType.SELECT).build();
+
+    Author parameterObject = new Author(-1, "cbegin", "******", "cbegin@nowhere.com", "N/A", Section.NEWS);
+
+    BoundSql boundSql = new BoundSql(config, "some select statement", new ArrayList<ParameterMapping>() {
+      private static final long serialVersionUID = 1L;
+
+      {
+        add(new ParameterMapping.Builder(config, "id", registry.getTypeHandler(int.class)).build());
+        add(new ParameterMapping.Builder(config, "username", registry.getTypeHandler(String.class)).build());
+        add(new ParameterMapping.Builder(config, "password", registry.getTypeHandler(String.class)).build());
+        add(new ParameterMapping.Builder(config, "email", registry.getTypeHandler(String.class)).build());
+        add(new ParameterMapping.Builder(config, "bio", registry.getTypeHandler(String.class))
+            .jdbcType(JdbcType.VARCHAR).build());
+        add(new ParameterMapping.Builder(config, "favouriteSection", registry.getTypeHandler(Section.class))
+            .jdbcType(JdbcType.VARCHAR).build());
+      }
+    }, parameterObject);
+
+    Executor executor = createExecutor(new JdbcTransaction(ds, null, false));
+    CacheKey cacheKey = executor.createCacheKey(mappedStatement, parameterObject, RowBounds.DEFAULT, boundSql);
+
+    CacheKey expected = new CacheKey();
+    expected.update(mappedStatement.getId());
+    expected.update(RowBounds.DEFAULT.getOffset());
+    expected.update(RowBounds.DEFAULT.getLimit());
+    expected.update(boundSql.getSql());
+    expected.update(parameterObject.getId());
+    expected.update(parameterObject.getUsername());
+    expected.update(parameterObject.getPassword());
+    expected.update(parameterObject.getEmail());
+    expected.update(parameterObject.getBio());
+    expected.update(parameterObject.getFavouriteSection());
+
+    assertEquals(expected, cacheKey);
   }
 
   protected Executor createExecutor(Transaction transaction) {

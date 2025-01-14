@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,9 +17,9 @@ package org.apache.ibatis.scripting.xmltags;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Member;
-import java.util.Map;
 
 import ognl.MemberAccess;
+import ognl.OgnlContext;
 
 import org.apache.ibatis.reflection.Reflector;
 
@@ -44,11 +44,11 @@ class OgnlMemberAccess implements MemberAccess {
   }
 
   @Override
-  public Object setup(Map context, Object target, Member member, String propertyName) {
+  public Object setup(OgnlContext context, Object target, Member member, String propertyName) {
     Object result = null;
     if (isAccessible(context, target, member, propertyName)) {
       AccessibleObject accessible = (AccessibleObject) member;
-      if (!accessible.isAccessible()) {
+      if (!accessible.canAccess(target)) {
         result = Boolean.FALSE;
         accessible.setAccessible(true);
       }
@@ -57,12 +57,12 @@ class OgnlMemberAccess implements MemberAccess {
   }
 
   @Override
-  public void restore(Map context, Object target, Member member, String propertyName, Object state) {
+  public void restore(OgnlContext context, Object target, Member member, String propertyName, Object state) {
     // Flipping accessible flag is not thread safe. See #1648
   }
 
   @Override
-  public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
+  public boolean isAccessible(OgnlContext context, Object target, Member member, String propertyName) {
     return canControlMemberAccessible;
   }
 

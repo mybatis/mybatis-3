@@ -140,9 +140,8 @@ public class MetaClass {
     if (reflector.hasSetter(prop.getName())) {
       MetaClass metaProp = metaClassForProperty(prop.getName());
       return metaProp.hasSetter(prop.getChildren());
-    } else {
-      return false;
     }
+    return false;
   }
 
   public boolean hasGetter(String name) {
@@ -153,9 +152,8 @@ public class MetaClass {
     if (reflector.hasGetter(prop.getName())) {
       MetaClass metaProp = metaClassForProperty(prop);
       return metaProp.hasGetter(prop.getChildren());
-    } else {
-      return false;
     }
+    return false;
   }
 
   public Invoker getGetInvoker(String name) {

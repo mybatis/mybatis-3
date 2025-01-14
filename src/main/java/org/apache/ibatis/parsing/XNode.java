@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -280,14 +280,11 @@ public class XNode {
 
   @Override
   public String toString() {
-    StringBuilder builder = new StringBuilder();
-    toString(builder, 0);
-    return builder.toString();
+    return buildToString(new StringBuilder(), 0).toString();
   }
 
-  private void toString(StringBuilder builder, int level) {
-    builder.append("<");
-    builder.append(name);
+  private StringBuilder buildToString(StringBuilder builder, int indentLevel) {
+    indent(builder, indentLevel).append("<").append(name);
     for (Map.Entry<Object, Object> entry : attributes.entrySet()) {
       builder.append(" ");
       builder.append(entry.getKey());
@@ -295,34 +292,35 @@ public class XNode {
       builder.append(entry.getValue());
       builder.append("\"");
     }
-    List<XNode> children = getChildren();
-    if (!children.isEmpty()) {
-      builder.append(">\n");
-      for (XNode child : children) {
-        indent(builder, level + 1);
-        child.toString(builder, level + 1);
-      }
-      indent(builder, level);
-      builder.append("</");
-      builder.append(name);
-      builder.append(">");
-    } else if (body != null) {
-      builder.append(">");
-      builder.append(body);
-      builder.append("</");
-      builder.append(name);
-      builder.append(">");
+
+    NodeList nodeList = node.getChildNodes();
+    if (nodeList == null || nodeList.getLength() == 0) {
+      builder.append(" />\n");
     } else {
-      builder.append("/>");
-      indent(builder, level);
+      builder.append(">\n");
+      for (int i = 0, n = nodeList.getLength(); i < n; i++) {
+        Node node = nodeList.item(i);
+        short nodeType = node.getNodeType();
+        if (nodeType == Node.ELEMENT_NODE) {
+          new XNode(xpathParser, node, variables).buildToString(builder, indentLevel + 1);
+        } else {
+          String text = getBodyData(node).trim();
+          if (text.length() > 0) {
+            indent(builder, indentLevel + 1).append(text).append("\n");
+          }
+        }
+      }
+      indent(builder, indentLevel).append("</").append(name).append(">\n");
     }
-    builder.append("\n");
+
+    return builder;
   }
 
-  private void indent(StringBuilder builder, int level) {
+  private StringBuilder indent(StringBuilder builder, int level) {
     for (int i = 0; i < level; i++) {
-      builder.append("    ");
+      builder.append("  ");
     }
+    return builder;
   }
 
   private Properties parseAttributes(Node n) {

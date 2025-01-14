@@ -20,6 +20,7 @@ public class User {
   private Integer id;
   private String name;
   private Currency cur;
+  private Mood mood;
 
   public Integer getId() {
     return id;
@@ -43,5 +44,13 @@ public class User {
 
   public void setCur(Currency cur) {
     this.cur = cur;
+  }
+
+  public Mood getMood() {
+    return mood;
+  }
+
+  public void setMood(Mood mood) {
+    this.mood = mood;
   }
 }

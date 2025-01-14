@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -112,32 +112,11 @@ public class MetaObject {
 
   public Object getValue(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
-    if (!prop.hasNext()) {
-      return objectWrapper.get(prop);
-    }
-    MetaObject metaValue = metaObjectForProperty(prop.getIndexedName());
-    if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
-      return null;
-    } else {
-      return metaValue.getValue(prop.getChildren());
-    }
+    return objectWrapper.get(prop);
   }
 
   public void setValue(String name, Object value) {
-    PropertyTokenizer prop = new PropertyTokenizer(name);
-    if (prop.hasNext()) {
-      MetaObject metaValue = metaObjectForProperty(prop.getIndexedName());
-      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
-        if (value == null) {
-          // don't instantiate child path if value is null
-          return;
-        }
-        metaValue = objectWrapper.instantiatePropertyValue(name, prop, objectFactory);
-      }
-      metaValue.setValue(prop.getChildren(), value);
-    } else {
-      objectWrapper.set(prop, value);
-    }
+    objectWrapper.set(new PropertyTokenizer(name), value);
   }
 
   public MetaObject metaObjectForProperty(String name) {

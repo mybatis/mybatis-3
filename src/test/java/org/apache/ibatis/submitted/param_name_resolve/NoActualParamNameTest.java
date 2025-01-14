@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
  */
 package org.apache.ibatis.submitted.param_name_resolve;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.Reader;
 import java.sql.Connection;
@@ -57,7 +57,7 @@ class NoActualParamNameTest {
   }
 
   @Test
-  void testSingleListParameterWhenUseActualParamNameIsFalse() {
+  void singleListParameterWhenUseActualParamNameIsFalse() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       // use actual name -> no available and index parameter("0") is not available too

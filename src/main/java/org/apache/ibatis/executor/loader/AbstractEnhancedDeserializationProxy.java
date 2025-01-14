@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.reflection.ExceptionUtil;
@@ -38,7 +39,7 @@ public abstract class AbstractEnhancedDeserializationProxy {
   private final ObjectFactory objectFactory;
   private final List<Class<?>> constructorArgTypes;
   private final List<Object> constructorArgs;
-  private final Object reloadingPropertyLock;
+  private final ReentrantLock lock = new ReentrantLock();
   private boolean reloadingProperty;
 
   protected AbstractEnhancedDeserializationProxy(Class<?> type,
@@ -49,7 +50,6 @@ public abstract class AbstractEnhancedDeserializationProxy {
     this.objectFactory = objectFactory;
     this.constructorArgTypes = constructorArgTypes;
     this.constructorArgs = constructorArgs;
-    this.reloadingPropertyLock = new Object();
     this.reloadingProperty = false;
   }
 
@@ -68,7 +68,8 @@ public abstract class AbstractEnhancedDeserializationProxy {
         return this.newSerialStateHolder(original, unloadedProperties, objectFactory, constructorArgTypes,
             constructorArgs);
       }
-      synchronized (this.reloadingPropertyLock) {
+      lock.lock();
+      try {
         if (!FINALIZE_METHOD.equals(methodName) && PropertyNamer.isProperty(methodName) && !reloadingProperty) {
           final String property = PropertyNamer.methodToProperty(methodName);
           final String propertyKey = property.toUpperCase(Locale.ENGLISH);
@@ -93,6 +94,8 @@ public abstract class AbstractEnhancedDeserializationProxy {
         }
 
         return enhanced;
+      } finally {
+        lock.unlock();
       }
     } catch (Throwable t) {
       throw ExceptionUtil.unwrapThrowable(t);

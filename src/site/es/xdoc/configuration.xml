@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2023 the original author or authors.
+       Copyright 2009-2025 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -187,10 +187,9 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
             </tr>
             <tr>
               <td>
-                multipleResultSetsEnabled
+                <strike>multipleResultSetsEnabled</strike>
               </td>
-              <td>Habilita o inhabilita la obtención de múltiples ResultSets con una sola sentencia (se requiere un driver compatible)
-              </td>
+              <td>Deprecated. This option has no effect.</td>
               <td>
                 true | false
               </td>
@@ -221,7 +220,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 true | false
               </td>
               <td>
-                False
+                false
               </td>
             </tr>
             <tr>
@@ -324,7 +323,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 true | false
               </td>
               <td>
-                False
+                false
               </td>
             </tr>
             <tr>
@@ -339,7 +338,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 true | false
               </td>
               <td>
-                True
+                true
               </td>
             </tr>
             <tr>
@@ -352,7 +351,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 true | false
               </td>
               <td>
-                False
+                false
               </td>
             </tr>
             <tr>
@@ -452,7 +451,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               <td>
                 MyBatis, by default, returns <code>null</code> when all the columns of a returned row are NULL.
                 When this setting is enabled, MyBatis returns an empty instance instead.
-                Note that it is also applied to nested results (i.e. collectioin and association). Since: 3.4.2
+                Note that it is also applied to nested results (i.e. collection and association). Since: 3.4.2
               </td>
               <td>
                 true | false
@@ -615,7 +614,6 @@ A continuación se muestra un ejemplo del elemento settings al completo:
   <setting name="cacheEnabled" value="true"/>
   <setting name="lazyLoadingEnabled" value="true"/>
   <setting name="aggressiveLazyLoading" value="true"/>
-  <setting name="multipleResultSetsEnabled" value="true"/>
   <setting name="useColumnLabel" value="true"/>
   <setting name="useGeneratedKeys" value="false"/>
   <setting name="autoMappingBehavior" value="PARTIAL"/>

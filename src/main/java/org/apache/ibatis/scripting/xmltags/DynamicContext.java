@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -106,7 +106,7 @@ public class DynamicContext {
   static class ContextAccessor implements PropertyAccessor {
 
     @Override
-    public Object getProperty(Map context, Object target, Object name) {
+    public Object getProperty(OgnlContext context, Object target, Object name) {
       Map map = (Map) target;
 
       Object result = map.get(name);
@@ -123,7 +123,7 @@ public class DynamicContext {
     }
 
     @Override
-    public void setProperty(Map context, Object target, Object name, Object value) {
+    public void setProperty(OgnlContext context, Object target, Object name, Object value) {
       Map<Object, Object> map = (Map<Object, Object>) target;
       map.put(name, value);
     }

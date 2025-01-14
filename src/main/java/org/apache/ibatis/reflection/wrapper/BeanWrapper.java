@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -42,18 +42,21 @@ public class BeanWrapper extends BaseWrapper {
 
   @Override
   public Object get(PropertyTokenizer prop) {
-    if (prop.getIndex() != null) {
-      Object collection = resolveCollection(prop, object);
-      return getCollectionValue(prop, collection);
+    if (prop.hasNext()) {
+      return getChildValue(prop);
+    } else if (prop.getIndex() != null) {
+      return getCollectionValue(prop, resolveCollection(prop, object));
+    } else {
+      return getBeanProperty(prop, object);
     }
-    return getBeanProperty(prop, object);
   }
 
   @Override
   public void set(PropertyTokenizer prop, Object value) {
-    if (prop.getIndex() != null) {
-      Object collection = resolveCollection(prop, object);
-      setCollectionValue(prop, collection, value);
+    if (prop.hasNext()) {
+      setChildValue(prop, value);
+    } else if (prop.getIndex() != null) {
+      setCollectionValue(prop, resolveCollection(prop, object), value);
     } else {
       setBeanProperty(prop, object, value);
     }
@@ -83,9 +86,8 @@ public class BeanWrapper extends BaseWrapper {
     MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
     if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
       return metaClass.getSetterType(name);
-    } else {
-      return metaValue.getSetterType(prop.getChildren());
     }
+    return metaValue.getSetterType(prop.getChildren());
   }
 
   @Override
@@ -97,9 +99,8 @@ public class BeanWrapper extends BaseWrapper {
     MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
     if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
       return metaClass.getGetterType(name);
-    } else {
-      return metaValue.getGetterType(prop.getChildren());
     }
+    return metaValue.getGetterType(prop.getChildren());
   }
 
   @Override
@@ -112,12 +113,10 @@ public class BeanWrapper extends BaseWrapper {
       MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
       if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
         return metaClass.hasSetter(name);
-      } else {
-        return metaValue.hasSetter(prop.getChildren());
       }
-    } else {
-      return false;
+      return metaValue.hasSetter(prop.getChildren());
     }
+    return false;
   }
 
   @Override
@@ -130,12 +129,10 @@ public class BeanWrapper extends BaseWrapper {
       MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
       if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
         return metaClass.hasGetter(name);
-      } else {
-        return metaValue.hasGetter(prop.getChildren());
       }
-    } else {
-      return false;
+      return metaValue.hasGetter(prop.getChildren());
     }
+    return false;
   }
 
   @Override

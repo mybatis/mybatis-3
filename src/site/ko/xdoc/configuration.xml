@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2023 the original author or authors.
+       Copyright 2009-2025 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -76,7 +76,7 @@
 
 SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environment, props);
 ]]></source>
-        <p>속성이 한개 이상 존재한다면 마이바티스는 일정한 순서로 로드한다.:</p>
+        <p>속성이 한개 이상 존재한다면 마이바티스는 다음의 순서로 로드한다.:</p>
         <ul>
           <li>properties 엘리먼트에 명시된 속성을 가장 먼저 읽는다.</li>
           <li>properties 엘리먼트의 클래스패스 자원이나 url 속성으로 부터 로드된 속성을 두번째로 읽는다. 그래서 이미 읽은 값이 있다면 덮어쓴다.</li>
@@ -179,9 +179,9 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
             </tr>
             <tr>
               <td>
-                multipleResultSetsEnabled
+                <strike>multipleResultSetsEnabled</strike>
               </td>
-              <td>한 개의 구문에서 여러 개의 ResultSet을 허용할지의 여부(드라이버가 해당 기능을 지원해야 함) </td>
+              <td>Deprecated. This option has no effect.</td>
               <td>
                 true | false
               </td>
@@ -214,7 +214,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 true | false
               </td>
               <td>
-                False
+                false
               </td>
             </tr>
             <tr>
@@ -334,7 +334,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 true | false
               </td>
               <td>
-                False
+                false
               </td>
             </tr>
             <tr>
@@ -349,7 +349,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 true | false
               </td>
               <td>
-                True
+                true
               </td>
             </tr>
             <tr>
@@ -363,7 +363,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 true | false
               </td>
               <td>
-                False
+                false
               </td>
             </tr>
             <tr>
@@ -620,7 +620,6 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
   <setting name="cacheEnabled" value="true"/>
   <setting name="lazyLoadingEnabled" value="true"/>
   <setting name="aggressiveLazyLoading" value="true"/>
-  <setting name="multipleResultSetsEnabled" value="true"/>
   <setting name="useColumnLabel" value="true"/>
   <setting name="useGeneratedKeys" value="false"/>
   <setting name="autoMappingBehavior" value="PARTIAL"/>
@@ -1806,7 +1805,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
           <li><code>poolMaximumActiveConnections</code> - 주어진 시간에 존재할 수 있는 활성화된(사용중인) 커넥션의 수.
       디폴트는 10이다.</li>
           <li><code>poolMaximumIdleConnections</code> - 주어진 시간에 존재할 수 있는 유휴 커넥션의 수</li>
-          <li>강제로 리턴되기 전에 풀에서 “체크아웃” 될 수 있는 커넥션의 시간.
+          <li><code>poolMaximumCheckoutTime</code> - 강제로 리턴되기 전에 풀에서 “체크아웃” 될 수 있는 커넥션의 시간.
       디폴트는 20000ms(20 초)</li>
           <li><code>poolTimeToWait</code> - 풀이 로그 상태를 출력하고 비정상적으로 긴 경우 커넥션을 다시 얻을려고 시도하는 로우 레벨 설정.
       디폴트는 20000ms(20 초)</li>

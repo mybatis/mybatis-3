@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BiFunction;
 
 import org.apache.ibatis.binding.MapperRegistry;
@@ -107,7 +108,6 @@ public class Configuration {
   protected boolean safeResultHandlerEnabled = true;
   protected boolean mapUnderscoreToCamelCase;
   protected boolean aggressiveLazyLoading;
-  protected boolean multipleResultSetsEnabled = true;
   protected boolean useGeneratedKeys;
   protected boolean useColumnLabel = true;
   protected boolean cacheEnabled = true;
@@ -166,11 +166,15 @@ public class Configuration {
 
   protected final Set<String> loadedResources = new HashSet<>();
   protected final Map<String, XNode> sqlFragments = new StrictMap<>("XML fragments parsed from previous mappers");
-
   protected final Collection<XMLStatementBuilder> incompleteStatements = new LinkedList<>();
   protected final Collection<CacheRefResolver> incompleteCacheRefs = new LinkedList<>();
   protected final Collection<ResultMapResolver> incompleteResultMaps = new LinkedList<>();
   protected final Collection<MethodResolver> incompleteMethods = new LinkedList<>();
+
+  private final ReentrantLock incompleteResultMapsLock = new ReentrantLock();
+  private final ReentrantLock incompleteCacheRefsLock = new ReentrantLock();
+  private final ReentrantLock incompleteStatementsLock = new ReentrantLock();
+  private final ReentrantLock incompleteMethodsLock = new ReentrantLock();
 
   /*
    * A map holds cache-ref relationship. The key is the namespace that references a cache bound to another namespace and
@@ -451,12 +455,20 @@ public class Configuration {
     this.aggressiveLazyLoading = aggressiveLazyLoading;
   }
 
+  /**
+   * @deprecated You can safely remove the call to this method as this option had no effect.
+   */
+  @Deprecated
   public boolean isMultipleResultSetsEnabled() {
-    return multipleResultSetsEnabled;
+    return true;
   }
 
+  /**
+   * @deprecated You can safely remove the call to this method as this option had no effect.
+   */
+  @Deprecated
   public void setMultipleResultSetsEnabled(boolean multipleResultSetsEnabled) {
-    this.multipleResultSetsEnabled = multipleResultSetsEnabled;
+    // nop
   }
 
   public Set<String> getLazyLoadTriggerMethods() {
@@ -832,34 +844,70 @@ public class Configuration {
     return mappedStatements.values();
   }
 
+  /**
+   * @deprecated call {@link #parsePendingStatements(boolean)}
+   */
+  @Deprecated
   public Collection<XMLStatementBuilder> getIncompleteStatements() {
     return incompleteStatements;
   }
 
   public void addIncompleteStatement(XMLStatementBuilder incompleteStatement) {
-    incompleteStatements.add(incompleteStatement);
+    incompleteStatementsLock.lock();
+    try {
+      incompleteStatements.add(incompleteStatement);
+    } finally {
+      incompleteStatementsLock.unlock();
+    }
   }
 
+  /**
+   * @deprecated call {@link #parsePendingCacheRefs(boolean)}
+   */
+  @Deprecated
   public Collection<CacheRefResolver> getIncompleteCacheRefs() {
     return incompleteCacheRefs;
   }
 
   public void addIncompleteCacheRef(CacheRefResolver incompleteCacheRef) {
-    incompleteCacheRefs.add(incompleteCacheRef);
+    incompleteCacheRefsLock.lock();
+    try {
+      incompleteCacheRefs.add(incompleteCacheRef);
+    } finally {
+      incompleteCacheRefsLock.unlock();
+    }
   }
 
+  /**
+   * @deprecated call {@link #parsePendingResultMaps(boolean)}
+   */
+  @Deprecated
   public Collection<ResultMapResolver> getIncompleteResultMaps() {
     return incompleteResultMaps;
   }
 
   public void addIncompleteResultMap(ResultMapResolver resultMapResolver) {
-    incompleteResultMaps.add(resultMapResolver);
+    incompleteResultMapsLock.lock();
+    try {
+      incompleteResultMaps.add(resultMapResolver);
+    } finally {
+      incompleteResultMapsLock.unlock();
+    }
   }
 
   public void addIncompleteMethod(MethodResolver builder) {
-    incompleteMethods.add(builder);
+    incompleteMethodsLock.lock();
+    try {
+      incompleteMethods.add(builder);
+    } finally {
+      incompleteMethodsLock.unlock();
+    }
   }
 
+  /**
+   * @deprecated call {@link #parsePendingMethods(boolean)}
+   */
+  @Deprecated
   public Collection<MethodResolver> getIncompleteMethods() {
     return incompleteMethods;
   }
@@ -923,35 +971,72 @@ public class Configuration {
    * are added as it provides fail-fast statement validation.
    */
   protected void buildAllStatements() {
-    parsePendingResultMaps();
-    if (!incompleteCacheRefs.isEmpty()) {
-      synchronized (incompleteCacheRefs) {
-        incompleteCacheRefs.removeIf(x -> x.resolveCacheRef() != null);
-      }
+    parsePendingResultMaps(true);
+    parsePendingCacheRefs(true);
+    parsePendingStatements(true);
+    parsePendingMethods(true);
+  }
+
+  public void parsePendingMethods(boolean reportUnresolved) {
+    if (incompleteMethods.isEmpty()) {
+      return;
     }
-    if (!incompleteStatements.isEmpty()) {
-      synchronized (incompleteStatements) {
-        incompleteStatements.removeIf(x -> {
-          x.parseStatementNode();
-          return true;
-        });
+    incompleteMethodsLock.lock();
+    try {
+      incompleteMethods.removeIf(x -> {
+        x.resolve();
+        return true;
+      });
+    } catch (IncompleteElementException e) {
+      if (reportUnresolved) {
+        throw e;
       }
-    }
-    if (!incompleteMethods.isEmpty()) {
-      synchronized (incompleteMethods) {
-        incompleteMethods.removeIf(x -> {
-          x.resolve();
-          return true;
-        });
-      }
+    } finally {
+      incompleteMethodsLock.unlock();
     }
   }
 
-  private void parsePendingResultMaps() {
+  public void parsePendingStatements(boolean reportUnresolved) {
+    if (incompleteStatements.isEmpty()) {
+      return;
+    }
+    incompleteStatementsLock.lock();
+    try {
+      incompleteStatements.removeIf(x -> {
+        x.parseStatementNode();
+        return true;
+      });
+    } catch (IncompleteElementException e) {
+      if (reportUnresolved) {
+        throw e;
+      }
+    } finally {
+      incompleteStatementsLock.unlock();
+    }
+  }
+
+  public void parsePendingCacheRefs(boolean reportUnresolved) {
+    if (incompleteCacheRefs.isEmpty()) {
+      return;
+    }
+    incompleteCacheRefsLock.lock();
+    try {
+      incompleteCacheRefs.removeIf(x -> x.resolveCacheRef() != null);
+    } catch (IncompleteElementException e) {
+      if (reportUnresolved) {
+        throw e;
+      }
+    } finally {
+      incompleteCacheRefsLock.unlock();
+    }
+  }
+
+  public void parsePendingResultMaps(boolean reportUnresolved) {
     if (incompleteResultMaps.isEmpty()) {
       return;
     }
-    synchronized (incompleteResultMaps) {
+    incompleteResultMapsLock.lock();
+    try {
       boolean resolved;
       IncompleteElementException ex = null;
       do {
@@ -967,10 +1052,12 @@ public class Configuration {
           }
         }
       } while (resolved);
-      if (!incompleteResultMaps.isEmpty() && ex != null) {
+      if (reportUnresolved && !incompleteResultMaps.isEmpty() && ex != null) {
         // At least one result map is unresolvable.
         throw ex;
       }
+    } finally {
+      incompleteResultMapsLock.unlock();
     }
   }
 
@@ -1026,6 +1113,7 @@ public class Configuration {
     private static final long serialVersionUID = -4950446264854982944L;
     private final String name;
     private BiFunction<V, V, String> conflictMessageProducer;
+    private static final Object AMBIGUITY_INSTANCE = new Object();
 
     public StrictMap(String name, int initialCapacity, float loadFactor) {
       super(initialCapacity, loadFactor);
@@ -1075,7 +1163,7 @@ public class Configuration {
         if (super.get(shortKey) == null) {
           super.put(shortKey, value);
         } else {
-          super.put(shortKey, (V) new Ambiguity(shortKey));
+          super.put(shortKey, (V) AMBIGUITY_INSTANCE);
         }
       }
       return super.put(key, value);
@@ -1096,23 +1184,11 @@ public class Configuration {
       if (value == null) {
         throw new IllegalArgumentException(name + " does not contain value for " + key);
       }
-      if (value instanceof Ambiguity) {
-        throw new IllegalArgumentException(((Ambiguity) value).getSubject() + " is ambiguous in " + name
+      if (AMBIGUITY_INSTANCE == value) {
+        throw new IllegalArgumentException(key + " is ambiguous in " + name
             + " (try using the full name including the namespace, or rename one of the entries)");
       }
       return value;
-    }
-
-    protected static class Ambiguity {
-      private final String subject;
-
-      public Ambiguity(String subject) {
-        this.subject = subject;
-      }
-
-      public String getSubject() {
-        return subject;
-      }
     }
 
     private String getShortName(String key) {

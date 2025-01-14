@@ -1,6 +1,8 @@
 title: MyBatis 3 | Logging
 author: Clinton Begin, Eduardo Macarron
 
+<h1 class="d-none">Avoid blank site</h1>
+
 ## Logging
 
 MyBatis proporciona información de logging mediante el uso interno de una factoría. La factoría interna delega la información de logging en alguna de las siguientes implementaciones.

@@ -52,8 +52,7 @@ class TimestampWithTimezoneTypeHandlerTest {
       Record record = mapper.selectById(1);
       assertEquals(OffsetDateTime.of(2018, 1, 2, 11, 22, 33, 123456000, ZoneOffset.ofHoursMinutes(1, 23)),
           record.getOdt());
-      // HSQLDB 2.4.1 truncates nano seconds.
-      assertEquals(OffsetTime.of(11, 22, 33, 0, ZoneOffset.ofHoursMinutes(1, 23)), record.getOt());
+      assertEquals(OffsetTime.of(11, 22, 33, 123456000, ZoneOffset.ofHoursMinutes(1, 23)), record.getOt());
     }
   }
 
@@ -76,7 +75,7 @@ class TimestampWithTimezoneTypeHandlerTest {
     }
   }
 
-  @Disabled("HSQLDB 2.4.1 does not support this.")
+  @Disabled("HSQLDB does not support this.")
   @Test
   void shouldInsertOffsetTime() {
     OffsetTime ot = OffsetTime.of(11, 22, 33, 123456000, ZoneOffset.ofHoursMinutes(1, 23));

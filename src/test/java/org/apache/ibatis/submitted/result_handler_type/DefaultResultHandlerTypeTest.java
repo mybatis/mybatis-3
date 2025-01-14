@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,37 +31,37 @@ import org.junit.jupiter.api.Test;
 class DefaultResultHandlerTypeTest {
 
   @Test
-  void testSelectList() throws Exception {
+  void selectList() throws Exception {
     String xmlConfig = "org/apache/ibatis/submitted/result_handler_type/MapperConfig.xml";
     SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryXmlConfig(xmlConfig);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       List<Person> list = sqlSession
           .selectList("org.apache.ibatis.submitted.result_handler_type.PersonMapper.doSelect");
-      assertEquals(list.size(), 2);
+      assertEquals(2, list.size());
       assertEquals("java.util.LinkedList", list.getClass().getCanonicalName());
     }
   }
 
   @Test
-  void testSelectMap() throws Exception {
+  void selectMap() throws Exception {
     String xmlConfig = "org/apache/ibatis/submitted/result_handler_type/MapperConfig.xml";
     SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryXmlConfig(xmlConfig);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Map<Integer, Person> map = sqlSession
           .selectMap("org.apache.ibatis.submitted.result_handler_type.PersonMapper.doSelect", "id");
-      assertEquals(map.size(), 2);
+      assertEquals(2, map.size());
       assertEquals("java.util.LinkedHashMap", map.getClass().getCanonicalName());
     }
   }
 
   @Test
-  void testSelectMapAnnotation() throws Exception {
+  void selectMapAnnotation() throws Exception {
     String xmlConfig = "org/apache/ibatis/submitted/result_handler_type/MapperConfig.xml";
     SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryXmlConfig(xmlConfig);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper mapper = sqlSession.getMapper(PersonMapper.class);
       Map<Integer, Person> map = mapper.selectAsMap();
-      assertEquals(map.size(), 2);
+      assertEquals(2, map.size());
       assertEquals("java.util.LinkedHashMap", map.getClass().getCanonicalName());
     }
   }
