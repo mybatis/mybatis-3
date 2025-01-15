@@ -3,6 +3,7 @@ MyBatis SQL Mapper Framework for Java
 
 [![build](https://github.com/mybatis/mybatis-3/actions/workflows/ci.yaml/badge.svg)](https://github.com/mybatis/mybatis-3/actions?query=workflow%3A%22Java+CI%22)
 [![Coverage Status](https://coveralls.io/repos/mybatis/mybatis-3/badge.svg?branch=master&service=github)](https://coveralls.io/github/mybatis/mybatis-3?branch=master)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=mybatis_mybatis-3&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=mybatis_mybatis-3)
 [![Maven central](https://maven-badges.herokuapp.com/maven-central/org.mybatis/mybatis/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.mybatis/mybatis)
 [![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/https/oss.sonatype.org/org.mybatis/mybatis.svg)](https://oss.sonatype.org/content/repositories/snapshots/org/mybatis/mybatis/)
 [![License](https://img.shields.io/:license-apache-brightgreen.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
@@ -25,12 +26,7 @@ Essentials
 Contributions
 -------------
 
-Mybatis-core is now being auto formatted.  Given nature of some code logic with mybatis, it is more appropriate to force a formatting structure manually for snippets such as sql statements.  To do so, add following blocks around code.
-
-- ```// @formatter:off``` to start the block of unformatted code
-- ```// @formatter:on``` to end the block of unformatted code
-
-If comment sections need same behaviour such as javadocs, note that the entire block must be around entire comment as direct usage does not properly indicate that formatter treats it all as one comment block regardless.
+See [here](CONTRIBUTING.md)
 
 Tests
 -----
