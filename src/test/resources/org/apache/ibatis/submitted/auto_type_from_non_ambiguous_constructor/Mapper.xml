@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+       Copyright 2009-2025 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          https://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.apache.ibatis.submitted.auto_type_from_non_ambiguous_constructor.Mapper">
+
+    <resultMap id="nonAmbiguousAccountRM" type="org.apache.ibatis.submitted.auto_type_from_non_ambiguous_constructor.Account">
+        <constructor>
+            <idArg column="id" javaType="_long"/>
+            <arg column="name" javaType="java.lang.String"/>
+            <arg column="type" javaType="java.lang.String"/>
+        </constructor>
+    </resultMap>
+
+    <resultMap id="accountRM" type="org.apache.ibatis.submitted.auto_type_from_non_ambiguous_constructor.Account">
+        <constructor>
+            <idArg column="id"/>
+            <arg column="name"/>
+            <arg column="type"/>
+        </constructor>
+    </resultMap>
+
+    <resultMap id="account2RM" type="org.apache.ibatis.submitted.auto_type_from_non_ambiguous_constructor.Account2">
+        <constructor>
+            <idArg column="id"/>
+            <arg column="name"/>
+            <arg column="type"/>
+        </constructor>
+    </resultMap>
+
+    <resultMap id="account3RM" type="org.apache.ibatis.submitted.auto_type_from_non_ambiguous_constructor.Account3">
+        <constructor>
+            <idArg column="id"/>
+            <arg column="name" javaType="java.lang.String" />
+            <arg column="type"/>
+        </constructor>
+    </resultMap>
+
+    <sql id="accountSelect">
+        select a.id
+          , a.name
+          , a.type
+        from account a
+          where a.id = #{id}
+    </sql>
+
+    <select id="getAccountNonAmbiguous" resultMap="nonAmbiguousAccountRM">
+        <include refid="accountSelect"/>
+    </select>
+
+    <select id="getAccountJavaTypesMissing" resultMap="accountRM">
+        <include refid="accountSelect"/>
+    </select>
+
+    <select id="getAccountExtraParameter" resultMap="account2RM">
+        <include refid="accountSelect"/>
+    </select>
+
+    <select id="getAccountPartialTypesProvided" resultMap="account3RM">
+        <include refid="accountSelect"/>
+    </select>
+
+    <resultMap id="account4RM" type="org.apache.ibatis.submitted.auto_type_from_non_ambiguous_constructor.Account4">
+        <constructor>
+            <idArg name="accountId" column="id"/>
+            <!-- these two are defined in wrong order -->
+            <arg name="accountDob" column="dob" />
+            <arg name="accountName" column="name"/>
+        </constructor>
+    </resultMap>
+
+    <select id="getAccountWrongOrder" resultMap="account4RM">
+        select id, name, type, date '2025-01-05' dob from account where id = #{id}
+    </select>
+</mapper>

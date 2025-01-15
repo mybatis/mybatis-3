@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 
-       Copyright 2009-2024 the original author or authors.
+       Copyright 2009-2025 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -24,10 +24,10 @@
 
     <resultMap id="immutableBlogResultMap" type="org.apache.ibatis.domain.blog.immutable.ImmutableBlog">
         <constructor>
-            <idArg column="id" javaType="_int"/>
-            <arg column="title" javaType="java.lang.String"/>
-            <arg javaType="org.apache.ibatis.domain.blog.immutable.ImmutableAuthor" resultMap="immutableAuthorResultMap" columnPrefix="author_"/>
-            <arg javaType="java.util.List" resultMap="immutablePostResultMap" columnPrefix="post_" />
+            <idArg column="id"/>
+            <arg column="title" />
+            <arg resultMap="immutableAuthorResultMap" columnPrefix="author_"/>
+            <arg resultMap="immutablePostResultMap" columnPrefix="post_" />
         </constructor>
     </resultMap>
 
@@ -38,7 +38,7 @@
             <arg column="password" javaType="String"/>
             <arg column="email" javaType="String"/>
             <arg column="bio" javaType="String"/>
-            <arg column="favorite_section" javaType="org.apache.ibatis.domain.blog.Section"/>
+            <arg column="favorite_section"/>
         </constructor>
     </resultMap>
 

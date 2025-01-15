@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -63,6 +63,7 @@ import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.builder.CacheRefResolver;
 import org.apache.ibatis.builder.IncompleteElementException;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
+import org.apache.ibatis.builder.ResultMappingConstructorResolver;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
@@ -237,7 +238,7 @@ public class MapperAnnotationBuilder {
   private void applyResultMap(String resultMapId, Class<?> returnType, Arg[] args, Result[] results,
       TypeDiscriminator discriminator) {
     List<ResultMapping> resultMappings = new ArrayList<>();
-    applyConstructorArgs(args, returnType, resultMappings);
+    applyConstructorArgs(args, returnType, resultMappings, resultMapId);
     applyResults(results, returnType, resultMappings);
     Discriminator disc = applyDiscriminator(resultMapId, returnType, discriminator);
     // TODO add AutoMappingBehaviour
@@ -251,7 +252,7 @@ public class MapperAnnotationBuilder {
         String caseResultMapId = resultMapId + "-" + c.value();
         List<ResultMapping> resultMappings = new ArrayList<>();
         // issue #136
-        applyConstructorArgs(c.constructArgs(), resultType, resultMappings);
+        applyConstructorArgs(c.constructArgs(), resultType, resultMappings, resultMapId);
         applyResults(c.results(), resultType, resultMappings);
         // TODO add AutoMappingBehaviour
         assistant.addResultMap(caseResultMapId, c.type(), resultMapId, null, resultMappings, null);
@@ -461,7 +462,7 @@ public class MapperAnnotationBuilder {
 
   private String findColumnPrefix(Result result) {
     String columnPrefix = result.one().columnPrefix();
-    if (columnPrefix.length() < 1) {
+    if (columnPrefix.isEmpty()) {
       columnPrefix = result.many().columnPrefix();
     }
     return columnPrefix;
@@ -469,7 +470,7 @@ public class MapperAnnotationBuilder {
 
   private String nestedResultMapId(Result result) {
     String resultMapId = result.one().resultMap();
-    if (resultMapId.length() < 1) {
+    if (resultMapId.isEmpty()) {
       resultMapId = result.many().resultMap();
     }
     if (!resultMapId.contains(".")) {
@@ -479,15 +480,15 @@ public class MapperAnnotationBuilder {
   }
 
   private boolean hasNestedResultMap(Result result) {
-    if (result.one().resultMap().length() > 0 && result.many().resultMap().length() > 0) {
+    if (!result.one().resultMap().isEmpty() && !result.many().resultMap().isEmpty()) {
       throw new BuilderException("Cannot use both @One and @Many annotations in the same @Result");
     }
-    return result.one().resultMap().length() > 0 || result.many().resultMap().length() > 0;
+    return !result.one().resultMap().isEmpty() || !result.many().resultMap().isEmpty();
   }
 
   private String nestedSelectId(Result result) {
     String nestedSelect = result.one().select();
-    if (nestedSelect.length() < 1) {
+    if (nestedSelect.isEmpty()) {
       nestedSelect = result.many().select();
     }
     if (!nestedSelect.contains(".")) {
@@ -498,22 +499,24 @@ public class MapperAnnotationBuilder {
 
   private boolean isLazy(Result result) {
     boolean isLazy = configuration.isLazyLoadingEnabled();
-    if (result.one().select().length() > 0 && FetchType.DEFAULT != result.one().fetchType()) {
+    if (!result.one().select().isEmpty() && FetchType.DEFAULT != result.one().fetchType()) {
       isLazy = result.one().fetchType() == FetchType.LAZY;
-    } else if (result.many().select().length() > 0 && FetchType.DEFAULT != result.many().fetchType()) {
+    } else if (!result.many().select().isEmpty() && FetchType.DEFAULT != result.many().fetchType()) {
       isLazy = result.many().fetchType() == FetchType.LAZY;
     }
     return isLazy;
   }
 
   private boolean hasNestedSelect(Result result) {
-    if (result.one().select().length() > 0 && result.many().select().length() > 0) {
+    if (!result.one().select().isEmpty() && !result.many().select().isEmpty()) {
       throw new BuilderException("Cannot use both @One and @Many annotations in the same @Result");
     }
-    return result.one().select().length() > 0 || result.many().select().length() > 0;
+    return !result.one().select().isEmpty() || !result.many().select().isEmpty();
   }
 
-  private void applyConstructorArgs(Arg[] args, Class<?> resultType, List<ResultMapping> resultMappings) {
+  private void applyConstructorArgs(Arg[] args, Class<?> resultType, List<ResultMapping> resultMappings,
+      String resultMapId) {
+    final List<ResultMapping> mappings = new ArrayList<>();
     for (Arg arg : args) {
       List<ResultFlag> flags = new ArrayList<>();
       flags.add(ResultFlag.CONSTRUCTOR);
@@ -527,12 +530,16 @@ public class MapperAnnotationBuilder {
           nullOrEmpty(arg.column()), arg.javaType() == void.class ? null : arg.javaType(),
           arg.jdbcType() == JdbcType.UNDEFINED ? null : arg.jdbcType(), nullOrEmpty(arg.select()),
           nullOrEmpty(arg.resultMap()), null, nullOrEmpty(arg.columnPrefix()), typeHandler, flags, null, null, false);
-      resultMappings.add(resultMapping);
+      mappings.add(resultMapping);
     }
+
+    final ResultMappingConstructorResolver resolver = new ResultMappingConstructorResolver(configuration, mappings,
+        resultType, resultMapId);
+    resultMappings.addAll(resolver.resolveWithConstructor());
   }
 
   private String nullOrEmpty(String value) {
-    return value == null || value.trim().length() == 0 ? null : value;
+    return value == null || value.trim().isEmpty() ? null : value;
   }
 
   private KeyGenerator handleSelectKeyAnnotation(SelectKey selectKeyAnnotation, String baseStatementId,
