@@ -36,7 +36,7 @@ class ResultMappingTest {
 
   // Issue 4: column is mandatory on nested queries
   @Test
-  void shouldFailWithAMissingColumnInNetstedSelect() {
+  void shouldFailWithAMissingColumnInNestedSelect() {
     Assertions.assertThrows(IllegalStateException.class,
         () -> new ResultMapping.Builder(configuration, "prop").nestedQueryId("nested query ID").build());
   }
