@@ -26,11 +26,11 @@ public interface Mapper1 {
   String SELECT_SQL = "select a.id, a.name, a.type from account a where a.id = #{id}";
   String SELECT_WITH_DOB_SQL = "select id, name, type, date '2025-01-05' dob from account where id = #{id}";
 
-  @ConstructorArgs({ @Arg(column = "id"), @Arg(column = "name"), @Arg(column = "type")})
+  @ConstructorArgs({ @Arg(column = "id"), @Arg(column = "name"), @Arg(column = "type") })
   @Select(SELECT_SQL)
   Account getAccountJavaTypesMissing(long id);
 
-  @ConstructorArgs({ @Arg(column = "id"), @Arg(column = "name", javaType = String.class), @Arg(column = "type")})
+  @ConstructorArgs({ @Arg(column = "id"), @Arg(column = "name", javaType = String.class), @Arg(column = "type") })
   @Select(SELECT_SQL)
   Account3 getAccountPartialTypesProvided(long id);
 

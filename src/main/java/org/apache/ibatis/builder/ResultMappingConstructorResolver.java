@@ -103,7 +103,7 @@ public class ResultMappingConstructorResolver {
         .filter(Objects::nonNull).collect(Collectors.toCollection(LinkedHashSet::new));
 
     // arg order can only be 'fixed' if all mappings have property names
-    final boolean allMappingsHavePropertyNames = constructorResultMappings.size() == constructorArgsByName.size();
+    final boolean allMappingsHavePropertyNames = verifyPropertyNaming(constructorArgsByName);
 
     // only do this if all property mappings were set
     if (allMappingsHavePropertyNames) {
@@ -145,6 +145,19 @@ public class ResultMappingConstructorResolver {
     }
 
     return resultMappings;
+  }
+
+  private boolean verifyPropertyNaming(Set<String> constructorArgsByName) {
+    final boolean allMappingsHavePropertyNames = constructorResultMappings.size() == constructorArgsByName.size();
+
+    // If property names have been partially specified, throw an exception, as this case does not make sense
+    // either specify all names and (optional random order), or type info.
+    if (!allMappingsHavePropertyNames && !constructorArgsByName.isEmpty()) {
+      throw new BuilderException("Error in result map '" + resultMapId
+          + "'. We do not support partially specifying a property name. Either specify all property names, or none.");
+    }
+
+    return allMappingsHavePropertyNames;
   }
 
   List<ConstructorMetaInfo> retrieveConstructorCandidates(int withLength) {

@@ -177,18 +177,16 @@ class ResultMappingConstructorResolverTest {
   }
 
   @Test
-  void testCanResolveWithMissingPropertyNameAndPartialTypeInfo() {
+  void testThrowExceptionWithPartialPropertyNameSpecified() {
     ResultMapping mappingA = createConstructorMappingFor(Object.class, "a", "a");
     ResultMapping mappingB = createConstructorMappingFor(Object.class, null, "b");
     ResultMapping mappingC = createConstructorMappingFor(LocalDate.class, null, "c");
-    ResultMapping[] constructorMappings = new ResultMapping[] { mappingA, mappingB, mappingC };
 
-    final ResultMappingConstructorResolver resolver = createResolverFor(ResultType1.class, TEST_ID,
-        constructorMappings);
-    final List<ResultMapping> mappingList = resolver.resolveWithConstructor();
+    final ResultMappingConstructorResolver resolver = createResolverFor(ResultType1.class, TEST_ID, mappingA, mappingB,
+        mappingC);
 
-    assertThat(mappingList).extracting(ResultMapping::getProperty, mapping -> mapping.getJavaType().getSimpleName())
-        .containsExactly(tuple("a", "long"), tuple(null, "String"), tuple(null, "LocalDate"));
+    assertThatThrownBy(resolver::resolveWithConstructor).isInstanceOf(BuilderException.class)
+        .hasMessageContaining("Either specify all property names, or none.");
   }
 
   @Test
