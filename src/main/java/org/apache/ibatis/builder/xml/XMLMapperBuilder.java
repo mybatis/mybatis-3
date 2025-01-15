@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -57,6 +57,7 @@ public class XMLMapperBuilder extends BaseBuilder {
   private final MapperBuilderAssistant builderAssistant;
   private final Map<String, XNode> sqlFragments;
   private final String resource;
+  private Class<?> mapperClass;
 
   @Deprecated
   public XMLMapperBuilder(Reader reader, Configuration configuration, String resource, Map<String, XNode> sqlFragments,
@@ -70,6 +71,12 @@ public class XMLMapperBuilder extends BaseBuilder {
       Map<String, XNode> sqlFragments) {
     this(new XPathParser(reader, true, configuration.getVariables(), new XMLMapperEntityResolver()), configuration,
         resource, sqlFragments);
+  }
+
+  public XMLMapperBuilder(InputStream inputStream, Configuration configuration, String resource,
+      Map<String, XNode> sqlFragments, Class<?> mapperClass) {
+    this(inputStream, configuration, resource, sqlFragments, mapperClass.getName());
+    this.mapperClass = mapperClass;
   }
 
   public XMLMapperBuilder(InputStream inputStream, Configuration configuration, String resource,
@@ -136,7 +143,7 @@ public class XMLMapperBuilder extends BaseBuilder {
   private void buildStatementFromContext(List<XNode> list, String requiredDatabaseId) {
     for (XNode context : list) {
       final XMLStatementBuilder statementParser = new XMLStatementBuilder(configuration, builderAssistant, context,
-          requiredDatabaseId);
+          requiredDatabaseId, mapperClass);
       try {
         statementParser.parseStatementNode();
       } catch (IncompleteElementException e) {
