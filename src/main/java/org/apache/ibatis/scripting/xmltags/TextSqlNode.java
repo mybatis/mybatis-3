@@ -42,7 +42,12 @@ public class TextSqlNode implements SqlNode {
     DynamicCheckerTokenParser checker = new DynamicCheckerTokenParser();
     GenericTokenParser parser = createParser(checker);
     parser.parse(text);
-    return checker.isDynamic();
+		if (checker.isDynamic) return true;
+
+		// Use regularity to determine whether the string of in (#{xxx}) is contained in sql, and if so, process it as dynamic sql
+		Pattern pattern = Pattern.compile("\\s+in\\s+\\(\\s*#\\{\\s*\\S+\\s*\\}\\s*\\)", Pattern.CASE_INSENSITIVE);
+		Matcher matcher = pattern.matcher(text);
+		return matcher.find();
   }
 
   @Override
