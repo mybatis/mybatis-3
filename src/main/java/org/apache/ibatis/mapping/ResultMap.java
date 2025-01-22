@@ -110,7 +110,7 @@ public class ResultMap {
         if (property != null) {
           resultMap.mappedProperties.add(property);
         }
-        if (resultMapping.getFlags().contains(ResultFlag.CONSTRUCTOR)) {
+        if (ResultFlag.containsConstructor(resultMapping.getFlags())) {
           resultMap.constructorResultMappings.add(resultMapping);
 
           // #101
@@ -125,7 +125,7 @@ public class ResultMap {
         } else {
           resultMap.propertyResultMappings.add(resultMapping);
         }
-        if (resultMapping.getFlags().contains(ResultFlag.ID)) {
+        if (ResultFlag.containsId(resultMapping.getFlags())) {
           resultMap.idResultMappings.add(resultMapping);
         }
       }

@@ -218,12 +218,7 @@ final class ExecutorTestHelper {
                   private static final long serialVersionUID = 1L;
                   {
                     add(new ResultMapping.Builder(config, null, "id", registry.getTypeHandler(Integer.class))
-                        .javaType(int.class).flags(new ArrayList<ResultFlag>() {
-                          private static final long serialVersionUID = 1L;
-                          {
-                            add(ResultFlag.CONSTRUCTOR);
-                          }
-                        }).build());
+                        .javaType(int.class).flags(ResultFlag.CONSTRUCTOR).build());
                     add(new ResultMapping.Builder(config, "username", "username", registry.getTypeHandler(String.class))
                         .build());
                     add(new ResultMapping.Builder(config, "password", "password", registry.getTypeHandler(String.class))
@@ -397,13 +392,8 @@ final class ExecutorTestHelper {
         new ArrayList<ResultMapping>() {
           private static final long serialVersionUID = 1L;
           {
-            add(new ResultMapping.Builder(config, "id", "id", registry.getTypeHandler(int.class))
-                .flags(new ArrayList<ResultFlag>() {
-                  private static final long serialVersionUID = 1L;
-                  {
-                    add(ResultFlag.ID);
-                  }
-                }).build());
+            add(new ResultMapping.Builder(config, "id", "id", registry.getTypeHandler(int.class)).flags(ResultFlag.ID)
+                .build());
             add(new ResultMapping.Builder(config, "title", "title", registry.getTypeHandler(String.class)).build());
             add(new ResultMapping.Builder(config, "author.id", "author_id", registry.getTypeHandler(int.class))
                 .build());
@@ -454,13 +444,8 @@ final class ExecutorTestHelper {
         new ArrayList<ResultMapping>() {
           private static final long serialVersionUID = 1L;
           {
-            add(new ResultMapping.Builder(config, "id", "id", registry.getTypeHandler(int.class))
-                .flags(new ArrayList<ResultFlag>() {
-                  private static final long serialVersionUID = 1L;
-                  {
-                    add(ResultFlag.ID);
-                  }
-                }).build());
+            add(new ResultMapping.Builder(config, "id", "id", registry.getTypeHandler(int.class)).flags(ResultFlag.ID)
+                .build());
             add(new ResultMapping.Builder(config, "title", "title", registry.getTypeHandler(String.class)).build());
             add(new ResultMapping.Builder(config, "author.id", "author_id", registry.getTypeHandler(int.class))
                 .build());
@@ -518,12 +503,7 @@ final class ExecutorTestHelper {
           private static final long serialVersionUID = 1L;
           {
             add(new ResultMapping.Builder(config, "id", "tag_id", registry.getTypeHandler(int.class))
-                .flags(new ArrayList<ResultFlag>() {
-                  private static final long serialVersionUID = 1L;
-                  {
-                    add(ResultFlag.ID);
-                  }
-                }).build());
+                .flags(ResultFlag.ID).build());
             add(new ResultMapping.Builder(config, "name", "tag_name", registry.getTypeHandler(String.class)).build());
           }
         }).build();
@@ -532,12 +512,7 @@ final class ExecutorTestHelper {
           private static final long serialVersionUID = 1L;
           {
             add(new ResultMapping.Builder(config, "id", "comment_id", registry.getTypeHandler(int.class))
-                .flags(new ArrayList<ResultFlag>() {
-                  private static final long serialVersionUID = 1L;
-                  {
-                    add(ResultFlag.ID);
-                  }
-                }).build());
+                .flags(ResultFlag.ID).build());
             add(new ResultMapping.Builder(config, "name", "comment_name", registry.getTypeHandler(String.class))
                 .build());
             add(new ResultMapping.Builder(config, "comment", "comment", registry.getTypeHandler(String.class)).build());
@@ -549,13 +524,8 @@ final class ExecutorTestHelper {
         new ArrayList<ResultMapping>() {
           private static final long serialVersionUID = 1L;
           {
-            add(new ResultMapping.Builder(config, "id", "id", registry.getTypeHandler(int.class))
-                .flags(new ArrayList<ResultFlag>() {
-                  private static final long serialVersionUID = 1L;
-                  {
-                    add(ResultFlag.ID);
-                  }
-                }).build());
+            add(new ResultMapping.Builder(config, "id", "id", registry.getTypeHandler(int.class)).flags(ResultFlag.ID)
+                .build());
             add(new ResultMapping.Builder(config, "blog", "blog_id", registry.getTypeHandler(int.class))
                 .javaType(Blog.class).nestedQueryId("selectBlogById").build());
             add(new ResultMapping.Builder(config, "createdOn", "created_on", registry.getTypeHandler(Date.class))
@@ -609,12 +579,7 @@ final class ExecutorTestHelper {
           private static final long serialVersionUID = 1L;
           {
             add(new ResultMapping.Builder(config, "id", "tag_id", registry.getTypeHandler(int.class))
-                .flags(new ArrayList<ResultFlag>() {
-                  private static final long serialVersionUID = 1L;
-                  {
-                    add(ResultFlag.ID);
-                  }
-                }).build());
+                .flags(ResultFlag.ID).build());
             add(new ResultMapping.Builder(config, "name", "tag_name", registry.getTypeHandler(String.class)).build());
           }
         }).build();
@@ -623,12 +588,7 @@ final class ExecutorTestHelper {
           private static final long serialVersionUID = 1L;
           {
             add(new ResultMapping.Builder(config, "id", "comment_id", registry.getTypeHandler(int.class))
-                .flags(new ArrayList<ResultFlag>() {
-                  private static final long serialVersionUID = 1L;
-                  {
-                    add(ResultFlag.ID);
-                  }
-                }).build());
+                .flags(ResultFlag.ID).build());
             add(new ResultMapping.Builder(config, "name", "comment_name", registry.getTypeHandler(String.class))
                 .build());
             add(new ResultMapping.Builder(config, "comment", "comment", registry.getTypeHandler(String.class)).build());
@@ -639,13 +599,8 @@ final class ExecutorTestHelper {
     final ResultMap postResultMap = new ResultMap.Builder(config, "", Post.class, new ArrayList<ResultMapping>() {
       private static final long serialVersionUID = 1L;
       {
-        add(new ResultMapping.Builder(config, "id", "id", registry.getTypeHandler(int.class))
-            .flags(new ArrayList<ResultFlag>() {
-              private static final long serialVersionUID = 1L;
-              {
-                add(ResultFlag.ID);
-              }
-            }).build());
+        add(new ResultMapping.Builder(config, "id", "id", registry.getTypeHandler(int.class)).flags(ResultFlag.ID)
+            .build());
         add(new ResultMapping.Builder(config, "blog", "blog_id", registry.getTypeHandler(int.class))
             .javaType(Blog.class).nestedQueryId("selectBlogById").build());
         add(new ResultMapping.Builder(config, "createdOn", "created_on", registry.getTypeHandler(Date.class)).build());
@@ -699,12 +654,7 @@ final class ExecutorTestHelper {
           private static final long serialVersionUID = 1L;
           {
             add(new ResultMapping.Builder(config, "id", "tag_id", registry.getTypeHandler(int.class))
-                .flags(new ArrayList<ResultFlag>() {
-                  private static final long serialVersionUID = 1L;
-                  {
-                    add(ResultFlag.ID);
-                  }
-                }).build());
+                .flags(ResultFlag.ID).build());
             add(new ResultMapping.Builder(config, "name", "tag_name", registry.getTypeHandler(String.class)).build());
           }
         }).build();
@@ -713,12 +663,7 @@ final class ExecutorTestHelper {
           private static final long serialVersionUID = 1L;
           {
             add(new ResultMapping.Builder(config, "id", "comment_id", registry.getTypeHandler(int.class))
-                .flags(new ArrayList<ResultFlag>() {
-                  private static final long serialVersionUID = 1L;
-                  {
-                    add(ResultFlag.ID);
-                  }
-                }).build());
+                .flags(ResultFlag.ID).build());
             add(new ResultMapping.Builder(config, "name", "comment_name", registry.getTypeHandler(String.class))
                 .build());
             add(new ResultMapping.Builder(config, "comment", "comment", registry.getTypeHandler(String.class)).build());
@@ -730,13 +675,8 @@ final class ExecutorTestHelper {
         new ArrayList<ResultMapping>() {
           private static final long serialVersionUID = 1L;
           {
-            add(new ResultMapping.Builder(config, "id", "id", registry.getTypeHandler(int.class))
-                .flags(new ArrayList<ResultFlag>() {
-                  private static final long serialVersionUID = 1L;
-                  {
-                    add(ResultFlag.ID);
-                  }
-                }).build());
+            add(new ResultMapping.Builder(config, "id", "id", registry.getTypeHandler(int.class)).flags(ResultFlag.ID)
+                .build());
 
             add(new ResultMapping.Builder(config, "blog").nestedQueryId("selectBlogByIdAndAuthor")
                 .composites(new ArrayList<ResultMapping>() {

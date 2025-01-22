@@ -40,7 +40,7 @@ public class ResultMapping {
   private String nestedQueryId;
   private Set<String> notNullColumns;
   private String columnPrefix;
-  private List<ResultFlag> flags;
+  private byte flags;
   private List<ResultMapping> composites;
   private String resultSet;
   private String foreignColumn;
@@ -67,7 +67,7 @@ public class ResultMapping {
     public Builder(Configuration configuration, String property) {
       resultMapping.configuration = configuration;
       resultMapping.property = property;
-      resultMapping.flags = new ArrayList<>();
+      resultMapping.flags = ResultFlag.NO_FLAG;
       resultMapping.composites = new ArrayList<>();
       resultMapping.lazy = configuration.isLazyLoadingEnabled();
     }
@@ -112,7 +112,7 @@ public class ResultMapping {
       return this;
     }
 
-    public Builder flags(List<ResultFlag> flags) {
+    public Builder flags(byte flags) {
       resultMapping.flags = flags;
       return this;
     }
@@ -134,7 +134,6 @@ public class ResultMapping {
 
     public ResultMapping build() {
       // lock down collections
-      resultMapping.flags = Collections.unmodifiableList(resultMapping.flags);
       resultMapping.composites = Collections.unmodifiableList(resultMapping.composites);
       resolveTypeHandler();
       validate();
@@ -223,7 +222,7 @@ public class ResultMapping {
     return columnPrefix;
   }
 
-  public List<ResultFlag> getFlags() {
+  public byte getFlags() {
     return flags;
   }
 
