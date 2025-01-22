@@ -16,6 +16,7 @@
 package org.apache.ibatis.mapping;
 
 import java.sql.ResultSet;
+import java.util.Optional;
 
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
@@ -37,9 +38,40 @@ public class ParameterMapping {
   private TypeHandler<?> typeHandler;
   private String resultMapId;
   private String jdbcTypeName;
+  private LikeEnum like;
   private String expression;
 
   private ParameterMapping() {
+  }
+
+  public enum LikeEnum {
+
+    NONE,
+
+    LEFT {
+      @Override
+      public String format(String source) {
+        return "%" + source;
+      }
+    },
+
+    RIGHT {
+      @Override
+      public String format(String source) {
+        return source + "%";
+      }
+    },
+
+    ALL {
+      @Override
+      public String format(String source) {
+        return RIGHT.format(LEFT.format(source));
+      }
+    };
+
+    public String format(String source) {
+      return source;
+    }
   }
 
   public static class Builder {
@@ -91,6 +123,18 @@ public class ParameterMapping {
 
     public Builder jdbcTypeName(String jdbcTypeName) {
       parameterMapping.jdbcTypeName = jdbcTypeName;
+      return this;
+    }
+
+    public Builder like(String likeMode) {
+      LikeEnum likeEnum = null;
+      for (LikeEnum value : LikeEnum.values()) {
+        if (value.name().equalsIgnoreCase(likeMode)) {
+          likeEnum = value;
+          break;
+        }
+      }
+      parameterMapping.like = Optional.ofNullable(likeEnum).orElse(LikeEnum.NONE);
       return this;
     }
 
@@ -197,6 +241,15 @@ public class ParameterMapping {
   }
 
   /**
+   * Used for handling concat parameter with %.
+   *
+   * @return like pattern
+   */
+  public LikeEnum getLike() {
+    return like;
+  }
+
+  /**
    * Expression 'Not used'.
    *
    * @return the expression
@@ -217,6 +270,7 @@ public class ParameterMapping {
     // sb.append(", typeHandler=").append(typeHandler); // typeHandler also doesn't have a useful .toString()
     sb.append(", resultMapId='").append(resultMapId).append('\'');
     sb.append(", jdbcTypeName='").append(jdbcTypeName).append('\'');
+    sb.append(", like='").append(like).append('\'');
     sb.append(", expression='").append(expression).append('\'');
     sb.append('}');
     return sb.toString();

@@ -86,6 +86,9 @@ public class DefaultParameterHandler implements ParameterHandler {
           if (value == null && jdbcType == null) {
             jdbcType = configuration.getJdbcTypeForNull();
           }
+          if (parameterMapping.getLike() != null && value instanceof String) {
+            value = parameterMapping.getLike().format((String) value);
+          }
           try {
             typeHandler.setParameter(ps, i + 1, value, jdbcType);
           } catch (TypeException | SQLException e) {

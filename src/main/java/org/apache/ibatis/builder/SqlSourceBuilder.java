@@ -35,7 +35,7 @@ import org.apache.ibatis.type.JdbcType;
  */
 public class SqlSourceBuilder extends BaseBuilder {
 
-  private static final String PARAMETER_PROPERTIES = "javaType,jdbcType,mode,numericScale,resultMap,typeHandler,jdbcTypeName";
+  private static final String PARAMETER_PROPERTIES = "javaType,jdbcType,mode,numericScale,resultMap,typeHandler,jdbcTypeName,like";
 
   public SqlSourceBuilder(Configuration configuration) {
     super(configuration);
@@ -132,6 +132,8 @@ public class SqlSourceBuilder extends BaseBuilder {
           typeHandlerAlias = value;
         } else if ("jdbcTypeName".equals(name)) {
           builder.jdbcTypeName(value);
+        } else if ("like".equals(name)) {
+          builder.like(value);
         } else if ("property".equals(name)) {
           // Do Nothing
         } else if ("expression".equals(name)) {
