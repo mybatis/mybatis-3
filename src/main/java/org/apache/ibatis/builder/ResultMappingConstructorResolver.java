@@ -98,6 +98,10 @@ public class ResultMappingConstructorResolver {
     final List<ConstructorMetaInfo> matchingConstructorCandidates = retrieveConstructorCandidates(
         constructorResultMappings.size());
 
+    if (matchingConstructorCandidates.isEmpty()) {
+      return constructorResultMappings;
+    }
+
     // extract the property names we have
     final Set<String> constructorArgsByName = constructorResultMappings.stream().map(ResultMapping::getProperty)
         .filter(Objects::nonNull).collect(Collectors.toCollection(LinkedHashSet::new));
@@ -123,11 +127,9 @@ public class ResultMappingConstructorResolver {
             + ". Note that 'javaType' is required when there is ambiguous constructors or there is no writable property with the same name ('name' is optional, BTW). There is more info in the debug log.");
       } else {
         if (log.isDebugEnabled()) {
-          log.debug("Constructor for '" + resultMapId
-              + "' could not be resolved, continuing, but this may result in a mapping exception later");
+          log.debug("Constructor for '" + resultMapId + "' could not be resolved.");
         }
-        // return un-modified original mappings (maybe have this as a config flag, as this will result in a runtime
-        // exception eventually
+        // return un-modified original mappings
         return constructorResultMappings;
       }
     }
