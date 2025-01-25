@@ -72,12 +72,13 @@
 
     <clirr.comparisonVersion>3.4.6</clirr.comparisonVersion>
 
-    <byte-buddy.version>1.15.11</byte-buddy.version>
+    <byte-buddy.version>1.16.1</byte-buddy.version>
     <derby.version>10.17.1.0</derby.version>
     <log4j.version>2.24.3</log4j.version>
     <mockito.version>5.15.2</mockito.version>
     <mssql-jdbc.version>12.8.1.jre11</mssql-jdbc.version>
     <testcontainers.version>1.20.4</testcontainers.version>
+    <git-build-hook.version>3.5.0</git-build-hook.version>
 
     <!-- Add slow test groups here and annotate classes similar to @Tag('groupName'). -->
     <!-- Excluded groups are ran on github ci, to force here, pass -d"excludedGroups=" -->
@@ -106,7 +107,7 @@
     <dependency>
       <groupId>ognl</groupId>
       <artifactId>ognl</artifactId>
-      <version>3.4.4</version>
+      <version>3.4.5</version>
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
@@ -195,19 +196,25 @@
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <version>42.7.4</version>
+      <version>42.7.5</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.mysql</groupId>
       <artifactId>mysql-connector-j</artifactId>
-      <version>9.1.0</version>
+      <version>9.2.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.oracle.database.jdbc</groupId>
+      <artifactId>ojdbc11</artifactId>
+      <version>23.6.0.24.10</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>3.27.1</version>
+      <version>3.27.3</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -254,6 +261,12 @@
       <version>${testcontainers.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>oracle-free</artifactId>
+      <version>${testcontainers.version}</version>
+      <scope>test</scope>
+    </dependency>
     <!-- For javadoc link -->
     <dependency>
       <groupId>com.microsoft.sqlserver</groupId>
@@ -292,7 +305,7 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.5.15</version>
+      <version>1.5.16</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -418,6 +431,24 @@
             </enforceBytecodeVersion>
           </rules>
         </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>com.rudikershaw.gitbuildhook</groupId>
+        <artifactId>git-build-hook-maven-plugin</artifactId>
+        <version>${git-build-hook.version}</version>
+        <configuration>
+          <installHooks>
+            <pre-commit>hooks/pre-commit.sh</pre-commit>
+          </installHooks>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>install</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

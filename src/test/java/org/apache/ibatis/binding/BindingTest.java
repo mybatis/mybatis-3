@@ -29,7 +29,6 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -63,7 +62,6 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -625,7 +623,7 @@ class BindingTest {
   void shouldGetBlogsWithAuthorsAndPosts() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      List<Blog> blogs = mapper.selectBlogsWithAutorAndPosts();
+      List<Blog> blogs = mapper.selectBlogsWithAuthorAndPosts();
       assertEquals(2, blogs.size());
       assertTrue(blogs.get(0) instanceof Proxy);
       assertEquals(101, blogs.get(0).getAuthor().getId());
@@ -642,7 +640,7 @@ class BindingTest {
   void shouldGetBlogsWithAuthorsAndPostsEagerly() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      List<Blog> blogs = mapper.selectBlogsWithAutorAndPostsEagerly();
+      List<Blog> blogs = mapper.selectBlogsWithAuthorAndPostsEagerly();
       assertEquals(2, blogs.size());
       assertFalse(blogs.get(0) instanceof Factory);
       assertEquals(101, blogs.get(0).getAuthor().getId());
@@ -690,8 +688,6 @@ class BindingTest {
         assertEquals(2, blog.getId());
         assertFalse(blogIterator.hasNext());
       }
-    } catch (IOException e) {
-      Assertions.fail(e.getMessage());
     }
   }
 

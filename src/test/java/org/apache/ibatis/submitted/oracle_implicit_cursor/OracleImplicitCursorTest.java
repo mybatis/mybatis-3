@@ -13,28 +13,27 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.cursor_simple;
+package org.apache.ibatis.submitted.oracle_implicit_cursor;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
-import java.util.Iterator;
+import java.util.List;
+import java.util.function.Function;
 
 import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.apache.ibatis.testcontainers.PgContainer;
+import org.apache.ibatis.testcontainers.OracleTestContainer;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 @Tag("TestcontainersTests")
-class PostgresCursorTest {
+class OracleImplicitCursorTest {
 
   private static SqlSessionFactory sqlSessionFactory;
 
@@ -42,34 +41,38 @@ class PostgresCursorTest {
   static void setUp() throws Exception {
     Configuration configuration = new Configuration();
     Environment environment = new Environment("development", new JdbcTransactionFactory(),
-        PgContainer.getUnpooledDataSource());
+        OracleTestContainer.getUnpooledDataSource());
     configuration.setEnvironment(environment);
     configuration.addMapper(Mapper.class);
     sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-        "org/apache/ibatis/submitted/cursor_simple/CreateDB.sql");
+        "org/apache/ibatis/submitted/oracle_implicit_cursor/CreateDB.sql");
   }
 
   @Test
-  void shouldBeAbleToReuseStatement() {
-    // #1351
-    try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.REUSE)) {
+  void shouldImplicitCursors_Statement() {
+    doTest(Mapper::selectImplicitCursors_Statement);
+  }
+
+  @Test
+  void shouldImplicitCursors_Prepared() {
+    doTest(Mapper::selectImplicitCursors_Prepared);
+  }
+
+  @Test
+  void shouldImplicitCursors_Callable() {
+    doTest(Mapper::selectImplicitCursors_Callable);
+  }
+
+  private void doTest(Function<Mapper, List<Author>> query) {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      {
-        Cursor<User> usersCursor = mapper.getAllUsers();
-        Iterator<User> iterator = usersCursor.iterator();
-        User user = iterator.next();
-        assertEquals("User1", user.getName());
-        usersCursor.close();
-      }
-      {
-        Cursor<User> usersCursor = mapper.getAllUsers();
-        Iterator<User> iterator = usersCursor.iterator();
-        User user = iterator.next();
-        assertEquals("User1", user.getName());
-        usersCursor.close();
-      }
+      List<Author> authors = query.apply(mapper);
+      assertIterableEquals(
+          List.of(new Author(1, "John", List.of(new Book(1, "C#"), new Book(2, "Python"), new Book(5, "Ruby"))),
+              new Author(2, "Jane", List.of(new Book(3, "SQL"), new Book(4, "Java")))),
+          authors);
     }
   }
 }

@@ -17,33 +17,41 @@ package org.apache.ibatis.testcontainers;
 
 import javax.sql.DataSource;
 
+import org.apache.ibatis.datasource.pooled.PooledDataSource;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.utility.DockerImageName;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.oracle.OracleContainer;
 
-public final class PgContainer {
+@Testcontainers
+public final class OracleTestContainer {
 
   private static final String DB_NAME = "mybatis_test";
   private static final String USERNAME = "u";
   private static final String PASSWORD = "p";
-  private static final String DRIVER = "org.postgresql.Driver";
+  private static final String DRIVER = "oracle.jdbc.driver.OracleDriver";
 
-  private static final PostgreSQLContainer<?> INSTANCE = initContainer();
+  @Container
+  private static final OracleContainer INSTANCE = initContainer();
 
-  private static PostgreSQLContainer<?> initContainer() {
+  private static OracleContainer initContainer() {
     @SuppressWarnings("resource")
-    PostgreSQLContainer<?> container = new PostgreSQLContainer<>(
-        DockerImageName.parse("postgres").withTag(PostgreSQLContainer.DEFAULT_TAG)).withDatabaseName(DB_NAME)
-            .withUsername(USERNAME).withPassword(PASSWORD);
+    var container = new OracleContainer("gvenzl/oracle-free:slim-faststart").withDatabaseName(DB_NAME)
+        .withUsername(USERNAME).withPassword(PASSWORD);
     container.start();
     return container;
   }
 
   public static DataSource getUnpooledDataSource() {
-    return new UnpooledDataSource(PgContainer.DRIVER, INSTANCE.getJdbcUrl(), PgContainer.USERNAME,
-        PgContainer.PASSWORD);
+    return new UnpooledDataSource(OracleTestContainer.DRIVER, INSTANCE.getJdbcUrl(), OracleTestContainer.USERNAME,
+        OracleTestContainer.PASSWORD);
   }
 
-  private PgContainer() {
+  public static PooledDataSource getPooledDataSource() {
+    return new PooledDataSource(OracleTestContainer.DRIVER, INSTANCE.getJdbcUrl(), OracleTestContainer.USERNAME,
+        OracleTestContainer.PASSWORD);
+  }
+
+  private OracleTestContainer() {
   }
 }

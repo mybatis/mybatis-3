@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -93,9 +93,6 @@ class DefaultResultSetHandlerTest2 {
     when(rsmd.getColumnLabel(1)).thenReturn("id");
     when(rsmd.getColumnType(1)).thenReturn(Types.INTEGER);
     when(rsmd.getColumnClassName(1)).thenReturn(Integer.class.getCanonicalName());
-    when(stmt.getConnection()).thenReturn(conn);
-    when(conn.getMetaData()).thenReturn(dbmd);
-    when(dbmd.supportsMultipleResultSets()).thenReturn(false); // for simplicity.
 
     final List<Object> results = resultSetHandler.handleResultSets(stmt);
     assertEquals(0, results.size());

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,33 +13,16 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.collection_in_constructor;
+package org.apache.ibatis.submitted.oracle_implicit_cursor;
 
 import java.util.List;
 
 public interface Mapper {
 
-  Store getAStore(Integer id);
+  List<Author> selectImplicitCursors_Statement();
 
-  List<Store> getStores();
+  List<Author> selectImplicitCursors_Prepared();
 
-  Store2 getAStore2(Integer id);
+  List<Author> selectImplicitCursors_Callable();
 
-  Store3 getAStore3(Integer id);
-
-  Store4 getAStore4(Integer id);
-
-  Store5 getAStore5(Integer id);
-
-  Store6 getAStore6(Integer id);
-
-  Store7 getAStore7(Integer id);
-
-  Store8 getAStore8(Integer id);
-
-  Container getAContainer();
-
-  List<Container1> getContainers();
-
-  List<Store10> getStores10();
 }

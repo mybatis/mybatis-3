@@ -247,34 +247,49 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   }
 
   private ResultSetWrapper getFirstResultSet(Statement stmt) throws SQLException {
-    ResultSet rs = stmt.getResultSet();
-    while (rs == null) {
-      // move forward to get the first resultset in case the driver
-      // doesn't return the resultset as the first result (HSQLDB)
-      if (stmt.getMoreResults()) {
-        rs = stmt.getResultSet();
-      } else if (stmt.getUpdateCount() == -1) {
-        // no more results. Must be no resultset
-        break;
-      }
+    ResultSet rs = null;
+    SQLException e1 = null;
+
+    try {
+      rs = stmt.getResultSet();
+    } catch (SQLException e) {
+      // Oracle throws ORA-17283 for implicit cursor
+      e1 = e;
     }
+
+    try {
+      while (rs == null) {
+        // move forward to get the first resultset in case the driver
+        // doesn't return the resultset as the first result (HSQLDB)
+        if (stmt.getMoreResults()) {
+          rs = stmt.getResultSet();
+        } else if (stmt.getUpdateCount() == -1) {
+          // no more results. Must be no resultset
+          break;
+        }
+      }
+    } catch (SQLException e) {
+      throw e1 != null ? e1 : e;
+    }
+
     return rs != null ? new ResultSetWrapper(rs, configuration) : null;
   }
 
   private ResultSetWrapper getNextResultSet(Statement stmt) {
     // Making this method tolerant of bad JDBC drivers
     try {
-      if (stmt.getConnection().getMetaData().supportsMultipleResultSets()) {
-        // Crazy Standard JDBC way of determining if there are more results
-        // DO NOT try to 'improve' the condition even if IDE tells you to!
-        // It's important that getUpdateCount() is called here.
-        if (!(!stmt.getMoreResults() && stmt.getUpdateCount() == -1)) {
-          ResultSet rs = stmt.getResultSet();
-          if (rs == null) {
-            return getNextResultSet(stmt);
-          } else {
-            return new ResultSetWrapper(rs, configuration);
-          }
+      // We stopped checking DatabaseMetaData#supportsMultipleResultSets()
+      // because Oracle driver (incorrectly) returns false
+
+      // Crazy Standard JDBC way of determining if there are more results
+      // DO NOT try to 'improve' the condition even if IDE tells you to!
+      // It's important that getUpdateCount() is called here.
+      if (!(!stmt.getMoreResults() && stmt.getUpdateCount() == -1)) {
+        ResultSet rs = stmt.getResultSet();
+        if (rs == null) {
+          return getNextResultSet(stmt);
+        } else {
+          return new ResultSetWrapper(rs, configuration);
         }
       }
     } catch (Exception e) {
