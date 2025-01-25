@@ -69,7 +69,7 @@ class JavassistProxyTest extends SerializableProxyTest {
   }
 
   @Test
-  void shouldSerizalizeADeserlizaliedProxy() throws Exception {
+  void shouldSerializeADeserializedProxy() throws Exception {
     Object proxy = ((JavassistProxyFactory) proxyFactory).createDeserializationProxy(author, new HashMap<>(),
         new DefaultObjectFactory(), new ArrayList<>(), new ArrayList<>());
     Author author2 = (Author) deserialize(serialize((Serializable) proxy));

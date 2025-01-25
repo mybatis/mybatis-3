@@ -10,6 +10,7 @@
 /release.properties
 /target
 .github/keys/
+.profiler/
 
 # These are needed if running in IDE without properties set
 /ibderby
