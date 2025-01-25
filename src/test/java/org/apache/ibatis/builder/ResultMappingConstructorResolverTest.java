@@ -190,6 +190,19 @@ class ResultMappingConstructorResolverTest {
   }
 
   @Test
+  void testThrowExceptionWithDuplicatedPropertyNames() {
+    ResultMapping mappingA = createConstructorMappingFor(Object.class, "a", "a");
+    ResultMapping mappingB = createConstructorMappingFor(Object.class, "a", "b");
+    ResultMapping mappingC = createConstructorMappingFor(LocalDate.class, "c", "c");
+
+    final ResultMappingConstructorResolver resolver = createResolverFor(ResultType1.class, TEST_ID, mappingA, mappingB,
+        mappingC);
+
+    assertThatThrownBy(resolver::resolveWithConstructor).isInstanceOf(BuilderException.class)
+        .hasMessageContaining("Either specify all property names, or none.");
+  }
+
+  @Test
   void testCanResolveWithMissingPropertyNameAndAllTypeInfo() {
     ResultMapping mappingA = createConstructorMappingFor(long.class, null, "a");
     ResultMapping mappingB = createConstructorMappingFor(String.class, null, "b");

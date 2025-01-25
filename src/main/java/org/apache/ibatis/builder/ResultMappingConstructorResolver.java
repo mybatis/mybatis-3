@@ -156,7 +156,7 @@ public class ResultMappingConstructorResolver {
     // either specify all names and (optional random order), or type info.
     if (!allMappingsHavePropertyNames && !constructorArgsByName.isEmpty()) {
       throw new BuilderException("Error in result map '" + resultMapId
-          + "'. We do not support partially specifying a property name. Either specify all property names, or none.");
+          + "'. We do not support partially specifying a property name nor duplicates. Either specify all property names, or none.");
     }
 
     return allMappingsHavePropertyNames;
