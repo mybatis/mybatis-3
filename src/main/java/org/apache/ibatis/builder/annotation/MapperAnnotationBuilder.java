@@ -63,6 +63,7 @@ import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.builder.CacheRefResolver;
 import org.apache.ibatis.builder.IncompleteElementException;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
+import org.apache.ibatis.builder.SqlInjector;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
@@ -106,7 +107,7 @@ public class MapperAnnotationBuilder {
 
   public MapperAnnotationBuilder(Configuration configuration, Class<?> type) {
     String resource = type.getName().replace('.', '/') + ".java (best guess)";
-    this.assistant = new MapperBuilderAssistant(configuration, resource);
+    this.assistant = configuration.getMapperBuilderAssistant(resource);
     this.configuration = configuration;
     this.type = type;
   }
@@ -132,6 +133,12 @@ public class MapperAnnotationBuilder {
         } catch (IncompleteElementException e) {
           configuration.addIncompleteMethod(new MethodResolver(this, method));
         }
+      }
+
+      // inject custom XML SQL scripts
+      SqlInjector sqlInjector = configuration.getSqlInjector();
+      if (null != sqlInjector) {
+        sqlInjector.inject(assistant, type);
       }
     }
     configuration.parsePendingMethods(false);

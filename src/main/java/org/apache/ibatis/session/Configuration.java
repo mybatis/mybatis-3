@@ -32,7 +32,9 @@ import java.util.function.BiFunction;
 import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.builder.CacheRefResolver;
 import org.apache.ibatis.builder.IncompleteElementException;
+import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.builder.ResultMapResolver;
+import org.apache.ibatis.builder.SqlInjector;
 import org.apache.ibatis.builder.annotation.MethodResolver;
 import org.apache.ibatis.builder.xml.XMLStatementBuilder;
 import org.apache.ibatis.cache.Cache;
@@ -274,6 +276,23 @@ public class Configuration {
    */
   public void setDefaultSqlProviderType(Class<?> defaultSqlProviderType) {
     this.defaultSqlProviderType = defaultSqlProviderType;
+  }
+
+  /**
+   * SqlInjector to provide subclass rewriting.
+   */
+  public SqlInjector getSqlInjector() {
+    return null;
+  }
+
+  /**
+   * Building MapperBuilderAssistant Cooperate with SQL Injector
+   *
+   * @param resource the resource path
+   * @return {@link MapperBuilderAssistant}
+   */
+  public MapperBuilderAssistant getMapperBuilderAssistant(String resource) {
+    return new MapperBuilderAssistant(this, resource);
   }
 
   public boolean isCallSettersOnNulls() {
