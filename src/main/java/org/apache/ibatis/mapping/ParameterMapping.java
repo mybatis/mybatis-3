@@ -27,6 +27,7 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
  */
 public class ParameterMapping {
 
+  private static Object UNSET = new Object();
   private Configuration configuration;
 
   private String property;
@@ -38,8 +39,7 @@ public class ParameterMapping {
   private String resultMapId;
   private String jdbcTypeName;
   private String expression;
-  private Object value;
-  private boolean hasValue;
+  private Object value = UNSET;
 
   private ParameterMapping() {
   }
@@ -103,7 +103,6 @@ public class ParameterMapping {
 
     public Builder value(Object value) {
       parameterMapping.value = value;
-      parameterMapping.hasValue = true;
       return this;
     }
 
@@ -218,7 +217,7 @@ public class ParameterMapping {
   }
 
   public boolean hasValue() {
-    return hasValue;
+    return value != UNSET;
   }
 
   @Override
