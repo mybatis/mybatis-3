@@ -72,6 +72,25 @@ public class ResultMapping {
       resultMapping.lazy = configuration.isLazyLoadingEnabled();
     }
 
+    public Builder(ResultMapping otherMapping) {
+      this(otherMapping.configuration, otherMapping.property);
+
+      resultMapping.flags.addAll(otherMapping.flags);
+      resultMapping.composites.addAll(otherMapping.composites);
+
+      resultMapping.column = otherMapping.column;
+      resultMapping.javaType = otherMapping.javaType;
+      resultMapping.jdbcType = otherMapping.jdbcType;
+      resultMapping.typeHandler = otherMapping.typeHandler;
+      resultMapping.nestedResultMapId = otherMapping.nestedResultMapId;
+      resultMapping.nestedQueryId = otherMapping.nestedQueryId;
+      resultMapping.notNullColumns = otherMapping.notNullColumns;
+      resultMapping.columnPrefix = otherMapping.columnPrefix;
+      resultMapping.resultSet = otherMapping.resultSet;
+      resultMapping.foreignColumn = otherMapping.foreignColumn;
+      resultMapping.lazy = otherMapping.lazy;
+    }
+
     public Builder javaType(Class<?> javaType) {
       resultMapping.javaType = javaType;
       return this;
@@ -243,6 +262,7 @@ public class ResultMapping {
     return foreignColumn;
   }
 
+  @Deprecated
   public void setForeignColumn(String foreignColumn) {
     this.foreignColumn = foreignColumn;
   }
@@ -251,6 +271,7 @@ public class ResultMapping {
     return lazy;
   }
 
+  @Deprecated
   public void setLazy(boolean lazy) {
     this.lazy = lazy;
   }
