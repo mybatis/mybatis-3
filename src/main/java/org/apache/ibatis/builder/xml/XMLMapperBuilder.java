@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import org.apache.ibatis.builder.CacheRefResolver;
 import org.apache.ibatis.builder.IncompleteElementException;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.builder.ResultMapResolver;
+import org.apache.ibatis.builder.ResultMappingConstructorResolver;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.io.Resources;
@@ -223,12 +224,17 @@ public class XMLMapperBuilder extends BaseBuilder {
     if (typeClass == null) {
       typeClass = inheritEnclosingType(resultMapNode, enclosingType);
     }
+
+    String id = resultMapNode.getStringAttribute("id", resultMapNode::getValueBasedIdentifier);
+    String extend = resultMapNode.getStringAttribute("extends");
+    Boolean autoMapping = resultMapNode.getBooleanAttribute("autoMapping");
+
     Discriminator discriminator = null;
     List<ResultMapping> resultMappings = new ArrayList<>(additionalResultMappings);
     List<XNode> resultChildren = resultMapNode.getChildren();
     for (XNode resultChild : resultChildren) {
       if ("constructor".equals(resultChild.getName())) {
-        processConstructorElement(resultChild, typeClass, resultMappings);
+        processConstructorElement(resultChild, typeClass, resultMappings, id);
       } else if ("discriminator".equals(resultChild.getName())) {
         discriminator = processDiscriminatorElement(resultChild, typeClass, resultMappings);
       } else {
@@ -239,9 +245,7 @@ public class XMLMapperBuilder extends BaseBuilder {
         resultMappings.add(buildResultMappingFromContext(resultChild, typeClass, flags));
       }
     }
-    String id = resultMapNode.getStringAttribute("id", resultMapNode::getValueBasedIdentifier);
-    String extend = resultMapNode.getStringAttribute("extends");
-    Boolean autoMapping = resultMapNode.getBooleanAttribute("autoMapping");
+
     ResultMapResolver resultMapResolver = new ResultMapResolver(builderAssistant, id, typeClass, extend, discriminator,
         resultMappings, autoMapping);
     try {
@@ -265,16 +269,24 @@ public class XMLMapperBuilder extends BaseBuilder {
     return null;
   }
 
-  private void processConstructorElement(XNode resultChild, Class<?> resultType, List<ResultMapping> resultMappings) {
+  private void processConstructorElement(XNode resultChild, Class<?> resultType, List<ResultMapping> resultMappings,
+      String id) {
     List<XNode> argChildren = resultChild.getChildren();
+
+    final List<ResultMapping> mappings = new ArrayList<>();
     for (XNode argChild : argChildren) {
       List<ResultFlag> flags = new ArrayList<>();
       flags.add(ResultFlag.CONSTRUCTOR);
       if ("idArg".equals(argChild.getName())) {
         flags.add(ResultFlag.ID);
       }
-      resultMappings.add(buildResultMappingFromContext(argChild, resultType, flags));
+
+      mappings.add(buildResultMappingFromContext(argChild, resultType, flags));
     }
+
+    final ResultMappingConstructorResolver resolver = new ResultMappingConstructorResolver(configuration, mappings,
+        resultType, id);
+    resultMappings.addAll(resolver.resolveWithConstructor());
   }
 
   private Discriminator processDiscriminatorElement(XNode context, Class<?> resultType,
