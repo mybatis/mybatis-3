@@ -27,7 +27,7 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
  */
 public class ParameterMapping {
 
-  private static Object UNSET = new Object();
+  private static final Object UNSET = new Object();
   private Configuration configuration;
 
   private String property;
