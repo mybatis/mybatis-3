@@ -93,15 +93,15 @@ public class DynamicContext {
 
   private void initTokenParser(List<ParameterMapping> parameterMappings) {
     if (tokenParser == null) {
-      tokenHandler = new ParameterMappingTokenHandler(parameterMappings, configuration, parameterObject, parameterType,
-          bindings, paramExists);
+      tokenHandler = new ParameterMappingTokenHandler(parameterMappings != null ? parameterMappings : new ArrayList<>(),
+          configuration, parameterObject, parameterType, bindings, paramExists);
       tokenParser = new GenericTokenParser("#{", "}", tokenHandler);
     }
   }
 
   public List<ParameterMapping> getParameterMappings() {
-    initTokenParser(new ArrayList<>());
-    return tokenHandler == null ? new ArrayList<>() : tokenHandler.getParameterMappings();
+    initTokenParser(null);
+    return tokenHandler.getParameterMappings();
   }
 
   protected String parseParam(String sql) {
