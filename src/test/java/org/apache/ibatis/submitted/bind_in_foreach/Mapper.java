@@ -13,16 +13,17 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.oracle_implicit_cursor;
+package org.apache.ibatis.submitted.bind_in_foreach;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Select;
+
 public interface Mapper {
 
-  List<Author> selectImplicitCursors_Statement();
+  @Select("select * from users order by id")
+  List<User> selectUsers();
 
-  List<Author> selectImplicitCursors_Prepared();
-
-  List<Author> selectImplicitCursors_Callable();
+  int createUsers(List<Integer> numbers);
 
 }

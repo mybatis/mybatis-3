@@ -536,7 +536,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     final List<ResultMapping> propertyMappings = resultMap.getPropertyResultMappings();
     for (ResultMapping propertyMapping : propertyMappings) {
       String column = prependPrefix(propertyMapping.getColumn(), columnPrefix);
-      if (propertyMapping.getNestedResultMapId() != null) {
+      if (propertyMapping.getNestedResultMapId() != null && !JdbcType.CURSOR.equals(propertyMapping.getJdbcType())) {
         // the user added a column attribute to a nested result map, ignore it
         column = null;
       }
@@ -573,6 +573,11 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     if (propertyMapping.getNestedQueryId() != null) {
       return getNestedQueryMappingValue(rs, metaResultObject, propertyMapping, lazyLoader, columnPrefix);
     }
+    if (JdbcType.CURSOR.equals(propertyMapping.getJdbcType())) {
+      List<Object> results = getNestedCursorValue(rsw, propertyMapping, columnPrefix);
+      linkObjects(metaResultObject, propertyMapping, results.get(0), true);
+      return metaResultObject.getValue(propertyMapping.getProperty());
+    }
     if (propertyMapping.getResultSet() != null) {
       addPendingChildRelation(rs, metaResultObject, propertyMapping); // TODO is that OK?
       return DEFERRED;
@@ -584,6 +589,19 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       }
       return typeHandler.getResult(rs, column);
     }
+  }
+
+  private List<Object> getNestedCursorValue(ResultSetWrapper rsw, ResultMapping propertyMapping,
+      String parentColumnPrefix) throws SQLException {
+    final String column = prependPrefix(propertyMapping.getColumn(), parentColumnPrefix);
+    ResultMap nestedResultMap = resolveDiscriminatedResultMap(rsw,
+        configuration.getResultMap(propertyMapping.getNestedResultMapId()),
+        getColumnPrefix(parentColumnPrefix, propertyMapping));
+    ResultSetWrapper nestedRsw = new ResultSetWrapper(rsw.getResultSet().getObject(column, ResultSet.class),
+        configuration);
+    List<Object> results = new ArrayList<>();
+    handleResultSet(nestedRsw, nestedResultMap, results, null);
+    return results;
   }
 
   private TypeHandler<?> resolvePropertyTypeHandler(ResultSetWrapper rsw, MetaObject metaResultObject,
@@ -798,6 +816,15 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       try {
         if (constructorMapping.getNestedQueryId() != null) {
           value = getNestedQueryConstructorValue(rsw.getResultSet(), constructorMapping, columnPrefix);
+        } else if (JdbcType.CURSOR.equals(constructorMapping.getJdbcType())) {
+          List<?> result = (List<?>) getNestedCursorValue(rsw, constructorMapping, columnPrefix).get(0);
+          if (objectFactory.isCollection(parameterType)) {
+            MetaObject collection = configuration.newMetaObject(objectFactory.create(parameterType));
+            collection.addAll((List<?>) result);
+            value = collection.getOriginalObject();
+          } else {
+            value = toSingleObj(result);
+          }
         } else if (constructorMapping.getNestedResultMapId() != null) {
           final String constructorColumnPrefix = getColumnPrefix(columnPrefix, constructorMapping);
           final ResultMap resultMap = resolveDiscriminatedResultMap(rsw,
@@ -1574,10 +1601,19 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   }
 
   private void linkObjects(MetaObject metaObject, ResultMapping resultMapping, Object rowValue) {
+    linkObjects(metaObject, resultMapping, rowValue, false);
+  }
+
+  private void linkObjects(MetaObject metaObject, ResultMapping resultMapping, Object rowValue,
+      boolean isNestedCursorResult) {
     final Object collectionProperty = instantiateCollectionPropertyIfAppropriate(resultMapping, metaObject);
     if (collectionProperty != null) {
       final MetaObject targetMetaObject = configuration.newMetaObject(collectionProperty);
-      targetMetaObject.add(rowValue);
+      if (isNestedCursorResult) {
+        targetMetaObject.addAll((List<?>) rowValue);
+      } else {
+        targetMetaObject.add(rowValue);
+      }
 
       // it is possible for pending creations to get set via property mappings,
       // keep track of these, so we can rebuild them.
@@ -1590,8 +1626,14 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         pendingPccRelations.put(originalObject, pendingRelation);
       }
     } else {
-      metaObject.setValue(resultMapping.getProperty(), rowValue);
+      metaObject.setValue(resultMapping.getProperty(),
+          isNestedCursorResult ? toSingleObj((List<?>) rowValue) : rowValue);
     }
+  }
+
+  private Object toSingleObj(List<?> list) {
+    // Even if there are multiple elements, silently returns the first one.
+    return list.isEmpty() ? null : list.get(0);
   }
 
   private Object instantiateCollectionPropertyIfAppropriate(ResultMapping resultMapping, MetaObject metaObject) {

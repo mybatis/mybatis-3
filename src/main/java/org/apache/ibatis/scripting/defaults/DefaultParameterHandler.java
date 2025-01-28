@@ -93,7 +93,6 @@ public class DefaultParameterHandler implements ParameterHandler {
     ErrorContext.instance().activity("setting parameters").object(mappedStatement.getParameterMap().getId());
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
     if (parameterMappings != null) {
-      MetaObject metaObject = null;
       ParamNameResolver paramNameResolver = mappedStatement.getParamNameResolver();
       for (int i = 0; i < parameterMappings.size(); i++) {
         ParameterMapping parameterMapping = parameterMappings.get(i);
@@ -104,7 +103,9 @@ public class DefaultParameterHandler implements ParameterHandler {
           JdbcType actualJdbcType = jdbcType == null ? getParamJdbcType(ps, i + 1) : jdbcType;
           Type propertyGenericType = null;
           TypeHandler typeHandler = parameterMapping.getTypeHandler();
-          if (boundSql.hasAdditionalParameter(propertyName)) { // issue #448 ask first for additional params
+          if (parameterMapping.hasValue()) {
+            value = parameterMapping.getValue();
+          } else if (boundSql.hasAdditionalParameter(propertyName)) { // issue #448 ask first for additional params
             value = boundSql.getAdditionalParameter(propertyName);
             if (typeHandler == null) {
               typeHandler = configuration.getTypeHandlerResolver().resolve(value.getClass(), null, null, actualJdbcType,
@@ -119,8 +120,8 @@ public class DefaultParameterHandler implements ParameterHandler {
               value = parameterObject;
               typeHandler = paramTypeHandler;
             } else {
-              metaObject = getParamMetaObject();
-              value = metaObject.getValue(propertyName);
+              paramMetaObject = getParamMetaObject();
+              value = paramMetaObject.getValue(propertyName);
               if (typeHandler == null && value != null) {
                 if (paramNameResolver != null && ParamMap.class.equals(parameterClass)) {
                   Type actualParamType = paramNameResolver.getType(propertyName);
@@ -142,7 +143,7 @@ public class DefaultParameterHandler implements ParameterHandler {
                   }
                 } else {
                   try {
-                    propertyGenericType = metaObject.getGenericGetterType(propertyName).getKey();
+                    propertyGenericType = paramMetaObject.getGenericGetterType(propertyName).getKey();
                     typeHandler = configuration.getTypeHandlerResolver().resolve(parameterClass, propertyGenericType,
                         propertyName, actualJdbcType, null);
                   } catch (Exception e) {

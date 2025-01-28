@@ -15,11 +15,16 @@
  */
 package org.apache.ibatis.scripting.defaults;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import org.apache.ibatis.builder.ParameterMappingTokenHandler;
 import org.apache.ibatis.builder.SqlSourceBuilder;
 import org.apache.ibatis.mapping.BoundSql;
+import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.SqlSource;
+import org.apache.ibatis.parsing.GenericTokenParser;
 import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.scripting.xmltags.DynamicContext;
 import org.apache.ibatis.scripting.xmltags.DynamicSqlSource;
@@ -43,7 +48,10 @@ public class RawSqlSource implements SqlSource {
 
   public RawSqlSource(Configuration configuration, SqlNode rootSqlNode, Class<?> parameterType,
       ParamNameResolver paramNameResolver) {
-    this(configuration, getSql(configuration, rootSqlNode), parameterType, paramNameResolver);
+    DynamicContext context = new DynamicContext(configuration, parameterType, paramNameResolver);
+    rootSqlNode.apply(context);
+    String sql = context.getSql();
+    sqlSource = SqlSourceBuilder.buildSqlSource(configuration, sql, context.getParameterMappings());
   }
 
   public RawSqlSource(Configuration configuration, String sql, Class<?> parameterType) {
@@ -52,15 +60,12 @@ public class RawSqlSource implements SqlSource {
 
   public RawSqlSource(Configuration configuration, String sql, Class<?> parameterType,
       ParamNameResolver paramNameResolver) {
-    SqlSourceBuilder sqlSourceParser = new SqlSourceBuilder(configuration);
     Class<?> clazz = parameterType == null ? Object.class : parameterType;
-    sqlSource = sqlSourceParser.parse(sql, clazz, new HashMap<>(), paramNameResolver);
-  }
-
-  private static String getSql(Configuration configuration, SqlNode rootSqlNode) {
-    DynamicContext context = new DynamicContext(configuration, null);
-    rootSqlNode.apply(context);
-    return context.getSql();
+    List<ParameterMapping> parameterMappings = new ArrayList<>();
+    ParameterMappingTokenHandler tokenHandler = new ParameterMappingTokenHandler(parameterMappings, configuration,
+        clazz, new HashMap<>(), paramNameResolver);
+    GenericTokenParser parser = new GenericTokenParser("#{", "}", tokenHandler);
+    sqlSource = SqlSourceBuilder.buildSqlSource(configuration, parser.parse(sql), parameterMappings);
   }
 
   @Override

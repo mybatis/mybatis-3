@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,26 +13,26 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.scripting.xmltags;
+package org.apache.ibatis.submitted.bind_in_foreach;
 
-import org.apache.ibatis.session.Configuration;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+public class User {
 
-/**
- * @author <a href="1181963012mw@gmail.com">mawen12</a>
- *
- * @see SqlNode
- */
-@ExtendWith(MockitoExtension.class)
-abstract class SqlNodeBase {
+  private Integer id;
+  private String name;
 
-  @Mock
-  protected Configuration configuration;
+  public Integer getId() {
+    return id;
+  }
 
-  @Mock
-  protected DynamicContext context;
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-  public abstract void shouldApply() throws Exception;
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
 }

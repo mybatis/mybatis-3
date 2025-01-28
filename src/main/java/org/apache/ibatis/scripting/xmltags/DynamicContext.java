@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,9 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
 
@@ -23,7 +25,11 @@ import ognl.OgnlContext;
 import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;
 
+import org.apache.ibatis.builder.ParameterMappingTokenHandler;
+import org.apache.ibatis.mapping.ParameterMapping;
+import org.apache.ibatis.parsing.GenericTokenParser;
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.session.Configuration;
 
 /**
@@ -38,20 +44,38 @@ public class DynamicContext {
     OgnlRuntime.setPropertyAccessor(ContextMap.class, new ContextAccessor());
   }
 
-  private final ContextMap bindings;
+  protected final ContextMap bindings;
   private final StringJoiner sqlBuilder = new StringJoiner(" ");
-  private int uniqueNumber;
 
-  public DynamicContext(Configuration configuration, Object parameterObject) {
-    if (parameterObject != null && !(parameterObject instanceof Map)) {
+  private final Configuration configuration;
+  private final Object parameterObject;
+  private final Class<?> parameterType;
+  private final ParamNameResolver paramNameResolver;
+  private final boolean paramExists;
+
+  private GenericTokenParser tokenParser;
+  private ParameterMappingTokenHandler tokenHandler;
+
+  public DynamicContext(Configuration configuration, Class<?> parameterType, ParamNameResolver paramNameResolver) {
+    this(configuration, null, parameterType, paramNameResolver, false);
+  }
+
+  public DynamicContext(Configuration configuration, Object parameterObject, Class<?> parameterType,
+      ParamNameResolver paramNameResolver, boolean paramExists) {
+    if (parameterObject == null || parameterObject instanceof Map) {
+      bindings = new ContextMap(null, false);
+    } else {
       MetaObject metaObject = configuration.newMetaObject(parameterObject);
       boolean existsTypeHandler = configuration.getTypeHandlerRegistry().hasTypeHandler(parameterObject.getClass());
       bindings = new ContextMap(metaObject, existsTypeHandler);
-    } else {
-      bindings = new ContextMap(null, false);
     }
     bindings.put(PARAMETER_OBJECT_KEY, parameterObject);
     bindings.put(DATABASE_ID_KEY, configuration.getDatabaseId());
+    this.configuration = configuration;
+    this.parameterObject = parameterObject;
+    this.paramExists = paramExists;
+    this.parameterType = parameterType;
+    this.paramNameResolver = paramNameResolver;
   }
 
   public Map<String, Object> getBindings() {
@@ -70,8 +94,38 @@ public class DynamicContext {
     return sqlBuilder.toString().trim();
   }
 
-  public int getUniqueNumber() {
-    return uniqueNumber++;
+  private void initTokenParser(List<ParameterMapping> parameterMappings) {
+    if (tokenParser == null) {
+      tokenHandler = new ParameterMappingTokenHandler(parameterMappings != null ? parameterMappings : new ArrayList<>(),
+          configuration, parameterObject, parameterType, bindings, paramNameResolver, paramExists);
+      tokenParser = new GenericTokenParser("#{", "}", tokenHandler);
+    }
+  }
+
+  public List<ParameterMapping> getParameterMappings() {
+    initTokenParser(null);
+    return tokenHandler.getParameterMappings();
+  }
+
+  protected String parseParam(String sql) {
+    initTokenParser(getParameterMappings());
+    return tokenParser.parse(sql);
+  }
+
+  protected Object getParameterObject() {
+    return parameterObject;
+  }
+
+  protected Class<?> getParameterType() {
+    return parameterType;
+  }
+
+  protected ParamNameResolver getParamNameResolver() {
+    return paramNameResolver;
+  }
+
+  protected boolean isParamExists() {
+    return paramExists;
   }
 
   static class ContextMap extends HashMap<String, Object> {
