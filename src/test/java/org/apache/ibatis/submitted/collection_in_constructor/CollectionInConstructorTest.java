@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,6 +14,9 @@
  *    limitations under the License.
  */
 package org.apache.ibatis.submitted.collection_in_constructor;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 
 import java.io.Reader;
 import java.util.Arrays;
@@ -165,6 +168,23 @@ class CollectionInConstructorTest {
   }
 
   @Test
+  void testCollectionArgWithNestedAndTypeHandler() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      List<Store10> stores10 = mapper.getStores10();
+
+      assertThat(stores10).isNotNull().hasSize(3)
+          .extracting(Store10::getId, Store10::getName, store -> store.getClerks().size(), Store10::getStrings)
+          .containsExactly(tuple(1, "Store 1", 5, List.of("a", "b", "c", "1")),
+              tuple(2, "Store 2", 0, List.of("a", "b", "c", "2")), tuple(3, "Store 3", 0, List.of("a", "b", "c", "3")));
+
+      assertThat(stores10.get(0).getClerks()).extracting(Clerk::getId, Clerk::getName).containsExactly(
+          tuple(1001, "Clerk 1001"), tuple(1002, "Clerk 1002"), tuple(1003, "Clerk 1003"), tuple(1004, "Clerk 1004"),
+          tuple(1005, "Clerk 1005"));
+    }
+  }
+
+  @Test
   void testImmutableNestedObjects() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -203,17 +223,17 @@ class CollectionInConstructorTest {
           new Store9(1, "Store 1", Arrays.asList(new Clerk(1002, "Clerk 1002"), new Clerk(1005, "Clerk 1005")))));
 
       // cannot use direct equals as we overwrote it with a bad impl on purpose
-      org.assertj.core.api.Assertions.assertThat(containers).isNotNull().hasSize(2);
+      assertThat(containers).isNotNull().hasSize(2);
       assertContainer1(containers.get(0), expectedContainer1);
       assertContainer1(containers.get(1), expectedContainer2);
     }
   }
 
   private static void assertContainer1(Container1 container1, Container1 expectedContainer1) {
-    org.assertj.core.api.Assertions.assertThat(container1).isNotNull().satisfies(c -> {
-      org.assertj.core.api.Assertions.assertThat(c.getNum()).isEqualTo(expectedContainer1.getNum());
-      org.assertj.core.api.Assertions.assertThat(c.getType()).isEqualTo(expectedContainer1.getType());
-      org.assertj.core.api.Assertions.assertThat(c.getStores()).isEqualTo(expectedContainer1.getStores());
+    assertThat(container1).isNotNull().satisfies(c -> {
+      assertThat(c.getNum()).isEqualTo(expectedContainer1.getNum());
+      assertThat(c.getType()).isEqualTo(expectedContainer1.getType());
+      assertThat(c.getStores()).isEqualTo(expectedContainer1.getStores());
     });
   }
 }

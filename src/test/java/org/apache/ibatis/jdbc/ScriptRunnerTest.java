@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -113,7 +113,7 @@ class ScriptRunnerTest extends BaseDataTest {
   }
 
   @Test
-  void commentAferStatementDelimiterShouldNotCauseRunnerFail() throws Exception {
+  void commentAfterStatementDelimiterShouldNotCauseRunnerFail() throws Exception {
     DataSource ds = createUnpooledDataSource(JPETSTORE_PROPERTIES);
     String resource = "org/apache/ibatis/jdbc/ScriptCommentAfterEOLTerminator.sql";
     try (Connection conn = ds.getConnection(); Reader reader = Resources.getResourceAsReader(resource)) {

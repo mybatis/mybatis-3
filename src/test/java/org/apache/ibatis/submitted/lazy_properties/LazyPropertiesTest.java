@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -155,16 +155,16 @@ class LazyPropertiesTest {
 
   @Test
   void shouldInvokingSetterInvalidateLazyLoading_Javassist() {
-    shoulInvokingSetterInvalidateLazyLoading(new JavassistProxyFactory());
+    shouldInvokingSetterInvalidateLazyLoading(new JavassistProxyFactory());
   }
 
   @Tag("RequireIllegalAccess")
   @Test
   void shouldInvokingSetterInvalidateLazyLoading_Cglib() {
-    shoulInvokingSetterInvalidateLazyLoading(new CglibProxyFactory());
+    shouldInvokingSetterInvalidateLazyLoading(new CglibProxyFactory());
   }
 
-  private void shoulInvokingSetterInvalidateLazyLoading(ProxyFactory proxyFactory) {
+  private void shouldInvokingSetterInvalidateLazyLoading(ProxyFactory proxyFactory) {
     Configuration config = sqlSessionFactory.getConfiguration();
     config.setProxyFactory(proxyFactory);
     config.setAggressiveLazyLoading(false);

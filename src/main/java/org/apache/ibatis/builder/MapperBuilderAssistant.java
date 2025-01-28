@@ -472,5 +472,4 @@ public class MapperBuilderAssistant extends BaseBuilder {
     }
     return javaType;
   }
-
 }

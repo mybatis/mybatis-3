@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2024 the original author or authors.
+       Copyright 2009-2025 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -275,6 +275,32 @@
     from store s
       left join clerk c on c.store_id = s.id
     order by type, s.id, c.id
+  ]]></select>
+
+  <resultMap
+          type="org.apache.ibatis.submitted.collection_in_constructor.Store10"
+          id="store10RM">
+    <constructor>
+      <idArg column="id" javaType="int" />
+      <arg column="name" javaType="string" />
+      <arg javaType="list" resultMap="immutableClerkRM" columnPrefix="clerk_" />
+      <arg column="csv" javaType="list"
+           typeHandler="org.apache.ibatis.submitted.collection_in_constructor.CsvToListTypeHandler" />
+    </constructor>
+  </resultMap>
+
+  <select id="getStores10" resultMap="store10RM"
+          resultOrdered="true"><![CDATA[
+    select
+      s.id,
+      s.name,
+      c.id clerk_id, c.name clerk_name,
+      i.id aisle_id, i.name aisle_name,
+      CONCAT('a,b,c,', s.id) csv
+    from store s
+    left join clerk c on c.store_id = s.id
+    left join aisle i on i.store_id = s.id
+    order by s.id, c.id, i.id
   ]]></select>
 
 </mapper>
