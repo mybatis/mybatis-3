@@ -342,17 +342,7 @@ public final class TypeHandlerRegistry {
     }
     if (type instanceof Class) {
       Class<?> clazz = (Class<?>) type;
-      if (Enum.class.isAssignableFrom(clazz)) {
-        // TODO: verify
-        // if (clazz.isAnonymousClass()) {
-        // return getJdbcHandlerMap(clazz.getSuperclass());
-        // }
-        // jdbcHandlerMap = getJdbcHandlerMapForEnumInterfaces(clazz, clazz);
-        // if (jdbcHandlerMap == null) {
-        // register(clazz, getInstance(clazz, defaultEnumTypeHandler));
-        // return typeHandlerMap.get(clazz);
-        // }
-      } else {
+      if (!Enum.class.isAssignableFrom(clazz)) {
         jdbcHandlerMap = getJdbcHandlerMapForSuperclass(clazz);
       }
     }
