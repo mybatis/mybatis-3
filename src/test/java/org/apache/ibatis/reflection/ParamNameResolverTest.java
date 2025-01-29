@@ -41,6 +41,7 @@ class ParamNameResolverTest {
     Method method = clazz.getDeclaredMethod("m1", Integer.class);
     ParamNameResolver resolver = new ParamNameResolver(new Configuration(), method, clazz);
     assertEquals(Integer.class, resolver.getType("p"));
+    assertEquals(Integer.class, resolver.getType("param1"));
   }
 
   @Test
@@ -50,6 +51,7 @@ class ParamNameResolverTest {
     ParamNameResolver resolver = new ParamNameResolver(new Configuration(), method, clazz);
     assertEquals(List.class, ((ParameterizedType) resolver.getType("p")).getRawType());
     assertEquals(String.class, resolver.getType("p[0]"));
+    assertEquals(String.class, resolver.getType("param1[0]"));
   }
 
   @Test
@@ -59,5 +61,7 @@ class ParamNameResolverTest {
     ParamNameResolver resolver = new ParamNameResolver(new Configuration(), method, clazz);
     assertEquals(Integer[].class, resolver.getType("p"));
     assertEquals(Integer.class, resolver.getType("p[0]"));
+    assertEquals(Integer[].class, resolver.getType("param1"));
+    assertEquals(Integer.class, resolver.getType("param1[0]"));
   }
 }

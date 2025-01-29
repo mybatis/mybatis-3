@@ -181,7 +181,21 @@ public class ParamNameResolver {
 
   public Type getType(String name) {
     PropertyTokenizer propertyTokenizer = new PropertyTokenizer(name);
-    Type type = typeMap.get(propertyTokenizer.getName());
+    String unindexed = propertyTokenizer.getName();
+    Type type = typeMap.get(unindexed);
+
+    if (type == null && unindexed.startsWith(GENERIC_NAME_PREFIX)) {
+      try {
+        Integer paramIndex = Integer.valueOf(unindexed.substring(GENERIC_NAME_PREFIX.length())) - 1;
+        unindexed = names.get(paramIndex);
+        if (unindexed != null) {
+          type = typeMap.get(unindexed);
+        }
+      } catch (NumberFormatException e) {
+        // user mistake
+      }
+    }
+
     if (propertyTokenizer.getIndex() != null) {
       if (type instanceof ParameterizedType) {
         Type[] typeArgs = ((ParameterizedType) type).getActualTypeArguments();
@@ -190,7 +204,6 @@ public class ParamNameResolver {
         return ((Class<?>) type).getComponentType();
       }
     }
-    // TODO: param1, param2
     return type;
   }
 
