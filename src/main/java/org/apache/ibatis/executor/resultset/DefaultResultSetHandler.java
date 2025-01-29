@@ -618,7 +618,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         th = typeHandlerRegistry.getTypeHandler(jdbcType);
       } else {
         Type classToHandle = metaResultObject.getGenericSetterType(property).getKey();
-        th = configuration.getTypeHandlerResolver().resolve(metaResultObjectClass, classToHandle, property, jdbcType,
+        th = configuration.getTypeHandlerRegistry().resolve(metaResultObjectClass, classToHandle, property, jdbcType,
             null);
         if (th == null) {
           throw new TypeException(
@@ -660,7 +660,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           }
           final Type propertyType = metaObject.getGenericSetterType(property).getKey();
           Class<?> metaObjectClass = metaObject.getOriginalObject().getClass();
-          TypeHandler<?> typeHandler = configuration.getTypeHandlerResolver().resolve(metaObjectClass, propertyType,
+          TypeHandler<?> typeHandler = configuration.getTypeHandlerRegistry().resolve(metaObjectClass, propertyType,
               property, rsw.getJdbcType(columnName), null);
           if (typeHandler != null) {
             autoMapping.add(new UnMappedColumnAutoMapping(columnName, property, typeHandler,

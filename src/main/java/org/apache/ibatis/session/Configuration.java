@@ -92,12 +92,10 @@ import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
-import org.apache.ibatis.type.DefaultTypeHandlerResolver;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeAliasRegistry;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
-import org.apache.ibatis.type.TypeHandlerResolver;
 
 /**
  * @author Clinton Begin
@@ -154,7 +152,6 @@ public class Configuration {
   protected final MapperRegistry mapperRegistry = new MapperRegistry(this);
   protected final InterceptorChain interceptorChain = new InterceptorChain();
   protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry(this);
-  protected final TypeHandlerResolver typeHandlerResolver = new DefaultTypeHandlerResolver(typeHandlerRegistry);
   protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
   protected final LanguageDriverRegistry languageRegistry = new LanguageDriverRegistry();
 
@@ -648,10 +645,6 @@ public class Configuration {
 
   public void setObjectWrapperFactory(ObjectWrapperFactory objectWrapperFactory) {
     this.objectWrapperFactory = objectWrapperFactory;
-  }
-
-  public TypeHandlerResolver getTypeHandlerResolver() {
-    return typeHandlerResolver;
   }
 
   /**

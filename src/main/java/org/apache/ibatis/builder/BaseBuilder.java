@@ -131,7 +131,7 @@ public abstract class BaseBuilder {
     if (typeHandlerType == null && jdbcType == null) {
       return null;
     }
-    return configuration.getTypeHandlerResolver().resolve(parameterType, propertyType, propertyName, jdbcType,
+    return configuration.getTypeHandlerRegistry().resolve(parameterType, propertyType, propertyName, jdbcType,
         typeHandlerType);
   }
 
