@@ -26,11 +26,12 @@ create table users (
 
 create table product (
   id int identity,
-  name varchar(20)
+  name varchar(20),
+  released_on date
 );
 
 insert into users (id, name, city, state) values(1, '   User1', '  Carmel  ', '  IN ');
 
-insert into product (id, name) values
-(1, 'iPod'),
-(2, 'iPad');
+insert into product (id, name, released_on) values
+(1, 'iPod', '2001-11-10'),
+(2, 'iPad', '2010-04-03');

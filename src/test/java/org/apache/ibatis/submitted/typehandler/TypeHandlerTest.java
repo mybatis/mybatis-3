@@ -19,9 +19,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.Reader;
+import java.time.LocalDate;
+import java.util.Map;
 
 import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -30,9 +31,8 @@ import org.apache.ibatis.submitted.typehandler.Product.ConstantProductIdTypeHand
 import org.apache.ibatis.submitted.typehandler.Product.ProductId;
 import org.apache.ibatis.submitted.typehandler.Product.ProductIdTypeHandler;
 import org.apache.ibatis.type.JdbcType;
-import org.junit.jupiter.api.Assertions;
+import org.apache.ibatis.type.LocalDateTypeHandler;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class TypeHandlerTest {
@@ -135,29 +135,49 @@ class TypeHandlerTest {
     }
   }
 
-  @Disabled("This does not fail anymore because jdbcType resolution is performed at exection time using metadata")
   @Test
   void shouldFailIfMultipleHandlerMappedToAType() {
     sqlSessionFactory.getConfiguration().getTypeHandlerRegistry().register(ProductId.class, JdbcType.BIGINT,
         ConstantProductIdTypeHandler.class);
-    // multiple type handlers are mapped to ProductId and
-    // none of them are mapped to null jdbcType.
-    Assertions.assertThrows(BuilderException.class, this::addMapper);
-  }
-
-  @Disabled("This is no longer the expected behavior. "
-      + "As there is a type handler registered for ProductId:INTEGER combination, it will be used.")
-  @Test
-  void shouldPickHandlerForNull() {
-    sqlSessionFactory.getConfiguration().getTypeHandlerRegistry().register(ProductId.class, null,
-        ConstantProductIdTypeHandler.class);
-    // multiple type handlers are mapped to ProductId and
-    // one of them are mapped to null jdbcType.
+    // Two type handlers are mapped to ProductId.
+    // One for JdbcType=BIGINT and the other for JdbcType=INTEGER
+    // The runtime JdbcType is INTEGER, so the second one should be used.
     addMapper();
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Product product = mapper.getProductByNameXml("iPad");
-      assertEquals(Integer.valueOf(999), product.getId().getValue());
+      assertEquals(Integer.valueOf(2), product.getId().getValue());
     }
   }
+
+  @Test
+  void shouldHandlerBePickedBasedOnRuntimeJdbcType() {
+    sqlSessionFactory.getConfiguration().getTypeHandlerRegistry().register(ProductId.class, null,
+        ConstantProductIdTypeHandler.class);
+    // Two type handlers are mapped to ProductId.
+    // One for JdbcType=NULL and the other for JdbcType=INTEGER
+    // The runtime JdbcType is INTEGER, so the second one should be used.
+    addMapper();
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      Product product = mapper.getProductByNameXml("iPad");
+      assertEquals(Integer.valueOf(2), product.getId().getValue());
+    }
+  }
+
+  @Test
+  void shouldHandlerBePickedBasedOnRuntimeJdbcType_Map() {
+    // gh-591
+    // If a handler is registered against Object and JdbcType,
+    // it will be used when result type is Map
+    sqlSessionFactory.getConfiguration().getTypeHandlerRegistry().register(Object.class, JdbcType.DATE,
+        LocalDateTypeHandler.class);
+    addMapper();
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      Map<String, Object> map = mapper.getProductAsMap(1);
+      assertEquals(LocalDate.of(2001, 11, 10), map.get("RELEASED_ON"));
+    }
+  }
+
 }

@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.submitted.typehandler;
 
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Arg;
 import org.apache.ibatis.annotations.ConstructorArgs;
 import org.apache.ibatis.annotations.Insert;
@@ -58,4 +60,7 @@ public interface Mapper {
 
   @Select("select id from product where name = #{value}")
   ProductId getProductIdByName(String name);
+
+  @Select("select id, name, released_on from product where id = #{id}")
+  Map<String, Object> getProductAsMap(Integer id);
 }
