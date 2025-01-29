@@ -59,7 +59,7 @@ class ReflectorTest {
   }
 
   @Test
-  void should() {
+  void shouldGetGenericGetterType() {
     Type type = new TypeReference<Entity<List<String>>>() {
     }.getRawType();
     ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
