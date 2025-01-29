@@ -15,19 +15,19 @@
  */
 package org.apache.ibatis.submitted.maptypehandler;
 
+import static org.assertj.core.api.Assertions.*;
+
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -59,15 +59,15 @@ class MapTypeHandlerTest {
     }
   }
 
-  @Disabled("The new implementation handles this usage as expected")
   @Test
-  void shouldGetAUserFromXML() {
+  void shouldNotUseMapTypeHandlerEvenIfTheParamIsAMap() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Map<String, Object> params = new HashMap<>();
       params.put("id", 1);
       params.put("name", "User1");
-      Assertions.assertThrows(PersistenceException.class, () -> mapper.getUserXML(params));
+      User user = mapper.getUserXML(params);
+      assertThat(user).extracting(User::getId, User::getName).containsExactly(1, "User1");
     }
   }
 
