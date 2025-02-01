@@ -59,10 +59,11 @@ import org.apache.ibatis.session.Configuration;
  */
 public final class TypeHandlerRegistry {
 
+  public static final ObjectTypeHandler OBJECT_TYPE_HANDLER = new ObjectTypeHandler();
+
   private final Map<JdbcType, TypeHandler<?>> jdbcTypeHandlerMap = new EnumMap<>(JdbcType.class);
   private final Map<Type, Map<JdbcType, TypeHandler<?>>> typeHandlerMap = new ConcurrentHashMap<>();
   private final Map<Type, Entry<Constructor<?>, Set<JdbcType>>> smartHandlers = new ConcurrentHashMap<>();
-  private final TypeHandler<Object> unknownTypeHandler;
   @Deprecated
   private final Map<Class<?>, TypeHandler<?>> allTypeHandlersMap = new HashMap<>();
 
@@ -86,8 +87,6 @@ public final class TypeHandlerRegistry {
    * @since 3.5.4
    */
   public TypeHandlerRegistry(Configuration configuration) {
-    this.unknownTypeHandler = new UnknownTypeHandler(configuration);
-
     register(Boolean.class, new BooleanTypeHandler());
     register(boolean.class, new BooleanTypeHandler());
     register(JdbcType.BOOLEAN, new BooleanTypeHandler());
@@ -133,7 +132,6 @@ public final class TypeHandlerRegistry {
     register(JdbcType.NCHAR, new NStringTypeHandler());
     register(JdbcType.NCLOB, new NClobTypeHandler());
 
-    register(Object.class, JdbcType.ARRAY, new ArrayTypeHandler());
     register(JdbcType.ARRAY, new ArrayTypeHandler());
 
     register(BigInteger.class, new BigIntegerTypeHandler());
@@ -153,10 +151,6 @@ public final class TypeHandlerRegistry {
     register(byte[].class, JdbcType.LONGVARBINARY, new BlobTypeHandler());
     register(JdbcType.LONGVARBINARY, new BlobTypeHandler());
     register(JdbcType.BLOB, new BlobTypeHandler());
-
-    register(Object.class, unknownTypeHandler);
-    register(Object.class, JdbcType.OTHER, unknownTypeHandler);
-    register(JdbcType.OTHER, unknownTypeHandler);
 
     register(Date.class, new DateTypeHandler());
     register(Date.class, JdbcType.DATE, new DateOnlyTypeHandler());
@@ -267,8 +261,19 @@ public final class TypeHandlerRegistry {
     if (ParamMap.class.equals(type)) {
       return null;
     }
-    Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = getJdbcHandlerMap(type);
     TypeHandler<?> handler = null;
+    Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = getJdbcHandlerMap(type);
+
+    if (Object.class.equals(type)) {
+      if (jdbcHandlerMap != null) {
+        handler = jdbcHandlerMap.get(jdbcType);
+      }
+      if (handler == null) {
+        handler = jdbcTypeHandlerMap.get(jdbcType);
+      }
+      return handler != null ? handler : OBJECT_TYPE_HANDLER;
+    }
+
     if (jdbcHandlerMap != null) {
       handler = jdbcHandlerMap.get(jdbcType);
       if (handler == null) {
@@ -283,7 +288,7 @@ public final class TypeHandlerRegistry {
       handler = getSmartHandler(type, jdbcType);
     }
     if (handler == null && type instanceof ParameterizedType) {
-      return getTypeHandler((Class<?>) ((ParameterizedType) type).getRawType(), jdbcType);
+      handler = getTypeHandler((Class<?>) ((ParameterizedType) type).getRawType(), jdbcType);
     }
     // type drives generics here
     return handler;
@@ -392,10 +397,6 @@ public final class TypeHandlerRegistry {
       }
     }
     return soleHandler;
-  }
-
-  public TypeHandler<Object> getUnknownTypeHandler() {
-    return unknownTypeHandler;
   }
 
   public void register(JdbcType jdbcType, TypeHandler<?> handler) {

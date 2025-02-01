@@ -15,8 +15,8 @@
  */
 package org.apache.ibatis.submitted.typebasedtypehandlerresolution;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -306,10 +306,10 @@ class LocallySpecifiedTypeHandlerResolutionTest {
       user.setIntvalue(new FuzzyBean<Integer>(23));
       user.setDatevalue(LocalDate.of(2020, 5, 13));
       user.setDatevalue2(LocalDate.of(2020, 5, 7));
-      PersistenceException ex = assertThrows(PersistenceException.class, () -> sqlSession.insert(
+      // There is no way to obtain info about type parameters.
+      assertThatExceptionOfType(PersistenceException.class).isThrownBy(() -> sqlSession.insert(
           "org.apache.ibatis.submitted.typebasedtypehandlerresolution.LocallySpecifiedHandlerMapper.insertXmlWithoutParameterType",
-          user));
-      assertEquals("Unknown rawType : class java.lang.Object", ex.getCause().getCause().getMessage());
+          user)).withMessageContaining("FuzzyBean cannot be cast to class java.lang.String");
     }
   }
 }

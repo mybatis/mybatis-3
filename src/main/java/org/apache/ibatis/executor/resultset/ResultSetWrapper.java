@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,10 +31,8 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.ObjectTypeHandler;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
-import org.apache.ibatis.type.UnknownTypeHandler;
 
 /**
  * @author Iwao AVE!
@@ -79,12 +77,8 @@ public class ResultSetWrapper {
   }
 
   public JdbcType getJdbcType(String columnName) {
-    for (int i = 0; i < columnNames.size(); i++) {
-      if (columnNames.get(i).equalsIgnoreCase(columnName)) {
-        return jdbcTypes.get(i);
-      }
-    }
-    return null;
+    int columnIndex = getColumnIndex(columnName);
+    return columnIndex == -1 ? null : jdbcTypes.get(columnIndex);
   }
 
   /**
@@ -109,26 +103,28 @@ public class ResultSetWrapper {
     }
     if (handler == null) {
       JdbcType jdbcType = getJdbcType(columnName);
-      handler = typeHandlerRegistry.getTypeHandler(propertyType, jdbcType);
-      // Replicate logic of UnknownTypeHandler#resolveTypeHandler
-      // See issue #59 comment 10
-      if (handler == null || handler instanceof UnknownTypeHandler) {
-        final int index = columnNames.indexOf(columnName);
-        final Class<?> javaType = resolveClass(classNames.get(index));
-        if (javaType != null && jdbcType != null) {
-          handler = typeHandlerRegistry.getTypeHandler(javaType, jdbcType);
-        } else if (javaType != null) {
-          handler = typeHandlerRegistry.getTypeHandler(javaType);
-        } else if (jdbcType != null) {
-          handler = typeHandlerRegistry.getTypeHandler(jdbcType);
-        }
+      if (jdbcType != null && propertyType != null) {
+        handler = typeHandlerRegistry.getTypeHandler(propertyType, jdbcType);
+      } else if (propertyType != null) {
+        handler = typeHandlerRegistry.getTypeHandler(propertyType);
+      } else if (jdbcType != null) {
+        handler = typeHandlerRegistry.getTypeHandler(jdbcType);
       }
-      if (handler == null || handler instanceof UnknownTypeHandler) {
-        handler = new ObjectTypeHandler();
+      if (handler == null) {
+        handler = TypeHandlerRegistry.OBJECT_TYPE_HANDLER;
       }
       columnHandlers.put(propertyType, handler);
     }
     return handler;
+  }
+
+  private int getColumnIndex(String columnName) {
+    for (int i = 0; i < columnNames.size(); i++) {
+      if (columnNames.get(i).equalsIgnoreCase(columnName)) {
+        return i;
+      }
+    }
+    return -1;
   }
 
   private Class<?> resolveClass(String className) {

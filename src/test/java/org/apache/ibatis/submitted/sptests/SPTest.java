@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -162,8 +162,11 @@ class SPTest {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
       spMapper.echoDate(parameter);
 
-      java.sql.Date outDate = new java.sql.Date(now.getTime());
-      assertEquals(outDate.toString(), parameter.get("output date").toString());
+      // For DATE, DateOnlyTypeHandler is used.
+
+      // Cut-off time part
+      Date expected = new Date(java.sql.Date.valueOf(new java.sql.Date(now.getTime()).toLocalDate()).getTime());
+      assertEquals(expected, parameter.get("output date"));
     }
   }
 

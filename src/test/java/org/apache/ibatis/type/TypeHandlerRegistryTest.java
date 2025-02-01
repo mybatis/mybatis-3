@@ -58,7 +58,6 @@ class TypeHandlerRegistryTest {
     assertFalse(typeHandlerRegistry.hasTypeHandler(RichType.class));
     assertTrue(typeHandlerRegistry.hasTypeHandler(String.class, JdbcType.LONGVARCHAR));
     assertTrue(typeHandlerRegistry.hasTypeHandler(String.class, JdbcType.INTEGER));
-    assertTrue(typeHandlerRegistry.getUnknownTypeHandler() instanceof UnknownTypeHandler);
   }
 
   @Test

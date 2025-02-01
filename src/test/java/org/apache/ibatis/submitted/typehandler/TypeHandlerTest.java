@@ -168,10 +168,9 @@ class TypeHandlerTest {
   @Test
   void shouldHandlerBePickedBasedOnRuntimeJdbcType_Map() {
     // gh-591
-    // If a handler is registered against Object and JdbcType,
+    // If a handler is registered against JdbcType,
     // it will be used when result type is Map
-    sqlSessionFactory.getConfiguration().getTypeHandlerRegistry().register(Object.class, JdbcType.DATE,
-        LocalDateTypeHandler.class);
+    sqlSessionFactory.getConfiguration().getTypeHandlerRegistry().register(JdbcType.DATE, new LocalDateTypeHandler());
     addMapper();
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
