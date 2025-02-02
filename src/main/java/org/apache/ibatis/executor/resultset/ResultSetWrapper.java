@@ -27,10 +27,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.ObjectTypeHandler;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
@@ -93,29 +93,18 @@ public class ResultSetWrapper {
    * @return the type handler
    */
   public TypeHandler<?> getTypeHandler(Class<?> propertyType, String columnName) {
-    TypeHandler<?> handler = null;
-    Map<Class<?>, TypeHandler<?>> columnHandlers = typeHandlerMap.get(columnName);
-    if (columnHandlers == null) {
-      columnHandlers = new HashMap<>();
-      typeHandlerMap.put(columnName, columnHandlers);
-    } else {
-      handler = columnHandlers.get(propertyType);
-    }
-    if (handler == null) {
+    Map<Class<?>, TypeHandler<?>> columnHandlers = typeHandlerMap.computeIfAbsent(columnName, k -> new HashMap<>());
+    return columnHandlers.computeIfAbsent(propertyType, k -> {
+      TypeHandler<?> handler = null;
       JdbcType jdbcType = getJdbcType(columnName);
-      if (jdbcType != null && propertyType != null) {
-        handler = typeHandlerRegistry.getTypeHandler(propertyType, jdbcType);
-      } else if (propertyType != null) {
-        handler = typeHandlerRegistry.getTypeHandler(propertyType);
-      } else if (jdbcType != null) {
+      if (jdbcType != null && k != null) {
+        handler = typeHandlerRegistry.getTypeHandler(k, jdbcType);
+      }
+      if (handler == null && jdbcType != null) {
         handler = typeHandlerRegistry.getTypeHandler(jdbcType);
       }
-      if (handler == null) {
-        handler = TypeHandlerRegistry.OBJECT_TYPE_HANDLER;
-      }
-      columnHandlers.put(propertyType, handler);
-    }
-    return handler;
+      return handler == null ? ObjectTypeHandler.INSTANCE : handler;
+    });
   }
 
   private int getColumnIndex(String columnName) {
@@ -125,18 +114,6 @@ public class ResultSetWrapper {
       }
     }
     return -1;
-  }
-
-  private Class<?> resolveClass(String className) {
-    try {
-      // #699 className could be null
-      if (className != null) {
-        return Resources.classForName(className);
-      }
-    } catch (ClassNotFoundException e) {
-      // ignore
-    }
-    return null;
   }
 
   private void loadMappedAndUnmappedColumnNames(ResultMap resultMap, String columnPrefix) throws SQLException {

@@ -68,7 +68,6 @@ public class ConflictedTypeHandler implements TypeHandler<Object> {
   }
 
   private ExecutorException exception() {
-    // TODO:
     return new ExecutorException(
         "Multiple type-aware handlers are registered and being looked up without type; javaType=" + javaType
             + ", jdbcType=" + jdbcType + ", type handlers="

@@ -33,7 +33,6 @@ import org.apache.ibatis.session.Configuration;
 @Deprecated
 public class UnknownTypeHandler extends BaseTypeHandler<Object> {
 
-  private static final ObjectTypeHandler OBJECT_TYPE_HANDLER = new ObjectTypeHandler();
   // TODO Rename to 'configuration' after removing the 'configuration' property(deprecated property) on parent class
   private final Configuration config;
   private final Supplier<TypeHandlerRegistry> typeHandlerRegistrySupplier;
@@ -82,7 +81,7 @@ public class UnknownTypeHandler extends BaseTypeHandler<Object> {
   public Object getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
     TypeHandler<?> handler = resolveTypeHandler(rs.getMetaData(), columnIndex);
     if (handler == null || handler instanceof UnknownTypeHandler) {
-      handler = OBJECT_TYPE_HANDLER;
+      handler = ObjectTypeHandler.INSTANCE;
     }
     return handler.getResult(rs, columnIndex);
   }
@@ -95,12 +94,12 @@ public class UnknownTypeHandler extends BaseTypeHandler<Object> {
   private TypeHandler<?> resolveTypeHandler(Object parameter, JdbcType jdbcType) {
     TypeHandler<?> handler;
     if (parameter == null) {
-      handler = OBJECT_TYPE_HANDLER;
+      handler = ObjectTypeHandler.INSTANCE;
     } else {
       handler = typeHandlerRegistrySupplier.get().getTypeHandler(parameter.getClass(), jdbcType);
       // check if handler is null (issue #270)
       if (handler == null || handler instanceof UnknownTypeHandler) {
-        handler = OBJECT_TYPE_HANDLER;
+        handler = ObjectTypeHandler.INSTANCE;
       }
     }
     return handler;
@@ -123,7 +122,7 @@ public class UnknownTypeHandler extends BaseTypeHandler<Object> {
         handler = resolveTypeHandler(rsmd, columnIndex);
       }
       if (handler == null || handler instanceof UnknownTypeHandler) {
-        handler = OBJECT_TYPE_HANDLER;
+        handler = ObjectTypeHandler.INSTANCE;
       }
       return handler;
     } catch (SQLException e) {
