@@ -107,32 +107,31 @@ public abstract class BaseBuilder {
 
   @Deprecated
   protected TypeHandler<?> resolveTypeHandler(Class<?> javaType, String typeHandlerAlias) {
-    return resolveTypeHandler(null, null, javaType, null, typeHandlerAlias);
+    return resolveTypeHandler(null, javaType, null, typeHandlerAlias);
   }
 
   @Deprecated
   protected TypeHandler<?> resolveTypeHandler(Class<?> javaType, Class<? extends TypeHandler<?>> typeHandlerType) {
-    return resolveTypeHandler(null, null, javaType, null, typeHandlerType);
+    return resolveTypeHandler(null, javaType, null, typeHandlerType);
   }
 
-  protected TypeHandler<?> resolveTypeHandler(Class<?> parameterType, String propertyName, Type propertyType,
-      JdbcType jdbcType, String typeHandlerAlias) {
+  protected TypeHandler<?> resolveTypeHandler(Class<?> parameterType, Type propertyType, JdbcType jdbcType,
+      String typeHandlerAlias) {
     Class<? extends TypeHandler<?>> typeHandlerType = null;
     typeHandlerType = resolveClass(typeHandlerAlias);
     if (typeHandlerType != null && !TypeHandler.class.isAssignableFrom(typeHandlerType)) {
       throw new BuilderException("Type " + typeHandlerType.getName()
           + " is not a valid TypeHandler because it does not implement TypeHandler interface");
     }
-    return resolveTypeHandler(parameterType, propertyName, propertyType, jdbcType, typeHandlerType);
+    return resolveTypeHandler(parameterType, propertyType, jdbcType, typeHandlerType);
   }
 
-  protected TypeHandler<?> resolveTypeHandler(Class<?> parameterType, String propertyName, Type propertyType,
-      JdbcType jdbcType, Class<? extends TypeHandler<?>> typeHandlerType) {
+  protected TypeHandler<?> resolveTypeHandler(Class<?> parameterType, Type propertyType, JdbcType jdbcType,
+      Class<? extends TypeHandler<?>> typeHandlerType) {
     if (typeHandlerType == null && jdbcType == null) {
       return null;
     }
-    return configuration.getTypeHandlerRegistry().resolve(parameterType, propertyType, propertyName, jdbcType,
-        typeHandlerType);
+    return configuration.getTypeHandlerRegistry().resolve(parameterType, propertyType, jdbcType, typeHandlerType);
   }
 
   protected <T> Class<? extends T> resolveAlias(String alias) {

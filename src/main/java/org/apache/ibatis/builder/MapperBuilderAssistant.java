@@ -149,8 +149,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 
     // Class parameterType = parameterMapBuilder.type();
     Class<?> javaTypeClass = resolveParameterJavaType(parameterType, property, javaType, jdbcType);
-    TypeHandler<?> typeHandlerInstance = resolveTypeHandler(parameterType, property, javaTypeClass, jdbcType,
-        typeHandler);
+    TypeHandler<?> typeHandlerInstance = resolveTypeHandler(parameterType, javaTypeClass, jdbcType, typeHandler);
 
     return new ParameterMapping.Builder(configuration, property, javaTypeClass).jdbcType(jdbcType)
         .resultMapId(resultMap).mode(parameterMode).numericScale(numericScale).typeHandler(typeHandlerInstance).build();
@@ -343,8 +342,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       Class<? extends TypeHandler<?>> typeHandler, List<ResultFlag> flags, String resultSet, String foreignColumn,
       boolean lazy) {
     Entry<Type, Class<?>> setterType = resolveSetterType(resultType, property, javaType);
-    TypeHandler<?> typeHandlerInstance = resolveTypeHandler(resultType, property, setterType.getKey(), jdbcType,
-        typeHandler);
+    TypeHandler<?> typeHandlerInstance = resolveTypeHandler(resultType, setterType.getKey(), jdbcType, typeHandler);
     List<ResultMapping> composites;
     if ((nestedSelect == null || nestedSelect.isEmpty()) && (foreignColumn == null || foreignColumn.isEmpty())) {
       composites = Collections.emptyList();

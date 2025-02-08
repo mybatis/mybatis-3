@@ -178,7 +178,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
               }
               jdbcType = JdbcType.forCode(rsmd.getColumnType(i + 1));
             }
-            typeHandler = typeHandlerRegistry.resolve(parameterObject.getClass(), javaType, property, jdbcType, null);
+            typeHandler = typeHandlerRegistry.resolve(parameterObject.getClass(), javaType, jdbcType, null);
           }
           metaParam.setValue(property, typeHandler.getResult(cs, i + 1));
         }
@@ -635,8 +635,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         th = typeHandlerRegistry.getTypeHandler(jdbcType);
       } else {
         Type classToHandle = metaResultObject.getGenericSetterType(property).getKey();
-        th = configuration.getTypeHandlerRegistry().resolve(metaResultObjectClass, classToHandle, property, jdbcType,
-            null);
+        th = configuration.getTypeHandlerRegistry().resolve(metaResultObjectClass, classToHandle, jdbcType, null);
         if (th == null) {
           throw new TypeException(
               "No usable type handler found for mapping the result of column '" + column + "' to property '" + property
@@ -678,7 +677,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
           final Type propertyType = metaObject.getGenericSetterType(property).getKey();
           Class<?> metaObjectClass = metaObject.getOriginalObject().getClass();
           TypeHandler<?> typeHandler = configuration.getTypeHandlerRegistry().resolve(metaObjectClass, propertyType,
-              property, rsw.getJdbcType(columnName), null);
+              rsw.getJdbcType(columnName), null);
           if (typeHandler != null) {
             autoMapping.add(new UnMappedColumnAutoMapping(columnName, property, typeHandler,
                 propertyType instanceof Class && ((Class<?>) propertyType).isPrimitive()));

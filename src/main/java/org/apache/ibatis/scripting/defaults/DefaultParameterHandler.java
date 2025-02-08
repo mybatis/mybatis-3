@@ -57,7 +57,7 @@ public class DefaultParameterHandler implements ParameterHandler {
   private ParameterMetaData paramMetaData;
   private MetaObject paramMetaObject;
   private HashMap<Class<?>, MetaClass> metaClassCache = new HashMap<>();
-  private static final ParameterMetaData nullParameterMetaData = new ParameterMetaData() {
+  private static final ParameterMetaData NULL_PARAM_METADATA = new ParameterMetaData() {
     // @formatter:off
     public <T> T unwrap(Class<T> iface) throws SQLException { return null; }
     public boolean isWrapperFor(Class<?> iface) throws SQLException { return false; }
@@ -107,7 +107,7 @@ public class DefaultParameterHandler implements ParameterHandler {
           } else if (boundSql.hasAdditionalParameter(propertyName)) { // issue #448 ask first for additional params
             value = boundSql.getAdditionalParameter(propertyName);
             if (typeHandler == null) {
-              typeHandler = typeHandlerRegistry.resolve(value.getClass(), null, null, actualJdbcType, null);
+              typeHandler = typeHandlerRegistry.resolve(value.getClass(), null, actualJdbcType, null);
             }
           } else if (parameterObject == null) {
             value = null;
@@ -143,7 +143,7 @@ public class DefaultParameterHandler implements ParameterHandler {
                   try {
                     propertyGenericType = paramMetaObject.getGenericGetterType(propertyName).getKey();
                     typeHandler = configuration.getTypeHandlerRegistry().resolve(parameterClass, propertyGenericType,
-                        propertyName, actualJdbcType, null);
+                        actualJdbcType, null);
                   } catch (Exception e) {
                     // Not always resolvable
                   }
@@ -162,8 +162,8 @@ public class DefaultParameterHandler implements ParameterHandler {
             if (propertyGenericType == null) {
               propertyGenericType = value.getClass();
             }
-            typeHandler = typeHandlerRegistry.resolve(parameterObject.getClass(), propertyGenericType, propertyName,
-                actualJdbcType, null);
+            typeHandler = typeHandlerRegistry.resolve(parameterObject.getClass(), propertyGenericType, actualJdbcType,
+                null);
           }
           if (typeHandler == null) {
             typeHandler = typeHandlerRegistry.getTypeHandler(actualJdbcType);
@@ -189,14 +189,13 @@ public class DefaultParameterHandler implements ParameterHandler {
   private JdbcType getParamJdbcType(PreparedStatement ps, int paramIndex) {
     try {
       if (paramMetaData == null) {
-        try {
-          paramMetaData = ps.getParameterMetaData();
-        } catch (SQLException e) {
-          paramMetaData = nullParameterMetaData;
-        }
+        paramMetaData = ps.getParameterMetaData();
       }
-      return JdbcType.forCode(paramMetaData.getParameterType(paramIndex));
+      return paramMetaData == NULL_PARAM_METADATA ? null : JdbcType.forCode(paramMetaData.getParameterType(paramIndex));
     } catch (SQLException e) {
+      if (paramMetaData == null) {
+        paramMetaData = NULL_PARAM_METADATA;
+      }
       return null;
     }
   }
