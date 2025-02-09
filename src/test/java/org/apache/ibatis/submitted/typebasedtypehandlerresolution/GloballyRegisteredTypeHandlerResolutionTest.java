@@ -201,4 +201,22 @@ class GloballyRegisteredTypeHandlerResolutionTest {
       assertEquals(1, user.getId());
     }
   }
+
+  @Test
+  void shouldHandlerAppliedToNestedSelectSingleParam() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      GloballyRegisteredHandlerMapper mapper = sqlSession.getMapper(GloballyRegisteredHandlerMapper.class);
+      ParentBean bean = mapper.selectNestedUser_SingleParam(1);
+      assertEquals(1, bean.getUser().getId());
+    }
+  }
+
+  @Test
+  void shouldHandlerAppliedToNestedSelectMultiParam() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      GloballyRegisteredHandlerMapper mapper = sqlSession.getMapper(GloballyRegisteredHandlerMapper.class);
+      ParentBean bean = mapper.selectNestedUser_MultiParam(1);
+      assertEquals(1, bean.getUser().getId());
+    }
+  }
 }

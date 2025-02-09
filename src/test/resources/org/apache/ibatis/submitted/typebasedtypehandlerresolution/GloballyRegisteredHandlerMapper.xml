@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2022 the original author or authors.
+       Copyright 2009-2025 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -47,5 +47,33 @@
     insert into users (id, strvalue, intvalue, strings, integers) values
     (#{id}, #{strvalue}, #{intvalue}, #{strings}, #{integers})
   ]]></insert>
+
+  <resultMap id="parentBeanRM_SingleParam" type="org.apache.ibatis.submitted.typebasedtypehandlerresolution.ParentBean">
+    <id property="id" column="id" />
+    <association property="user" column="strvalue" select="selectUserByStrvalue" />
+  </resultMap>
+
+  <select id="selectNestedUser_SingleParam" resultMap="parentBeanRM_SingleParam">
+    select id, strvalue, intvalue from users where id = #{id}
+  </select>
+
+  <select id="selectUserByStrvalue" parameterType="org.apache.ibatis.submitted.typebasedtypehandlerresolution.User" resultMap="userRM">
+    select id, strvalue, intvalue, strings, integers from users
+    where strvalue = #{strvalue}
+  </select>
+
+  <resultMap id="parentBeanRM_MultiParam" type="org.apache.ibatis.submitted.typebasedtypehandlerresolution.ParentBean">
+    <id property="id" column="id" />
+    <association property="user" column="{strvalue=strvalue,intvalue=intvalue}" select="selectUserByStrvalueAndIntvalue" />
+  </resultMap>
+
+  <select id="selectNestedUser_MultiParam" resultMap="parentBeanRM_MultiParam">
+    select id, strvalue, intvalue from users where id = #{id}
+  </select>
+
+  <select id="selectUserByStrvalueAndIntvalue" parameterType="org.apache.ibatis.submitted.typebasedtypehandlerresolution.User" resultMap="userRM">
+    select id, strvalue, intvalue, strings, integers from users
+    where strvalue = #{strvalue} and intvalue = #{intvalue}
+  </select>
 
 </mapper>

@@ -1087,6 +1087,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private Object prepareSimpleKeyParameter(ResultSetWrapper rsw, ResultMapping resultMapping, Class<?> parameterType,
       String columnPrefix) throws SQLException {
+    // parameterType is ignored in this case
     final String columnName = prependPrefix(resultMapping.getColumn(), columnPrefix);
     final TypeHandler<?> typeHandler = rsw.getTypeHandler(parameterType, columnName);
     return typeHandler.getResult(rsw.getResultSet(), columnName);
@@ -1094,14 +1095,15 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private Object prepareCompositeKeyParameter(ResultSetWrapper rsw, ResultMapping resultMapping, Class<?> parameterType,
       String columnPrefix) throws SQLException {
+    // Map is used if parameterType is not specified
     final Object parameterObject = instantiateParameterObject(parameterType);
     final MetaObject metaObject = configuration.newMetaObject(parameterObject);
     boolean foundValues = false;
     for (ResultMapping innerResultMapping : resultMapping.getComposites()) {
-      final Class<?> propType = metaObject.getSetterType(innerResultMapping.getProperty());
-      final TypeHandler<?> typeHandler = typeHandlerRegistry.getTypeHandler(propType);
-      final Object propValue = typeHandler.getResult(rsw.getResultSet(),
-          prependPrefix(innerResultMapping.getColumn(), columnPrefix));
+      final String columnName = prependPrefix(innerResultMapping.getColumn(), columnPrefix);
+      final TypeHandler<?> typeHandler = resolvePropertyTypeHandler(rsw, metaObject, innerResultMapping.getColumn(),
+          columnPrefix);
+      final Object propValue = typeHandler.getResult(rsw.getResultSet(), columnName);
       // issue #353 & #560 do not execute nested query if key is null
       if (propValue != null) {
         metaObject.setValue(innerResultMapping.getProperty(), propValue);

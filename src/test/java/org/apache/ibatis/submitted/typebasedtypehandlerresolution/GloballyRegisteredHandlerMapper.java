@@ -45,4 +45,8 @@ public interface GloballyRegisteredHandlerMapper {
 
   @Select("select id, strvalue, intvalue, strings, integers from users where strvalue = #{p1} and intvalue = #{p2}")
   User getUserByFuzzyBeans(FuzzyBean<String> p1, FuzzyBean<Integer> p2);
+
+  ParentBean selectNestedUser_SingleParam(Integer id);
+
+  ParentBean selectNestedUser_MultiParam(Integer id);
 }
