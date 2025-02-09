@@ -39,4 +39,10 @@ public interface GloballyRegisteredHandlerMapper {
 
   @Select("select strvalue from users where id = #{id}")
   FuzzyBean<String> selectFuzzyString(Integer id);
+
+  @Select("select id, strvalue, intvalue, strings, integers from users where strvalue = #{v}")
+  User getUserByFuzzyBean(FuzzyBean<String> str);
+
+  @Select("select id, strvalue, intvalue, strings, integers from users where strvalue = #{p1} and intvalue = #{p2}")
+  User getUserByFuzzyBeans(FuzzyBean<String> p1, FuzzyBean<Integer> p2);
 }

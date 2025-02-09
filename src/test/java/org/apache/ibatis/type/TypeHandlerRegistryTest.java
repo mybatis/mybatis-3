@@ -50,7 +50,7 @@ class TypeHandlerRegistryTest {
 
   @Test
   void shouldRegisterAndRetrieveTypeHandler() {
-    TypeHandler<String> stringTypeHandler = typeHandlerRegistry.getTypeHandler(String.class);
+    TypeHandler<?> stringTypeHandler = typeHandlerRegistry.getTypeHandler(String.class);
     typeHandlerRegistry.register(String.class, JdbcType.LONGVARCHAR, stringTypeHandler);
     assertEquals(stringTypeHandler, typeHandlerRegistry.getTypeHandler(String.class, JdbcType.LONGVARCHAR));
 

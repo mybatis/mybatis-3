@@ -193,7 +193,7 @@ public final class TypeHandlerRegistry {
     this.defaultEnumTypeHandler = typeHandler;
   }
 
-  public boolean hasTypeHandler(Class<?> javaType) {
+  public boolean hasTypeHandler(Type javaType) {
     return hasTypeHandler(javaType, null);
   }
 
@@ -216,13 +216,6 @@ public final class TypeHandlerRegistry {
     return allTypeHandlersMap.get(handlerType);
   }
 
-  @Deprecated
-  @SuppressWarnings("unchecked")
-  public <T> TypeHandler<T> getTypeHandler(Class<T> clazz) {
-    return (TypeHandler<T>) getTypeHandler((Type) clazz);
-  }
-
-  @Deprecated
   public TypeHandler<?> getTypeHandler(Type type) {
     return getTypeHandler(type, null);
   }

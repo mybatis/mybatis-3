@@ -183,4 +183,22 @@ class GloballyRegisteredTypeHandlerResolutionTest {
       assertEquals("garden", fuzzyBean.getValue());
     }
   }
+
+  @Test
+  void shouldHandlerBeAppliedToSoleParam() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      GloballyRegisteredHandlerMapper mapper = sqlSession.getMapper(GloballyRegisteredHandlerMapper.class);
+      User user = mapper.getUserByFuzzyBean(new FuzzyBean<String>("garden"));
+      assertEquals(1, user.getId());
+    }
+  }
+
+  @Test
+  void shouldHandlerBeAppliedToMultiParams() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      GloballyRegisteredHandlerMapper mapper = sqlSession.getMapper(GloballyRegisteredHandlerMapper.class);
+      User user = mapper.getUserByFuzzyBeans(new FuzzyBean<String>("garden"), new FuzzyBean<Integer>(31));
+      assertEquals(1, user.getId());
+    }
+  }
 }

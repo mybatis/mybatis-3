@@ -138,6 +138,8 @@ public class DefaultParameterHandler implements ParameterHandler {
                     } else {
                       propertyGenericType = actualParamClass;
                     }
+                  } else {
+                    propertyGenericType = actualParamType;
                   }
                 } else {
                   try {
