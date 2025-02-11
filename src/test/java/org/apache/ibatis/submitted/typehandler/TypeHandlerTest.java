@@ -19,7 +19,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.Reader;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.OffsetTime;
 import java.util.Map;
 
 import org.apache.ibatis.BaseDataTest;
@@ -147,6 +151,20 @@ class TypeHandlerTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Product product = mapper.getProductByNameXml("iPad");
       assertEquals(Integer.valueOf(2), product.getId().getValue());
+    }
+  }
+
+  @Test
+  void shouldRespectClassNameFromMetadataByDefault() {
+    addMapper();
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      Map<String, Object> map = mapper.selectDateTime();
+      assertEquals(java.sql.Date.class, map.get("D").getClass());
+      assertEquals(OffsetTime.class, map.get("T").getClass());
+      assertEquals(OffsetDateTime.class, map.get("TS").getClass());
+      assertEquals(Time.class, map.get("LT").getClass());
+      assertEquals(Timestamp.class, map.get("LTS").getClass());
     }
   }
 

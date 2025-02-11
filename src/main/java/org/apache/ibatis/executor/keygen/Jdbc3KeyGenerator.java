@@ -260,8 +260,11 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
                 + metaParam.getOriginalObject().getClass().getName() + "'.");
           }
           Class<?> propertyType = metaParam.getSetterType(propertyName);
-          typeHandler = typeHandlerRegistry.getTypeHandler(propertyType,
-              JdbcType.forCode(rsmd.getColumnType(columnPosition)));
+          JdbcType jdbcType = JdbcType.forCode(rsmd.getColumnType(columnPosition));
+          typeHandler = typeHandlerRegistry.getTypeHandler(propertyType, jdbcType);
+          if (typeHandler == null) {
+            typeHandler = typeHandlerRegistry.getTypeHandler(jdbcType);
+          }
         }
         if (typeHandler == null) {
           // Error?

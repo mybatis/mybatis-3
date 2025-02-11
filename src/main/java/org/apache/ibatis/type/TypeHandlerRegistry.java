@@ -254,7 +254,10 @@ public final class TypeHandlerRegistry {
   public TypeHandler<?> getTypeHandler(Type type, JdbcType jdbcType) {
     if (ParamMap.class.equals(type)) {
       return null;
+    } else if (type == null) {
+      return getTypeHandler(jdbcType);
     }
+
     TypeHandler<?> handler = null;
     Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = getJdbcHandlerMap(type);
 
@@ -262,10 +265,7 @@ public final class TypeHandlerRegistry {
       if (jdbcHandlerMap != null) {
         handler = jdbcHandlerMap.get(jdbcType);
       }
-      if (handler == null) {
-        handler = jdbcTypeHandlerMap.get(jdbcType);
-      }
-      return handler != null ? handler : ObjectTypeHandler.INSTANCE;
+      return handler;
     }
 
     if (jdbcHandlerMap != null) {

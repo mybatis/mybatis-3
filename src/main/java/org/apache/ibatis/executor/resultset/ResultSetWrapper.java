@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.executor.resultset;
 
+import java.lang.reflect.Type;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -27,6 +28,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
@@ -44,7 +46,7 @@ public class ResultSetWrapper {
   private final List<String> columnNames = new ArrayList<>();
   private final List<String> classNames = new ArrayList<>();
   private final List<JdbcType> jdbcTypes = new ArrayList<>();
-  private final Map<String, Map<Class<?>, TypeHandler<?>>> typeHandlerMap = new HashMap<>();
+  private final Map<String, Map<Type, TypeHandler<?>>> typeHandlerMap = new HashMap<>();
   private final Map<String, Set<String>> mappedColumnNamesMap = new HashMap<>();
   private final Map<String, List<String>> unMappedColumnNamesMap = new HashMap<>();
 
@@ -92,19 +94,43 @@ public class ResultSetWrapper {
    *
    * @return the type handler
    */
-  public TypeHandler<?> getTypeHandler(Class<?> propertyType, String columnName) {
-    Map<Class<?>, TypeHandler<?>> columnHandlers = typeHandlerMap.computeIfAbsent(columnName, k -> new HashMap<>());
-    return columnHandlers.computeIfAbsent(propertyType, k -> {
-      TypeHandler<?> handler = null;
-      JdbcType jdbcType = getJdbcType(columnName);
-      if (jdbcType != null && k != null) {
-        handler = typeHandlerRegistry.getTypeHandler(k, jdbcType);
+  public TypeHandler<?> getTypeHandler(Type propertyType, String columnName) {
+    return typeHandlerMap.computeIfAbsent(columnName, k -> new HashMap<>()).computeIfAbsent(propertyType, k -> {
+      int index = getColumnIndex(columnName);
+      if (index == -1) {
+        return ObjectTypeHandler.INSTANCE;
       }
-      if (handler == null && jdbcType != null) {
+
+      JdbcType jdbcType = jdbcTypes.get(index);
+      TypeHandler<?> handler = typeHandlerRegistry.resolve(null, k, jdbcType, null);
+      if (handler != null) {
+        return handler;
+      }
+
+      Class<?> javaType = resolveClass(classNames.get(index));
+      if (!(k instanceof Class && ((Class<?>) k).isAssignableFrom(javaType))) {
+        // Clearly incompatible
+        return null;
+      }
+
+      handler = typeHandlerRegistry.resolve(null, javaType, jdbcType, null);
+      if (handler == null) {
         handler = typeHandlerRegistry.getTypeHandler(jdbcType);
       }
       return handler == null ? ObjectTypeHandler.INSTANCE : handler;
     });
+  }
+
+  static Class<?> resolveClass(String className) {
+    try {
+      // #699 className could be null
+      if (className != null) {
+        return Resources.classForName(className);
+      }
+    } catch (ClassNotFoundException e) {
+      // ignore
+    }
+    return null;
   }
 
   private int getColumnIndex(String columnName) {
