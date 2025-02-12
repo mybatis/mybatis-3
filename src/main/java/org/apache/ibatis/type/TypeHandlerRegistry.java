@@ -566,10 +566,4 @@ public final class TypeHandlerRegistry {
     return Collections.unmodifiableCollection(allTypeHandlersMap.values());
   }
 
-  public TypeHandler<?> resolve(Class<?> declaringClass, Type propertyType, JdbcType jdbcType,
-      Class<? extends TypeHandler<?>> typeHandlerClass) {
-    Type javaType = propertyType == null ? declaringClass : propertyType;
-    return getTypeHandler(javaType, jdbcType, typeHandlerClass);
-  }
-
 }

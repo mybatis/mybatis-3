@@ -144,7 +144,7 @@ public class ParameterMappingTokenHandler extends BaseBuilder implements TokenHa
     if (metaParameters.hasGetter(propertyTokenizer.getName())) { // issue #448 get type from additional params
       return metaParameters.getGetterType(property);
     }
-    typeHandler = resolveTypeHandler(parameterType, null, jdbcType, (Class<? extends TypeHandler<?>>) null);
+    typeHandler = resolveTypeHandler(parameterType, jdbcType, (Class<? extends TypeHandler<?>>) null);
     if (typeHandler != null) {
       return parameterType;
     }

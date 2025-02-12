@@ -102,7 +102,7 @@ public class ResultSetWrapper {
       }
 
       JdbcType jdbcType = jdbcTypes.get(index);
-      TypeHandler<?> handler = typeHandlerRegistry.resolve(null, k, jdbcType, null);
+      TypeHandler<?> handler = typeHandlerRegistry.getTypeHandler(k, jdbcType, null);
       if (handler != null) {
         return handler;
       }
@@ -113,7 +113,7 @@ public class ResultSetWrapper {
         return null;
       }
 
-      handler = typeHandlerRegistry.resolve(null, javaType, jdbcType, null);
+      handler = typeHandlerRegistry.getTypeHandler(javaType, jdbcType, null);
       if (handler == null) {
         handler = typeHandlerRegistry.getTypeHandler(jdbcType);
       }

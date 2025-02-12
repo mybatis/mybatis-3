@@ -106,9 +106,6 @@ public class DefaultParameterHandler implements ParameterHandler {
             value = parameterMapping.getValue();
           } else if (boundSql.hasAdditionalParameter(propertyName)) { // issue #448 ask first for additional params
             value = boundSql.getAdditionalParameter(propertyName);
-            if (typeHandler == null) {
-              typeHandler = typeHandlerRegistry.resolve(value.getClass(), null, actualJdbcType, null);
-            }
           } else if (parameterObject == null) {
             value = null;
           } else {
@@ -144,7 +141,7 @@ public class DefaultParameterHandler implements ParameterHandler {
                 } else {
                   try {
                     propertyGenericType = paramMetaObject.getGenericGetterType(propertyName).getKey();
-                    typeHandler = configuration.getTypeHandlerRegistry().resolve(parameterClass, propertyGenericType,
+                    typeHandler = configuration.getTypeHandlerRegistry().getTypeHandler(propertyGenericType,
                         actualJdbcType, null);
                   } catch (Exception e) {
                     // Not always resolvable
@@ -164,8 +161,7 @@ public class DefaultParameterHandler implements ParameterHandler {
             if (propertyGenericType == null) {
               propertyGenericType = value.getClass();
             }
-            typeHandler = typeHandlerRegistry.resolve(parameterObject.getClass(), propertyGenericType, actualJdbcType,
-                null);
+            typeHandler = typeHandlerRegistry.getTypeHandler(propertyGenericType, actualJdbcType, null);
           }
           if (typeHandler == null) {
             typeHandler = typeHandlerRegistry.getTypeHandler(actualJdbcType);

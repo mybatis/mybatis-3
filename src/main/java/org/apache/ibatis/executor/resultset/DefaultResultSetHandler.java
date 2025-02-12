@@ -168,7 +168,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
               javaType = metaParam.getGenericSetterType(property).getKey();
             }
             JdbcType jdbcType = parameterMapping.getJdbcType();
-            typeHandler = typeHandlerRegistry.resolve(parameterObject.getClass(), javaType, jdbcType, null);
+            typeHandler = typeHandlerRegistry.getTypeHandler(javaType, jdbcType, null);
             if (typeHandler == null) {
               typeHandler = typeHandlerRegistry.getTypeHandler(jdbcType);
               if (typeHandler == null) {

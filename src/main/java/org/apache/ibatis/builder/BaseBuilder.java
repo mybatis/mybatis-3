@@ -112,7 +112,7 @@ public abstract class BaseBuilder {
 
   @Deprecated
   protected TypeHandler<?> resolveTypeHandler(Class<?> javaType, Class<? extends TypeHandler<?>> typeHandlerType) {
-    return resolveTypeHandler(null, javaType, null, typeHandlerType);
+    return resolveTypeHandler(javaType, null, typeHandlerType);
   }
 
   protected TypeHandler<?> resolveTypeHandler(Class<?> parameterType, Type propertyType, JdbcType jdbcType,
@@ -123,15 +123,15 @@ public abstract class BaseBuilder {
       throw new BuilderException("Type " + typeHandlerType.getName()
           + " is not a valid TypeHandler because it does not implement TypeHandler interface");
     }
-    return resolveTypeHandler(parameterType, propertyType, jdbcType, typeHandlerType);
+    return resolveTypeHandler(propertyType, jdbcType, typeHandlerType);
   }
 
-  protected TypeHandler<?> resolveTypeHandler(Class<?> parameterType, Type propertyType, JdbcType jdbcType,
+  protected TypeHandler<?> resolveTypeHandler(Type javaType, JdbcType jdbcType,
       Class<? extends TypeHandler<?>> typeHandlerType) {
     if (typeHandlerType == null && jdbcType == null) {
       return null;
     }
-    return configuration.getTypeHandlerRegistry().resolve(parameterType, propertyType, jdbcType, typeHandlerType);
+    return configuration.getTypeHandlerRegistry().getTypeHandler(javaType, jdbcType, typeHandlerType);
   }
 
   protected <T> Class<? extends T> resolveAlias(String alias) {
