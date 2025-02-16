@@ -148,7 +148,9 @@ class ClobReaderTypeHandlerTest extends BaseTypeHandlerTest {
   }
 
   interface Mapper {
+    // @formatter:off
     @Select("SELECT ID, CONTENT FROM TEST_CLOB WHERE ID = #{id}")
+    // @formatter:on
     ClobContent findOne(int id);
 
     @Insert("INSERT INTO TEST_CLOB (ID, CONTENT) VALUES(#{id}, #{content})")
