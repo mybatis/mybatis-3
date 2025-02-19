@@ -77,7 +77,7 @@
     <log4j.version>2.24.3</log4j.version>
     <mockito.version>5.15.2</mockito.version>
     <mssql-jdbc.version>12.8.1.jre11</mssql-jdbc.version>
-    <testcontainers.version>1.20.4</testcontainers.version>
+    <testcontainers.version>1.20.5</testcontainers.version>
     <git-build-hook.version>3.5.0</git-build-hook.version>
 
     <!-- Add slow test groups here and annotate classes similar to @Tag('groupName'). -->
