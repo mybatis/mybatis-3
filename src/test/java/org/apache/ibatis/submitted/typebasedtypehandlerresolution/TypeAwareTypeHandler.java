@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -79,6 +79,16 @@ public class TypeAwareTypeHandler implements TypeHandler<Object> {
 
   @Override
   public Object getResult(ResultSet rs, int columnIndex) throws SQLException {
+    if (FuzzyBean.class.equals(rawType)) {
+      if (String.class.equals(typeArg)) {
+        return new FuzzyBean<String>(rs.getString(columnIndex));
+      } else if (Integer.class.equals(typeArg)) {
+        return new FuzzyBean<Integer>(rs.getInt(columnIndex));
+      }
+    } else if (LocalDate.class.equals(rawType)) {
+      int v = rs.getInt(columnIndex);
+      return v == 0 ? null : LocalDate.of(v / 10000, v / 100 % 100, v % 100);
+    }
     return null;
   }
 

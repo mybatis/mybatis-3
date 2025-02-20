@@ -16,6 +16,7 @@
 package org.apache.ibatis.submitted.typebasedtypehandlerresolution;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -217,6 +218,45 @@ class GloballyRegisteredTypeHandlerResolutionTest {
       GloballyRegisteredHandlerMapper mapper = sqlSession.getMapper(GloballyRegisteredHandlerMapper.class);
       ParentBean bean = mapper.selectNestedUser_MultiParam(1);
       assertEquals(1, bean.getUser().getId());
+    }
+  }
+
+  @Test
+  void shouldHandlerGeneratedKey() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      GloballyRegisteredHandlerMapper mapper = sqlSession.getMapper(GloballyRegisteredHandlerMapper.class);
+      Product product = new Product();
+      product.setName("Great product");
+      assertEquals(1, mapper.insertProduct(product));
+      assertNotNull(product.getId());
+    }
+  }
+
+  @Test
+  void shouldHandlerGeneratedKeys() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      GloballyRegisteredHandlerMapper mapper = sqlSession.getMapper(GloballyRegisteredHandlerMapper.class);
+      Product product1 = new Product();
+      product1.setName("Great product");
+      Product product2 = new Product();
+      product2.setName("Good product");
+      assertEquals(2, mapper.insertProducts(List.of(product1, product2)));
+      assertNotNull(product1.getId());
+      assertNotNull(product2.getId());
+    }
+  }
+
+  @Test
+  void shouldHandlerGeneratedKeys_MultiParams() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      GloballyRegisteredHandlerMapper mapper = sqlSession.getMapper(GloballyRegisteredHandlerMapper.class);
+      Product product1 = new Product();
+      product1.setName("Great product");
+      Product product2 = new Product();
+      product2.setName("Good product");
+      assertEquals(2, mapper.insertProducts2("dummy", List.of(product1, product2)));
+      assertNotNull(product1.getId());
+      assertNotNull(product2.getId());
     }
   }
 }

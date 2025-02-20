@@ -1,5 +1,5 @@
 --
---    Copyright 2009-2022 the original author or authors.
+--    Copyright 2009-2025 the original author or authors.
 --
 --    Licensed under the Apache License, Version 2.0 (the "License");
 --    you may not use this file except in compliance with the License.
@@ -30,3 +30,9 @@ insert into users (id, strvalue, intvalue, datevalue, datevalue2, strings, integ
   values(1, 'garden', 31, 20200511, '2020-05-09', 'a,b,c', '1,3,5');
 insert into users (id, strvalue, intvalue, datevalue, datevalue2, strings, integers)
   values(2, 'vault', 32, 20200512, '2020-05-10', 'd,e,f', '7,9');
+
+
+create table product (
+  id int identity,
+  name varchar(20)
+);

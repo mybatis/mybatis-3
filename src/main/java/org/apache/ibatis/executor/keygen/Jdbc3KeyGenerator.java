@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.executor.keygen;
 
+import java.lang.reflect.Type;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -259,7 +260,7 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
             throw new ExecutorException("No setter found for the keyProperty '" + propertyName + "' in '"
                 + metaParam.getOriginalObject().getClass().getName() + "'.");
           }
-          Class<?> propertyType = metaParam.getSetterType(propertyName);
+          Type propertyType = metaParam.getGenericSetterType(propertyName).getKey();
           JdbcType jdbcType = JdbcType.forCode(rsmd.getColumnType(columnPosition));
           typeHandler = typeHandlerRegistry.getTypeHandler(propertyType, jdbcType);
           if (typeHandler == null) {

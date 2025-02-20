@@ -15,7 +15,11 @@
  */
 package org.apache.ibatis.submitted.typebasedtypehandlerresolution;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Select;
 
@@ -49,4 +53,12 @@ public interface GloballyRegisteredHandlerMapper {
   ParentBean selectNestedUser_SingleParam(Integer id);
 
   ParentBean selectNestedUser_MultiParam(Integer id);
+
+  @Options(useGeneratedKeys = true, keyColumn = "id", keyProperty = "id")
+  @Insert("insert into product (name) values (#{name})")
+  int insertProduct(Product product);
+
+  int insertProducts(List<Product> products);
+
+  int insertProducts2(@Param("dummy") String dummy, @Param("products") List<Product> products);
 }

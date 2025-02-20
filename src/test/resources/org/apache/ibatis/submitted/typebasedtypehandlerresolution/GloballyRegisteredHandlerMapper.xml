@@ -76,4 +76,17 @@
     where strvalue = #{strvalue} and intvalue = #{intvalue}
   </select>
 
+  <insert id="insertProducts" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+    insert into product (name) values
+    <foreach collection="list" item="product" separator=",">
+      (#{product.name})
+    </foreach>
+  </insert>
+
+  <insert id="insertProducts2" useGeneratedKeys="true" keyColumn="id" keyProperty="products.id">
+    insert into product (name) values
+    <foreach collection="products" item="product" separator=",">
+      (#{product.name})
+    </foreach>
+  </insert>
 </mapper>
