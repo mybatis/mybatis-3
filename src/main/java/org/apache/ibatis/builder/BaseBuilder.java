@@ -105,12 +105,12 @@ public abstract class BaseBuilder {
     }
   }
 
-  @Deprecated
+  @Deprecated(since = "3.6.0", forRemoval = true)
   protected TypeHandler<?> resolveTypeHandler(Class<?> javaType, String typeHandlerAlias) {
     return resolveTypeHandler(null, javaType, null, typeHandlerAlias);
   }
 
-  @Deprecated
+  @Deprecated(since = "3.6.0", forRemoval = true)
   protected TypeHandler<?> resolveTypeHandler(Class<?> javaType, Class<? extends TypeHandler<?>> typeHandlerType) {
     return resolveTypeHandler(javaType, null, typeHandlerType);
   }

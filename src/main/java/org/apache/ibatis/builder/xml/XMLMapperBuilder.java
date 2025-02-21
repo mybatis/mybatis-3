@@ -60,7 +60,7 @@ public class XMLMapperBuilder extends BaseBuilder {
   private final String resource;
   private Class<?> mapperClass;
 
-  @Deprecated
+  @Deprecated(since = "3.6.0", forRemoval = true)
   public XMLMapperBuilder(Reader reader, Configuration configuration, String resource, Map<String, XNode> sqlFragments,
       String namespace) {
     this(reader, configuration, resource, sqlFragments);

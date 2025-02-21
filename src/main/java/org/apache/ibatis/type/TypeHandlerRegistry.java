@@ -197,7 +197,7 @@ public final class TypeHandlerRegistry {
     return hasTypeHandler(javaType, null);
   }
 
-  @Deprecated
+  @Deprecated(since = "3.6.0", forRemoval = true)
   public boolean hasTypeHandler(TypeReference<?> javaTypeReference) {
     return hasTypeHandler(javaTypeReference, null);
   }
@@ -206,12 +206,12 @@ public final class TypeHandlerRegistry {
     return javaType != null && getTypeHandler(javaType, jdbcType) != null;
   }
 
-  @Deprecated
+  @Deprecated(since = "3.6.0", forRemoval = true)
   public boolean hasTypeHandler(TypeReference<?> javaTypeReference, JdbcType jdbcType) {
     return javaTypeReference != null && getTypeHandler(javaTypeReference, jdbcType) != null;
   }
 
-  @Deprecated
+  @Deprecated(since = "3.6.0", forRemoval = true)
   public TypeHandler<?> getMappingTypeHandler(Class<? extends TypeHandler<?>> handlerType) {
     return allTypeHandlersMap.get(handlerType);
   }
@@ -220,7 +220,7 @@ public final class TypeHandlerRegistry {
     return getTypeHandler(type, null);
   }
 
-  @Deprecated
+  @Deprecated(since = "3.6.0", forRemoval = true)
   public <T> TypeHandler<T> getTypeHandler(TypeReference<T> javaTypeReference) {
     return getTypeHandler(javaTypeReference, null);
   }
@@ -230,7 +230,7 @@ public final class TypeHandlerRegistry {
   }
 
   @SuppressWarnings("unchecked")
-  @Deprecated
+  @Deprecated(since = "3.6.0", forRemoval = true)
   public <T> TypeHandler<T> getTypeHandler(TypeReference<T> javaTypeReference, JdbcType jdbcType) {
     return (TypeHandler<T>) getTypeHandler(javaTypeReference.getRawType(), jdbcType);
   }
@@ -397,7 +397,7 @@ public final class TypeHandlerRegistry {
     register(new Type[] { mappedJavaType }, mappedJdbcTypes(handler.getClass()), handler);
   }
 
-  @Deprecated
+  @Deprecated(since = "3.6.0", forRemoval = true)
   public <T> void register(TypeReference<T> javaTypeReference, TypeHandler<? extends T> handler) {
     register(javaTypeReference.getRawType(), handler);
   }
@@ -451,7 +451,7 @@ public final class TypeHandlerRegistry {
 
   // java type + handler type
 
-  @Deprecated
+  @Deprecated(since = "3.6.0", forRemoval = true)
   public void register(String javaTypeClassName, String typeHandlerClassName) throws ClassNotFoundException {
     register(Resources.classForName(javaTypeClassName), Resources.classForName(typeHandlerClassName));
   }
