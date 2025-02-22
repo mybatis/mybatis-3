@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.BuilderException;
@@ -38,6 +39,7 @@ public class XMLScriptBuilder extends BaseBuilder {
   private boolean isDynamic;
   private final Class<?> parameterType;
   private final Map<String, NodeHandler> nodeHandlerMap = new HashMap<>();
+  private final static Map<String, StaticTextSqlNode> EMPTY_TEXT_NODE = new ConcurrentHashMap<>();
 
   public XMLScriptBuilder(Configuration configuration, XNode context) {
     this(configuration, context, null);
@@ -80,6 +82,11 @@ public class XMLScriptBuilder extends BaseBuilder {
       XNode child = node.newXNode(children.item(i));
       if (child.getNode().getNodeType() == Node.CDATA_SECTION_NODE || child.getNode().getNodeType() == Node.TEXT_NODE) {
         String data = child.getStringBody("");
+        if (data.trim().isEmpty()) {
+          StaticTextSqlNode staticTextSqlNode = EMPTY_TEXT_NODE.computeIfAbsent(data, StaticTextSqlNode::new);
+          contents.add(staticTextSqlNode);
+          continue;
+        }
         TextSqlNode textSqlNode = new TextSqlNode(data);
         if (textSqlNode.isDynamic()) {
           contents.add(textSqlNode);
