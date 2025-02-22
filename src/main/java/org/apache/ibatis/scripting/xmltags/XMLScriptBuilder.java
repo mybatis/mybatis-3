@@ -39,7 +39,7 @@ public class XMLScriptBuilder extends BaseBuilder {
   private boolean isDynamic;
   private final Class<?> parameterType;
   private final Map<String, NodeHandler> nodeHandlerMap = new HashMap<>();
-  private final static Map<String,StaticTextSqlNode> EMPTY_TEXT_NODE = new ConcurrentHashMap<>();
+  private final static Map<String, StaticTextSqlNode> EMPTY_TEXT_NODE = new ConcurrentHashMap<>();
 
   public XMLScriptBuilder(Configuration configuration, XNode context) {
     this(configuration, context, null);
