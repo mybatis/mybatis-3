@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -150,16 +150,20 @@ class XmlMapperBuilderTest {
   @Test
   void resolveTypeHandlerTypeHandlerAliasIsNull() {
     BaseBuilder builder = new BaseBuilder(new Configuration()) {
+      {
+      }
     };
-    TypeHandler<?> typeHandler = builder.resolveTypeHandler(String.class, (String) null);
+    TypeHandler<?> typeHandler = builder.resolveTypeHandler(String.class, null, null, (String) null);
     assertThat(typeHandler).isNull();
   }
 
   @Test
   void resolveTypeHandlerNoAssignable() {
     BaseBuilder builder = new BaseBuilder(new Configuration()) {
+      {
+      }
     };
-    when(() -> builder.resolveTypeHandler(String.class, "integer"));
+    when(() -> builder.resolveTypeHandler(String.class, null, null, "integer"));
     then(caughtException()).isInstanceOf(BuilderException.class).hasMessage(
         "Type java.lang.Integer is not a valid TypeHandler because it does not implement TypeHandler interface");
   }

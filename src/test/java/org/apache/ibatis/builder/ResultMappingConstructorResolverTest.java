@@ -228,11 +228,7 @@ class ResultMappingConstructorResolverTest {
         mappingC);
     final List<ResultMapping> mappingList = resolver.resolveWithConstructor();
 
-    assertThat(mappingList)
-        .extracting(ResultMapping::getProperty, mapping -> mapping.getJavaType().getSimpleName(),
-            mapping -> mapping.getTypeHandler().getClass().getSimpleName())
-        .containsExactly(tuple("a", "String", "StringTypeHandler"), tuple("b", "int", "IntegerTypeHandler"),
-            tuple("c", "List", "MyTypeHandler"));
+    assertThat(mappingList.get(2).getTypeHandler().getClass()).isEqualTo(MyTypeHandler.class);
   }
 
   @Nested

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
  *    limitations under the License.
  */
 package org.apache.ibatis.submitted.typehandler;
+
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Arg;
 import org.apache.ibatis.annotations.ConstructorArgs;
@@ -58,4 +60,10 @@ public interface Mapper {
 
   @Select("select id from product where name = #{value}")
   ProductId getProductIdByName(String name);
+
+  @Select("select current_date d, current_time t, current_timestamp ts, localtime lt, localtimestamp lts from (values(0))")
+  Map<String, Object> selectDateTime();
+
+  @Select("select id, name, released_on from product where id = #{id}")
+  Map<String, Object> getProductAsMap(Integer id);
 }

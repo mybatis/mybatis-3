@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.builder;
 
+import java.lang.reflect.Type;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,6 +23,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -45,6 +47,7 @@ import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.reflection.MetaClass;
+import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
@@ -146,7 +149,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 
     // Class parameterType = parameterMapBuilder.type();
     Class<?> javaTypeClass = resolveParameterJavaType(parameterType, property, javaType, jdbcType);
-    TypeHandler<?> typeHandlerInstance = resolveTypeHandler(javaTypeClass, typeHandler);
+    TypeHandler<?> typeHandlerInstance = resolveTypeHandler(javaTypeClass, jdbcType, typeHandler);
 
     return new ParameterMapping.Builder(configuration, property, javaTypeClass).jdbcType(jdbcType)
         .resultMapId(resultMap).mode(parameterMode).numericScale(numericScale).typeHandler(typeHandlerInstance).build();
@@ -200,7 +203,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       SqlCommandType sqlCommandType, Integer fetchSize, Integer timeout, String parameterMap, Class<?> parameterType,
       String resultMap, Class<?> resultType, ResultSetType resultSetType, boolean flushCache, boolean useCache,
       boolean resultOrdered, KeyGenerator keyGenerator, String keyProperty, String keyColumn, String databaseId,
-      LanguageDriver lang, String resultSets, boolean dirtySelect) {
+      LanguageDriver lang, String resultSets, boolean dirtySelect, ParamNameResolver paramNameResolver) {
 
     if (unresolvedCacheRef) {
       throw new IncompleteElementException("Cache-ref not yet resolved");
@@ -213,7 +216,8 @@ public class MapperBuilderAssistant extends BaseBuilder {
         .keyGenerator(keyGenerator).keyProperty(keyProperty).keyColumn(keyColumn).databaseId(databaseId).lang(lang)
         .resultOrdered(resultOrdered).resultSets(resultSets)
         .resultMaps(getStatementResultMaps(resultMap, resultType, id)).resultSetType(resultSetType)
-        .flushCacheRequired(flushCache).useCache(useCache).cache(currentCache).dirtySelect(dirtySelect);
+        .flushCacheRequired(flushCache).useCache(useCache).cache(currentCache).dirtySelect(dirtySelect)
+        .paramNameResolver(paramNameResolver);
 
     ParameterMap statementParameterMap = getStatementParameterMap(parameterMap, parameterType, id);
     if (statementParameterMap != null) {
@@ -276,7 +280,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
       LanguageDriver lang, String resultSets) {
     return addMappedStatement(id, sqlSource, statementType, sqlCommandType, fetchSize, timeout, parameterMap,
         parameterType, resultMap, resultType, resultSetType, flushCache, useCache, resultOrdered, keyGenerator,
-        keyProperty, keyColumn, databaseId, lang, null, false);
+        keyProperty, keyColumn, databaseId, lang, null, false, null);
   }
 
   public MappedStatement addMappedStatement(String id, SqlSource sqlSource, StatementType statementType,
@@ -337,15 +341,15 @@ public class MapperBuilderAssistant extends BaseBuilder {
       JdbcType jdbcType, String nestedSelect, String nestedResultMap, String notNullColumn, String columnPrefix,
       Class<? extends TypeHandler<?>> typeHandler, List<ResultFlag> flags, String resultSet, String foreignColumn,
       boolean lazy) {
-    Class<?> javaTypeClass = resolveResultJavaType(resultType, property, javaType);
-    TypeHandler<?> typeHandlerInstance = resolveTypeHandler(javaTypeClass, typeHandler);
+    Entry<Type, Class<?>> setterType = resolveSetterType(resultType, property, javaType);
+    TypeHandler<?> typeHandlerInstance = resolveTypeHandler(setterType.getKey(), jdbcType, typeHandler);
     List<ResultMapping> composites;
     if ((nestedSelect == null || nestedSelect.isEmpty()) && (foreignColumn == null || foreignColumn.isEmpty())) {
       composites = Collections.emptyList();
     } else {
       composites = parseCompositeColumnName(column);
     }
-    return new ResultMapping.Builder(configuration, property, column, javaTypeClass).jdbcType(jdbcType)
+    return new ResultMapping.Builder(configuration, property, column, setterType.getValue()).jdbcType(jdbcType)
         .nestedQueryId(applyCurrentNamespace(nestedSelect, true))
         .nestedResultMapId(applyCurrentNamespace(nestedResultMap, true)).resultSet(resultSet)
         .typeHandler(typeHandlerInstance).flags(flags == null ? new ArrayList<>() : flags).composites(composites)
@@ -427,26 +431,26 @@ public class MapperBuilderAssistant extends BaseBuilder {
         String property = parser.nextToken();
         String column = parser.nextToken();
         ResultMapping complexResultMapping = new ResultMapping.Builder(configuration, property, column,
-            configuration.getTypeHandlerRegistry().getUnknownTypeHandler()).build();
+            (TypeHandler<?>) null).build();
         composites.add(complexResultMapping);
       }
     }
     return composites;
   }
 
-  private Class<?> resolveResultJavaType(Class<?> resultType, String property, Class<?> javaType) {
-    if (javaType == null && property != null) {
+  private Entry<Type, Class<?>> resolveSetterType(Class<?> resultType, String property, Class<?> javaType) {
+    if (javaType != null) {
+      return Map.entry(javaType, javaType);
+    }
+    if (property != null) {
+      MetaClass metaResultType = MetaClass.forClass(resultType, configuration.getReflectorFactory());
       try {
-        MetaClass metaResultType = MetaClass.forClass(resultType, configuration.getReflectorFactory());
-        javaType = metaResultType.getSetterType(property);
+        return metaResultType.getGenericSetterType(property);
       } catch (Exception e) {
-        // ignore, following null check statement will deal with the situation
+        // Not all property types are resolvable.
       }
     }
-    if (javaType == null) {
-      javaType = Object.class;
-    }
-    return javaType;
+    return Map.entry(Object.class, Object.class);
   }
 
   private Class<?> resolveParameterJavaType(Class<?> resultType, String property, Class<?> javaType,
