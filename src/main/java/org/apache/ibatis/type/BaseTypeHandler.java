@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import org.apache.ibatis.session.Configuration;
  * @author Simone Tripodi
  * @author Kzuki Shimizu
  */
-public abstract class BaseTypeHandler<T> extends TypeReference<T> implements TypeHandler<T> {
+public abstract class BaseTypeHandler<T> implements TypeHandler<T> {
 
   /**
    * @deprecated Since 3.5.0 - See https://github.com/mybatis/mybatis-3/issues/1203. This field will remove future.
