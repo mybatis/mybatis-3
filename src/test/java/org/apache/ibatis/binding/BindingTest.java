@@ -45,7 +45,6 @@ import javax.sql.DataSource;
 import net.sf.cglib.proxy.Factory;
 
 import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.binding.MapperProxy.MapperMethodInvoker;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.domain.blog.Author;
 import org.apache.ibatis.domain.blog.Blog;
