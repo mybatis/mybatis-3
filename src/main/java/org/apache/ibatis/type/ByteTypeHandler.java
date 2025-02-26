@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import java.sql.SQLException;
  * @author Clinton Begin
  */
 public class ByteTypeHandler extends BaseTypeHandler<Byte> {
+  public static final ByteTypeHandler INSTANCE = new ByteTypeHandler();
 
   @Override
   public void setNonNullParameter(PreparedStatement ps, int i, Byte parameter, JdbcType jdbcType) throws SQLException {
