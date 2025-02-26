@@ -25,6 +25,7 @@ import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.executor.keygen.NoKeyGenerator;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
+import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 
@@ -56,6 +57,7 @@ public final class MappedStatement {
   private Log statementLog;
   private LanguageDriver lang;
   private String[] resultSets;
+  private ParamNameResolver paramNameResolver;
   private boolean dirtySelect;
 
   MappedStatement() {
@@ -182,6 +184,11 @@ public final class MappedStatement {
       return this;
     }
 
+    public Builder paramNameResolver(ParamNameResolver paramNameResolver) {
+      mappedStatement.paramNameResolver = paramNameResolver;
+      return this;
+    }
+
     /**
      * Resul sets.
      *
@@ -302,6 +309,10 @@ public final class MappedStatement {
 
   public boolean isDirtySelect() {
     return dirtySelect;
+  }
+
+  public ParamNameResolver getParamNameResolver() {
+    return paramNameResolver;
   }
 
   /**

@@ -58,8 +58,9 @@ public class XMLMapperBuilder extends BaseBuilder {
   private final MapperBuilderAssistant builderAssistant;
   private final Map<String, XNode> sqlFragments;
   private final String resource;
+  private Class<?> mapperClass;
 
-  @Deprecated
+  @Deprecated(since = "3.6.0", forRemoval = true)
   public XMLMapperBuilder(Reader reader, Configuration configuration, String resource, Map<String, XNode> sqlFragments,
       String namespace) {
     this(reader, configuration, resource, sqlFragments);
@@ -71,6 +72,12 @@ public class XMLMapperBuilder extends BaseBuilder {
       Map<String, XNode> sqlFragments) {
     this(new XPathParser(reader, true, configuration.getVariables(), new XMLMapperEntityResolver()), configuration,
         resource, sqlFragments);
+  }
+
+  public XMLMapperBuilder(InputStream inputStream, Configuration configuration, String resource,
+      Map<String, XNode> sqlFragments, Class<?> mapperClass) {
+    this(inputStream, configuration, resource, sqlFragments, mapperClass.getName());
+    this.mapperClass = mapperClass;
   }
 
   public XMLMapperBuilder(InputStream inputStream, Configuration configuration, String resource,
@@ -137,7 +144,7 @@ public class XMLMapperBuilder extends BaseBuilder {
   private void buildStatementFromContext(List<XNode> list, String requiredDatabaseId) {
     for (XNode context : list) {
       final XMLStatementBuilder statementParser = new XMLStatementBuilder(configuration, builderAssistant, context,
-          requiredDatabaseId);
+          requiredDatabaseId, mapperClass);
       try {
         statementParser.parseStatementNode();
       } catch (IncompleteElementException e) {

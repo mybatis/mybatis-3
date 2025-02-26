@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -30,9 +30,9 @@ import org.apache.ibatis.session.Configuration;
 /**
  * @author Clinton Begin
  */
+@Deprecated(since = "3.6.0", forRemoval = true)
 public class UnknownTypeHandler extends BaseTypeHandler<Object> {
 
-  private static final ObjectTypeHandler OBJECT_TYPE_HANDLER = new ObjectTypeHandler();
   // TODO Rename to 'configuration' after removing the 'configuration' property(deprecated property) on parent class
   private final Configuration config;
   private final Supplier<TypeHandlerRegistry> typeHandlerRegistrySupplier;
@@ -81,7 +81,7 @@ public class UnknownTypeHandler extends BaseTypeHandler<Object> {
   public Object getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
     TypeHandler<?> handler = resolveTypeHandler(rs.getMetaData(), columnIndex);
     if (handler == null || handler instanceof UnknownTypeHandler) {
-      handler = OBJECT_TYPE_HANDLER;
+      handler = ObjectTypeHandler.INSTANCE;
     }
     return handler.getResult(rs, columnIndex);
   }
@@ -94,12 +94,12 @@ public class UnknownTypeHandler extends BaseTypeHandler<Object> {
   private TypeHandler<?> resolveTypeHandler(Object parameter, JdbcType jdbcType) {
     TypeHandler<?> handler;
     if (parameter == null) {
-      handler = OBJECT_TYPE_HANDLER;
+      handler = ObjectTypeHandler.INSTANCE;
     } else {
       handler = typeHandlerRegistrySupplier.get().getTypeHandler(parameter.getClass(), jdbcType);
       // check if handler is null (issue #270)
       if (handler == null || handler instanceof UnknownTypeHandler) {
-        handler = OBJECT_TYPE_HANDLER;
+        handler = ObjectTypeHandler.INSTANCE;
       }
     }
     return handler;
@@ -122,7 +122,7 @@ public class UnknownTypeHandler extends BaseTypeHandler<Object> {
         handler = resolveTypeHandler(rsmd, columnIndex);
       }
       if (handler == null || handler instanceof UnknownTypeHandler) {
-        handler = OBJECT_TYPE_HANDLER;
+        handler = ObjectTypeHandler.INSTANCE;
       }
       return handler;
     } catch (SQLException e) {
