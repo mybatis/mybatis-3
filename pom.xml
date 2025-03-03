@@ -75,7 +75,7 @@
     <byte-buddy.version>1.17.1</byte-buddy.version>
     <derby.version>10.17.1.0</derby.version>
     <log4j.version>2.24.3</log4j.version>
-    <mockito.version>5.15.2</mockito.version>
+    <mockito.version>5.16.0</mockito.version>
     <mssql-jdbc.version>12.8.1.jre11</mssql-jdbc.version>
     <testcontainers.version>1.20.5</testcontainers.version>
     <git-build-hook.version>3.5.0</git-build-hook.version>
