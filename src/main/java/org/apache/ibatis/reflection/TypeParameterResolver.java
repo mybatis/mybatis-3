@@ -283,8 +283,14 @@ public class TypeParameterResolver {
 
     @Override
     public String toString() {
-      return "ParameterizedTypeImpl [rawType=" + rawType + ", ownerType=" + ownerType + ", actualTypeArguments="
-          + Arrays.toString(actualTypeArguments) + "]";
+      StringBuilder s = new StringBuilder().append(rawType.getName()).append("<");
+      for (int i = 0; i < actualTypeArguments.length; i++) {
+        if (i > 0) {
+          s.append(", ");
+        }
+        s.append(actualTypeArguments[i].getTypeName());
+      }
+      return s.append(">").toString();
     }
   }
 
@@ -329,6 +335,17 @@ public class TypeParameterResolver {
       WildcardTypeImpl other = (WildcardTypeImpl) obj;
       return Arrays.equals(lowerBounds, other.lowerBounds) && Arrays.equals(upperBounds, other.upperBounds);
     }
+
+    @Override
+    public String toString() {
+      StringBuilder s = new StringBuilder().append("?");
+      if (lowerBounds.length > 0) {
+        s.append(" super ").append(lowerBounds[0].getTypeName());
+      } else if (upperBounds.length > 0 && upperBounds[0] != Object.class) {
+        s.append(" extends ").append(upperBounds[0].getTypeName());
+      }
+      return s.toString();
+    }
   }
 
   static class GenericArrayTypeImpl implements GenericArrayType {
@@ -359,6 +376,11 @@ public class TypeParameterResolver {
       }
       GenericArrayTypeImpl other = (GenericArrayTypeImpl) obj;
       return Objects.equals(genericComponentType, other.genericComponentType);
+    }
+
+    @Override
+    public String toString() {
+      return new StringBuilder().append(genericComponentType.toString()).append("[]").toString();
     }
   }
 }
