@@ -90,7 +90,7 @@ public class TrimSqlNode implements SqlNode {
     public void applyAll() {
       sqlBuffer = new StringBuilder(sqlBuffer.toString().trim());
       String trimmedUppercaseSql = sqlBuffer.toString().toUpperCase(Locale.ENGLISH);
-      if (trimmedUppercaseSql.length() > 0) {
+      if (!trimmedUppercaseSql.isEmpty()) {
         applyPrefix(sqlBuffer, trimmedUppercaseSql);
         applySuffix(sqlBuffer, trimmedUppercaseSql);
       }
@@ -99,6 +99,9 @@ public class TrimSqlNode implements SqlNode {
 
     @Override
     public void appendSql(String sql) {
+      if (sqlBuffer.length() > 0) {
+        sqlBuffer.append(" ");
+      }
       sqlBuffer.append(sql);
     }
 
