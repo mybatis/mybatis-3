@@ -32,6 +32,15 @@ import java.util.Objects;
  */
 public class TypeParameterResolver {
 
+  public static Type[] resolveClassTypeParams(Class<?> classWithTypeParams, Class<?> childClass) {
+    TypeVariable<?>[] typeArgs = classWithTypeParams.getTypeParameters();
+    Type[] result = new Type[typeArgs.length];
+    for (int i = 0; i < typeArgs.length; i++) {
+      result[i] = resolveTypeVar(typeArgs[i], childClass, classWithTypeParams);
+    }
+    return result;
+  }
+
   /**
    * Resolve field type.
    *
@@ -139,6 +148,14 @@ public class TypeParameterResolver {
     } else if (srcType instanceof ParameterizedType) {
       ParameterizedType parameterizedType = (ParameterizedType) srcType;
       clazz = (Class<?>) parameterizedType.getRawType();
+      if (clazz == declaringClass) {
+        TypeVariable<?>[] typeVars = declaringClass.getTypeParameters();
+        for (int i = 0; i < typeVars.length; i++) {
+          if (typeVar.equals(typeVars[i])) {
+            return parameterizedType.getActualTypeArguments()[i];
+          }
+        }
+      }
     } else {
       throw new IllegalArgumentException(
           "The 2nd arg must be Class or ParameterizedType, but was: " + srcType.getClass());

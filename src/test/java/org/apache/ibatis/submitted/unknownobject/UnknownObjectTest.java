@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,20 +17,36 @@ package org.apache.ibatis.submitted.unknownobject;
 
 import java.io.Reader;
 
+import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class UnknownObjectTest {
 
-  @Test
-  void shouldFailBecauseThereIsAPropertyWithoutTypeHandler() throws Exception {
-    // create a SqlSessionFactory
+  private static SqlSessionFactory sqlSessionFactory;
+
+  @BeforeAll
+  static void setUp() throws Exception {
     try (
         Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/unknownobject/mybatis-config.xml")) {
-      Assertions.assertThrows(PersistenceException.class, () -> new SqlSessionFactoryBuilder().build(reader));
+      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+
+    }
+    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+        "org/apache/ibatis/submitted/unknownobject/CreateDB.sql");
+  }
+
+  @Test
+  void shouldFailBecauseThereIsAPropertyWithoutTypeHandler() throws Exception {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      Assertions.assertThrows(PersistenceException.class, () -> mapper.getUser(1));
     }
   }
 
