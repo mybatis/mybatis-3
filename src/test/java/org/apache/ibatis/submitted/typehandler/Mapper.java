@@ -23,6 +23,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.submitted.typehandler.Product.ProductId;
@@ -70,4 +71,13 @@ public interface Mapper {
 
   @Insert({ "insert into vague (vague) values (#{bean})" })
   int insertVague(@Param("bean") VagueBean bean);
+
+  @Result(property = "id", column = "id")
+  @Result(property = "vague", column = "vague")
+  @Select("select * from vague where id = #{id}")
+  VagueBean selectVague(Integer id);
+
+  @ResultMap("vagueRM")
+  @Select("select * from vague where id = #{id}")
+  VagueBean selectVagueNested(Integer id);
 }

@@ -600,6 +600,10 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         final String property = propertyMapping.getProperty();
         final Type javaType = property == null ? null : metaResultObject.getGenericSetterType(property).getKey();
         typeHandler = rsw.getTypeHandler(javaType, column);
+        if (typeHandler == null) {
+          throw new ExecutorException(
+              "No type handler found for '" + javaType + "' and JDBC type '" + rsw.getJdbcType(column) + "'");
+        }
       }
       return typeHandler.getResult(rs, column);
     }
@@ -1539,6 +1543,9 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         if (column != null && mappedColumnNames.contains(column.toUpperCase(Locale.ENGLISH))) {
           if (th == null) {
             th = typeHandlerRegistry.getTypeHandler(rsw.getJdbcType(column));
+          }
+          if (th == null) {
+            th = ObjectTypeHandler.INSTANCE;
           }
           final Object value = th.getResult(rsw.getResultSet(), column);
           if (value != null || configuration.isReturnInstanceForEmptyRow()) {

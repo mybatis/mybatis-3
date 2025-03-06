@@ -18,6 +18,7 @@ package org.apache.ibatis.submitted.typehandler;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.Reader;
@@ -29,6 +30,7 @@ import java.time.OffsetTime;
 import java.util.Map;
 
 import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -215,6 +217,30 @@ class TypeHandlerTest {
     } catch (Exception e) {
       assertThat(e).cause().isExactlyInstanceOf(TypeException.class).hasMessage(
           "Could not find type handler for Java type '" + VagueBean.class.getName() + "' nor JDBC type 'OTHER'");
+    }
+  }
+
+  @Test
+  void shouldThrowProperExceptionWhenNoHandlerFoundForResult() {
+    addMapper();
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      mapper.selectVague(1);
+      fail("Should throw exception");
+    } catch (Exception e) {
+      assertThat(e).cause().isExactlyInstanceOf(ExecutorException.class)
+          .hasMessage("No type handler found for 'java.util.Set<?>' and JDBC type 'OTHER'");
+    }
+  }
+
+  @Test
+  void shouldCreateRowKeyNotThrowNpe() {
+    addMapper();
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      VagueBean bean = mapper.selectVagueNested(1);
+      assertEquals(1, bean.getId());
+      assertTrue(bean.getVague().isEmpty());
     }
   }
 
