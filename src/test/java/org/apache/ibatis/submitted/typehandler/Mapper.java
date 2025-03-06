@@ -21,6 +21,7 @@ import org.apache.ibatis.annotations.Arg;
 import org.apache.ibatis.annotations.ConstructorArgs;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
@@ -66,4 +67,7 @@ public interface Mapper {
 
   @Select("select id, name, released_on from product where id = #{id}")
   Map<String, Object> getProductAsMap(Integer id);
+
+  @Insert({ "insert into vague (vague) values (#{bean})" })
+  int insertVague(@Param("bean") VagueBean bean);
 }

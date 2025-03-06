@@ -15,8 +15,10 @@
  */
 package org.apache.ibatis.submitted.typehandler;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.Reader;
 import java.sql.Time;
@@ -36,6 +38,7 @@ import org.apache.ibatis.submitted.typehandler.Product.ProductId;
 import org.apache.ibatis.submitted.typehandler.Product.ProductIdTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.LocalDateTypeHandler;
+import org.apache.ibatis.type.TypeException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -199,6 +202,19 @@ class TypeHandlerTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Map<String, Object> map = mapper.getProductAsMap(1);
       assertEquals(LocalDate.of(2001, 11, 10), map.get("RELEASED_ON"));
+    }
+  }
+
+  @Test
+  void shouldThrowProperExceptionWhenNoHandlerFoundForParam() {
+    addMapper();
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      mapper.insertVague(new VagueBean());
+      fail("Should throw exception");
+    } catch (Exception e) {
+      assertThat(e).cause().isExactlyInstanceOf(TypeException.class).hasMessage(
+          "Could not find type handler for Java type '" + VagueBean.class.getName() + "' nor JDBC type 'OTHER'");
     }
   }
 

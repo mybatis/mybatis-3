@@ -16,6 +16,7 @@
 
 drop table users if exists;
 drop table product if exists;
+drop table vague if exists;
 
 create table users (
   id int,
@@ -30,8 +31,15 @@ create table product (
   released_on date
 );
 
+create table vague (
+  id int identity,
+  vague other
+);
+
 insert into users (id, name, city, state) values(1, '   User1', '  Carmel  ', '  IN ');
 
 insert into product (id, name, released_on) values
 (1, 'iPod', '2001-11-10'),
 (2, 'iPad', '2010-04-03');
+
+insert into vague (id, vague) values (1, null);

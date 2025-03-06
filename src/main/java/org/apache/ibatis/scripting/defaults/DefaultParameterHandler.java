@@ -166,6 +166,10 @@ public class DefaultParameterHandler implements ParameterHandler {
           if (typeHandler == null) {
             typeHandler = typeHandlerRegistry.getTypeHandler(actualJdbcType);
           }
+          if (typeHandler == null) {
+            throw new TypeException("Could not find type handler for Java type '" + propertyGenericType.getTypeName()
+                + "' nor JDBC type '" + actualJdbcType + "'");
+          }
           try {
             typeHandler.setParameter(ps, i + 1, value, jdbcType);
           } catch (TypeException | SQLException e) {
