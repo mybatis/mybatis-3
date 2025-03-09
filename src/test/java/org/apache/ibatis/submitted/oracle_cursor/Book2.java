@@ -14,25 +14,24 @@
  *    limitations under the License.
  */
 
-package org.apache.ibatis.submitted.oracle_implicit_cursor;
+package org.apache.ibatis.submitted.oracle_cursor;
 
-import java.util.List;
 import java.util.Objects;
 
-public class Author {
+public class Book2 {
   private Integer id;
   private String name;
-  private List<Book> books;
+  private Author author;
 
-  public Author() {
+  public Book2() {
     super();
   }
 
-  public Author(Integer id, String name, List<Book> books) {
+  public Book2(Integer id, String name, Author author) {
     super();
     this.id = id;
     this.name = name;
-    this.books = books;
+    this.author = author;
   }
 
   public Integer getId() {
@@ -51,17 +50,17 @@ public class Author {
     this.name = name;
   }
 
-  public List<Book> getBooks() {
-    return books;
+  public Author getAuthor() {
+    return author;
   }
 
-  public void setBooks(List<Book> books) {
-    this.books = books;
+  public void setAuthor(Author author) {
+    this.author = author;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(books, id, name);
+    return Objects.hash(author, id, name);
   }
 
   @Override
@@ -69,15 +68,15 @@ public class Author {
     if (this == obj) {
       return true;
     }
-    if (!(obj instanceof Author)) {
+    if (!(obj instanceof Book2)) {
       return false;
     }
-    Author other = (Author) obj;
-    return Objects.equals(books, other.books) && Objects.equals(id, other.id) && Objects.equals(name, other.name);
+    Book2 other = (Book2) obj;
+    return Objects.equals(author, other.author) && Objects.equals(id, other.id) && Objects.equals(name, other.name);
   }
 
   @Override
   public String toString() {
-    return "Author [id=" + id + ", name=" + name + ", books=" + books + "]";
+    return "Book2 [id=" + id + ", name=" + name + ", author=" + author + "]";
   }
 }

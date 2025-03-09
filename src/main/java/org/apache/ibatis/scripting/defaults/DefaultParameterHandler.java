@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -45,6 +45,8 @@ public class DefaultParameterHandler implements ParameterHandler {
   private final BoundSql boundSql;
   private final Configuration configuration;
 
+  private MetaObject metaObject;
+
   public DefaultParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {
     this.mappedStatement = mappedStatement;
     this.configuration = mappedStatement.getConfiguration();
@@ -63,24 +65,10 @@ public class DefaultParameterHandler implements ParameterHandler {
     ErrorContext.instance().activity("setting parameters").object(mappedStatement.getParameterMap().getId());
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
     if (parameterMappings != null) {
-      MetaObject metaObject = null;
       for (int i = 0; i < parameterMappings.size(); i++) {
         ParameterMapping parameterMapping = parameterMappings.get(i);
         if (parameterMapping.getMode() != ParameterMode.OUT) {
-          Object value;
-          String propertyName = parameterMapping.getProperty();
-          if (boundSql.hasAdditionalParameter(propertyName)) { // issue #448 ask first for additional params
-            value = boundSql.getAdditionalParameter(propertyName);
-          } else if (parameterObject == null) {
-            value = null;
-          } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
-            value = parameterObject;
-          } else {
-            if (metaObject == null) {
-              metaObject = configuration.newMetaObject(parameterObject);
-            }
-            value = metaObject.getValue(propertyName);
-          }
+          Object value = getValue(parameterMapping);
           TypeHandler typeHandler = parameterMapping.getTypeHandler();
           JdbcType jdbcType = parameterMapping.getJdbcType();
           if (value == null && jdbcType == null) {
@@ -93,6 +81,25 @@ public class DefaultParameterHandler implements ParameterHandler {
           }
         }
       }
+    }
+  }
+
+  private Object getValue(ParameterMapping parameterMapping) {
+    if (parameterMapping.hasValue()) {
+      return parameterMapping.getValue();
+    }
+    String propertyName = parameterMapping.getProperty();
+    if (boundSql.hasAdditionalParameter(propertyName)) { // issue #448 ask first for additional params
+      return boundSql.getAdditionalParameter(propertyName);
+    } else if (parameterObject == null) {
+      return null;
+    } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
+      return parameterObject;
+    } else {
+      if (metaObject == null) {
+        metaObject = configuration.newMetaObject(parameterObject);
+      }
+      return metaObject.getValue(propertyName);
     }
   }
 

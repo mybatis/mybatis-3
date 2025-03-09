@@ -93,10 +93,6 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
         declaringClass);
   }
 
-  interface MapperMethodInvoker {
-    Object invoke(Object proxy, Method method, Object[] args, SqlSession sqlSession) throws Throwable;
-  }
-
   private static class PlainMethodInvoker implements MapperMethodInvoker {
     private final MapperMethod mapperMethod;
 

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,26 +13,15 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.scripting.xmltags;
+package org.apache.ibatis.submitted.auto_type_from_non_ambiguous_constructor;
 
-import org.apache.ibatis.session.Configuration;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+public record Account3(long accountId, String accountName, String accountType) {
 
-/**
- * @author <a href="1181963012mw@gmail.com">mawen12</a>
- *
- * @see SqlNode
- */
-@ExtendWith(MockitoExtension.class)
-abstract class SqlNodeBase {
+  public Account3(long accountId, int mismatch, String accountType) {
+    this(accountId, "MismatchedAccountI", accountType);
+  }
 
-  @Mock
-  protected Configuration configuration;
-
-  @Mock
-  protected DynamicContext context;
-
-  public abstract void shouldApply() throws Exception;
+  public Account3(long accountId, long mismatch, String accountType) {
+    this(accountId, "MismatchedAccountL", accountType);
+  }
 }

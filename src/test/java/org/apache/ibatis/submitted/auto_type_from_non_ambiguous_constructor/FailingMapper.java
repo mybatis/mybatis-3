@@ -13,16 +13,10 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.oracle_implicit_cursor;
+package org.apache.ibatis.submitted.auto_type_from_non_ambiguous_constructor;
 
-import java.util.List;
+public interface FailingMapper {
 
-public interface Mapper {
-
-  List<Author> selectImplicitCursors_Statement();
-
-  List<Author> selectImplicitCursors_Prepared();
-
-  List<Author> selectImplicitCursors_Callable();
+  Account1 getAccountAmbiguous(long id);
 
 }
