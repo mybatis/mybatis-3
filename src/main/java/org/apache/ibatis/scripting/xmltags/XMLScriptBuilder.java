@@ -39,7 +39,7 @@ public class XMLScriptBuilder extends BaseBuilder {
   private boolean isDynamic;
   private final Class<?> parameterType;
   private final Map<String, NodeHandler> nodeHandlerMap = new HashMap<>();
-  private final static Map<String, StaticTextSqlNode> EMPTY_TEXT_NODE = new ConcurrentHashMap<>();
+  private static final Map<String, SqlNode> emptyNodeCache = new ConcurrentHashMap<>();
 
   public XMLScriptBuilder(Configuration configuration, XNode context) {
     this(configuration, context, null);
@@ -83,8 +83,7 @@ public class XMLScriptBuilder extends BaseBuilder {
       if (child.getNode().getNodeType() == Node.CDATA_SECTION_NODE || child.getNode().getNodeType() == Node.TEXT_NODE) {
         String data = child.getStringBody("");
         if (data.trim().isEmpty()) {
-          StaticTextSqlNode staticTextSqlNode = EMPTY_TEXT_NODE.computeIfAbsent(data, StaticTextSqlNode::new);
-          contents.add(staticTextSqlNode);
+          contents.add(emptyNodeCache.computeIfAbsent(data, EmptySqlNode::new));
           continue;
         }
         TextSqlNode textSqlNode = new TextSqlNode(data);
@@ -255,4 +254,18 @@ public class XMLScriptBuilder extends BaseBuilder {
     }
   }
 
+  private static class EmptySqlNode implements SqlNode {
+    private final String whitespaces;
+
+    public EmptySqlNode(String whitespaces) {
+      super();
+      this.whitespaces = whitespaces;
+    }
+
+    @Override
+    public boolean apply(DynamicContext context) {
+      context.appendSql(whitespaces);
+      return true;
+    }
+  }
 }
