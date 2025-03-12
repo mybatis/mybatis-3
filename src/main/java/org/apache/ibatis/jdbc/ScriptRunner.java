@@ -120,8 +120,9 @@ public class ScriptRunner {
       } else {
         executeLineByLine(reader);
       }
-    } finally {
+    } catch (RuntimeSqlException exception) {
       rollbackConnection();
+      throw exception;
     }
   }
 

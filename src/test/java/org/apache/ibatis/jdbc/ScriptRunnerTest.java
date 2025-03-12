@@ -16,7 +16,9 @@
 package org.apache.ibatis.jdbc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
@@ -281,5 +283,94 @@ class ScriptRunnerTest extends BaseDataTest {
 
     verify(stmt).execute("line 1;" + LINE_SEPARATOR + "line 2;" + LINE_SEPARATOR + LINE_SEPARATOR);
     verify(stmt).execute("line 3" + LINE_SEPARATOR);
+  }
+
+  @Test
+  void testRollbackWithAutoCommitFalseAndStopErrorTrue() throws Exception {
+    DataSource ds = createJPetstoreDataSource();
+    try (Connection conn = ds.getConnection()) {
+      ScriptRunner runner = new ScriptRunner(conn);
+      runner.setAutoCommit(false);
+      runner.setStopOnError(true);
+      runner.setSendFullScript(false);
+      Reader reader = new StringReader("""
+          INSERT INTO signon VALUES('xiaoai','123456');
+          123;
+          INSERT INTO signon VALUES('xiaolan','123456');
+          """);
+      assertThrows(RuntimeSqlException.class, () -> runner.runScript(reader));
+    }
+    assertSignonCountByUsername(ds, "xiaoai", 0L);
+    assertSignonCountByUsername(ds, "xiaolan", 0L);
+  }
+
+  @Test
+  void testRollbackWithAutoCommitFalseAndStopErrorFalse() throws Exception {
+    DataSource ds = createJPetstoreDataSource();
+    try (Connection conn = ds.getConnection()) {
+      ScriptRunner runner = new ScriptRunner(conn);
+      runner.setAutoCommit(false);
+      runner.setStopOnError(false);
+      runner.setSendFullScript(false);
+      Reader reader = new StringReader("""
+          INSERT INTO signon VALUES('xiaoai','123456');
+          123;
+          INSERT INTO signon VALUES('xiaolan','123456');
+          """);
+      runner.runScript(reader);
+    }
+    assertSignonCountByUsername(ds, "xiaoai", 1L);
+    assertSignonCountByUsername(ds, "xiaolan", 1L);
+  }
+
+  private void assertSignonCountByUsername(DataSource dataSource, String username, long expectedVal)
+      throws SQLException {
+    try (Connection conn = dataSource.getConnection()) {
+      Map<String, Object> map = new SqlRunner(conn).selectOne("select count(*) as COUNT from signon where username = ?",
+          username);
+      assertNotNull(map);
+      assertNotNull(map.get("COUNT"));
+      assertEquals(expectedVal, map.get("COUNT"));
+    }
+  }
+
+  @Test
+  void testRollbackWithAutoCommitTrueAndStopErrorTrue() throws Exception {
+    DataSource ds = createJPetstoreDataSource();
+    try (Connection conn = ds.getConnection()) {
+      ScriptRunner runner = new ScriptRunner(conn);
+      runner.setAutoCommit(true);
+      runner.setStopOnError(true);
+      runner.setErrorLogWriter(null);
+      runner.setSendFullScript(false);
+      Reader reader = new StringReader("""
+          INSERT INTO signon VALUES('xiaohong','123456');
+          123;
+          INSERT INTO signon VALUES('xiaoming','123456');
+          """);
+      assertThrows(RuntimeSqlException.class, () -> runner.runScript(reader));
+    }
+    assertSignonCountByUsername(ds, "xiaohong", 1L);
+    assertSignonCountByUsername(ds, "xiaoming", 0L);
+  }
+
+  @Test
+  void testRollbackWithAutoCommitTrueAndStopErrorFalse() throws Exception {
+    DataSource ds = createJPetstoreDataSource();
+    try (Connection conn = ds.getConnection()) {
+      ScriptRunner runner = new ScriptRunner(conn);
+      runner.setAutoCommit(true);
+      runner.setStopOnError(false);
+      runner.setErrorLogWriter(null);
+      runner.setSendFullScript(false);
+      Reader reader = new StringReader("""
+          INSERT INTO signon VALUES('xiaohong','123456');
+          123;
+          INSERT INTO signon VALUES('xiaoming','123456');
+          """);
+      runner.runScript(reader);
+    }
+    assertSignonCountByUsername(ds, "xiaohong", 1L);
+    assertSignonCountByUsername(ds, "xiaoming", 1L);
   }
 }
