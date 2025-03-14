@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.BuilderException;
@@ -38,6 +39,7 @@ public class XMLScriptBuilder extends BaseBuilder {
   private boolean isDynamic;
   private final Class<?> parameterType;
   private final Map<String, NodeHandler> nodeHandlerMap = new HashMap<>();
+  private static final Map<String, SqlNode> emptyNodeCache = new ConcurrentHashMap<>();
 
   public XMLScriptBuilder(Configuration configuration, XNode context) {
     this(configuration, context, null);
@@ -80,6 +82,10 @@ public class XMLScriptBuilder extends BaseBuilder {
       XNode child = node.newXNode(children.item(i));
       if (child.getNode().getNodeType() == Node.CDATA_SECTION_NODE || child.getNode().getNodeType() == Node.TEXT_NODE) {
         String data = child.getStringBody("");
+        if (data.trim().isEmpty()) {
+          contents.add(emptyNodeCache.computeIfAbsent(data, EmptySqlNode::new));
+          continue;
+        }
         TextSqlNode textSqlNode = new TextSqlNode(data);
         if (textSqlNode.isDynamic()) {
           contents.add(textSqlNode);
@@ -248,4 +254,18 @@ public class XMLScriptBuilder extends BaseBuilder {
     }
   }
 
+  private static class EmptySqlNode implements SqlNode {
+    private final String whitespaces;
+
+    public EmptySqlNode(String whitespaces) {
+      super();
+      this.whitespaces = whitespaces;
+    }
+
+    @Override
+    public boolean apply(DynamicContext context) {
+      context.appendSql(whitespaces);
+      return true;
+    }
+  }
 }
