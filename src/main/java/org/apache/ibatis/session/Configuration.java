@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.session;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -69,6 +71,7 @@ import org.apache.ibatis.logging.nologging.NoLoggingImpl;
 import org.apache.ibatis.logging.slf4j.Slf4jImpl;
 import org.apache.ibatis.logging.stdout.StdOutImpl;
 import org.apache.ibatis.mapping.BoundSql;
+import org.apache.ibatis.mapping.DatabaseIdProvider;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ParameterMap;
@@ -108,6 +111,7 @@ public class Configuration {
   protected boolean safeResultHandlerEnabled = true;
   protected boolean mapUnderscoreToCamelCase;
   protected boolean aggressiveLazyLoading;
+  protected boolean multipleResultSetsEnabled = true;
   protected boolean useGeneratedKeys;
   protected boolean useColumnLabel = true;
   protected boolean cacheEnabled = true;
@@ -117,6 +121,7 @@ public class Configuration {
   protected boolean shrinkWhitespacesInSql;
   protected boolean nullableOnForEach;
   protected boolean argNameBasedConstructorAutoMapping;
+  protected boolean supportDynamicRoutingDataSource;
 
   protected String logPrefix;
   protected Class<? extends Log> logImpl;
@@ -133,6 +138,7 @@ public class Configuration {
   protected AutoMappingBehavior autoMappingBehavior = AutoMappingBehavior.PARTIAL;
   protected AutoMappingUnknownColumnBehavior autoMappingUnknownColumnBehavior = AutoMappingUnknownColumnBehavior.NONE;
 
+  protected DatabaseIdProvider databaseIdProvider;
   protected Properties variables = new Properties();
   protected ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
   protected ObjectFactory objectFactory = new DefaultObjectFactory();
@@ -349,6 +355,29 @@ public class Configuration {
     this.databaseId = databaseId;
   }
 
+  public boolean getSupportDynamicRoutingDataSource() {
+    return this.supportDynamicRoutingDataSource;
+  }
+
+  public void setSupportDynamicRoutingDataSource(Boolean supportDynamicRoutingDataSource) {
+    this.supportDynamicRoutingDataSource = supportDynamicRoutingDataSource;
+  }
+
+  public DatabaseIdProvider getDatabaseIdProvider() {
+    return databaseIdProvider;
+  }
+
+  public void setDatabaseIdProvider(DatabaseIdProvider databaseIdProvider) {
+    this.databaseIdProvider = databaseIdProvider;
+  }
+
+  public String getCurrentDatabaseId() throws SQLException {
+    if (supportDynamicRoutingDataSource && databaseIdProvider != null) {
+      return databaseIdProvider.getDatabaseId(environment.getDataSource());
+    }
+    return this.getDatabaseId();
+  }
+
   public Class<?> getConfigurationFactory() {
     return configurationFactory;
   }
@@ -455,20 +484,12 @@ public class Configuration {
     this.aggressiveLazyLoading = aggressiveLazyLoading;
   }
 
-  /**
-   * @deprecated You can safely remove the call to this method as this option had no effect.
-   */
-  @Deprecated
   public boolean isMultipleResultSetsEnabled() {
-    return true;
+    return multipleResultSetsEnabled;
   }
 
-  /**
-   * @deprecated You can safely remove the call to this method as this option had no effect.
-   */
-  @Deprecated
   public void setMultipleResultSetsEnabled(boolean multipleResultSetsEnabled) {
-    // nop
+    this.multipleResultSetsEnabled = multipleResultSetsEnabled;
   }
 
   public Set<String> getLazyLoadTriggerMethods() {
@@ -831,7 +852,12 @@ public class Configuration {
   }
 
   public void addMappedStatement(MappedStatement ms) {
-    mappedStatements.put(ms.getId(), ms);
+    String id = ms.getId();
+    if (this.getSupportDynamicRoutingDataSource() && Objects.nonNull(ms.getDatabaseId())
+        && ms.getDatabaseId().trim().length() > 0) {
+      id = id + "#" + ms.getDatabaseId();
+    }
+    mappedStatements.put(id, ms);
   }
 
   public Collection<String> getMappedStatementNames() {
@@ -920,7 +946,29 @@ public class Configuration {
     if (validateIncompleteStatements) {
       buildAllStatements();
     }
-    return mappedStatements.get(id);
+    MappedStatement statement = null;
+    try {
+      statement = mappedStatements.get(this.getMappedStatementId(id));
+    } catch (IllegalArgumentException e) {
+      if (this.getSupportDynamicRoutingDataSource()) {
+        statement = mappedStatements.get(id);
+      } else {
+        throw e;
+      }
+    }
+
+    return statement;
+  }
+
+  protected String getMappedStatementId(String id) {
+    try {
+      String databaseId = this.getCurrentDatabaseId();
+      if (this.getSupportDynamicRoutingDataSource() && Objects.nonNull(databaseId)) {
+        return id + "#" + databaseId;
+      }
+    } catch (SQLException ignore) {
+    }
+    return id;
   }
 
   public Map<String, XNode> getSqlFragments() {
@@ -959,7 +1007,8 @@ public class Configuration {
     if (validateIncompleteStatements) {
       buildAllStatements();
     }
-    return mappedStatements.containsKey(statementName);
+    return mappedStatements.containsKey(this.getMappedStatementId(statementName))
+        || this.getSupportDynamicRoutingDataSource() && mappedStatements.containsKey(statementName);
   }
 
   public void addCacheRef(String namespace, String referencedNamespace) {
@@ -1113,7 +1162,6 @@ public class Configuration {
     private static final long serialVersionUID = -4950446264854982944L;
     private final String name;
     private BiFunction<V, V, String> conflictMessageProducer;
-    private static final Object AMBIGUITY_INSTANCE = new Object();
 
     public StrictMap(String name, int initialCapacity, float loadFactor) {
       super(initialCapacity, loadFactor);
@@ -1163,7 +1211,7 @@ public class Configuration {
         if (super.get(shortKey) == null) {
           super.put(shortKey, value);
         } else {
-          super.put(shortKey, (V) AMBIGUITY_INSTANCE);
+          super.put(shortKey, (V) new Ambiguity(shortKey));
         }
       }
       return super.put(key, value);
@@ -1184,11 +1232,23 @@ public class Configuration {
       if (value == null) {
         throw new IllegalArgumentException(name + " does not contain value for " + key);
       }
-      if (AMBIGUITY_INSTANCE == value) {
-        throw new IllegalArgumentException(key + " is ambiguous in " + name
+      if (value instanceof Ambiguity) {
+        throw new IllegalArgumentException(((Ambiguity) value).getSubject() + " is ambiguous in " + name
             + " (try using the full name including the namespace, or rename one of the entries)");
       }
       return value;
+    }
+
+    protected static class Ambiguity {
+      private final String subject;
+
+      public Ambiguity(String subject) {
+        this.subject = subject;
+      }
+
+      public String getSubject() {
+        return subject;
+      }
     }
 
     private String getShortName(String key) {
