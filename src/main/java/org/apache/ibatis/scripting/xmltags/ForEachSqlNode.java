@@ -132,7 +132,8 @@ public class ForEachSqlNode implements SqlNode {
     private boolean prefixApplied;
 
     public PrefixedContext(DynamicContext delegate, String prefix) {
-      super(configuration, delegate.getParameterObject(), delegate.getParameterType(), delegate.isParamExists());
+      super(configuration, delegate.getParameterObject(), delegate.getParameterType(), delegate.getParamNameResolver(),
+          delegate.isParamExists());
       this.delegate = delegate;
       this.prefix = prefix;
       this.prefixApplied = false;

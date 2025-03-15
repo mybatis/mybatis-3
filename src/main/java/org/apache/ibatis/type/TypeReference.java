@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -48,13 +48,7 @@ public abstract class TypeReference<T> {
           + "Remove the extension or add a type parameter to it.");
     }
 
-    Type rawType = ((ParameterizedType) genericSuperclass).getActualTypeArguments()[0];
-    // TODO remove this when Reflector is fixed to return Types
-    if (rawType instanceof ParameterizedType) {
-      rawType = ((ParameterizedType) rawType).getRawType();
-    }
-
-    return rawType;
+    return ((ParameterizedType) genericSuperclass).getActualTypeArguments()[0];
   }
 
   public final Type getRawType() {

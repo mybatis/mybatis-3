@@ -36,6 +36,7 @@ import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.ParameterMode;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.LocalCacheScope;
@@ -218,13 +219,18 @@ public abstract class BaseExecutor implements Executor {
           value = boundSql.getAdditionalParameter(propertyName);
         } else if (parameterObject == null) {
           value = null;
-        } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
-          value = parameterObject;
         } else {
-          if (metaObject == null) {
-            metaObject = configuration.newMetaObject(parameterObject);
+          ParamNameResolver paramNameResolver = ms.getParamNameResolver();
+          if (paramNameResolver != null
+              && typeHandlerRegistry.hasTypeHandler(paramNameResolver.getType(paramNameResolver.getNames()[0]))
+              || typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
+            value = parameterObject;
+          } else {
+            if (metaObject == null) {
+              metaObject = configuration.newMetaObject(parameterObject);
+            }
+            value = metaObject.getValue(propertyName);
           }
-          value = metaObject.getValue(propertyName);
         }
         cacheKey.update(value);
       }

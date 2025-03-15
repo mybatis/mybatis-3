@@ -25,6 +25,7 @@ import org.apache.ibatis.builder.BaseBuilder;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.parsing.XNode;
+import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.scripting.defaults.RawSqlSource;
 import org.apache.ibatis.session.Configuration;
 import org.w3c.dom.Node;
@@ -38,6 +39,7 @@ public class XMLScriptBuilder extends BaseBuilder {
   private final XNode context;
   private boolean isDynamic;
   private final Class<?> parameterType;
+  private final ParamNameResolver paramNameResolver;
   private final Map<String, NodeHandler> nodeHandlerMap = new HashMap<>();
   private static final Map<String, SqlNode> emptyNodeCache = new ConcurrentHashMap<>();
 
@@ -46,9 +48,15 @@ public class XMLScriptBuilder extends BaseBuilder {
   }
 
   public XMLScriptBuilder(Configuration configuration, XNode context, Class<?> parameterType) {
+    this(configuration, context, parameterType, null);
+  }
+
+  public XMLScriptBuilder(Configuration configuration, XNode context, Class<?> parameterType,
+      ParamNameResolver paramNameResolver) {
     super(configuration);
     this.context = context;
     this.parameterType = parameterType;
+    this.paramNameResolver = paramNameResolver;
     initNodeHandlerMap();
   }
 
@@ -70,7 +78,7 @@ public class XMLScriptBuilder extends BaseBuilder {
     if (isDynamic) {
       sqlSource = new DynamicSqlSource(configuration, rootSqlNode);
     } else {
-      sqlSource = new RawSqlSource(configuration, rootSqlNode, parameterType);
+      sqlSource = new RawSqlSource(configuration, rootSqlNode, parameterType, paramNameResolver);
     }
     return sqlSource;
   }

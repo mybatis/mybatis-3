@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ public class ProviderSqlSource implements SqlSource {
   private final LanguageDriver languageDriver;
   private final Method mapperMethod;
   private final Method providerMethod;
-  private final String[] providerMethodArgumentNames;
+  private final ParamNameResolver paramNameResolver;
   private final Class<?>[] providerMethodParameterTypes;
   private final ProviderContext providerContext;
   private final Integer providerContextIndex;
@@ -138,7 +138,7 @@ public class ProviderSqlSource implements SqlSource {
           + "' not found in SqlProvider '" + this.providerType.getName() + "'.");
     }
     this.providerMethod = candidateProviderMethod;
-    this.providerMethodArgumentNames = new ParamNameResolver(configuration, this.providerMethod).getNames();
+    this.paramNameResolver = new ParamNameResolver(configuration, this.providerMethod, mapperType);
     this.providerMethodParameterTypes = this.providerMethod.getParameterTypes();
 
     ProviderContext candidateProviderContext = null;
@@ -178,7 +178,7 @@ public class ProviderSqlSource implements SqlSource {
         } else {
           @SuppressWarnings("unchecked")
           Map<String, Object> params = (Map<String, Object>) parameterObject;
-          sql = invokeProviderMethod(extractProviderMethodArguments(params, providerMethodArgumentNames));
+          sql = invokeProviderMethod(extractProviderMethodArguments(params, paramNameResolver.getNames()));
         }
       } else {
         switch (providerMethodParameterTypes.length) {
@@ -202,7 +202,7 @@ public class ProviderSqlSource implements SqlSource {
         }
       }
       Class<?> parameterType = parameterObject == null ? Object.class : parameterObject.getClass();
-      return languageDriver.createSqlSource(configuration, sql, parameterType);
+      return languageDriver.createSqlSource(configuration, sql, parameterType, paramNameResolver);
     } catch (BuilderException e) {
       throw e;
     } catch (Exception e) {

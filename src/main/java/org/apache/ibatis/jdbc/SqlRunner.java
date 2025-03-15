@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.type.ObjectTypeHandler;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
@@ -242,11 +243,11 @@ public class SqlRunner {
         Class<?> type = Resources.classForName(rsmd.getColumnClassName(i + 1));
         TypeHandler<?> typeHandler = typeHandlerRegistry.getTypeHandler(type);
         if (typeHandler == null) {
-          typeHandler = typeHandlerRegistry.getTypeHandler(Object.class);
+          typeHandler = ObjectTypeHandler.INSTANCE;
         }
         typeHandlers.add(typeHandler);
       } catch (Exception e) {
-        typeHandlers.add(typeHandlerRegistry.getTypeHandler(Object.class));
+        typeHandlers.add(ObjectTypeHandler.INSTANCE);
       }
     }
     while (rs.next()) {

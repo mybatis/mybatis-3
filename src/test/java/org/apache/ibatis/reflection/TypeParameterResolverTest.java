@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -37,9 +37,11 @@ import org.apache.ibatis.reflection.typeparam.Level0Mapper;
 import org.apache.ibatis.reflection.typeparam.Level0Mapper.Level0InnerMapper;
 import org.apache.ibatis.reflection.typeparam.Level1Mapper;
 import org.apache.ibatis.reflection.typeparam.Level2Mapper;
+import org.apache.ibatis.type.TypeReference;
 import org.junit.jupiter.api.Test;
 
 class TypeParameterResolverTest {
+
   @Test
   void returnLv0SimpleClass() throws Exception {
     Class<?> clazz = Level0Mapper.class;
@@ -95,6 +97,7 @@ class TypeParameterResolverTest {
     assertEquals(2, paramType.getActualTypeArguments().length);
     assertEquals(Integer.class, paramType.getActualTypeArguments()[0]);
     assertEquals(Double.class, paramType.getActualTypeArguments()[1]);
+    assertEquals("java.util.Map<java.lang.Integer, java.lang.Double>", result.toString());
   }
 
   @Test
@@ -109,6 +112,7 @@ class TypeParameterResolverTest {
     assertTrue(paramType.getActualTypeArguments()[0] instanceof WildcardType);
     WildcardType wildcard = (WildcardType) paramType.getActualTypeArguments()[0];
     assertEquals(String.class, wildcard.getUpperBounds()[0]);
+    assertEquals("java.util.List<? extends java.lang.String>", paramType.toString());
   }
 
   @Test
@@ -362,6 +366,7 @@ class TypeParameterResolverTest {
     assertTrue(result[0] instanceof GenericArrayType);
     GenericArrayType genericArrayType = (GenericArrayType) result[0];
     assertTrue(genericArrayType.getGenericComponentType() instanceof ParameterizedType);
+    assertEquals("java.util.List<java.lang.String>[]", genericArrayType.toString());
     ParameterizedType paramType = (ParameterizedType) genericArrayType.getGenericComponentType();
     assertEquals(List.class, paramType.getRawType());
     assertEquals(String.class, paramType.getActualTypeArguments()[0]);
@@ -373,6 +378,20 @@ class TypeParameterResolverTest {
     Method method = clazz.getMethod("setId", Object.class);
     Type[] result = TypeParameterResolver.resolveParamTypes(method, clazz);
     assertEquals(String.class, result[0]);
+  }
+
+  @Test
+  void paramGeneric() throws Exception {
+    TypeReference<ParentIface<String>> type = new TypeReference<ParentIface<String>>() {
+    };
+    Method method = ParentIface.class.getMethod("m");
+    Type result = TypeParameterResolver.resolveReturnType(method, type.getRawType());
+    assertTrue(result instanceof ParameterizedType);
+    ParameterizedType parameterizedType = (ParameterizedType) result;
+    assertEquals(List.class, parameterizedType.getRawType());
+    Type[] typeArgs = parameterizedType.getActualTypeArguments();
+    assertEquals(1, typeArgs.length);
+    assertEquals(String.class, typeArgs[0]);
   }
 
   @Test
@@ -473,24 +492,65 @@ class TypeParameterResolverTest {
     executor.shutdown();
   }
 
+  @Test
+  void shouldResolveInterfaceTypeParams() {
+    Type[] types = TypeParameterResolver.resolveClassTypeParams(ParentIface.class, IntegerHandler.class);
+    assertEquals(1, types.length);
+    assertEquals(Integer.class, types[0]);
+  }
+
+  @Test
+  void shouldResolveInterfaceTypeParamsDeep() {
+    Type[] types = TypeParameterResolver.resolveClassTypeParams(ParentIface.class, StringHandler.class);
+    assertEquals(1, types.length);
+    assertEquals(String.class, types[0]);
+  }
+
+  @Test
+  void shouldResolveInterfaceTypeParamsDeeper() {
+    Type[] types = TypeParameterResolver.resolveClassTypeParams(ParentIface.class, CustomStringHandler3.class);
+    assertEquals(1, types.length);
+    assertEquals(String.class, types[0]);
+  }
+
   class AA {
-    // Do nothing
   }
 
   class BB {
-    // Do nothing
   }
 
   interface IfaceA extends ParentIface<AA> {
-    // Do Nothing
   }
 
   interface IfaceB extends ParentIface<BB> {
-    // Do Nothing
   }
 
   interface ParentIface<T> {
     List<T> m();
+  }
+
+  abstract class BaseHandler<T> implements ParentIface<T> {
+  }
+
+  class StringHandler extends BaseHandler<String> {
+    public List<String> m() {
+      return null;
+    }
+  }
+
+  class CustomStringHandler extends StringHandler {
+  }
+
+  class CustomStringHandler2<T> extends CustomStringHandler {
+  }
+
+  class CustomStringHandler3 extends CustomStringHandler2<Integer> {
+  }
+
+  class IntegerHandler implements Cloneable, ParentIface<Integer> {
+    public List<Integer> m() {
+      return null;
+    }
   }
 
 }

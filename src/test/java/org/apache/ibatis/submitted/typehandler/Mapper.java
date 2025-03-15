@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,11 +15,15 @@
  */
 package org.apache.ibatis.submitted.typehandler;
 
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Arg;
 import org.apache.ibatis.annotations.ConstructorArgs;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.submitted.typehandler.Product.ProductId;
@@ -58,4 +62,22 @@ public interface Mapper {
 
   @Select("select id from product where name = #{value}")
   ProductId getProductIdByName(String name);
+
+  @Select("select current_date d, current_time t, current_timestamp ts, localtime lt, localtimestamp lts from (values(0))")
+  Map<String, Object> selectDateTime();
+
+  @Select("select id, name, released_on from product where id = #{id}")
+  Map<String, Object> getProductAsMap(Integer id);
+
+  @Insert({ "insert into vague (vague) values (#{bean})" })
+  int insertVague(@Param("bean") VagueBean bean);
+
+  @Result(property = "id", column = "id")
+  @Result(property = "vague", column = "vague")
+  @Select("select * from vague where id = #{id}")
+  VagueBean selectVague(Integer id);
+
+  @ResultMap("vagueRM")
+  @Select("select * from vague where id = #{id}")
+  VagueBean selectVagueNested(Integer id);
 }

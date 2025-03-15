@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package org.apache.ibatis.scripting.xmltags;
 import org.apache.ibatis.builder.SqlSourceBuilder;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.SqlSource;
+import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.session.Configuration;
 
 /**
@@ -27,15 +28,21 @@ public class DynamicSqlSource implements SqlSource {
 
   private final Configuration configuration;
   private final SqlNode rootSqlNode;
+  private final ParamNameResolver paramNameResolver;
 
   public DynamicSqlSource(Configuration configuration, SqlNode rootSqlNode) {
+    this(configuration, rootSqlNode, null);
+  }
+
+  public DynamicSqlSource(Configuration configuration, SqlNode rootSqlNode, ParamNameResolver paramNameResolver) {
     this.configuration = configuration;
     this.rootSqlNode = rootSqlNode;
+    this.paramNameResolver = paramNameResolver;
   }
 
   @Override
   public BoundSql getBoundSql(Object parameterObject) {
-    DynamicContext context = new DynamicContext(configuration, parameterObject, null, true);
+    DynamicContext context = new DynamicContext(configuration, parameterObject, null, paramNameResolver, true);
     rootSqlNode.apply(context);
     String sql = context.getSql();
     SqlSource sqlSource = SqlSourceBuilder.buildSqlSource(configuration, sql, context.getParameterMappings());

@@ -32,6 +32,15 @@ import java.util.Objects;
  */
 public class TypeParameterResolver {
 
+  public static Type[] resolveClassTypeParams(Class<?> classWithTypeParams, Class<?> childClass) {
+    TypeVariable<?>[] typeArgs = classWithTypeParams.getTypeParameters();
+    Type[] result = new Type[typeArgs.length];
+    for (int i = 0; i < typeArgs.length; i++) {
+      result[i] = resolveTypeVar(typeArgs[i], childClass, classWithTypeParams);
+    }
+    return result;
+  }
+
   /**
    * Resolve field type.
    *
@@ -139,6 +148,14 @@ public class TypeParameterResolver {
     } else if (srcType instanceof ParameterizedType) {
       ParameterizedType parameterizedType = (ParameterizedType) srcType;
       clazz = (Class<?>) parameterizedType.getRawType();
+      if (clazz == declaringClass) {
+        TypeVariable<?>[] typeVars = declaringClass.getTypeParameters();
+        for (int i = 0; i < typeVars.length; i++) {
+          if (typeVar.equals(typeVars[i])) {
+            return parameterizedType.getActualTypeArguments()[i];
+          }
+        }
+      }
     } else {
       throw new IllegalArgumentException(
           "The 2nd arg must be Class or ParameterizedType, but was: " + srcType.getClass());
@@ -266,8 +283,14 @@ public class TypeParameterResolver {
 
     @Override
     public String toString() {
-      return "ParameterizedTypeImpl [rawType=" + rawType + ", ownerType=" + ownerType + ", actualTypeArguments="
-          + Arrays.toString(actualTypeArguments) + "]";
+      StringBuilder s = new StringBuilder().append(rawType.getName()).append("<");
+      for (int i = 0; i < actualTypeArguments.length; i++) {
+        if (i > 0) {
+          s.append(", ");
+        }
+        s.append(actualTypeArguments[i].getTypeName());
+      }
+      return s.append(">").toString();
     }
   }
 
@@ -312,6 +335,17 @@ public class TypeParameterResolver {
       WildcardTypeImpl other = (WildcardTypeImpl) obj;
       return Arrays.equals(lowerBounds, other.lowerBounds) && Arrays.equals(upperBounds, other.upperBounds);
     }
+
+    @Override
+    public String toString() {
+      StringBuilder s = new StringBuilder().append("?");
+      if (lowerBounds.length > 0) {
+        s.append(" super ").append(lowerBounds[0].getTypeName());
+      } else if (upperBounds.length > 0 && upperBounds[0] != Object.class) {
+        s.append(" extends ").append(upperBounds[0].getTypeName());
+      }
+      return s.toString();
+    }
   }
 
   static class GenericArrayTypeImpl implements GenericArrayType {
@@ -342,6 +376,11 @@ public class TypeParameterResolver {
       }
       GenericArrayTypeImpl other = (GenericArrayTypeImpl) obj;
       return Objects.equals(genericComponentType, other.genericComponentType);
+    }
+
+    @Override
+    public String toString() {
+      return new StringBuilder().append(genericComponentType.toString()).append("[]").toString();
     }
   }
 }
