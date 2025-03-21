@@ -165,7 +165,7 @@ AND title like ‘someTitle’]]></source>
   <p>XML 設定ファイルと XML Mapper ファイルについての説明はここまでになります。次の章では、Java API について詳しく見ていきます。</p>
   </subsection>
   <subsection name="script">
-  <p>For using dynamic SQL in annotated mapper class, <em>script</em> element can be used. For example:</p>
+  <p><em>script</em> 要素を使用することで、アノテーション付きのマッパークラスで動的SQLを使用できます。例：</p>
   <source><![CDATA[
     @Update({"<script>",
       "update Author",
