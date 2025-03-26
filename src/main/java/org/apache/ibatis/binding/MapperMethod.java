@@ -58,37 +58,19 @@ public class MapperMethod {
     Object result;
     switch (command.getType()) {
       case INSERT: {
-        Object param = method.convertArgsToSqlCommandParam(args);
-        result = rowCountResult(sqlSession.insert(command.getName(), param));
+        result = handleInsert(sqlSession, args);
         break;
       }
       case UPDATE: {
-        Object param = method.convertArgsToSqlCommandParam(args);
-        result = rowCountResult(sqlSession.update(command.getName(), param));
+        result = handleUpdate(sqlSession, args);
         break;
       }
       case DELETE: {
-        Object param = method.convertArgsToSqlCommandParam(args);
-        result = rowCountResult(sqlSession.delete(command.getName(), param));
+        result = handleDelete(sqlSession, args);
         break;
       }
       case SELECT:
-        if (method.returnsVoid() && method.hasResultHandler()) {
-          executeWithResultHandler(sqlSession, args);
-          result = null;
-        } else if (method.returnsMany()) {
-          result = executeForMany(sqlSession, args);
-        } else if (method.returnsMap()) {
-          result = executeForMap(sqlSession, args);
-        } else if (method.returnsCursor()) {
-          result = executeForCursor(sqlSession, args);
-        } else {
-          Object param = method.convertArgsToSqlCommandParam(args);
-          result = sqlSession.selectOne(command.getName(), param);
-          if (method.returnsOptional() && (result == null || !method.getReturnType().equals(result.getClass()))) {
-            result = Optional.ofNullable(result);
-          }
-        }
+        result = handleSelect(sqlSession, args);
         break;
       case FLUSH:
         result = sqlSession.flushStatements();
@@ -96,11 +78,47 @@ public class MapperMethod {
       default:
         throw new BindingException("Unknown execution method for: " + command.getName());
     }
+
     if (result == null && method.getReturnType().isPrimitive() && !method.returnsVoid()) {
       throw new BindingException("Mapper method '" + command.getName()
           + "' attempted to return null from a method with a primitive return type (" + method.getReturnType() + ").");
     }
     return result;
+  }
+
+  private Object handleInsert(SqlSession sqlSession, Object[] args) {
+    Object param = method.convertArgsToSqlCommandParam(args);
+    return rowCountResult(sqlSession.insert(command.getName(), param));
+  }
+
+  private Object handleUpdate(SqlSession sqlSession, Object[] args) {
+    Object param = method.convertArgsToSqlCommandParam(args);
+    return rowCountResult(sqlSession.update(command.getName(), param));
+  }
+
+  private Object handleDelete(SqlSession sqlSession, Object[] args) {
+    Object param = method.convertArgsToSqlCommandParam(args);
+    return rowCountResult(sqlSession.delete(command.getName(), param));
+  }
+
+  private Object handleSelect(SqlSession sqlSession, Object[] args) {
+    if (method.returnsVoid() && method.hasResultHandler()) {
+      executeWithResultHandler(sqlSession, args);
+      return null;
+    } else if (method.returnsMany()) {
+      return executeForMany(sqlSession, args);
+    } else if (method.returnsMap()) {
+      return executeForMap(sqlSession, args);
+    } else if (method.returnsCursor()) {
+      return executeForCursor(sqlSession, args);
+    } else {
+      Object param = method.convertArgsToSqlCommandParam(args);
+      Object result = sqlSession.selectOne(command.getName(), param);
+      if (method.returnsOptional() && (result == null || !method.getReturnType().equals(result.getClass()))) {
+        result = Optional.ofNullable(result);
+      }
+      return result;
+    }
   }
 
   private Object rowCountResult(int rowCount) {
