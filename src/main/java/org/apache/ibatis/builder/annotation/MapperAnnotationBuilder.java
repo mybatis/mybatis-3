@@ -107,6 +107,8 @@ public class MapperAnnotationBuilder {
   private final Configuration configuration;
   private final MapperBuilderAssistant assistant;
   private final Class<?> type;
+  private static final int expectedMapTypeCount = 2;
+
 
   public MapperAnnotationBuilder(Configuration configuration, Class<?> type) {
     String resource = type.getName().replace('.', '/') + ".java (best guess)";
@@ -424,7 +426,7 @@ public class MapperAnnotationBuilder {
       } else if (method.isAnnotationPresent(MapKey.class) && Map.class.isAssignableFrom(rawType)) {
         // (gcode issue 504) Do not look into Maps if there is not MapKey annotation
         Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
-        if (actualTypeArguments != null && actualTypeArguments.length == 2) {
+        if (actualTypeArguments != null && actualTypeArguments.length == expectedMapTypeCount) {
           Type returnTypeParameter = actualTypeArguments[1];
           if (returnTypeParameter instanceof Class<?>) {
             returnType = (Class<?>) returnTypeParameter;
