@@ -663,17 +663,18 @@ public abstract class AbstractSQL<T> {
 
     private String selectSQL(SafeAppendable builder) {
       if (distinct) {
-        sqlClause(builder, "SELECT DISTINCT", select, "", "", ", ");
+        sqlClause(builder, SQLKeywords.SELECT_DISTINCT, select, "", "", ", ");
       } else {
-        sqlClause(builder, "SELECT", select, "", "", ", ");
+        sqlClause(builder, SQLKeywords.SELECT, select, "", "", ", ");
       }
 
-      sqlClause(builder, "FROM", tables, "", "", ", ");
+      sqlClause(builder, SQLKeywords.FROM, tables, "", "", ", ");
       joins(builder);
-      sqlClause(builder, "WHERE", where, "(", ")", " AND ");
-      sqlClause(builder, "GROUP BY", groupBy, "", "", ", ");
-      sqlClause(builder, "HAVING", having, "(", ")", " AND ");
-      sqlClause(builder, "ORDER BY", orderBy, "", "", ", ");
+      sqlClause(builder, SQLKeywords.WHERE, where, "(", ")", " AND ");
+      sqlClause(builder, SQLKeywords.GROUP_BY, groupBy, "", "", ", ");
+      sqlClause(builder, SQLKeywords.HAVING, having, "(", ")", " AND ");
+      sqlClause(builder, SQLKeywords.ORDER_BY, orderBy, "", "", ", ");
+
       limitingRowsStrategy.applyLimitToSelect(builder, offset, limit);
       return builder.toString();
     }
