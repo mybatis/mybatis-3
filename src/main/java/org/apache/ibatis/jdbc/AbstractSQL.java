@@ -674,7 +674,7 @@ public abstract class AbstractSQL<T> {
       sqlClause(builder, "GROUP BY", groupBy, "", "", ", ");
       sqlClause(builder, "HAVING", having, "(", ")", " AND ");
       sqlClause(builder, "ORDER BY", orderBy, "", "", ", ");
-      limitingRowsStrategy.appendClause(builder, offset, limit);
+      limitingRowsStrategy.applyLimitToSelect(builder, offset, limit);
       return builder.toString();
     }
 

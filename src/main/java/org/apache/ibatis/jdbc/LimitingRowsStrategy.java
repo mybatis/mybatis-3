@@ -48,6 +48,11 @@ public enum LimitingRowsStrategy {
   };
 
   public abstract void appendClause(SafeAppendable builder, String offset, String limit);
+
+  public void applyLimitToSelect(SafeAppendable builder, String offset, String limit) {
+    this.appendClause(builder, offset, limit);
+  }
+
 }
 
 class SafeAppendable {
