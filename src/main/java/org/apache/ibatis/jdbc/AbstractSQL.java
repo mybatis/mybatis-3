@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.jdbc;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -385,7 +384,7 @@ public abstract class AbstractSQL<T> {
    */
   public T LIMIT(String variable) {
     sql().limit = variable;
-    sql().limitingRowsStrategy = SQLStatement.LimitingRowsStrategy.OFFSET_LIMIT;
+    sql().limitingRowsStrategy = LimitingRowsStrategy.OFFSET_LIMIT;
     return getSelf();
   }
 
@@ -419,7 +418,7 @@ public abstract class AbstractSQL<T> {
    */
   public T OFFSET(String variable) {
     sql().offset = variable;
-    sql().limitingRowsStrategy = SQLStatement.LimitingRowsStrategy.OFFSET_LIMIT;
+    sql().limitingRowsStrategy = LimitingRowsStrategy.OFFSET_LIMIT;
     return getSelf();
   }
 
@@ -453,7 +452,7 @@ public abstract class AbstractSQL<T> {
    */
   public T FETCH_FIRST_ROWS_ONLY(String variable) {
     sql().limit = variable;
-    sql().limitingRowsStrategy = SQLStatement.LimitingRowsStrategy.ISO;
+    sql().limitingRowsStrategy = LimitingRowsStrategy.ISO;
     return getSelf();
   }
 
@@ -487,7 +486,7 @@ public abstract class AbstractSQL<T> {
    */
   public T OFFSET_ROWS(String variable) {
     sql().offset = variable;
-    sql().limitingRowsStrategy = SQLStatement.LimitingRowsStrategy.ISO;
+    sql().limitingRowsStrategy = LimitingRowsStrategy.ISO;
     return getSelf();
   }
 
@@ -600,32 +599,6 @@ public abstract class AbstractSQL<T> {
     return sb.toString();
   }
 
-  private static class SafeAppendable {
-    private final Appendable appendable;
-    private boolean empty = true;
-
-    public SafeAppendable(Appendable a) {
-      this.appendable = a;
-    }
-
-    public SafeAppendable append(CharSequence s) {
-      try {
-        if (empty && s.length() > 0) {
-          empty = false;
-        }
-        appendable.append(s);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
-      return this;
-    }
-
-    public boolean isEmpty() {
-      return empty;
-    }
-
-  }
-
   private static class SQLStatement {
 
     public enum StatementType {
@@ -637,40 +610,6 @@ public abstract class AbstractSQL<T> {
       SELECT,
 
       UPDATE
-
-    }
-
-    private enum LimitingRowsStrategy {
-      NOP {
-        @Override
-        protected void appendClause(SafeAppendable builder, String offset, String limit) {
-          // NOP
-        }
-      },
-      ISO {
-        @Override
-        protected void appendClause(SafeAppendable builder, String offset, String limit) {
-          if (offset != null) {
-            builder.append(" OFFSET ").append(offset).append(" ROWS");
-          }
-          if (limit != null) {
-            builder.append(" FETCH FIRST ").append(limit).append(" ROWS ONLY");
-          }
-        }
-      },
-      OFFSET_LIMIT {
-        @Override
-        protected void appendClause(SafeAppendable builder, String offset, String limit) {
-          if (limit != null) {
-            builder.append(" LIMIT ").append(limit);
-          }
-          if (offset != null) {
-            builder.append(" OFFSET ").append(offset);
-          }
-        }
-      };
-
-      protected abstract void appendClause(SafeAppendable builder, String offset, String limit);
 
     }
 
