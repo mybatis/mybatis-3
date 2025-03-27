@@ -109,7 +109,6 @@ public class MapperAnnotationBuilder {
   private final Class<?> type;
   private static final int expectedMapTypeCount = 2;
 
-
   public MapperAnnotationBuilder(Configuration configuration, Class<?> type) {
     String resource = type.getName().replace('.', '/') + ".java (best guess)";
     this.assistant = new MapperBuilderAssistant(configuration, resource);
@@ -118,10 +117,10 @@ public class MapperAnnotationBuilder {
   }
 
   public void parse() {
-    String resource = type.toString();
-    if (!configuration.isResourceLoaded(resource)) {
+    String typeSignature = type.toString();
+    if (!configuration.isResourceLoaded(typeSignature)) {
       loadXmlResource();
-      configuration.addLoadedResource(resource);
+      configuration.addLoadedResource(typeSignature);
       assistant.setCurrentNamespace(type.getName());
       parseCache();
       parseCacheRef();
