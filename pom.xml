@@ -232,7 +232,7 @@
     <dependency>
       <groupId>com.github.hazendaz.catch-exception</groupId>
       <artifactId>catch-exception</artifactId>
-      <version>2.3.3</version>
+      <version>2.3.4</version>
       <scope>test</scope>
     </dependency>
     <dependency>
