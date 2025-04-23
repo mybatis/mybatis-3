@@ -22,6 +22,7 @@ import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 @Testcontainers
 public final class MysqlContainer {
@@ -36,8 +37,8 @@ public final class MysqlContainer {
 
   private static MySQLContainer<?> initContainer() {
     @SuppressWarnings("resource")
-    MySQLContainer<?> container = new MySQLContainer<>("mysql").withDatabaseName(DB_NAME).withUsername(USERNAME)
-        .withPassword(PASSWORD).withUrlParam("useSSL", "false");
+    MySQLContainer<?> container = new MySQLContainer<>(DockerImageName.parse("mysql").withTag("9.2"))
+        .withDatabaseName(DB_NAME).withUsername(USERNAME).withPassword(PASSWORD).withUrlParam("useSSL", "false");
     container.start();
     return container;
   }
