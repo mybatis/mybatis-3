@@ -247,6 +247,8 @@ public class XMLScriptBuilder extends BaseBuilder {
           handler.handleNode(child, ifSqlNodes);
         } else if (handler instanceof OtherwiseHandler) {
           handler.handleNode(child, defaultSqlNodes);
+        } else {
+          throw new BuilderException("Unknown element <" + nodeName + "> in SQL statement.");
         }
       }
     }
