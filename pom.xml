@@ -23,7 +23,7 @@
   <parent>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis-parent</artifactId>
-    <version>48</version>
+    <version>49</version>
     <relativePath />
   </parent>
 
