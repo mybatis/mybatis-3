@@ -5,7 +5,7 @@ MyBatis SQL Mapper Framework for Java
 [![Coverage Status](https://coveralls.io/repos/mybatis/mybatis-3/badge.svg?branch=master&service=github)](https://coveralls.io/github/mybatis/mybatis-3?branch=master)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=mybatis_mybatis-3&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=mybatis_mybatis-3)
 [![Maven central](https://maven-badges.herokuapp.com/maven-central/org.mybatis/mybatis/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.mybatis/mybatis)
-[![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/https/oss.sonatype.org/org.mybatis/mybatis.svg)](https://oss.sonatype.org/content/repositories/snapshots/org/mybatis/mybatis/)
+[![Maven Central (Snapshots)](https://img.shields.io/maven-metadata/v.svg?label=maven-central&metadataUrl=https://central.sonatype.com/repository/maven-snapshots/org/mybatis/mybatis/maven-metadata.xml)](https://central.sonatype.com/service/rest/repository/browse/maven-snapshots/org/mybatis/mybatis/)
 [![License](https://img.shields.io/:license-apache-brightgreen.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 [![Stack Overflow](https://img.shields.io/:stack%20overflow-mybatis-brightgreen.svg)](https://stackoverflow.com/questions/tagged/mybatis)
 [![Project Stats](https://www.openhub.net/p/mybatis/widgets/project_thin_badge.gif)](https://www.openhub.net/p/mybatis)
@@ -21,7 +21,7 @@ Essentials
 
 * [See the docs](https://mybatis.org/mybatis-3)
 * [Download Latest](https://github.com/mybatis/mybatis-3/releases)
-* [Download Snapshot](https://oss.sonatype.org/content/repositories/snapshots/org/mybatis/mybatis/)
+* [Download Snapshot](https://central.sonatype.com/service/rest/repository/browse/maven-snapshots/org/mybatis/mybatis/)
 
 Contributions
 -------------
