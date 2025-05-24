@@ -32,16 +32,14 @@ class XMLScriptBuilderTest {
     String xml = """
         <script>
         select * from user
-        <where>
-        <if test="1==1">and id = 1</if>
-        <if test="1==1">and id > 0</if>
-        </where>
+        <where><if test="1==1">and id = 1</if><if test="1==1">and id > 0</if></where>
+        <if test="1==1">and id = 1</if><if test="1==1">and id > 0</if>
         </script>
         """;
     SqlSource sqlSource = new XMLScriptBuilder(new Configuration(), new XPathParser(xml).evalNode("/script"))
         .parseScriptNode();
-    assertThat(sqlSource.getBoundSql(1).getSql())
-        .containsPattern("(?m)^\\s*select \\* from user\\s+WHERE\\s+id = 1\\s+and id > 0\\s*$");
+    assertThat(sqlSource.getBoundSql(1).getSql()).containsPattern(
+        "(?m)^\\s*select \\* from user\\s+WHERE\\s+id = 1\\s+and id > 0\\s+and id = 1\\s+and id > 0\\s*$");
   }
 
   @Test
