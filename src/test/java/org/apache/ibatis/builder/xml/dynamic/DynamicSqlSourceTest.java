@@ -214,7 +214,7 @@ class DynamicSqlSourceTest extends BaseDataTest {
 
   @Test
   void shouldTrimWHEREInsteadOfANDForBothConditions() throws Exception {
-    final String expected = "SELECT * FROM BLOG WHERE  ID = ?   OR NAME = ?";
+    final String expected = "SELECT * FROM BLOG WHERE  ID = ?    OR NAME = ?";
     DynamicSqlSource source = createDynamicSqlSource(new TextSqlNode("SELECT * FROM BLOG"),
         new WhereSqlNode(new Configuration(),
             mixedContents(new IfSqlNode(mixedContents(new TextSqlNode("   and ID = ?   ")), "true"),
@@ -236,7 +236,7 @@ class DynamicSqlSourceTest extends BaseDataTest {
 
   @Test
   void shouldTrimSETInsteadOfCOMMAForBothConditions() throws Exception {
-    final String expected = "UPDATE BLOG SET ID = ?,  NAME = ?";
+    final String expected = "UPDATE BLOG SET ID = ?,   NAME = ?";
     DynamicSqlSource source = createDynamicSqlSource(new TextSqlNode("UPDATE BLOG"),
         new SetSqlNode(new Configuration(),
             mixedContents(new IfSqlNode(mixedContents(new TextSqlNode(" ID = ?, ")), "true"),
