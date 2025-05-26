@@ -27,5 +27,5 @@ create table country(
     name varchar(20)
 );
 
-insert into person (id, name) values (1, 'Jane'), (2, 'John'); 
-insert into country (id, name) values (1, 'Japan'), (2, 'New Zealand'); 
+insert into person (id, name) values (1, 'Jane'), (2, 'John');
+insert into country (id, name) values (1, 'Japan'), (2, 'New Zealand');

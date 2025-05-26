@@ -17,18 +17,18 @@
 DROP TABLE parent if exists;
 DROP TABLE child if exists;
 create table parent(
-    id integer, 
+    id integer,
     value varchar(20)
 );
 
 create table child(
-    id integer, 
+    id integer,
     value varchar(20)
 );
 
 create table parent_child(
-    idparent integer, 
-    idchild_from integer, 
+    idparent integer,
+    idchild_from integer,
     idchild_to integer
 );
 

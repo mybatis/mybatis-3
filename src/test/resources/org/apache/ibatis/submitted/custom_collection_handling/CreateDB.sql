@@ -17,7 +17,7 @@
 drop table if exists contact;
 drop table if exists person;
 create table person (
-    id int, 
+    id int,
     name varchar(32),
     primary key (id)
 );
@@ -26,9 +26,9 @@ insert into person (id, name) values (1, 'John');
 insert into person (id, name) values (2, 'Rebecca');
 
 create table contact (
-    id int, 
-    address varchar(100), 
-    phone varchar(32), 
+    id int,
+    address varchar(100),
+    phone varchar(32),
     person_id int,
     foreign key (person_id) references person(id)
 );

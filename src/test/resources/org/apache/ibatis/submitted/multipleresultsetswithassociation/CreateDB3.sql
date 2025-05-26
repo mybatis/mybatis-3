@@ -19,7 +19,7 @@
     INSERT INTO order_header(order_id, cust_name)
         VALUES (2, 'Barney');
     INSERT INTO order_header(order_id, cust_name)
-        VALUES (3, 'Homer');        
+        VALUES (3, 'Homer');
 
     INSERT INTO order_detail(order_id, line_number, quantity, item_description)
         VALUES (1, 1, 1, 'Pen');

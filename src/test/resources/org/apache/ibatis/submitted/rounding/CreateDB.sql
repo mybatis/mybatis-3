@@ -24,7 +24,7 @@ create table users (
   roundingMode int
 );
 
-insert into users (id, name, funkyNumber, roundingMode) 
+insert into users (id, name, funkyNumber, roundingMode)
 values(1, 'User1', 123456789.9876543212345678987654321, 0);
 
 
@@ -35,6 +35,6 @@ create table users2 (
   roundingMode varchar(12)
 );
 
-insert into users2 (id, name, funkyNumber, roundingMode) 
+insert into users2 (id, name, funkyNumber, roundingMode)
 values(1, 'User1', 123456789.9876543212345678987654321, 'UP');
 

@@ -49,7 +49,7 @@ INSERT INTO comment (id,post_id,name,comment) VALUES (3,3,'rider','I prefer moto
 --  4  5   6  7
 
 INSERT INTO node (id, parent_id) VALUES (1,null);
-INSERT INTO node (id, parent_id) VALUES (2,1); 
+INSERT INTO node (id, parent_id) VALUES (2,1);
 INSERT INTO node (id, parent_id) VALUES (3,1);
 INSERT INTO node (id, parent_id) VALUES (4,2);
 INSERT INTO node (id, parent_id) VALUES (5,2);

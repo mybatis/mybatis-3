@@ -27,7 +27,7 @@ create table items (
   owner int,
   name varchar(20)
 );
- 
+
 insert into persons (id, name) values (1, 'grandma');
 insert into persons (id, name) values (2, 'sister');
 insert into persons (id, name) values (3, 'brother');

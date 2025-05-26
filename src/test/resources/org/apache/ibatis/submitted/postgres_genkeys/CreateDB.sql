@@ -23,7 +23,7 @@ CREATE TABLE mbtest.users (
   name character varying(30)
 );
 
-INSERT INTO mbtest.users (name) values 
+INSERT INTO mbtest.users (name) values
 ('Jimmy');
 
 
@@ -32,5 +32,5 @@ CREATE TABLE mbtest.sections (
   name character varying(30)
 );
 
-INSERT INTO mbtest.sections (section_id, name) values 
+INSERT INTO mbtest.sections (section_id, name) values
 (1, 'Section 1');

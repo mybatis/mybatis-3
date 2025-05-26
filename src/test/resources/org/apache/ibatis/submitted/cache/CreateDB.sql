@@ -22,5 +22,5 @@ create table person(
     lastname varchar(20)
 );
 
-insert into person(id, firstname, lastname) values (1, 'Jane', 'Doe'); 
-insert into person(id, firstname, lastname) values (2, 'John', 'Smith'); 
+insert into person(id, firstname, lastname) values (1, 'Jane', 'Doe');
+insert into person(id, firstname, lastname) values (2, 'John', 'Smith');

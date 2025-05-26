@@ -17,7 +17,7 @@
 drop table prop if exists;
 
 create table prop (
-  id int, 
+  id int,
   val varchar(20),
   url varchar(32)
 );

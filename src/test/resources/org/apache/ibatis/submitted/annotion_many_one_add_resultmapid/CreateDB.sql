@@ -15,7 +15,7 @@
 --
 
 -- ----------------------------
--- Table structure for  role 
+-- Table structure for  role
 -- ----------------------------
 CREATE TABLE role (
 id int,
