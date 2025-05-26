@@ -1,5 +1,5 @@
 --
---    Copyright 2009-2022 the original author or authors.
+--    Copyright 2009-2025 the original author or authors.
 --
 --    Licensed under the Apache License, Version 2.0 (the "License");
 --    you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ go
 
 create procedure sptest.adder(in addend1 integer, in addend2 integer, out theSum integer)
 begin atomic
-  set theSum = addend1 + addend2; 
+  set theSum = addend1 + addend2;
 end
 go
 
@@ -145,7 +145,7 @@ go
 
 create procedure sptest.echoDate(in inputDate date, out outputDate date)
 begin atomic
-  set outputDate = inputDate; 
+  set outputDate = inputDate;
 end
 go
 

@@ -1,5 +1,5 @@
 --
---    Copyright 2009-2022 the original author or authors.
+--    Copyright 2009-2025 the original author or authors.
 --
 --    Licensed under the Apache License, Version 2.0 (the "License");
 --    you may not use this file except in compliance with the License.
@@ -22,11 +22,11 @@
         DECLARE result1 CURSOR FOR
         SELECT * FROM order_detail
         FOR READ ONLY ;
- 
+
         DECLARE result2 CURSOR FOR
         SELECT * FROM order_header
         FOR READ ONLY ;
-  
+
         OPEN result1 ;
         OPEN result2 ;
     END;
