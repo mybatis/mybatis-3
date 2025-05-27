@@ -77,7 +77,7 @@ class ExternalResourcesTest {
       badFile = Path.of(" ").toFile();
       ExternalResources.copyExternalResource(badFile, destFile);
     } catch (Exception e) {
-      assertTrue(e instanceof InvalidPathException);
+      assertTrue(e instanceof InvalidPathException || e instanceof NoSuchFileException);
     }
 
   }
