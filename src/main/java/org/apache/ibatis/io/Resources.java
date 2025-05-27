@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,9 +20,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.util.Properties;
 
 /**
@@ -219,22 +221,24 @@ public class Resources {
   }
 
   /**
-   * Returns a resource on the classpath as a File object
+   * Returns a resource on the classpath as a File object.
    *
    * @param resource
    *          The resource to find
    *
    * @return The resource
    *
-   * @throws java.io.IOException
-   *           If the resource cannot be found or read
+   * @throws IOException
+   *           Signals that an I/O exception has occurred.
+   * @throws URISyntaxException
+   *           the URI syntax exception
    */
-  public static File getResourceAsFile(String resource) throws IOException {
-    return new File(getResourceURL(resource).getFile());
+  public static File getResourceAsFile(String resource) throws IOException, URISyntaxException {
+    return Path.of(getResourceURL(resource).toURI()).toFile();
   }
 
   /**
-   * Returns a resource on the classpath as a File object
+   * Returns a resource on the classpath as a File object.
    *
    * @param loader
    *          - the classloader used to fetch the resource
@@ -243,11 +247,13 @@ public class Resources {
    *
    * @return The resource
    *
-   * @throws java.io.IOException
-   *           If the resource cannot be found or read
+   * @throws IOException
+   *           Signals that an I/O exception has occurred.
+   * @throws URISyntaxException
+   *           the URI syntax exception
    */
-  public static File getResourceAsFile(ClassLoader loader, String resource) throws IOException {
-    return new File(getResourceURL(loader, resource).getFile());
+  public static File getResourceAsFile(ClassLoader loader, String resource) throws IOException, URISyntaxException {
+    return Path.of(getResourceURL(loader, resource).toURI()).toFile();
   }
 
   /**

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,7 +26,9 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystemException;
+import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -78,13 +80,13 @@ public class DefaultVFS extends VFS {
               if (log.isDebugEnabled()) {
                 log.debug("Listing " + url);
               }
-              File destinationDir = new File(path);
+              Path destinationDir = Path.of(path);
               for (JarEntry entry; (entry = jarInput.getNextJarEntry()) != null;) {
                 if (log.isDebugEnabled()) {
                   log.debug("Jar entry: " + entry.getName());
                 }
-                File entryFile = new File(destinationDir, entry.getName()).getCanonicalFile();
-                if (!entryFile.getPath().startsWith(destinationDir.getCanonicalPath())) {
+                File entryFile = destinationDir.resolve(entry.getName()).toFile().getCanonicalFile();
+                if (!entryFile.getPath().startsWith(destinationDir.toFile().getCanonicalPath())) {
                   throw new IOException("Bad zip entry: " + entry.getName());
                 }
                 children.add(entry.getName());
@@ -131,11 +133,11 @@ public class DefaultVFS extends VFS {
             // No idea where the exception came from so rethrow it
             throw e;
           }
-          File file = new File(url.getFile());
+          File file = Path.of(url.getFile()).toFile();
           if (log.isDebugEnabled()) {
             log.debug("Listing directory " + file.getAbsolutePath());
           }
-          if (file.isDirectory()) {
+          if (Files.isDirectory(file.toPath())) {
             if (log.isDebugEnabled()) {
               log.debug("Listing " + url);
             }
@@ -273,11 +275,11 @@ public class DefaultVFS extends VFS {
         log.debug("Not a JAR: " + jarUrl);
       }
       jarUrl.replace(0, jarUrl.length(), testUrl.getFile());
-      File file = new File(jarUrl.toString());
+      File file = Path.of(jarUrl.toString()).toFile();
 
       // File name might be URL-encoded
       if (!file.exists()) {
-        file = new File(URLEncoder.encode(jarUrl.toString(), StandardCharsets.UTF_8));
+        file = Path.of(URLEncoder.encode(jarUrl.toString(), StandardCharsets.UTF_8)).toFile();
       }
 
       if (file.exists()) {
