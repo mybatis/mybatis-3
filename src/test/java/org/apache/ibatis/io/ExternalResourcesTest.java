@@ -20,12 +20,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,10 +62,10 @@ class ExternalResourcesTest {
   void testcopyExternalResource_fileNotFound() {
 
     try {
-      badFile = new File("/tmp/nofile.sql");
+      badFile = Path.of("/tmp/nofile.sql").toFile();
       ExternalResources.copyExternalResource(badFile, destFile);
-    } catch (IOException e) {
-      assertTrue(e instanceof FileNotFoundException);
+    } catch (Exception e) {
+      assertTrue(e instanceof NoSuchFileException);
     }
 
   }
@@ -73,10 +74,10 @@ class ExternalResourcesTest {
   void testcopyExternalResource_emptyStringAsFile() {
 
     try {
-      badFile = new File(" ");
+      badFile = Path.of(" ").toFile();
       ExternalResources.copyExternalResource(badFile, destFile);
     } catch (Exception e) {
-      assertTrue(e instanceof FileNotFoundException);
+      assertTrue(e instanceof InvalidPathException || e instanceof NoSuchFileException);
     }
 
   }
@@ -85,7 +86,7 @@ class ExternalResourcesTest {
   void getConfiguredTemplate() {
     String templateName = "";
 
-    try (FileWriter fileWriter = new FileWriter(tempFile, StandardCharsets.UTF_8)) {
+    try (BufferedWriter fileWriter = Files.newBufferedWriter(tempFile.toPath(), StandardCharsets.UTF_8)) {
       fileWriter.append("new_command.template=templates/col_new_template_migration.sql");
       fileWriter.flush();
       templateName = ExternalResources.getConfiguredTemplate(tempFile.getAbsolutePath(), "new_command.template");
