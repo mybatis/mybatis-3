@@ -171,7 +171,7 @@ public class DefaultParameterHandler implements ParameterHandler {
                 + "' nor JDBC type '" + actualJdbcType + "'");
           }
           try {
-            typeHandler.setParameter(ps, i + 1, value, jdbcType);
+            typeHandler.setParameter(ps, i + 1, propertyName, value, jdbcType);
           } catch (TypeException | SQLException e) {
             throw new TypeException("Could not set parameters for mapping: " + parameterMapping + ". Cause: " + e, e);
           }

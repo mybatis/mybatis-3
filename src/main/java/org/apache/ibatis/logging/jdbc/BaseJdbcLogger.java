@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 import org.apache.ibatis.builder.SqlSourceBuilder;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ArrayUtil;
+import org.apache.ibatis.session.Configuration;
 
 /**
  * Base class for proxies to do logging.
@@ -47,6 +48,7 @@ public abstract class BaseJdbcLogger {
 
   private final List<Object> columnNames = new ArrayList<>();
   private final List<Object> columnValues = new ArrayList<>();
+  private final List<String> columnLabels = new ArrayList<>();
 
   protected final Log statementLog;
   protected final int queryStack;
@@ -85,12 +87,20 @@ public abstract class BaseJdbcLogger {
   }
 
   protected String getParameterValueString() {
-    List<Object> typeList = new ArrayList<>(columnValues.size());
-    for (Object value : columnValues) {
+    int size = columnValues.size();
+    List<Object> typeList = new ArrayList<>(size);
+    for (int i = 0; i < size; ++i) {
+      Object value = columnValues.get(i);
       if (value == null) {
         typeList.add("null");
       } else {
-        typeList.add(objectValueString(value) + "(" + value.getClass().getSimpleName() + ")");
+        String column = columnLabels.get(i);
+        boolean mask = Configuration.maskColumns.stream().anyMatch(column::equalsIgnoreCase);
+        String strVal = objectValueString(value);
+        if (mask) {
+          strVal = mask(strVal);
+        }
+        typeList.add(strVal + "(" + value.getClass().getSimpleName() + ")");
       }
     }
     final String parameters = typeList.toString();
@@ -112,10 +122,15 @@ public abstract class BaseJdbcLogger {
     return columnNames.toString();
   }
 
+  public void addColumnLabels(String column) {
+    this.columnLabels.add(column);
+  }
+
   protected void clearColumnInfo() {
     columnMap.clear();
     columnNames.clear();
     columnValues.clear();
+    columnLabels.clear();
   }
 
   protected String removeExtraWhitespace(String original) {
@@ -139,6 +154,25 @@ public abstract class BaseJdbcLogger {
   protected void trace(String text, boolean input) {
     if (statementLog.isTraceEnabled()) {
       statementLog.trace(prefix(input) + text);
+    }
+  }
+
+  protected String mask(String value) {
+    if (value == null || value.isEmpty()) {
+      return value;
+    }
+    int length = value.length();
+    if (length == 1) {
+      return value;
+    } else if (length == 2) {
+      return value.charAt(0) + "*";
+    } else {
+      int reserved = length >> 1;
+      StringBuilder sb = new StringBuilder();
+      sb.append(value, 0, reserved);
+      sb.append("*".repeat(Math.max(0, length - reserved * 2)));
+      sb.append(value, reserved + 1, length);
+      return sb.toString();
     }
   }
 

@@ -15,16 +15,7 @@
  */
 package org.apache.ibatis.session;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BiFunction;
@@ -120,6 +111,7 @@ public class Configuration {
 
   protected String logPrefix;
   protected Class<? extends Log> logImpl;
+  public static Set<String> maskColumns = new HashSet<>();
   protected Class<? extends VFS> vfsImpl;
   protected Class<?> defaultSqlProviderType;
   protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
@@ -238,6 +230,13 @@ public class Configuration {
       this.logImpl = logImpl;
       LogFactory.useCustomLogging(this.logImpl);
     }
+  }
+
+  public void setMaskColumns(String maskColumns) {
+    if (maskColumns == null || maskColumns.isEmpty()) {
+      return;
+    }
+    Collections.addAll(Configuration.maskColumns, maskColumns.split(","));
   }
 
   public Class<? extends VFS> getVfsImpl() {

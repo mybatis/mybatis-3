@@ -15,10 +15,14 @@
  */
 package org.apache.ibatis.type;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import org.apache.ibatis.logging.jdbc.BaseJdbcLogger;
 
 /**
  * @author Clinton Begin
@@ -26,6 +30,18 @@ import java.sql.SQLException;
 public interface TypeHandler<T> {
 
   void setParameter(PreparedStatement ps, int i, T parameter, JdbcType jdbcType) throws SQLException;
+
+  default void setParameter(PreparedStatement ps, int i, String column, T parameter, JdbcType jdbcType)
+      throws SQLException {
+    if (Proxy.isProxyClass(ps.getClass())) {
+      InvocationHandler handler = Proxy.getInvocationHandler(ps);
+      if (handler instanceof BaseJdbcLogger) {
+        BaseJdbcLogger logger = (BaseJdbcLogger) handler;
+        logger.addColumnLabels(column);
+      }
+    }
+    setParameter(ps, i, parameter, jdbcType);
+  }
 
   /**
    * Gets the result.

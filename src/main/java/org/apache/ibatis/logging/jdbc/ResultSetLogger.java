@@ -28,6 +28,7 @@ import java.util.StringJoiner;
 
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ExceptionUtil;
+import org.apache.ibatis.session.Configuration;
 
 /**
  * ResultSet proxy to add logging.
@@ -107,7 +108,13 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
         if (blobColumns.contains(i)) {
           row.add("<<BLOB>>");
         } else {
-          row.add(rs.getString(i));
+          String strVal = rs.getString(i);
+          String column = rs.getMetaData().getColumnName(i);
+          boolean mask = Configuration.maskColumns.stream().anyMatch(column::equalsIgnoreCase);
+          if (mask) {
+            strVal = mask(strVal);
+          }
+          row.add(strVal);
         }
       } catch (SQLException e) {
         // generally can't call getString() on a BLOB column
