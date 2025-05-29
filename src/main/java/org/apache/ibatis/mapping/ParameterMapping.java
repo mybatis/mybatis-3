@@ -37,6 +37,7 @@ public class ParameterMapping {
   private TypeHandler<?> typeHandler;
   private String resultMapId;
   private String jdbcTypeName;
+  private boolean maskLog;
   private String expression;
   private Object value = UNSET;
 
@@ -92,6 +93,11 @@ public class ParameterMapping {
 
     public Builder jdbcTypeName(String jdbcTypeName) {
       parameterMapping.jdbcTypeName = jdbcTypeName;
+      return this;
+    }
+
+    public Builder maskLog(String maskLog) {
+      parameterMapping.maskLog = "true".equals(maskLog);
       return this;
     }
 
@@ -183,6 +189,10 @@ public class ParameterMapping {
    */
   public String getJdbcTypeName() {
     return jdbcTypeName;
+  }
+
+  public boolean isMaskLog() {
+    return maskLog;
   }
 
   /**

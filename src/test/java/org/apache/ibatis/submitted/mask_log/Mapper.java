@@ -13,11 +13,15 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.basetest2;
+package org.apache.ibatis.submitted.mask_log;
+
+import java.util.List;
 
 public interface Mapper {
 
-  User getUser(Integer id, String name);
+  User getUser(Integer id, String number, String password);
+
+  List<User> getUsers(List<String> numbers, List<String> passwords);
 
   void insertUser(User user);
 

@@ -111,7 +111,7 @@ public class Configuration {
 
   protected String logPrefix;
   protected Class<? extends Log> logImpl;
-  public static Set<String> maskColumns = new HashSet<>();
+  protected Set<String> maskLogResultColumns = new HashSet<>();
   protected Class<? extends VFS> vfsImpl;
   protected Class<?> defaultSqlProviderType;
   protected LocalCacheScope localCacheScope = LocalCacheScope.SESSION;
@@ -232,11 +232,17 @@ public class Configuration {
     }
   }
 
-  public void setMaskColumns(String maskColumns) {
-    if (maskColumns == null || maskColumns.isEmpty()) {
+  public void setMaskLogResultColumns(String maskLogResultColumns) {
+    if (maskLogResultColumns == null || maskLogResultColumns.isEmpty()) {
       return;
     }
-    Collections.addAll(Configuration.maskColumns, maskColumns.split(","));
+    for (String column : maskLogResultColumns.split(",")) {
+      this.maskLogResultColumns.add(column.toUpperCase());
+    }
+  }
+
+  public Set<String> getMaskLogResultColumns() {
+    return maskLogResultColumns;
   }
 
   public Class<? extends VFS> getVfsImpl() {

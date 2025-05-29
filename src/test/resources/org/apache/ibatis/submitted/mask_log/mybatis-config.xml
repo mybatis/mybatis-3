@@ -24,7 +24,7 @@
 
     <settings>
         <setting name="logImpl" value="STDOUT_LOGGING"/>
-        <setting name="maskColumns" value="id,name"/>
+        <setting name="maskLogResultColumns" value="name,number,password"/>
     </settings>
 
     <environments default="development">
@@ -34,14 +34,14 @@
             </transactionManager>
             <dataSource type="UNPOOLED">
                 <property name="driver" value="org.hsqldb.jdbcDriver" />
-                <property name="url" value="jdbc:hsqldb:mem:basetest2" />
+                <property name="url" value="jdbc:hsqldb:mem:mask_log" />
                 <property name="username" value="sa" />
             </dataSource>
         </environment>
     </environments>
 
     <mappers>
-        <mapper class="org.apache.ibatis.submitted.basetest2.Mapper" />
+        <mapper class="org.apache.ibatis.submitted.mask_log.Mapper" />
     </mappers>
 
 </configuration>

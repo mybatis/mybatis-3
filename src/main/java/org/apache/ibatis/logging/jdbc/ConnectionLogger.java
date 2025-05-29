@@ -21,6 +21,7 @@ import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.Set;
 
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ExceptionUtil;
@@ -36,7 +37,11 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
   private final Connection connection;
 
   private ConnectionLogger(Connection conn, Log statementLog, int queryStack) {
-    super(statementLog, queryStack);
+    this(conn, statementLog, queryStack, null);
+  }
+
+  private ConnectionLogger(Connection conn, Log statementLog, int queryStack, Set<String> maskLogResultColumns) {
+    super(statementLog, queryStack, maskLogResultColumns);
     this.connection = conn;
   }
 
@@ -55,7 +60,7 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
       }
       if ("createStatement".equals(method.getName())) {
         Statement stmt = (Statement) method.invoke(connection, params);
-        return StatementLogger.newInstance(stmt, statementLog, queryStack);
+        return StatementLogger.newInstance(stmt, statementLog, queryStack, MASK_LOG_RESULT_COLUMNS);
       }
       return method.invoke(connection, params);
     } catch (Throwable t) {
@@ -76,7 +81,26 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
    * @return the connection with logging
    */
   public static Connection newInstance(Connection conn, Log statementLog, int queryStack) {
-    InvocationHandler handler = new ConnectionLogger(conn, statementLog, queryStack);
+    return newInstance(conn, statementLog, queryStack, null);
+  }
+
+  /**
+   * Creates a logging version of a connection.
+   *
+   * @param conn
+   *          the original connection
+   * @param statementLog
+   *          the statement log
+   * @param queryStack
+   *          the query stack
+   * @param maskLogResultColumns
+   *          the result columns to be masked
+   *
+   * @return the connection with logging
+   */
+  public static Connection newInstance(Connection conn, Log statementLog, int queryStack,
+      Set<String> maskLogResultColumns) {
+    InvocationHandler handler = new ConnectionLogger(conn, statementLog, queryStack, maskLogResultColumns);
     ClassLoader cl = Connection.class.getClassLoader();
     return (Connection) Proxy.newProxyInstance(cl, new Class[] { Connection.class }, handler);
   }

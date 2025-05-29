@@ -31,13 +31,13 @@ public interface TypeHandler<T> {
 
   void setParameter(PreparedStatement ps, int i, T parameter, JdbcType jdbcType) throws SQLException;
 
-  default void setParameter(PreparedStatement ps, int i, String column, T parameter, JdbcType jdbcType)
+  default void setParameter(PreparedStatement ps, int i, boolean maskLog, T parameter, JdbcType jdbcType)
       throws SQLException {
     if (Proxy.isProxyClass(ps.getClass())) {
       InvocationHandler handler = Proxy.getInvocationHandler(ps);
       if (handler instanceof BaseJdbcLogger) {
         BaseJdbcLogger logger = (BaseJdbcLogger) handler;
-        logger.addColumnLabels(column);
+        logger.addColumnMasks(maskLog);
       }
     }
     setParameter(ps, i, parameter, jdbcType);

@@ -18,7 +18,11 @@ drop table users if exists;
 
 create table users (
   id int,
-  name varchar(20)
+  name varchar(20),
+  number varchar(20),
+  password varchar(20)
 );
 
-insert into users (id, name) values(1, 'User1');
+insert into users (id, name, number, password) values(1, 'User1', 'Number1', 'Password1');
+insert into users (id, name, number, password) values(2, 'User2', 'Number2', 'Password2');
+insert into users (id, name, number, password) values(3, 'User3', 'Number3', 'Password3');

@@ -13,12 +13,14 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.apache.ibatis.submitted.basetest2;
+package org.apache.ibatis.submitted.mask_log;
 
 public class User {
 
   private Integer id;
   private String name;
+  private String number;
+  private String password;
 
   public Integer getId() {
     return id;
@@ -34,5 +36,21 @@ public class User {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public String getNumber() {
+    return number;
+  }
+
+  public void setNumber(String number) {
+    this.number = number;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
   }
 }

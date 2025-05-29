@@ -28,7 +28,6 @@ import java.util.StringJoiner;
 
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ExceptionUtil;
-import org.apache.ibatis.session.Configuration;
 
 /**
  * ResultSet proxy to add logging.
@@ -56,7 +55,11 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
   }
 
   private ResultSetLogger(ResultSet rs, Log statementLog, int queryStack) {
-    super(statementLog, queryStack);
+    this(rs, statementLog, queryStack, null);
+  }
+
+  private ResultSetLogger(ResultSet rs, Log statementLog, int queryStack, Set<String> maskLogResultColumns) {
+    super(statementLog, queryStack, maskLogResultColumns);
     this.rs = rs;
   }
 
@@ -110,7 +113,7 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
         } else {
           String strVal = rs.getString(i);
           String column = rs.getMetaData().getColumnName(i);
-          boolean mask = Configuration.maskColumns.stream().anyMatch(column::equalsIgnoreCase);
+          boolean mask = MASK_LOG_RESULT_COLUMNS.stream().anyMatch(column::equalsIgnoreCase);
           if (mask) {
             strVal = mask(strVal);
           }
@@ -137,7 +140,26 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
    * @return the ResultSet with logging
    */
   public static ResultSet newInstance(ResultSet rs, Log statementLog, int queryStack) {
-    InvocationHandler handler = new ResultSetLogger(rs, statementLog, queryStack);
+    return newInstance(rs, statementLog, queryStack, null);
+  }
+
+  /**
+   * Creates a logging version of a ResultSet.
+   *
+   * @param rs
+   *          the ResultSet to proxy
+   * @param statementLog
+   *          the statement log
+   * @param queryStack
+   *          the query stack
+   * @param maskLogResultColumns
+   *          the result columns to be masked
+   *
+   * @return the ResultSet with logging
+   */
+  public static ResultSet newInstance(ResultSet rs, Log statementLog, int queryStack,
+      Set<String> maskLogResultColumns) {
+    InvocationHandler handler = new ResultSetLogger(rs, statementLog, queryStack, maskLogResultColumns);
     ClassLoader cl = ResultSet.class.getClassLoader();
     return (ResultSet) Proxy.newProxyInstance(cl, new Class[] { ResultSet.class }, handler);
   }

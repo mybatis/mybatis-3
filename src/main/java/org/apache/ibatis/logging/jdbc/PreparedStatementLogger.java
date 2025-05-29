@@ -53,7 +53,7 @@ public final class PreparedStatementLogger extends BaseJdbcLogger implements Inv
         clearColumnInfo();
         if ("executeQuery".equals(method.getName())) {
           ResultSet rs = (ResultSet) method.invoke(statement, params);
-          return rs == null ? null : ResultSetLogger.newInstance(rs, statementLog, queryStack);
+          return rs == null ? null : ResultSetLogger.newInstance(rs, statementLog, queryStack, MASK_LOG_RESULT_COLUMNS);
         } else {
           return method.invoke(statement, params);
         }

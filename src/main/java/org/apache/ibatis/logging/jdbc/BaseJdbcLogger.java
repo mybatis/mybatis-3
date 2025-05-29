@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
 import org.apache.ibatis.builder.SqlSourceBuilder;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ArrayUtil;
-import org.apache.ibatis.session.Configuration;
 
 /**
  * Base class for proxies to do logging.
@@ -43,12 +42,13 @@ public abstract class BaseJdbcLogger {
 
   protected static final Set<String> SET_METHODS;
   protected static final Set<String> EXECUTE_METHODS = new HashSet<>();
+  protected static final Set<String> MASK_LOG_RESULT_COLUMNS = new HashSet<>();
 
   private final Map<Object, Object> columnMap = new HashMap<>();
 
   private final List<Object> columnNames = new ArrayList<>();
   private final List<Object> columnValues = new ArrayList<>();
-  private final List<String> columnLabels = new ArrayList<>();
+  private final List<Boolean> columnMasks = new ArrayList<>();
 
   protected final Log statementLog;
   protected final int queryStack;
@@ -57,11 +57,21 @@ public abstract class BaseJdbcLogger {
    * Default constructor
    */
   public BaseJdbcLogger(Log log, int queryStack) {
+    this(log, queryStack, null);
+  }
+
+  /*
+   * Default constructor
+   */
+  public BaseJdbcLogger(Log log, int queryStack, Set<String> maskLogResultColumns) {
     this.statementLog = log;
     if (queryStack == 0) {
       this.queryStack = 1;
     } else {
       this.queryStack = queryStack;
+    }
+    if (maskLogResultColumns != null) {
+      MASK_LOG_RESULT_COLUMNS.addAll(maskLogResultColumns);
     }
   }
 
@@ -94,8 +104,7 @@ public abstract class BaseJdbcLogger {
       if (value == null) {
         typeList.add("null");
       } else {
-        String column = columnLabels.get(i);
-        boolean mask = Configuration.maskColumns.stream().anyMatch(column::equalsIgnoreCase);
+        boolean mask = columnMasks.get(i);
         String strVal = objectValueString(value);
         if (mask) {
           strVal = mask(strVal);
@@ -122,15 +131,15 @@ public abstract class BaseJdbcLogger {
     return columnNames.toString();
   }
 
-  public void addColumnLabels(String column) {
-    this.columnLabels.add(column);
+  public void addColumnMasks(Boolean maskLog) {
+    this.columnMasks.add(maskLog);
   }
 
   protected void clearColumnInfo() {
     columnMap.clear();
     columnNames.clear();
     columnValues.clear();
-    columnLabels.clear();
+    columnMasks.clear();
   }
 
   protected String removeExtraWhitespace(String original) {
@@ -166,13 +175,13 @@ public abstract class BaseJdbcLogger {
       return value;
     } else if (length == 2) {
       return value.charAt(0) + "*";
+    } else if (length == 3) {
+      return value.charAt(0) + "*" + value.charAt(2);
     } else {
+      boolean even = (length & 1) == 0;
       int reserved = length >> 1;
-      StringBuilder sb = new StringBuilder();
-      sb.append(value, 0, reserved);
-      sb.append("*".repeat(Math.max(0, length - reserved * 2)));
-      sb.append(value, reserved + 1, length);
-      return sb.toString();
+      return value.substring(0, even ? reserved >> 1 : (reserved >> 1) + 1) + "*".repeat(reserved)
+          + value.substring(length - (reserved >> 1));
     }
   }
 

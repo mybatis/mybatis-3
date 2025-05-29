@@ -55,4 +55,16 @@ class BaseJdbcLoggerTest {
     when(array.getArray()).thenReturn(new String[] { "one", "two", "three" });
     assertThat(logger.getParameterValueString()).startsWith("[one, two, three]");
   }
+
+  @Test
+  void shouldMaskParameter() throws Exception {
+    assertThat(logger.mask("P")).isEqualTo("P");
+    assertThat(logger.mask("Pa")).isEqualTo("P*");
+    assertThat(logger.mask("Pas")).isEqualTo("P*s");
+    assertThat(logger.mask("Pass")).isEqualTo("P**s");
+    assertThat(logger.mask("Passw")).isEqualTo("Pa**w");
+    assertThat(logger.mask("Passwo")).isEqualTo("Pa***o");
+    assertThat(logger.mask("Passwor")).isEqualTo("Pa***r");
+    assertThat(logger.mask("Password")).isEqualTo("Pa***rd");
+  }
 }
