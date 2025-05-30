@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 
-       Copyright 2009-2022 the original author or authors.
+       Copyright 2009-2025 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -23,8 +23,8 @@
 <configuration>
 
     <settings>
-        <setting name="logImpl" value="STDOUT_LOGGING"/>
-        <setting name="maskLogResultColumns" value="name,number,password"/>
+        <setting name="logImpl" value="org.apache.ibatis.submitted.mask_log.StringBuilderLogImpl"/>
+        <setting name="maskLogResultColumns" value="number,password"/>
     </settings>
 
     <environments default="development">

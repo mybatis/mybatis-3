@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -98,18 +98,16 @@ public abstract class BaseJdbcLogger {
 
   protected String getParameterValueString() {
     int size = columnValues.size();
+    boolean equal = size == columnMasks.size();
     List<Object> typeList = new ArrayList<>(size);
     for (int i = 0; i < size; ++i) {
       Object value = columnValues.get(i);
       if (value == null) {
         typeList.add("null");
       } else {
-        boolean mask = columnMasks.get(i);
         String strVal = objectValueString(value);
-        if (mask) {
-          strVal = mask(strVal);
-        }
-        typeList.add(strVal + "(" + value.getClass().getSimpleName() + ")");
+        boolean mask = equal && columnMasks.get(i);
+        typeList.add(mask ? mask(strVal) : strVal + "(" + value.getClass().getSimpleName() + ")");
       }
     }
     final String parameters = typeList.toString();
@@ -178,10 +176,10 @@ public abstract class BaseJdbcLogger {
     } else if (length == 3) {
       return value.charAt(0) + "*" + value.charAt(2);
     } else {
-      boolean even = (length & 1) == 0;
-      int reserved = length >> 1;
-      return value.substring(0, even ? reserved >> 1 : (reserved >> 1) + 1) + "*".repeat(reserved)
-          + value.substring(length - (reserved >> 1));
+      int maskLen = length >> 1;
+      int rawLen = length - maskLen;
+      return value.substring(0, (rawLen & 1) == 0 ? rawLen >> 1 : (rawLen >> 1) + 1) + "*".repeat(maskLen)
+          + value.substring(length - (rawLen >> 1));
     }
   }
 

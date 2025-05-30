@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -64,7 +64,7 @@ class BaseJdbcLoggerTest {
     assertThat(logger.mask("Pass")).isEqualTo("P**s");
     assertThat(logger.mask("Passw")).isEqualTo("Pa**w");
     assertThat(logger.mask("Passwo")).isEqualTo("Pa***o");
-    assertThat(logger.mask("Passwor")).isEqualTo("Pa***r");
-    assertThat(logger.mask("Password")).isEqualTo("Pa***rd");
+    assertThat(logger.mask("Passwor")).isEqualTo("Pa***or");
+    assertThat(logger.mask("Password")).isEqualTo("Pa****rd");
   }
 }

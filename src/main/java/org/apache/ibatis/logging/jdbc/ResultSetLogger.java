@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -113,11 +113,8 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
         } else {
           String strVal = rs.getString(i);
           String column = rs.getMetaData().getColumnName(i);
-          boolean mask = MASK_LOG_RESULT_COLUMNS.stream().anyMatch(column::equalsIgnoreCase);
-          if (mask) {
-            strVal = mask(strVal);
-          }
-          row.add(strVal);
+          boolean mask = column != null && MASK_LOG_RESULT_COLUMNS.stream().anyMatch(column::equalsIgnoreCase);
+          row.add(mask ? mask(strVal) : strVal);
         }
       } catch (SQLException e) {
         // generally can't call getString() on a BLOB column
