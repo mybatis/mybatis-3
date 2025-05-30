@@ -113,6 +113,8 @@ public class ParameterMappingTokenHandler extends BaseBuilder implements TokenHa
         builder.resultMapId(value);
       } else if ("jdbcTypeName".equals(name)) {
         builder.jdbcTypeName(value);
+      } else if ("maskLog".equals(name)) {
+        builder.maskLog(value);
       } else if ("expression".equals(name)) {
         throw new BuilderException("Expression based parameters are not supported yet");
       } else {

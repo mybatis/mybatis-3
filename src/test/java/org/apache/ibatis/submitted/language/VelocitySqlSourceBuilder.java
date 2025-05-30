@@ -119,6 +119,9 @@ public class VelocitySqlSourceBuilder extends BaseBuilder {
             case "jdbcTypeName":
               builder.jdbcTypeName(value);
               break;
+            case "maskLog":
+              builder.maskLog(value);
+              break;
             case "property":
               break;
             case "expression":

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Set;
 
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ExceptionUtil;
@@ -35,7 +36,11 @@ public final class StatementLogger extends BaseJdbcLogger implements InvocationH
   private final Statement statement;
 
   private StatementLogger(Statement stmt, Log statementLog, int queryStack) {
-    super(statementLog, queryStack);
+    this(stmt, statementLog, queryStack, null);
+  }
+
+  private StatementLogger(Statement stmt, Log statementLog, int queryStack, Set<String> maskLogResultColumns) {
+    super(statementLog, queryStack, maskLogResultColumns);
     this.statement = stmt;
   }
 
@@ -51,14 +56,14 @@ public final class StatementLogger extends BaseJdbcLogger implements InvocationH
         }
         if ("executeQuery".equals(method.getName())) {
           ResultSet rs = (ResultSet) method.invoke(statement, params);
-          return rs == null ? null : ResultSetLogger.newInstance(rs, statementLog, queryStack);
+          return rs == null ? null : ResultSetLogger.newInstance(rs, statementLog, queryStack, MASK_LOG_RESULT_COLUMNS);
         } else {
           return method.invoke(statement, params);
         }
       }
       if ("getResultSet".equals(method.getName())) {
         ResultSet rs = (ResultSet) method.invoke(statement, params);
-        return rs == null ? null : ResultSetLogger.newInstance(rs, statementLog, queryStack);
+        return rs == null ? null : ResultSetLogger.newInstance(rs, statementLog, queryStack, MASK_LOG_RESULT_COLUMNS);
       } else {
         return method.invoke(statement, params);
       }
@@ -80,7 +85,26 @@ public final class StatementLogger extends BaseJdbcLogger implements InvocationH
    * @return the proxy
    */
   public static Statement newInstance(Statement stmt, Log statementLog, int queryStack) {
-    InvocationHandler handler = new StatementLogger(stmt, statementLog, queryStack);
+    return newInstance(stmt, statementLog, queryStack, null);
+  }
+
+  /**
+   * Creates a logging version of a Statement.
+   *
+   * @param stmt
+   *          the statement
+   * @param statementLog
+   *          the statement log
+   * @param queryStack
+   *          the query stack
+   * @param maskLogResultColumns
+   *          the result columns to be masked
+   *
+   * @return the proxy
+   */
+  public static Statement newInstance(Statement stmt, Log statementLog, int queryStack,
+      Set<String> maskLogResultColumns) {
+    InvocationHandler handler = new StatementLogger(stmt, statementLog, queryStack, maskLogResultColumns);
     ClassLoader cl = Statement.class.getClassLoader();
     return (Statement) Proxy.newProxyInstance(cl, new Class[] { Statement.class }, handler);
   }

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -54,5 +54,17 @@ class BaseJdbcLoggerTest {
     logger.setColumn("1", array);
     when(array.getArray()).thenReturn(new String[] { "one", "two", "three" });
     assertThat(logger.getParameterValueString()).startsWith("[one, two, three]");
+  }
+
+  @Test
+  void shouldMaskParameter() throws Exception {
+    assertThat(logger.mask("P")).isEqualTo("P");
+    assertThat(logger.mask("Pa")).isEqualTo("P*");
+    assertThat(logger.mask("Pas")).isEqualTo("P*s");
+    assertThat(logger.mask("Pass")).isEqualTo("P**s");
+    assertThat(logger.mask("Passw")).isEqualTo("Pa**w");
+    assertThat(logger.mask("Passwo")).isEqualTo("Pa***o");
+    assertThat(logger.mask("Passwor")).isEqualTo("Pa***or");
+    assertThat(logger.mask("Password")).isEqualTo("Pa****rd");
   }
 }

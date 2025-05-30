@@ -15,8 +15,7 @@
  */
 package org.apache.ibatis.scripting.defaults;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -69,8 +68,8 @@ class DefaultParameterHandlerTest {
     final BoundSql boundSql = mock(BoundSql.class);
 
     TypeHandler<Object> typeHandler = mock(TypeHandler.class);
-    doThrow(new SQLException("foo")).when(typeHandler).setParameter(any(PreparedStatement.class), anyInt(), any(),
-        any(JdbcType.class));
+    doThrow(new SQLException("foo")).when(typeHandler).setParameter(any(PreparedStatement.class), anyInt(),
+        anyBoolean(), any(), any(JdbcType.class));
     ParameterMapping parameterMapping = new ParameterMapping.Builder(mappedStatement.getConfiguration(), "prop",
         typeHandler).build();
     List<ParameterMapping> parameterMappings = List.of(parameterMapping);

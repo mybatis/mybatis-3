@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -118,6 +118,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       Properties settings = settingsAsProperties(root.evalNode("settings"));
       loadCustomVfsImpl(settings);
       loadCustomLogImpl(settings);
+      loadCustomMaskLogResultColumns(settings);
       typeAliasesElement(root.evalNode("typeAliases"));
       pluginsElement(root.evalNode("plugins"));
       objectFactoryElement(root.evalNode("objectFactory"));
@@ -168,6 +169,10 @@ public class XMLConfigBuilder extends BaseBuilder {
   private void loadCustomLogImpl(Properties props) {
     Class<? extends Log> logImpl = resolveClass(props.getProperty("logImpl"));
     configuration.setLogImpl(logImpl);
+  }
+
+  private void loadCustomMaskLogResultColumns(Properties props) {
+    configuration.setMaskLogResultColumns(props.getProperty("maskLogResultColumns"));
   }
 
   private void typeAliasesElement(XNode context) {

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -42,11 +42,13 @@ public abstract class BaseJdbcLogger {
 
   protected static final Set<String> SET_METHODS;
   protected static final Set<String> EXECUTE_METHODS = new HashSet<>();
+  protected static final Set<String> MASK_LOG_RESULT_COLUMNS = new HashSet<>();
 
   private final Map<Object, Object> columnMap = new HashMap<>();
 
   private final List<Object> columnNames = new ArrayList<>();
   private final List<Object> columnValues = new ArrayList<>();
+  private final List<Boolean> columnMasks = new ArrayList<>();
 
   protected final Log statementLog;
   protected final int queryStack;
@@ -55,11 +57,21 @@ public abstract class BaseJdbcLogger {
    * Default constructor
    */
   public BaseJdbcLogger(Log log, int queryStack) {
+    this(log, queryStack, null);
+  }
+
+  /*
+   * Default constructor
+   */
+  public BaseJdbcLogger(Log log, int queryStack, Set<String> maskLogResultColumns) {
     this.statementLog = log;
     if (queryStack == 0) {
       this.queryStack = 1;
     } else {
       this.queryStack = queryStack;
+    }
+    if (maskLogResultColumns != null) {
+      MASK_LOG_RESULT_COLUMNS.addAll(maskLogResultColumns);
     }
   }
 
@@ -85,12 +97,17 @@ public abstract class BaseJdbcLogger {
   }
 
   protected String getParameterValueString() {
-    List<Object> typeList = new ArrayList<>(columnValues.size());
-    for (Object value : columnValues) {
+    int size = columnValues.size();
+    boolean equal = size == columnMasks.size();
+    List<Object> typeList = new ArrayList<>(size);
+    for (int i = 0; i < size; ++i) {
+      Object value = columnValues.get(i);
       if (value == null) {
         typeList.add("null");
       } else {
-        typeList.add(objectValueString(value) + "(" + value.getClass().getSimpleName() + ")");
+        String strVal = objectValueString(value);
+        boolean mask = equal && columnMasks.get(i);
+        typeList.add(mask ? mask(strVal) : strVal + "(" + value.getClass().getSimpleName() + ")");
       }
     }
     final String parameters = typeList.toString();
@@ -112,10 +129,15 @@ public abstract class BaseJdbcLogger {
     return columnNames.toString();
   }
 
+  public void addColumnMasks(Boolean maskLog) {
+    this.columnMasks.add(maskLog);
+  }
+
   protected void clearColumnInfo() {
     columnMap.clear();
     columnNames.clear();
     columnValues.clear();
+    columnMasks.clear();
   }
 
   protected String removeExtraWhitespace(String original) {
@@ -139,6 +161,25 @@ public abstract class BaseJdbcLogger {
   protected void trace(String text, boolean input) {
     if (statementLog.isTraceEnabled()) {
       statementLog.trace(prefix(input) + text);
+    }
+  }
+
+  protected String mask(String value) {
+    if (value == null || value.isEmpty()) {
+      return value;
+    }
+    int length = value.length();
+    if (length == 1) {
+      return value;
+    } else if (length == 2) {
+      return value.charAt(0) + "*";
+    } else if (length == 3) {
+      return value.charAt(0) + "*" + value.charAt(2);
+    } else {
+      int maskLen = length >> 1;
+      int rawLen = length - maskLen;
+      return value.substring(0, (rawLen & 1) == 0 ? rawLen >> 1 : (rawLen >> 1) + 1) + "*".repeat(maskLen)
+          + value.substring(length - (rawLen >> 1));
     }
   }
 
