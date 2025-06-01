@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ public final class PreparedStatementLogger extends BaseJdbcLogger implements Inv
         clearColumnInfo();
         if ("executeQuery".equals(method.getName())) {
           ResultSet rs = (ResultSet) method.invoke(statement, params);
-          return rs == null ? null : ResultSetLogger.newInstance(rs, statementLog, queryStack);
+          return rs == null ? null : ResultSetLogger.newInstance(rs, statementLog, queryStack, MASK_LOG_RESULT_COLUMNS);
         } else {
           return method.invoke(statement, params);
         }
