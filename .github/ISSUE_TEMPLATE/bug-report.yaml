@@ -45,10 +45,11 @@ body:
       label: Issue Description
       description: |
         To fix the problem, we need to reproduce it first. ☝️
-
         - Provide as much detail as possible (config, DB data (DML, DDL), Java classes, Java/XML mappers, etc.).
-        - Sharing a small executable demo project on your GitHub repository speeds up the process significantly 🏎️💨. There are project templates and examples in this [repository](https://github.com/harawata/mybatis-issues).
+        - Sharing a small executable demo project on your GitHub repository speeds up the process significantly 🏎️💨.  
+        There are project templates and examples in this [repository](https://github.com/harawata/mybatis-issues).
         - If there is an exception, include the entire stack trace (the lower parts are important).
+
       value: |
         FYI, you can use GitHub Flavored Markdown here.
 
