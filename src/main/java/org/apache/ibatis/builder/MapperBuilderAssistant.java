@@ -162,7 +162,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
 
     if (extend != null) {
       if (!configuration.hasResultMap(extend)) {
-        throw new IncompleteElementException("Could not find a parent resultmap with id '" + extend + "'");
+        throw new IncompleteElementException("Could not find a parent resultMap with id '" + extend + "'");
       }
       ResultMap resultMap = configuration.getResultMap(extend);
       List<ResultMapping> extendedResultMappings = new ArrayList<>(resultMap.getResultMappings());

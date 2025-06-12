@@ -96,16 +96,16 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   // pending creations property tracker
   private final Map<Object, PendingRelation> pendingPccRelations = new IdentityHashMap<>();
 
-  // nested resultmaps
+  // nested resultMaps
   private final Map<CacheKey, Object> nestedResultObjects = new HashMap<>();
   private final Map<String, Object> ancestorObjects = new HashMap<>();
   private Object previousRowValue;
 
-  // multiple resultsets
+  // multiple resultSets
   private final Map<String, ResultMapping> nextResultMaps = new HashMap<>();
   private final Map<CacheKey, List<PendingRelation>> pendingRelations = new HashMap<>();
 
-  // Cached Automappings
+  // Cached AutoMappings
   private final Map<String, List<UnMappedColumnAutoMapping>> autoMappingsCache = new HashMap<>();
   private final Map<String, List<String>> constructorAutoMappingColumns = new HashMap<>();
 
@@ -199,7 +199,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         handleRowValues(rsw, resultMap, resultHandler, new RowBounds(), null);
       }
     } finally {
-      // issue #228 (close resultsets)
+      // issue #228 (close resultSets)
       closeResultSet(rs);
     }
   }
@@ -276,12 +276,12 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
     try {
       while (rs == null) {
-        // move forward to get the first resultset in case the driver
-        // doesn't return the resultset as the first result (HSQLDB)
+        // move forward to get the first resultSet in case the driver
+        // doesn't return the resultSet as the first result (HSQLDB)
         if (stmt.getMoreResults()) {
           rs = stmt.getResultSet();
         } else if (stmt.getUpdateCount() == -1) {
-          // no more results. Must be no resultset
+          // no more results. Must be no resultSet
           break;
         }
       }
@@ -350,7 +350,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
         handleRowValues(rsw, resultMap, resultHandler, rowBounds, null);
       }
     } finally {
-      // issue #228 (close resultsets)
+      // issue #228 (close resultSets)
       closeResultSet(rsw.getResultSet());
     }
   }

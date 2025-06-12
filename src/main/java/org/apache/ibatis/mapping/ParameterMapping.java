@@ -112,8 +112,8 @@ public class ParameterMapping {
 
     private void validate() {
       if (ResultSet.class.equals(parameterMapping.javaType) && parameterMapping.resultMapId == null) {
-        throw new IllegalStateException("Missing resultmap in property '" + parameterMapping.property + "'.  "
-            + "Parameters of type java.sql.ResultSet require a resultmap.");
+        throw new IllegalStateException("Missing resultMap in property '" + parameterMapping.property + "'.  "
+            + "Parameters of type java.sql.ResultSet require a resultMap.");
       }
     }
   }
