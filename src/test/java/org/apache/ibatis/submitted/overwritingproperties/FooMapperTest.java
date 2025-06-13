@@ -72,7 +72,7 @@ class FooMapperTest {
     // <result property="field4" column="field3" jdbcType="INTEGER"/>
     Assertions.assertEquals(inserted.getField3(), selected.getField4());
 
-    // field4 is explicitly remapped to field3 in the resultmap
+    // field4 is explicitly remapped to field3 in the resultMap
     // <result property="field3" column="field4" jdbcType="INTEGER"/>
     Assertions.assertEquals(inserted.getField4(), selected.getField3());
 
