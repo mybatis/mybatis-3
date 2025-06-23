@@ -76,7 +76,7 @@
     <derby.version>10.17.1.0</derby.version>
     <log4j.version>2.25.0</log4j.version>
     <mockito.version>5.18.0</mockito.version>
-    <mssql-jdbc.version>12.10.0.jre11</mssql-jdbc.version>
+    <mssql-jdbc.version>12.10.1.jre11</mssql-jdbc.version>
     <testcontainers.version>1.21.2</testcontainers.version>
     <git-build-hook.version>3.5.0</git-build-hook.version>
 
