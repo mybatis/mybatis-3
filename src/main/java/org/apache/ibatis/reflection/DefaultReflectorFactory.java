@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class DefaultReflectorFactory implements ReflectorFactory {
-  private boolean classCacheEnabled = true;
+  private volatile boolean classCacheEnabled = true;
   private final ConcurrentMap<Type, Reflector> reflectorMap = new ConcurrentHashMap<>();
 
   public DefaultReflectorFactory() {
@@ -33,6 +33,10 @@ public class DefaultReflectorFactory implements ReflectorFactory {
 
   @Override
   public void setClassCacheEnabled(boolean classCacheEnabled) {
+    boolean previous = this.classCacheEnabled;
+    if (previous != classCacheEnabled) {
+      reflectorMap.clear();
+    }
     this.classCacheEnabled = classCacheEnabled;
   }
 
