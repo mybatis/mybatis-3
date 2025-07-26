@@ -93,4 +93,15 @@ class DefaultObjectFactoryTest {
     Set set = defaultObjectFactory.create(Set.class);
     Assertions.assertTrue(set instanceof HashSet, " set should be HashSet");
   }
+
+  @SuppressWarnings("unchecked")
+  @Test
+  void createGenericClass() {
+    DefaultObjectFactory defaultObjectFactory = new DefaultObjectFactory();
+    TestGenericClass<String, Integer> testGenericClass = (TestGenericClass<String, Integer>) defaultObjectFactory
+      .create(TestGenericClass.class, Arrays.asList(String.class, Integer.class), Arrays.asList("foo", 0));
+
+    Assertions.assertEquals((Integer) 0, testGenericClass.myR, "myR didn't match expected");
+    Assertions.assertEquals("foo", testGenericClass.myT, "myT didn't match expected");
+  }
 }
