@@ -53,9 +53,10 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
     return (T) instantiateClass(classToCreate, constructorArgTypes, constructorArgs);
   }
 
+  @SuppressWarnings("unchecked")
   private <T> T instantiateClass(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
     try {
-      Constructor<T> constructor;
+      Constructor<T> constructor = null;
       if (constructorArgTypes == null || constructorArgs == null) {
         constructor = type.getDeclaredConstructor();
         try {
@@ -68,7 +69,25 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
           throw e;
         }
       }
-      constructor = type.getDeclaredConstructor(constructorArgTypes.toArray(new Class[0]));
+
+      try{
+        constructor = type.getDeclaredConstructor(constructorArgTypes.toArray(new Class[0]));
+      } catch (NoSuchMethodException e) {
+        boolean findAdaptConstructor = false;
+        Constructor<T>[] constructors = (Constructor<T>[]) type.getDeclaredConstructors();
+        for (Constructor<T> constructorMethod : constructors) {
+          if (canAdaptConstructor(constructorMethod, constructorArgTypes)) {
+            if (findAdaptConstructor) {
+              throw new ReflectionException("Ambiguous match between " + constructor + "and " + constructorMethod + "]");
+            } else {
+              constructor = constructorMethod;
+              findAdaptConstructor = true;
+            }
+          }
+        }
+        if (!findAdaptConstructor) throw e;
+      }
+
       try {
         return constructor.newInstance(constructorArgs.toArray(new Object[0]));
       } catch (IllegalAccessException e) {
@@ -107,6 +126,20 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
   @Override
   public <T> boolean isCollection(Class<T> type) {
     return Collection.class.isAssignableFrom(type);
+  }
+
+  private boolean canAdaptConstructor(Constructor<?> constructor, List<Class<?>> constructorArgTypes) {
+    Class<?>[] types = constructor.getParameterTypes();
+    int constructorArgSize = constructorArgTypes.size();
+    if (constructorArgSize == types.length) {
+      for (int i = 0; i < constructorArgSize; i++) {
+        if (!types[i].isAssignableFrom(constructorArgTypes.get(i))) {
+          return false;
+        }
+      }
+      return true;
+    }
+    return false;
   }
 
 }
