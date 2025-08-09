@@ -18,6 +18,7 @@ package org.apache.ibatis.reflection;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
@@ -230,7 +231,6 @@ class TypeParameterResolverTest {
     Type result = TypeParameterResolver.resolveReturnType(method, clazz);
     assertTrue(result instanceof Class);
     Class<?> resultClass = (Class<?>) result;
-    assertTrue(result instanceof Class);
     assertTrue(resultClass.isArray());
     assertTrue(resultClass.getComponentType().isArray());
     assertEquals(String.class, resultClass.getComponentType().getComponentType());
@@ -511,6 +511,41 @@ class TypeParameterResolverTest {
     Type[] types = TypeParameterResolver.resolveClassTypeParams(ParentIface.class, CustomStringHandler3.class);
     assertEquals(1, types.length);
     assertEquals(String.class, types[0]);
+  }
+
+  @Test
+  void shouldResolveWildcardTypeInClassDefinition() throws Exception {
+    class A<T extends Serializable> {
+      public T foo(T t) {
+        return t;
+      }
+    }
+
+    class B<T extends Number> extends A<T> {
+
+    }
+
+    class C1<T extends Integer> extends B<T> {
+
+    }
+
+    class C2 extends B<Integer> {
+
+    }
+
+    class C3 extends B {
+
+    }
+
+    Method m = A.class.getMethod("foo", Serializable.class);
+
+    assertEquals(Integer.class, TypeParameterResolver.resolveReturnType(m, C1.class));
+    assertEquals(Integer.class, TypeParameterResolver.resolveReturnType(m, C2.class));
+    assertEquals(Number.class, TypeParameterResolver.resolveReturnType(m, C3.class));
+
+    assertEquals(Integer.class, TypeParameterResolver.resolveParamTypes(m, C1.class)[0]);
+    assertEquals(Integer.class, TypeParameterResolver.resolveParamTypes(m, C2.class)[0]);
+    assertEquals(Number.class, TypeParameterResolver.resolveParamTypes(m, C3.class)[0]);
   }
 
   class AA {
