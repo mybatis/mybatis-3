@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.apache.ibatis.reflection.typeparam;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public interface Level0Mapper<L, M, N> {
 
@@ -45,6 +46,8 @@ public interface Level0Mapper<L, M, N> {
   List<? extends N> selectWildcardList();
 
   Map<N, M> selectMap();
+
+  Entry<N, M> selectEntry();
 
   N[] selectArray(List<N>[] param);
 

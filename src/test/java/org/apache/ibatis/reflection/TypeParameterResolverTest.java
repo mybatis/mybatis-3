@@ -28,6 +28,7 @@ import java.lang.reflect.WildcardType;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -588,4 +589,21 @@ class TypeParameterResolverTest {
     }
   }
 
+  @Test
+  void shouldParameterizedTypesWithOwnerTypeBeEqual() throws Exception {
+    class Clazz {
+      @SuppressWarnings("unused")
+      public Entry<String, Integer> entry() {
+        return null;
+      }
+    }
+
+    Type typeJdk = Clazz.class.getMethod("entry").getGenericReturnType();
+
+    Class<?> clazz = Level2Mapper.class;
+    Method method = clazz.getMethod("selectEntry");
+    Type typeMybatis = TypeParameterResolver.resolveReturnType(method, clazz);
+
+    assertEquals(typeMybatis, typeJdk);
+  }
 }
