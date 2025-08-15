@@ -231,26 +231,23 @@ public class TypeParameterResolver {
         newParentArgs[i] = parentTypeArgs[i];
       }
     }
-    if (noChange && !(parentType instanceof ParameterizedTypeImpl)) noChange = false;
-    return noChange
-      ? parentType
-      : new ParameterizedTypeImpl((Class<?>) parentType.getRawType(), parentType.getOwnerType(), newParentArgs);
+    if (noChange && !(parentType instanceof ParameterizedTypeImpl))
+      noChange = false;
+    return noChange ? parentType
+        : new ParameterizedTypeImpl((Class<?>) parentType.getRawType(), parentType.getOwnerType(), newParentArgs);
   }
 
   private static Type canonicalize(Type type) {
     if (type instanceof ParameterizedType) {
       ParameterizedType p = (ParameterizedType) type;
       return new ParameterizedTypeImpl((Class<?>) p.getRawType(), p.getOwnerType(), p.getActualTypeArguments());
-    }
-    else if (type instanceof GenericArrayType) {
+    } else if (type instanceof GenericArrayType) {
       GenericArrayType g = (GenericArrayType) type;
       return new GenericArrayTypeImpl(g.getGenericComponentType());
-    }
-    else if (type instanceof WildcardType) {
+    } else if (type instanceof WildcardType) {
       WildcardType w = (WildcardType) type;
       return new WildcardTypeImpl(w.getLowerBounds(), w.getUpperBounds());
-    }
-    else {
+    } else {
       return type;
     }
   }
@@ -322,10 +319,8 @@ public class TypeParameterResolver {
         s.append(ownerType.getTypeName()).append("$");
         if (ownerType instanceof ParameterizedTypeImpl) {
           // remove prefixes that do not contain generic information
-          s.append(
-            rawType.getName().replace(((ParameterizedTypeImpl) ownerType).rawType.getName() + "$", ""));
-        }
-        else {
+          s.append(rawType.getName().replace(((ParameterizedTypeImpl) ownerType).rawType.getName() + "$", ""));
+        } else {
           s.append(rawType.getSimpleName());
         }
       } else {
