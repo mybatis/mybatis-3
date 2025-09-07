@@ -606,4 +606,13 @@ class TypeParameterResolverTest {
 
     assertEquals(typeMybatis, typeJdk);
   }
+
+  @Test
+  void shouldNestedParamTypeToStringOmitCommonFqn() throws Exception {
+    Class<?> clazz = Level2Mapper.class;
+    Method method = clazz.getMethod("selectMapEntry");
+    Type type = TypeParameterResolver.resolveReturnType(method, clazz);
+    assertEquals("java.util.Map<java.util.Map$Entry<java.lang.String, java.lang.Integer>, java.util.Date>",
+        type.toString());
+  }
 }
