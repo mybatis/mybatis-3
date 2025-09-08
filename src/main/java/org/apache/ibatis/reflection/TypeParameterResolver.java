@@ -343,11 +343,11 @@ public class TypeParameterResolver {
       if (this == obj) {
         return true;
       }
-      if (!(obj instanceof WildcardTypeImpl)) {
+      if (!(obj instanceof WildcardType)) {
         return false;
       }
-      WildcardTypeImpl other = (WildcardTypeImpl) obj;
-      return Arrays.equals(lowerBounds, other.lowerBounds) && Arrays.equals(upperBounds, other.upperBounds);
+      WildcardType other = (WildcardType) obj;
+      return Arrays.equals(lowerBounds, other.getLowerBounds()) && Arrays.equals(upperBounds, other.getUpperBounds());
     }
 
     @Override
@@ -385,11 +385,11 @@ public class TypeParameterResolver {
       if (this == obj) {
         return true;
       }
-      if (!(obj instanceof GenericArrayTypeImpl)) {
+      if (!(obj instanceof GenericArrayType)) {
         return false;
       }
-      GenericArrayTypeImpl other = (GenericArrayTypeImpl) obj;
-      return Objects.equals(genericComponentType, other.genericComponentType);
+      GenericArrayType other = (GenericArrayType) obj;
+      return Objects.equals(genericComponentType, other.getGenericComponentType());
     }
 
     @Override
