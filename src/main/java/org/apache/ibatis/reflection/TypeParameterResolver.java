@@ -199,7 +199,7 @@ public class TypeParameterResolver {
         for (int i = 0; i < parentTypeVars.length; i++) {
           if (typeVar.equals(parentTypeVars[i])) {
             Type actualType = parentAsType.getActualTypeArguments()[i];
-            return actualType instanceof TypeVariable<?> ? ((TypeVariable<?>) actualType).getBounds()[0] : actualType;
+            return actualType instanceof TypeVariable<?> ? Object.class : actualType;
           }
         }
       }
@@ -231,37 +231,9 @@ public class TypeParameterResolver {
         newParentArgs[i] = parentTypeArgs[i];
       }
     }
-    if (noChange && !(parentType instanceof ParameterizedTypeImpl))
-      noChange = false;
-    return noChange ? parentType
-        : new ParameterizedTypeImpl((Class<?>) parentType.getRawType(), parentType.getOwnerType(), newParentArgs);
-  }
-
-  private static Type canonicalize(Type type) {
-    if (type instanceof ParameterizedType) {
-      ParameterizedType p = (ParameterizedType) type;
-      return new ParameterizedTypeImpl((Class<?>) p.getRawType(), p.getOwnerType(), p.getActualTypeArguments());
-    } else if (type instanceof GenericArrayType) {
-      GenericArrayType g = (GenericArrayType) type;
-      return new GenericArrayTypeImpl(g.getGenericComponentType());
-    } else if (type instanceof WildcardType) {
-      WildcardType w = (WildcardType) type;
-      return new WildcardTypeImpl(w.getLowerBounds(), w.getUpperBounds());
-    } else {
-      return type;
-    }
-  }
-
-  private static Type[] canonicalizeTypes(Type[] types) {
-    if (types == null || types.length == 0) {
-      return new Type[0];
-    }
-    int length = types.length;
-    Type[] canonicalizedTypes = new Type[length];
-    for (int i = 0; i < length; i++) {
-      canonicalizedTypes[i] = canonicalize(types[i]);
-    }
-    return canonicalizedTypes;
+    return noChange
+      ? parentType
+      : new ParameterizedTypeImpl((Class<?>) parentType.getRawType(), parentType.getOwnerType(), newParentArgs);
   }
 
   private TypeParameterResolver() {
@@ -277,9 +249,9 @@ public class TypeParameterResolver {
 
     ParameterizedTypeImpl(Class<?> rawType, Type ownerType, Type[] actualTypeArguments) {
       super();
-      this.rawType = (Class<?>) canonicalize(rawType);
-      this.ownerType = canonicalize(ownerType);
-      this.actualTypeArguments = canonicalizeTypes(actualTypeArguments);
+      this.rawType = rawType;
+      this.ownerType = ownerType;
+      this.actualTypeArguments = actualTypeArguments;
     }
 
     @Override
@@ -317,23 +289,22 @@ public class TypeParameterResolver {
       StringBuilder s = new StringBuilder();
       if (ownerType != null) {
         s.append(ownerType.getTypeName()).append("$");
-        if (ownerType instanceof ParameterizedTypeImpl) {
-          // remove prefixes that do not contain generic information
-          s.append(rawType.getName().replace(((ParameterizedTypeImpl) ownerType).rawType.getName() + "$", ""));
-        } else {
-          s.append(rawType.getSimpleName());
-        }
+        s.append(rawType.getSimpleName());
       } else {
         s.append(rawType.getName());
       }
-      s.append("<");
-      for (int i = 0; i < actualTypeArguments.length; i++) {
-        if (i > 0) {
-          s.append(", ");
+      int argLength = actualTypeArguments.length;
+      if (argLength > 0) {
+        s.append("<");
+        for (int i = 0; i < argLength; i++) {
+          if (i > 0) {
+            s.append(", ");
+          }
+          s.append(actualTypeArguments[i].getTypeName());
         }
-        s.append(actualTypeArguments[i].getTypeName());
+        s.append(">");
       }
-      return s.append(">").toString();
+      return s.toString();
     }
   }
 
@@ -344,8 +315,8 @@ public class TypeParameterResolver {
 
     WildcardTypeImpl(Type[] lowerBounds, Type[] upperBounds) {
       super();
-      this.lowerBounds = canonicalizeTypes(lowerBounds);
-      this.upperBounds = canonicalizeTypes(upperBounds);
+      this.lowerBounds = lowerBounds;
+      this.upperBounds = upperBounds;
     }
 
     @Override
@@ -396,7 +367,7 @@ public class TypeParameterResolver {
 
     GenericArrayTypeImpl(Type genericComponentType) {
       super();
-      this.genericComponentType = canonicalize(genericComponentType);
+      this.genericComponentType = genericComponentType;
     }
 
     @Override

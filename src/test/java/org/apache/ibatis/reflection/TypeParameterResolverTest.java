@@ -18,7 +18,6 @@ package org.apache.ibatis.reflection;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
@@ -514,41 +513,6 @@ class TypeParameterResolverTest {
     assertEquals(String.class, types[0]);
   }
 
-  @Test
-  void shouldResolveWildcardTypeInClassDefinition() throws Exception {
-    class A<T extends Serializable> {
-      public T foo(T t) {
-        return t;
-      }
-    }
-
-    class B<T extends Number> extends A<T> {
-
-    }
-
-    class C1<T extends Integer> extends B<T> {
-
-    }
-
-    class C2 extends B<Integer> {
-
-    }
-
-    class C3 extends B {
-
-    }
-
-    Method m = A.class.getMethod("foo", Serializable.class);
-
-    assertEquals(Integer.class, TypeParameterResolver.resolveReturnType(m, C1.class));
-    assertEquals(Integer.class, TypeParameterResolver.resolveReturnType(m, C2.class));
-    assertEquals(Number.class, TypeParameterResolver.resolveReturnType(m, C3.class));
-
-    assertEquals(Integer.class, TypeParameterResolver.resolveParamTypes(m, C1.class)[0]);
-    assertEquals(Integer.class, TypeParameterResolver.resolveParamTypes(m, C2.class)[0]);
-    assertEquals(Number.class, TypeParameterResolver.resolveParamTypes(m, C3.class)[0]);
-  }
-
   class AA {
   }
 
@@ -615,4 +579,48 @@ class TypeParameterResolverTest {
     assertEquals("java.util.Map<java.util.Map$Entry<java.lang.String, java.lang.Integer>, java.util.Date>",
         type.toString());
   }
+
+  static class Outer<T> {
+
+    class Inner {
+    }
+
+    public Inner foo() {
+      return null;
+    }
+
+  }
+
+  static class InnerTester {
+
+    public Outer<?>.Inner noTypeOuter() {
+      return null;
+    }
+
+    public Outer<String>.Inner stringTypeOuter() {
+      return null;
+    }
+
+  }
+
+  @Test
+  void shouldToStringHandleInnerClass() throws Exception {
+    Class<?> outerClass = Outer.class;
+    Class<?> innerTesterClass = InnerTester.class;
+    Method foo = outerClass.getMethod("foo");
+    Method noTypeOuter = innerTesterClass.getMethod("noTypeOuter");
+    Method stringTypeOuter = innerTesterClass.getMethod("stringTypeOuter");
+
+    Type fooReturnType = TypeParameterResolver.resolveReturnType(foo, outerClass);
+    Type noTypeOuterReturnType = TypeParameterResolver.resolveReturnType(noTypeOuter, innerTesterClass);
+    Type stringTypeOuterReturnType = TypeParameterResolver.resolveReturnType(stringTypeOuter, innerTesterClass);
+
+    assertEquals("org.apache.ibatis.reflection.TypeParameterResolverTest$Outer<T>$Inner",
+      fooReturnType.toString());
+    assertEquals("org.apache.ibatis.reflection.TypeParameterResolverTest$Outer<?>$Inner",
+      noTypeOuterReturnType.toString());
+    assertEquals("org.apache.ibatis.reflection.TypeParameterResolverTest$Outer<java.lang.String>$Inner",
+      stringTypeOuterReturnType.toString());
+  }
+
 }
