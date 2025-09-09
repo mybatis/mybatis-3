@@ -18,6 +18,7 @@ package org.apache.ibatis.reflection;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
@@ -568,7 +569,48 @@ class TypeParameterResolverTest {
     Method method = clazz.getMethod("selectEntry");
     Type typeMybatis = TypeParameterResolver.resolveReturnType(method, clazz);
 
-    assertEquals(typeMybatis, typeJdk);
+    assertTrue(typeJdk instanceof ParameterizedType && !(typeJdk instanceof TypeParameterResolver.ParameterizedTypeImpl));
+    assertTrue(typeMybatis instanceof TypeParameterResolver.ParameterizedTypeImpl);
+    assertEquals(typeMybatis.equals(typeJdk), typeJdk.equals(typeMybatis));
+  }
+
+  @Test
+  void shouldWildcardTypeBeEqual() throws Exception {
+    class WildcardTypeTester {
+      public List<? extends Serializable> foo() {
+        return null;
+      }
+    }
+
+    Class<?> clazz = WildcardTypeTester.class;
+    Method foo = clazz.getMethod("foo");
+    Type typeMybatis = TypeParameterResolver.resolveReturnType(foo, clazz);
+    Type typeJdk = foo.getGenericReturnType();
+
+    Type wildcardMybatis = ((ParameterizedType) typeMybatis).getActualTypeArguments()[0];
+    Type wildcardJdk = ((ParameterizedType) typeJdk).getActualTypeArguments()[0];
+
+    assertTrue(wildcardJdk instanceof WildcardType && !(wildcardJdk instanceof TypeParameterResolver.WildcardTypeImpl));
+    assertTrue(wildcardMybatis instanceof TypeParameterResolver.WildcardTypeImpl);
+    assertEquals(wildcardMybatis.equals(wildcardJdk), wildcardJdk.equals(wildcardMybatis));
+  }
+
+  @Test
+  void shouldGenericArrayTypeBeEqual() throws Exception {
+    class GenericArrayTypeTester {
+      public List<String>[] foo() {
+        return null;
+      }
+    }
+
+    Class<?> clazz = GenericArrayTypeTester.class;
+    Method foo = clazz.getMethod("foo");
+    Type typeMybatis = TypeParameterResolver.resolveReturnType(foo, clazz);
+    Type typeJdk = foo.getGenericReturnType();
+
+    assertTrue(typeJdk instanceof GenericArrayType && !(typeJdk instanceof TypeParameterResolver.GenericArrayTypeImpl));
+    assertTrue(typeMybatis instanceof TypeParameterResolver.GenericArrayTypeImpl);
+    assertEquals(typeMybatis.equals(typeJdk), typeJdk.equals(typeMybatis));
   }
 
   @Test
