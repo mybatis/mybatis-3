@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -389,11 +389,10 @@ public class PooledDataSource implements DataSource {
   }
 
   protected void pushConnection(PooledConnection conn) throws SQLException {
-
     lock.lock();
     try {
-      state.activeConnections.remove(conn);
       if (conn.isValid()) {
+        state.activeConnections.remove(conn);
         if (state.idleConnections.size() < poolMaximumIdleConnections
             && conn.getConnectionTypeCode() == expectedConnectionTypeCode) {
           state.accumulatedCheckoutTime += conn.getCheckoutTime();
@@ -441,17 +440,19 @@ public class PooledDataSource implements DataSource {
     while (conn == null) {
       lock.lock();
       try {
-        if (!state.idleConnections.isEmpty()) {
-          // Pool has available connection
-          conn = state.idleConnections.remove(0);
-          if (log.isDebugEnabled()) {
-            log.debug("Checked out connection " + conn.getRealHashCode() + " from pool.");
-          }
-        } else if (state.activeConnections.size() < poolMaximumActiveConnections) {
-          // Pool does not have available connection and can create a new connection
-          conn = new PooledConnection(dataSource.getConnection(), this);
-          if (log.isDebugEnabled()) {
-            log.debug("Created connection " + conn.getRealHashCode() + ".");
+        if (state.activeConnections.size() < poolMaximumActiveConnections) {
+          if (!state.idleConnections.isEmpty()) {
+            // Pool has available connection
+            conn = state.idleConnections.remove(0);
+            if (log.isDebugEnabled()) {
+              log.debug("Checked out connection " + conn.getRealHashCode() + " from pool.");
+            }
+          } else {
+            // Pool does not have available connection and can create a new connection
+            conn = new PooledConnection(dataSource.getConnection(), this);
+            if (log.isDebugEnabled()) {
+              log.debug("Created connection " + conn.getRealHashCode() + ".");
+            }
           }
         } else {
           // Cannot create new connection
