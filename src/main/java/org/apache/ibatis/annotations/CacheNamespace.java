@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -32,8 +32,9 @@ import org.apache.ibatis.cache.impl.PerpetualCache;
  *
  * <pre>{@code
  * @CacheNamespace(implementation = CustomCache.class, properties = {
- *     &#064;Property(name = "host", value = "${mybatis.cache.host}"),
- *     &#064;Property(name = "port", value = "${mybatis.cache.port}"), &#064;Property(name = "name", value = "usersCache") })
+ *   @Property(name = "host", value = "${mybatis.cache.host}"),
+ *   @Property(name = "port", value = "${mybatis.cache.port}"),
+ *   @Property(name = "name", value = "usersCache") })
  * public interface UserMapper {
  *   // ...
  * }
