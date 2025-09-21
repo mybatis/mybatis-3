@@ -571,7 +571,8 @@ class TypeParameterResolverTest {
 
     assertTrue(typeJdk instanceof ParameterizedType && !(typeJdk instanceof TypeParameterResolver.ParameterizedTypeImpl));
     assertTrue(typeMybatis instanceof TypeParameterResolver.ParameterizedTypeImpl);
-    assertEquals(typeMybatis.equals(typeJdk), typeJdk.equals(typeMybatis));
+    assertTrue(typeJdk.equals(typeMybatis));
+    assertTrue(typeMybatis.equals(typeJdk));
   }
 
   @Test
@@ -592,7 +593,8 @@ class TypeParameterResolverTest {
 
     assertTrue(wildcardJdk instanceof WildcardType && !(wildcardJdk instanceof TypeParameterResolver.WildcardTypeImpl));
     assertTrue(wildcardMybatis instanceof TypeParameterResolver.WildcardTypeImpl);
-    assertEquals(wildcardMybatis.equals(wildcardJdk), wildcardJdk.equals(wildcardMybatis));
+    assertTrue(typeJdk.equals(typeMybatis));
+    assertTrue(typeMybatis.equals(typeJdk));
   }
 
   @Test
@@ -610,7 +612,8 @@ class TypeParameterResolverTest {
 
     assertTrue(typeJdk instanceof GenericArrayType && !(typeJdk instanceof TypeParameterResolver.GenericArrayTypeImpl));
     assertTrue(typeMybatis instanceof TypeParameterResolver.GenericArrayTypeImpl);
-    assertEquals(typeMybatis.equals(typeJdk), typeJdk.equals(typeMybatis));
+    assertTrue(typeJdk.equals(typeMybatis));
+    assertTrue(typeMybatis.equals(typeJdk));
   }
 
   @Test
