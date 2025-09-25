@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -157,5 +157,28 @@ class PooledDataSourceTest {
 
     assertEquals(0, poolState.getActiveConnectionCount());
     assertEquals(0, poolState.getIdleConnectionCount());
+  }
+
+  @Test
+  void shouldActiveConnectionLessThanOrEqualPoolMaximumActiveConnections() throws Exception {
+    dataSource.setPoolMaximumCheckoutTime(1000);
+    dataSource.setPoolTimeToWait(500);
+    dataSource.setPoolMaximumActiveConnections(1);
+    dataSource.setPoolMaximumIdleConnections(1);
+
+    Connection conn1 = dataSource.getConnection();
+    conn1.setAutoCommit(false);
+    Connection conn2 = dataSource.getConnection();
+    conn2.setAutoCommit(false);
+    conn1.close();
+    Connection conn3 = dataSource.getConnection();
+    conn3.setAutoCommit(false);
+    conn2.close();
+    Connection conn4 = dataSource.getConnection();
+    conn4.setAutoCommit(false);
+    PoolState poolState = dataSource.getPoolState();
+    assertTrue(poolState.activeConnections.size() <= poolState.dataSource.poolMaximumActiveConnections);
+    conn3.close();
+    conn4.close();
   }
 }
