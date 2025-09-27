@@ -159,7 +159,7 @@ public class TypeParameterResolver {
       }
     } else {
       throw new IllegalArgumentException(
-          "The srcType(2nd arg) must be Class or ParameterizedType, but was: " + srcType.getClass());
+          "The 2nd arg must be Class or ParameterizedType, but was: " + srcType.getClass());
     }
 
     if (clazz == declaringClass) {
