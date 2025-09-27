@@ -578,6 +578,7 @@ class TypeParameterResolverTest {
   @Test
   void shouldWildcardTypeBeEqual() throws Exception {
     class WildcardTypeTester {
+      @SuppressWarnings("unused")
       public List<? extends Serializable> foo() {
         return null;
       }
@@ -600,6 +601,7 @@ class TypeParameterResolverTest {
   @Test
   void shouldGenericArrayTypeBeEqual() throws Exception {
     class GenericArrayTypeTester {
+      @SuppressWarnings("unused")
       public List<String>[] foo() {
         return null;
       }
