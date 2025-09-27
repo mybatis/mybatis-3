@@ -231,9 +231,8 @@ public class TypeParameterResolver {
         newParentArgs[i] = parentTypeArgs[i];
       }
     }
-    return noChange
-      ? parentType
-      : new ParameterizedTypeImpl((Class<?>) parentType.getRawType(), parentType.getOwnerType(), newParentArgs);
+    return noChange ? parentType
+        : new ParameterizedTypeImpl((Class<?>) parentType.getRawType(), parentType.getOwnerType(), newParentArgs);
   }
 
   private TypeParameterResolver() {

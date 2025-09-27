@@ -569,7 +569,8 @@ class TypeParameterResolverTest {
     Method method = clazz.getMethod("selectEntry");
     Type typeMybatis = TypeParameterResolver.resolveReturnType(method, clazz);
 
-    assertTrue(typeJdk instanceof ParameterizedType && !(typeJdk instanceof TypeParameterResolver.ParameterizedTypeImpl));
+    assertTrue(
+        typeJdk instanceof ParameterizedType && !(typeJdk instanceof TypeParameterResolver.ParameterizedTypeImpl));
     assertTrue(typeMybatis instanceof TypeParameterResolver.ParameterizedTypeImpl);
     assertTrue(typeJdk.equals(typeMybatis));
     assertTrue(typeMybatis.equals(typeJdk));
@@ -662,12 +663,11 @@ class TypeParameterResolverTest {
     Type noTypeOuterReturnType = TypeParameterResolver.resolveReturnType(noTypeOuter, innerTesterClass);
     Type stringTypeOuterReturnType = TypeParameterResolver.resolveReturnType(stringTypeOuter, innerTesterClass);
 
-    assertEquals("org.apache.ibatis.reflection.TypeParameterResolverTest$Outer<T>$Inner",
-      fooReturnType.toString());
+    assertEquals("org.apache.ibatis.reflection.TypeParameterResolverTest$Outer<T>$Inner", fooReturnType.toString());
     assertEquals("org.apache.ibatis.reflection.TypeParameterResolverTest$Outer<?>$Inner",
-      noTypeOuterReturnType.toString());
+        noTypeOuterReturnType.toString());
     assertEquals("org.apache.ibatis.reflection.TypeParameterResolverTest$Outer<java.lang.String>$Inner",
-      stringTypeOuterReturnType.toString());
+        stringTypeOuterReturnType.toString());
   }
 
 }
