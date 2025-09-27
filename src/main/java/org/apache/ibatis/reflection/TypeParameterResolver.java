@@ -129,9 +129,10 @@ public class TypeParameterResolver {
   private static ParameterizedType resolveParameterizedType(ParameterizedType parameterizedType, Type srcType,
       Class<?> declaringClass) {
     Class<?> rawType = (Class<?>) parameterizedType.getRawType();
+    Type ownerType = parameterizedType.getOwnerType();
     Type[] typeArgs = parameterizedType.getActualTypeArguments();
     Type[] args = resolveTypes(typeArgs, srcType, declaringClass);
-    return new ParameterizedTypeImpl(rawType, null, args);
+    return new ParameterizedTypeImpl(rawType, ownerType, args);
   }
 
   private static Type resolveWildcardType(WildcardType wildcardType, Type srcType, Class<?> declaringClass) {
@@ -230,7 +231,8 @@ public class TypeParameterResolver {
         newParentArgs[i] = parentTypeArgs[i];
       }
     }
-    return noChange ? parentType : new ParameterizedTypeImpl((Class<?>) parentType.getRawType(), null, newParentArgs);
+    return noChange ? parentType
+        : new ParameterizedTypeImpl((Class<?>) parentType.getRawType(), parentType.getOwnerType(), newParentArgs);
   }
 
   private TypeParameterResolver() {
@@ -244,7 +246,7 @@ public class TypeParameterResolver {
 
     private final Type[] actualTypeArguments;
 
-    public ParameterizedTypeImpl(Class<?> rawType, Type ownerType, Type[] actualTypeArguments) {
+    ParameterizedTypeImpl(Class<?> rawType, Type ownerType, Type[] actualTypeArguments) {
       super();
       this.rawType = rawType;
       this.ownerType = ownerType;
@@ -283,14 +285,25 @@ public class TypeParameterResolver {
 
     @Override
     public String toString() {
-      StringBuilder s = new StringBuilder().append(rawType.getName()).append("<");
-      for (int i = 0; i < actualTypeArguments.length; i++) {
-        if (i > 0) {
-          s.append(", ");
-        }
-        s.append(actualTypeArguments[i].getTypeName());
+      StringBuilder s = new StringBuilder();
+      if (ownerType != null) {
+        s.append(ownerType.getTypeName()).append("$");
+        s.append(rawType.getSimpleName());
+      } else {
+        s.append(rawType.getName());
       }
-      return s.append(">").toString();
+      int argLength = actualTypeArguments.length;
+      if (argLength > 0) {
+        s.append("<");
+        for (int i = 0; i < argLength; i++) {
+          if (i > 0) {
+            s.append(", ");
+          }
+          s.append(actualTypeArguments[i].getTypeName());
+        }
+        s.append(">");
+      }
+      return s.toString();
     }
   }
 
@@ -329,11 +342,11 @@ public class TypeParameterResolver {
       if (this == obj) {
         return true;
       }
-      if (!(obj instanceof WildcardTypeImpl)) {
+      if (!(obj instanceof WildcardType)) {
         return false;
       }
-      WildcardTypeImpl other = (WildcardTypeImpl) obj;
-      return Arrays.equals(lowerBounds, other.lowerBounds) && Arrays.equals(upperBounds, other.upperBounds);
+      WildcardType other = (WildcardType) obj;
+      return Arrays.equals(lowerBounds, other.getLowerBounds()) && Arrays.equals(upperBounds, other.getUpperBounds());
     }
 
     @Override
@@ -371,16 +384,16 @@ public class TypeParameterResolver {
       if (this == obj) {
         return true;
       }
-      if (!(obj instanceof GenericArrayTypeImpl)) {
+      if (!(obj instanceof GenericArrayType)) {
         return false;
       }
-      GenericArrayTypeImpl other = (GenericArrayTypeImpl) obj;
-      return Objects.equals(genericComponentType, other.genericComponentType);
+      GenericArrayType other = (GenericArrayType) obj;
+      return Objects.equals(genericComponentType, other.getGenericComponentType());
     }
 
     @Override
     public String toString() {
-      return new StringBuilder().append(genericComponentType.toString()).append("[]").toString();
+      return new StringBuilder().append(genericComponentType.getTypeName()).append("[]").toString();
     }
   }
 }
