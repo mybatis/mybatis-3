@@ -50,7 +50,7 @@ public class ChooseWhenTest {
   public void shouldApplyOtherwiseWhenNoParam() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       ChooseWhenMapper mapper = sqlSession.getMapper(ChooseWhenMapper.class);
-      Map<String, Object> param = new HashMap<>(); // name 없음
+      Map<String, Object> param = new HashMap<>(); // No name parameter
       List<User> users = mapper.selectUser(param);
       assertTrue(users.stream().allMatch(u -> "ACTIVE".equals(u.getStatus())));
     }
