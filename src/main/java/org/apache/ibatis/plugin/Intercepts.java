@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,9 +27,9 @@ import java.lang.annotation.Target;
  * <b>How to use:</b>
  *
  * <pre>{@code
- * @Intercepts(value = { @Signature(type = Executor.class, method = "update", args = { MappedStatement.class, Object.class }) })
+ * @Intercepts({ &#064;Signature(type = Executor.class, method = "update", args = { MappedStatement.class, Object.class }) })
  * public class ExamplePlugin implements Interceptor {
- *   @Override
+ *   &#064;Override
  *   public Object intercept(Invocation invocation) throws Throwable {
  *     // implement pre-processing if needed
  *     Object returnObject = invocation.proceed();

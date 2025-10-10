@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -28,10 +28,10 @@ import java.lang.annotation.Target;
  *
  * <pre>{@code
  * public interface UserMapper {
- *   @ConstructorArgs(value = { @Arg(column = "id", javaType = int.class, id = true),
- *       @Arg(column = "name", javaType = String.class),
- *       @Arg(javaType = UserEmail.class, select = "selectUserEmailById", column = "id") })
- *   @Select("SELECT id, name FROM users WHERE id = #{id}")
+ *   @ConstructorArgs({ &#064;Arg(column = "id", javaType = int.class, id = true),
+ *       &#064;Arg(column = "name", javaType = String.class),
+ *       &#064;Arg(javaType = UserEmail.class, select = "selectUserEmailById", column = "id") })
+ *   &#064;Select("SELECT id, name FROM users WHERE id = #{id}")
  *   User selectById(int id);
  * }
  * }</pre>

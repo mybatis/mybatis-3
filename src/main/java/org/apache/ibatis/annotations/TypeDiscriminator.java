@@ -32,11 +32,11 @@ import org.apache.ibatis.type.UnknownTypeHandler;
  *
  * <pre>{@code
  * public interface UserMapper {
- *   @Select("SELECT id, name, type FROM users ORDER BY id")
- *   @TypeDiscriminator(column = "type", javaType = String.class, cases = {
- *     @Case(value = "1", type = PremiumUser.class), @Case(value = "2", type = GeneralUser.class),
- *     @Case(value = "3", type = TemporaryUser.class) })
- *   List<User> selectAll();
+ *   &#064;Select("SELECT id, name, type FROM users ORDER BY id")
+ *   &#064;TypeDiscriminator(column = "type", javaType = String.class, cases = {
+ *       &#064;Case(value = "1", type = PremiumUser.class), &#064;Case(value = "2", type = GeneralUser.class),
+ *       &#064;Case(value = "3", type = TemporaryUser.class) })
+ *   List&lt;User&gt; selectAll();
  * }
  * }</pre>
  *
