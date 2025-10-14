@@ -33,7 +33,7 @@ import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-/*
+/**
  * Test for NPE when using extends.
  *
  * @author poitrac

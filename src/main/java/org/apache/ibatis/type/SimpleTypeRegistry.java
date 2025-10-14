@@ -48,7 +48,7 @@ public class SimpleTypeRegistry {
     // Prevent Instantiation
   }
 
-  /*
+  /**
    * Tells us if the class passed in is a known common type
    * @param clazz The class to check
    * @return True if the class is known

@@ -39,7 +39,7 @@ class ExternalResourcesTest {
   private File badFile;
   private File tempFile;
 
-  /*
+  /**
    * @throws java.lang.Exception
    */
   @BeforeEach
