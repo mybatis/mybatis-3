@@ -17,7 +17,7 @@ package org.apache.ibatis.submitted.dynsql2;
 
 import java.util.List;
 
-/*
+/**
  * @author Jeff Butler
  */
 public class Parameter {
