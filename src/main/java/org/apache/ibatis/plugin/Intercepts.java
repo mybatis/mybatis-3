@@ -26,8 +26,8 @@ import java.lang.annotation.Target;
  * <p>
  * <b>How to use:</b>
  *
- * <pre>{@code
- * @Intercepts({ &#064;Signature(type = Executor.class, method = "update", args = { MappedStatement.class, Object.class }) })
+ * <pre>
+ * <code>&#064;Intercepts({ &#064;Signature(type = Executor.class, method = "update", args = { MappedStatement.class, Object.class }) })
  * public class ExamplePlugin implements Interceptor {
  *   &#064;Override
  *   public Object intercept(Invocation invocation) throws Throwable {
@@ -37,7 +37,8 @@ import java.lang.annotation.Target;
  *     return returnObject;
  *   }
  * }
- * }</pre>
+ * </code>
+ * </pre>
  *
  * @author Clinton Begin
  */
