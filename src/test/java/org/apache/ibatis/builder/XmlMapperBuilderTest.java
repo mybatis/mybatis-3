@@ -153,7 +153,7 @@ class XmlMapperBuilderTest {
       {
       }
     };
-    TypeHandler<?> typeHandler = builder.resolveTypeHandler(String.class, null, null, (String) null);
+    TypeHandler<?> typeHandler = builder.resolveTypeHandler(null, null, (String) null);
     assertThat(typeHandler).isNull();
   }
 
@@ -163,7 +163,7 @@ class XmlMapperBuilderTest {
       {
       }
     };
-    when(() -> builder.resolveTypeHandler(String.class, null, null, "integer"));
+    when(() -> builder.resolveTypeHandler(null, null, "integer"));
     then(caughtException()).isInstanceOf(BuilderException.class).hasMessage(
         "Type java.lang.Integer is not a valid TypeHandler because it does not implement TypeHandler interface");
   }

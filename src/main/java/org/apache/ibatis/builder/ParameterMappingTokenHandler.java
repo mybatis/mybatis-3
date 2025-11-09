@@ -95,8 +95,8 @@ public class ParameterMappingTokenHandler extends BaseBuilder implements TokenHa
     if (genericType == null) {
       genericType = javaType;
     }
-    if ((typeHandler == null || typeHandlerAlias != null) && genericType != null && genericType != Object.class) {
-      typeHandler = resolveTypeHandler(parameterType, genericType, jdbcType, typeHandlerAlias);
+    if (typeHandler == null || typeHandlerAlias != null) {
+      typeHandler = resolveTypeHandler(genericType, jdbcType, typeHandlerAlias);
     }
     builder.typeHandler(typeHandler);
 

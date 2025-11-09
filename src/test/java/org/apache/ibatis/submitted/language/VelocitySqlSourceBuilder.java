@@ -134,7 +134,7 @@ public class VelocitySqlSourceBuilder extends BaseBuilder {
         }
       }
       if (typeHandlerAlias != null) {
-        builder.typeHandler(resolveTypeHandler(javaType, propertyType, jdbcType, typeHandlerAlias));
+        builder.typeHandler(resolveTypeHandler(propertyType, jdbcType, typeHandlerAlias));
       }
       return builder.build();
     }
