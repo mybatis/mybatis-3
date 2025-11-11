@@ -107,7 +107,7 @@ public abstract class BaseBuilder {
 
   @Deprecated(since = "3.6.0", forRemoval = true)
   protected TypeHandler<?> resolveTypeHandler(Class<?> javaType, String typeHandlerAlias) {
-    return resolveTypeHandler(null, javaType, null, typeHandlerAlias);
+    return resolveTypeHandler(javaType, null, typeHandlerAlias);
   }
 
   @Deprecated(since = "3.6.0", forRemoval = true)
@@ -115,8 +115,7 @@ public abstract class BaseBuilder {
     return resolveTypeHandler(javaType, null, typeHandlerType);
   }
 
-  protected TypeHandler<?> resolveTypeHandler(Class<?> parameterType, Type propertyType, JdbcType jdbcType,
-      String typeHandlerAlias) {
+  protected TypeHandler<?> resolveTypeHandler(Type propertyType, JdbcType jdbcType, String typeHandlerAlias) {
     Class<? extends TypeHandler<?>> typeHandlerType = null;
     typeHandlerType = resolveClass(typeHandlerAlias);
     if (typeHandlerType != null && !TypeHandler.class.isAssignableFrom(typeHandlerType)) {

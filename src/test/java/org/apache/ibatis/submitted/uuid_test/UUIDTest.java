@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.apache.ibatis.submitted.uuid_test;
 
 import java.io.Reader;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.ibatis.BaseDataTest;
@@ -61,6 +62,20 @@ class UUIDTest {
       user.setId(UUID.randomUUID());
       user.setName("User2");
       mapper.insertUser(user);
+    }
+  }
+
+  @Test
+  void shouldInsertAUserFullyDynamic() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      Map<String, Object> parameters = Map.of("p1", UUID.randomUUID(), "p2", "User3");
+      String sql = "insert into users values("
+          + "#{parameters.p1,typeHandler=org.apache.ibatis.submitted.uuid_test.UUIDTypeHandler}, "
+          + "#{parameters.p2})";
+
+      int rows = mapper.insertDynamicUser(sql, parameters);
+      Assertions.assertEquals(1, rows);
     }
   }
 

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,10 @@
  */
 package org.apache.ibatis.submitted.uuid_test;
 
+import java.util.Map;
 import java.util.UUID;
+
+import org.apache.ibatis.annotations.Insert;
 
 public interface Mapper {
 
@@ -23,4 +26,6 @@ public interface Mapper {
 
   void insertUser(User user);
 
+  @Insert("${sql}")
+  int insertDynamicUser(String sql, Map<String, Object> parameters);
 }

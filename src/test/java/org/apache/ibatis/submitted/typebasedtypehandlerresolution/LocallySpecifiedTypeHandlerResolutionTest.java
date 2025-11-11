@@ -309,7 +309,7 @@ class LocallySpecifiedTypeHandlerResolutionTest {
       // There is no way to obtain info about type parameters.
       assertThatExceptionOfType(PersistenceException.class).isThrownBy(() -> sqlSession.insert(
           "org.apache.ibatis.submitted.typebasedtypehandlerresolution.LocallySpecifiedHandlerMapper.insertXmlWithoutParameterType",
-          user)).withMessageContaining("FuzzyBean cannot be cast to class java.lang.String");
+          user)).withMessageContaining("Unknown rawType : class java.lang.Object");
     }
   }
 }
