@@ -300,7 +300,7 @@ public class ResultLoaderMap {
 
     @Override
     protected <E> List<E> doQuery(MappedStatement ms, Object parameter, RowBounds rowBounds,
-        ResultHandler resultHandler, BoundSql boundSql) throws SQLException {
+        ResultHandler<?> resultHandler, BoundSql boundSql) throws SQLException {
       throw new UnsupportedOperationException("Not supported.");
     }
 
