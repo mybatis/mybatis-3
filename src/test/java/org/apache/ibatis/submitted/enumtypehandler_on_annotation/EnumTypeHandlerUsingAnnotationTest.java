@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,6 +18,8 @@ package org.apache.ibatis.submitted.enumtypehandler_on_annotation;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.Reader;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
@@ -123,6 +125,27 @@ class EnumTypeHandlerUsingAnnotationTest {
       assertThat(employee.getFirstName()).isEqualTo("Mike");
       assertThat(employee.getLastName()).isEqualTo("Jordan");
       assertThat(employee.getPersonType()).isEqualTo(Person.PersonType.EMPLOYEE);
+    }
+  }
+
+  @Test
+  void insertDynamic() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+      String insertStatement = "insert into person (id, firstName, lastName, personType) values("
+          + "#{parameters.p1,jdbcType=INTEGER}," + "#{parameters.p2,jdbcType=VARCHAR},"
+          + "#{parameters.p3,jdbcType=VARCHAR}," + "#{parameters.p4,jdbcType=INTEGER,"
+          + "javaType=org.apache.ibatis.submitted.enumtypehandler_on_annotation.Person$PersonType,"
+          + "typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler})";
+
+      Map<String, Object> params = new HashMap<>();
+      params.put("p1", 100);
+      params.put("p2", "Fred");
+      params.put("p3", "Flintstone");
+      params.put("p4", Person.PersonType.PERSON);
+
+      int rows = personMapper.insertDynamic(insertStatement, params);
+      assertThat(rows).isEqualTo(1);
     }
   }
 
