@@ -76,6 +76,8 @@ public class ParameterMappingTokenHandler extends BaseBuilder implements TokenHa
 
   @Override
   public String handleToken(String content) {
+    genericType = null;
+    typeHandler = null;
     parameterMappings.add(buildParameterMapping(content));
     return "?";
   }
