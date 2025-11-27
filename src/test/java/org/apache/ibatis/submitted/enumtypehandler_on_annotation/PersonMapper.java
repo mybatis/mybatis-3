@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,9 +15,13 @@
  */
 package org.apache.ibatis.submitted.enumtypehandler_on_annotation;
 
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Arg;
 import org.apache.ibatis.annotations.Case;
 import org.apache.ibatis.annotations.ConstructorArgs;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
@@ -56,11 +60,16 @@ public interface PersonMapper {
       column = "personType", javaType = PersonType.class, typeHandler = EnumOrdinalTypeHandler.class,
       // Switch using enum constant name(PERSON or EMPLOYEE) at cases attribute
       cases = {
-            @Case(value = "PERSON", type = Person.class, results = {@Result(property = "personType", column = "personType", typeHandler = EnumOrdinalTypeHandler.class)})
-          , @Case(value = "EMPLOYEE", type = Employee.class, results = {@Result(property = "personType", column = "personType", typeHandler = EnumOrdinalTypeHandler.class)})
+            @Case(value = "PERSON", type = Person.class, results = {@Result(property = "personType",
+              column = "personType", typeHandler = EnumOrdinalTypeHandler.class)})
+          , @Case(value = "EMPLOYEE", type = Employee.class, results = {@Result(property = "personType",
+              column = "personType", typeHandler = EnumOrdinalTypeHandler.class)})
         })
   // @formatter:on
   @Select("SELECT id, firstName, lastName, personType FROM person WHERE id = #{id}")
   Person findOneUsingTypeDiscriminator(int id);
+
+  @Insert("${sql}")
+  int insertDynamic(@Param("sql") String sql, @Param("parameters") Map<String, Object> parameters);
 
 }
