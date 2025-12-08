@@ -15,22 +15,16 @@
  */
 package org.apache.ibatis.logging.jdbc;
 
+import org.apache.ibatis.builder.SqlSourceBuilder;
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.reflection.ArrayUtil;
+
 import java.lang.reflect.Method;
 import java.sql.Array;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
-
-import org.apache.ibatis.builder.SqlSourceBuilder;
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.reflection.ArrayUtil;
 
 /**
  * Base class for proxies to do logging.
@@ -43,10 +37,10 @@ public abstract class BaseJdbcLogger {
   protected static final Set<String> SET_METHODS;
   protected static final Set<String> EXECUTE_METHODS = new HashSet<>();
 
-  private final Map<Object, Object> columnMap = new HashMap<>();
+  private final Map<Object, String> columnMap = new HashMap<>();
 
   private final List<Object> columnNames = new ArrayList<>();
-  private final List<Object> columnValues = new ArrayList<>();
+  private final List<String> columnValues = new ArrayList<>();
 
   protected final Log statementLog;
   protected final int queryStack;
@@ -75,9 +69,18 @@ public abstract class BaseJdbcLogger {
   }
 
   protected void setColumn(Object key, Object value) {
-    columnMap.put(key, value);
+    String valueString = null;
+    if (value!=null){
+      valueString = objectValueString(value) +
+        "(" + value.getClass().getSimpleName()+")";
+    } else {
+      valueString = "null";
+    }
+
+
+    columnMap.put(key, valueString);
     columnNames.add(key);
-    columnValues.add(value);
+    columnValues.add(valueString);
   }
 
   protected Object getColumn(Object key) {
@@ -87,11 +90,7 @@ public abstract class BaseJdbcLogger {
   protected String getParameterValueString() {
     List<Object> typeList = new ArrayList<>(columnValues.size());
     for (Object value : columnValues) {
-      if (value == null) {
-        typeList.add("null");
-      } else {
-        typeList.add(objectValueString(value) + "(" + value.getClass().getSimpleName() + ")");
-      }
+       typeList.add(value);
     }
     final String parameters = typeList.toString();
     return parameters.substring(1, parameters.length() - 1);

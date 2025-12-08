@@ -15,11 +15,6 @@
  */
 package org.apache.ibatis.logging.jdbc;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
-
-import java.sql.Array;
-
 import org.apache.ibatis.logging.Log;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,12 +22,18 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.sql.Array;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.when;
+
 @ExtendWith(MockitoExtension.class)
 class BaseJdbcLoggerTest {
 
   @Mock
   Log log;
-  @Mock
+  @Mock(strictness = Mock.Strictness.LENIENT)
   Array array;
   private BaseJdbcLogger logger;
 
@@ -44,15 +45,29 @@ class BaseJdbcLoggerTest {
 
   @Test
   void shouldDescribePrimitiveArrayParameter() throws Exception {
-    logger.setColumn("1", array);
     when(array.getArray()).thenReturn(new int[] { 1, 2, 3 });
+    logger.setColumn("1", array);
     assertThat(logger.getParameterValueString()).startsWith("[1, 2, 3]");
   }
 
   @Test
   void shouldDescribeObjectArrayParameter() throws Exception {
-    logger.setColumn("1", array);
     when(array.getArray()).thenReturn(new String[] { "one", "two", "three" });
+    logger.setColumn("1", array);
     assertThat(logger.getParameterValueString()).startsWith("[one, two, three]");
+  }
+
+  @Test
+  void shouldDescribeObjectArrayCallFreeParameter() throws Exception {
+
+    when(array.getArray()).thenReturn(new String[] { "one", "two", "three" });
+    logger.setColumn("1", array);
+    doAnswer(e->{
+      when(array.getArray()).thenReturn(null);
+      return null;
+    }).when(array).free();
+    array.free();
+    assertThat(logger.getParameterValueString()).startsWith("[one, two, three]");
+
   }
 }
