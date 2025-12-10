@@ -1294,7 +1294,7 @@ The default value is `PARTIAL`, and it is so for a reason. When `FULL` is used a
   select
     B.id,
     B.title,
-    A.username,
+    A.username
   from Blog B left outer join Author A on B.author_id = A.id
   where B.id = #{id}
 </select>
