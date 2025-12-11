@@ -32,6 +32,15 @@ public class ParameterMap {
   private ParameterMap() {
   }
 
+  public static ParameterMap inline(String statementId, Class<?> parameterType) {
+    ParameterMap inlineParameterMap = new ParameterMap();
+    inlineParameterMap.id = statementId + "-Inline";
+    inlineParameterMap.type = parameterType;
+    // lock down collections
+    inlineParameterMap.parameterMappings = Collections.emptyList();
+    return inlineParameterMap;
+  }
+
   public static class Builder {
     private final ParameterMap parameterMap = new ParameterMap();
 
