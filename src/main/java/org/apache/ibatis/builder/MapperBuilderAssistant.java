@@ -308,9 +308,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         throw new IncompleteElementException("Could not find parameter map " + parameterMapName, e);
       }
     } else if (parameterTypeClass != null) {
-      List<ParameterMapping> parameterMappings = new ArrayList<>();
-      parameterMap = new ParameterMap.Builder(configuration, statementId + "-Inline", parameterTypeClass,
-          parameterMappings).build();
+      parameterMap = ParameterMap.inline(statementId, parameterTypeClass);
     }
     return parameterMap;
   }
@@ -330,9 +328,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         }
       }
     } else if (resultType != null) {
-      ResultMap inlineResultMap = new ResultMap.Builder(configuration, statementId + "-Inline", resultType,
-          new ArrayList<>(), null).build();
-      resultMaps.add(inlineResultMap);
+      resultMaps.add(ResultMap.inline(configuration, statementId, resultType));
     }
     return resultMaps;
   }

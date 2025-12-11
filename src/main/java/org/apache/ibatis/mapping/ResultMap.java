@@ -48,6 +48,21 @@ public class ResultMap {
   private ResultMap() {
   }
 
+  public static ResultMap inline(Configuration configuration, String statementId, Class<?> resultType) {
+    ResultMap inlineResultMap = new ResultMap();
+    inlineResultMap.configuration = configuration;
+    inlineResultMap.id = statementId + "-Inline";
+    inlineResultMap.type = resultType;
+    // lock down collections
+    inlineResultMap.resultMappings = Collections.emptyList();
+    inlineResultMap.idResultMappings = Collections.emptyList();
+    inlineResultMap.constructorResultMappings = Collections.emptyList();
+    inlineResultMap.propertyResultMappings = Collections.emptyList();
+    inlineResultMap.mappedColumns = Collections.emptySet();
+    inlineResultMap.mappedProperties = Collections.emptySet();
+    return inlineResultMap;
+  }
+
   public static class Builder {
     private final ResultMap resultMap = new ResultMap();
 
