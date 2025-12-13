@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
@@ -421,5 +422,8 @@ class ReflectorTest {
     List<String> property = Arrays.asList(reflector.getGetablePropertyNames());
     assertEquals(3, property.size());
     assertTrue(property.containsAll(Arrays.asList("id", "name", "props")));
+    assertFalse(property.contains("toString"));
+    assertFalse(property.contains("hashCode"));
+    assertFalse(property.contains("foo"));
   }
 }
