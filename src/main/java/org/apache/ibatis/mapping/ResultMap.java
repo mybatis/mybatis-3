@@ -49,17 +49,17 @@ public class ResultMap {
   }
 
   public static ResultMap buildEmpty(Configuration configuration, String statementId, Class<?> resultType) {
-    ResultMap emtpyResultMap = new ResultMap();
-    emtpyResultMap.configuration = configuration;
-    emtpyResultMap.id = statementId;
-    emtpyResultMap.type = resultType;
-    emtpyResultMap.resultMappings = Collections.emptyList();
-    emtpyResultMap.idResultMappings = Collections.emptyList();
-    emtpyResultMap.constructorResultMappings = Collections.emptyList();
-    emtpyResultMap.propertyResultMappings = Collections.emptyList();
-    emtpyResultMap.mappedColumns = Collections.emptySet();
-    emtpyResultMap.mappedProperties = Collections.emptySet();
-    return emtpyResultMap;
+    ResultMap emptyResultMap = new ResultMap();
+    emptyResultMap.configuration = configuration;
+    emptyResultMap.id = statementId;
+    emptyResultMap.type = resultType;
+    emptyResultMap.resultMappings = Collections.emptyList();
+    emptyResultMap.idResultMappings = Collections.emptyList();
+    emptyResultMap.constructorResultMappings = Collections.emptyList();
+    emptyResultMap.propertyResultMappings = Collections.emptyList();
+    emptyResultMap.mappedColumns = Collections.emptySet();
+    emptyResultMap.mappedProperties = Collections.emptySet();
+    return emptyResultMap;
   }
 
   public static class Builder {
