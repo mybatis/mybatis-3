@@ -48,6 +48,20 @@ public class ResultMap {
   private ResultMap() {
   }
 
+  public static ResultMap buildEmpty(Configuration configuration, String statementId, Class<?> resultType) {
+    ResultMap emptyResultMap = new ResultMap();
+    emptyResultMap.configuration = configuration;
+    emptyResultMap.id = statementId;
+    emptyResultMap.type = resultType;
+    emptyResultMap.resultMappings = Collections.emptyList();
+    emptyResultMap.idResultMappings = Collections.emptyList();
+    emptyResultMap.constructorResultMappings = Collections.emptyList();
+    emptyResultMap.propertyResultMappings = Collections.emptyList();
+    emptyResultMap.mappedColumns = Collections.emptySet();
+    emptyResultMap.mappedProperties = Collections.emptySet();
+    return emptyResultMap;
+  }
+
   public static class Builder {
     private final ResultMap resultMap = new ResultMap();
 
@@ -132,6 +146,7 @@ public class ResultMap {
       resultMap.constructorResultMappings = Collections.unmodifiableList(resultMap.constructorResultMappings);
       resultMap.propertyResultMappings = Collections.unmodifiableList(resultMap.propertyResultMappings);
       resultMap.mappedColumns = Collections.unmodifiableSet(resultMap.mappedColumns);
+      resultMap.mappedProperties = Collections.unmodifiableSet(resultMap.mappedProperties);
 
       return resultMap;
     }

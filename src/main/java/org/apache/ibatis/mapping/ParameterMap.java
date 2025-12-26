@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -30,6 +30,14 @@ public class ParameterMap {
   private List<ParameterMapping> parameterMappings;
 
   private ParameterMap() {
+  }
+
+  public static ParameterMap buildEmpty(String statementId, Class<?> parameterType) {
+    ParameterMap emptyParameterMap = new ParameterMap();
+    emptyParameterMap.id = statementId;
+    emptyParameterMap.type = parameterType;
+    emptyParameterMap.parameterMappings = Collections.emptyList();
+    return emptyParameterMap;
   }
 
   public static class Builder {
