@@ -728,7 +728,7 @@ The DB_VENDOR implementation databaseIdProvider sets as databaseId the String re
 </databaseIdProvider>
 ```
 
-When properties are provided, the DB_VENDOR databaseIdProvider will search the property value corresponding to the first key found in the returned database product name or "null" if there is not a matching property. In this case, if `getDatabaseProductName()` returns "Oracle (DataDirect)" the databaseId will be set to "oracle".
+When properties are provided, the DB_VENDOR databaseIdProvider will return the property value corresponding to the first key found in the returned database product name or "null" if there is not a matching property. In this case, if `getDatabaseProductName()` returns "Oracle (DataDirect)" the databaseId will be set to "oracle".
 
 You can build your own DatabaseIdProvider by implementing the interface `org.apache.ibatis.mapping.DatabaseIdProvider` and registering it in mybatis-config.xml:
 
