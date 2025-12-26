@@ -308,7 +308,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         throw new IncompleteElementException("Could not find parameter map " + parameterMapName, e);
       }
     } else if (parameterTypeClass != null) {
-      parameterMap = ParameterMap.inline(statementId, parameterTypeClass);
+      parameterMap = ParameterMap.buildEmpty(statementId + "-Inline", parameterTypeClass);
     }
     return parameterMap;
   }
@@ -328,7 +328,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
         }
       }
     } else if (resultType != null) {
-      resultMaps.add(ResultMap.inline(configuration, statementId, resultType));
+      resultMaps.add(ResultMap.buildEmpty(configuration, statementId + "-Inline", resultType));
     }
     return resultMaps;
   }

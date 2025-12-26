@@ -48,19 +48,18 @@ public class ResultMap {
   private ResultMap() {
   }
 
-  public static ResultMap inline(Configuration configuration, String statementId, Class<?> resultType) {
-    ResultMap inlineResultMap = new ResultMap();
-    inlineResultMap.configuration = configuration;
-    inlineResultMap.id = statementId + "-Inline";
-    inlineResultMap.type = resultType;
-    // lock down collections
-    inlineResultMap.resultMappings = Collections.emptyList();
-    inlineResultMap.idResultMappings = Collections.emptyList();
-    inlineResultMap.constructorResultMappings = Collections.emptyList();
-    inlineResultMap.propertyResultMappings = Collections.emptyList();
-    inlineResultMap.mappedColumns = Collections.emptySet();
-    inlineResultMap.mappedProperties = Collections.emptySet();
-    return inlineResultMap;
+  public static ResultMap buildEmpty(Configuration configuration, String statementId, Class<?> resultType) {
+    ResultMap emtpyResultMap = new ResultMap();
+    emtpyResultMap.configuration = configuration;
+    emtpyResultMap.id = statementId;
+    emtpyResultMap.type = resultType;
+    emtpyResultMap.resultMappings = Collections.emptyList();
+    emtpyResultMap.idResultMappings = Collections.emptyList();
+    emtpyResultMap.constructorResultMappings = Collections.emptyList();
+    emtpyResultMap.propertyResultMappings = Collections.emptyList();
+    emtpyResultMap.mappedColumns = Collections.emptySet();
+    emtpyResultMap.mappedProperties = Collections.emptySet();
+    return emtpyResultMap;
   }
 
   public static class Builder {
@@ -147,6 +146,7 @@ public class ResultMap {
       resultMap.constructorResultMappings = Collections.unmodifiableList(resultMap.constructorResultMappings);
       resultMap.propertyResultMappings = Collections.unmodifiableList(resultMap.propertyResultMappings);
       resultMap.mappedColumns = Collections.unmodifiableSet(resultMap.mappedColumns);
+      resultMap.mappedProperties = Collections.unmodifiableSet(resultMap.mappedProperties);
 
       return resultMap;
     }
