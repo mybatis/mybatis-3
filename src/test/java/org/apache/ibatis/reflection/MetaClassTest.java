@@ -25,6 +25,9 @@ import java.util.Map;
 
 import org.apache.ibatis.domain.misc.RichType;
 import org.apache.ibatis.domain.misc.generics.GenericConcrete;
+import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
+import org.apache.ibatis.reflection.wrapper.DefaultObjectWrapperFactory;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class MetaClassTest {
@@ -144,4 +147,36 @@ class MetaClassTest {
     assertEquals("richField", meta.findProperty("RICHfield"));
   }
 
+  @Test
+  void shouldUseCachedMetaClassWhenMetaClassCacheEnabled() {
+    final DefaultReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    reflectorFactory.setClassCacheEnabled(true);
+
+    final DefaultObjectFactory objectFactory = new DefaultObjectFactory();
+    final DefaultObjectWrapperFactory objectWrapperFactory = new DefaultObjectWrapperFactory();
+
+    RichType richType = new RichType();
+
+    MetaObject metaObject = MetaObject.forObject(richType, objectFactory, objectWrapperFactory, reflectorFactory);
+    Assertions.assertNotSame(metaObject.getMetaClass(), metaObject.metaObjectForProperty("richType").getMetaClass());
+
+    richType.setRichType(new RichType());
+    Assertions.assertSame(metaObject.getMetaClass(), metaObject.metaObjectForProperty("richType").getMetaClass());
+  }
+
+  @Test
+  void shouldNotUseCachedMetaClassWhenMetaClassCacheDisabled() {
+    final DefaultReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    reflectorFactory.setClassCacheEnabled(false);
+
+    final DefaultObjectFactory objectFactory = new DefaultObjectFactory();
+    final DefaultObjectWrapperFactory objectWrapperFactory = new DefaultObjectWrapperFactory();
+
+    RichType richType = new RichType();
+    MetaObject metaObject = MetaObject.forObject(richType, objectFactory, objectWrapperFactory, reflectorFactory);
+    Assertions.assertNotSame(metaObject.getMetaClass(), metaObject.metaObjectForProperty("richType").getMetaClass());
+
+    richType.setRichType(new RichType());
+    Assertions.assertNotSame(metaObject.getMetaClass(), metaObject.metaObjectForProperty("richType").getMetaClass());
+  }
 }
