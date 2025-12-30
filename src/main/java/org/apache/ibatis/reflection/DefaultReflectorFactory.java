@@ -22,6 +22,7 @@ import java.util.concurrent.ConcurrentMap;
 public class DefaultReflectorFactory implements ReflectorFactory {
   private boolean classCacheEnabled = true;
   private final ConcurrentMap<Type, Reflector> reflectorMap = new ConcurrentHashMap<>();
+  private final ConcurrentMap<Type, MetaClass> metaClassMap = new ConcurrentHashMap<>();
 
   public DefaultReflectorFactory() {
   }
@@ -43,6 +44,14 @@ public class DefaultReflectorFactory implements ReflectorFactory {
       return reflectorMap.computeIfAbsent(type, Reflector::new);
     }
     return new Reflector(type);
+  }
+
+  @Override
+  public MetaClass findMetaClassForType(Type type, boolean useCache) {
+    if (useCache) {
+      return metaClassMap.computeIfAbsent(type, _type -> MetaClass.forClass(_type, this));
+    }
+    return MetaClass.forClass(type, this);
   }
 
 }
