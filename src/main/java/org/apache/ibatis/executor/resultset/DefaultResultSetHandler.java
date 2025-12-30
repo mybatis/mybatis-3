@@ -776,17 +776,16 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private Object createResultObject(ResultSetWrapper rsw, ResultMap resultMap, List<Class<?>> constructorArgTypes,
       List<Object> constructorArgs, String columnPrefix, CacheKey parentRowKey) throws SQLException {
-
     final Class<?> resultType = resultMap.getType();
-    final MetaClass metaType = getOrCreateMetaClass(resultType);
-    final List<ResultMapping> constructorMappings = resultMap.getConstructorResultMappings();
     if (hasTypeHandlerForResultObject(rsw, resultType)) {
       return createPrimitiveResultObject(rsw, resultMap, columnPrefix);
     }
+    final List<ResultMapping> constructorMappings = resultMap.getConstructorResultMappings();
     if (!constructorMappings.isEmpty()) {
       return createParameterizedResultObject(rsw, resultType, constructorMappings, constructorArgTypes, constructorArgs,
           columnPrefix, resultMap.hasResultMapsUsingConstructorCollection(), parentRowKey);
-    } else if (resultType.isInterface() || metaType.hasDefaultConstructor()) {
+    }
+    if (resultType.isInterface() || getOrCreateMetaClass(resultType).hasDefaultConstructor()) {
       return objectFactory.create(resultType);
     } else if (shouldApplyAutomaticMappings(resultMap, false)) {
       return createByConstructorSignature(rsw, resultMap, columnPrefix, resultType, constructorArgTypes,
