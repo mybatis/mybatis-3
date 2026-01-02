@@ -34,4 +34,4 @@ jobs:
         if: ${{ matrix.os == 'ubuntu-latest' }}
         run: echo 'TEST_CONTAINERS_PROFILE=-PtestContainers' >> $GITHUB_ENV
       - name: Test with Maven
-        run: ./mvnw test --batch-mode --no-transfer-progress --show-version -D"license.skip=true -D"${TEST_CONTAINERS_PROFILE}"
+        run: ./mvnw test --batch-mode --no-transfer-progress --show-version -D"license.skip=true ${TEST_CONTAINERS_PROFILE}
