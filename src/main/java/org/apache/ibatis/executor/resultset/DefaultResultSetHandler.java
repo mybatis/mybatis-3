@@ -93,6 +93,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   private final ObjectFactory objectFactory;
   private final ReflectorFactory reflectorFactory;
 
+  private final HashMap<Class<?>, MetaClass> metaClassCache = new HashMap<>();
+
   // pending creations property tracker
   private final Map<Object, PendingRelation> pendingPccRelations = new IdentityHashMap<>();
 
@@ -774,17 +776,16 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private Object createResultObject(ResultSetWrapper rsw, ResultMap resultMap, List<Class<?>> constructorArgTypes,
       List<Object> constructorArgs, String columnPrefix, CacheKey parentRowKey) throws SQLException {
-
     final Class<?> resultType = resultMap.getType();
-    final MetaClass metaType = MetaClass.forClass(resultType, reflectorFactory);
-    final List<ResultMapping> constructorMappings = resultMap.getConstructorResultMappings();
     if (hasTypeHandlerForResultObject(rsw, resultType)) {
       return createPrimitiveResultObject(rsw, resultMap, columnPrefix);
     }
+    final List<ResultMapping> constructorMappings = resultMap.getConstructorResultMappings();
     if (!constructorMappings.isEmpty()) {
       return createParameterizedResultObject(rsw, resultType, constructorMappings, constructorArgTypes, constructorArgs,
           columnPrefix, resultMap.hasResultMapsUsingConstructorCollection(), parentRowKey);
-    } else if (resultType.isInterface() || metaType.hasDefaultConstructor()) {
+    }
+    if (resultType.isInterface() || getOrCreateMetaClass(resultType).hasDefaultConstructor()) {
       return objectFactory.create(resultType);
     } else if (shouldApplyAutomaticMappings(resultMap, false)) {
       return createByConstructorSignature(rsw, resultMap, columnPrefix, resultType, constructorArgTypes,
@@ -1559,7 +1560,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private void createRowKeyForUnmappedProperties(ResultMap resultMap, ResultSetWrapper rsw, CacheKey cacheKey,
       String columnPrefix) throws SQLException {
-    final MetaClass metaType = MetaClass.forClass(resultMap.getType(), reflectorFactory);
+    final MetaClass metaType = getOrCreateMetaClass(resultMap.getType());
     List<String> unmappedColumnNames = rsw.getUnmappedColumnNames(resultMap, columnPrefix);
     for (String column : unmappedColumnNames) {
       String property = column;
@@ -1659,4 +1660,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     return typeHandlerRegistry.hasTypeHandler(resultType);
   }
 
+  private MetaClass getOrCreateMetaClass(Class<?> type) {
+    return metaClassCache.computeIfAbsent(type, (_type) -> MetaClass.forClass(_type, reflectorFactory));
+  }
 }
