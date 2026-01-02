@@ -7,23 +7,34 @@ on:
 
 permissions: read-all
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  SONAR_ORGANIZATION: mybatis
+  SONAR_PROJECT_KEY: mybatis-3
+
 jobs:
   build:
     if: github.repository_owner == 'mybatis'
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
         with:
           # Disabling shallow clone is recommended for improving relevancy of reporting
           fetch-depth: 0
-      - name: Set up JDK
-        uses: actions/setup-java@v5
+      - name: Setup Java
+        uses: actions/setup-java@f2beeb24e141e01a676f977032f5a29d81c9e27e # v5
         with:
           cache: maven
           distribution: temurin
-          java-version: 21
+          java-version: 25
+      - name: Set SONAR_SCANNER_JAVA_OPTS
+        run: echo "SONAR_SCANNER_JAVA_OPTS=-Xmx512m" >> ${GITHUB_ENV}
       - name: Analyze with SonarCloud
-        run: ./mvnw verify jacoco:report sonar:sonar -B -V -Dsonar.projectKey=mybatis_mybatis-3 -Dsonar.organization=mybatis -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=$SONAR_TOKEN -Dlicense.skip=true --no-transfer-progress
+        run: ./mvnw verify jacoco:report sonar:sonar --batch-mode --no-transfer-progress --show-version -Dlicense.skip=true -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=${{ env.SONAR_ORGANIZATION }} -Dsonar.projectKey=${{ env.SONAR_ORGANIZATION }}_${{ env.SONAR_PROJECT_KEY }} -Dsonar.scanner.skipJreProvisioning=true -Dsonar.token=${{ env.SONAR_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

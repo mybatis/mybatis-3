@@ -4,26 +4,33 @@ on: [push, pull_request]
 
 permissions: read-all
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  build:
+  coveralls:
     if: github.repository_owner == 'mybatis'
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v6
-      - name: Set up JDK
-        uses: actions/setup-java@v5
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+      - name: Setup Java
+        uses: actions/setup-java@f2beeb24e141e01a676f977032f5a29d81c9e27e # v5
         with:
           cache: maven
           distribution: temurin
-          java-version: 21
+          java-version: 25
+      - name: Run the build
+        run: ./mvnw test --batch-mode --no-transfer-progress --quiet --show-version -Dlicense.skip=true
       - name: Report Coverage to Coveralls for Pull Requests
         if: github.event_name == 'pull_request'
-        run: ./mvnw -B -V test jacoco:report coveralls:report -q -Dlicense.skip=true -DrepoToken=$GITHUB_TOKEN -DserviceName=github -DpullRequest=$PR_NUMBER --no-transfer-progress
+        run: ./mvnw generate-sources jacoco:report coveralls:report --batch-mode --no-transfer-progress -DpullRequest=${{ env.PR_NUMBER }} -DrepoToken=${{ env.GITHUB_TOKEN }} -DserviceName=github
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.number }}
       - name: Report Coverage to Coveralls for General Push
         if: github.event_name == 'push'
-        run: ./mvnw -B -V test jacoco:report coveralls:report -q -Dlicense.skip=true -DrepoToken=$GITHUB_TOKEN -DserviceName=github --no-transfer-progress
+        run: ./mvnw generate-sources jacoco:report coveralls:report --batch-mode --no-transfer-progress -DrepoToken=${{ env.GITHUB_TOKEN }} -DserviceName=github
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
