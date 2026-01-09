@@ -30,6 +30,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -89,7 +90,8 @@ public class ArrayTypeHandler extends BaseTypeHandler<Object> {
       }
       Class<?> componentType = parameter.getClass().getComponentType();
       String arrayTypeName = resolveTypeName(componentType);
-      Array array = ps.getConnection().createArrayOf(arrayTypeName, (Object[]) parameter);
+      Object[] arrayParameter = (Object[]) parameter;
+      Array array = ps.getConnection().createArrayOf(arrayTypeName, Arrays.copyOf(arrayParameter, arrayParameter.length, Object[].class));
       ps.setArray(i, array);
       array.free();
     }
