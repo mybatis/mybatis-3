@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
+
 package org.apache.ibatis.scripting.xmltags;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -30,7 +31,9 @@ import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
 
-class OgnlCacheTest {
+class OgnlExpressionParserTest {
+  private OgnlExpressionParser parser = new OgnlExpressionParser();
+
   @Test
   void concurrentAccess() throws Exception {
     class DataClass {
@@ -42,7 +45,7 @@ class OgnlCacheTest {
     List<Future<Object>> futures = new ArrayList<>();
     context.put("data", new DataClass());
     ExecutorService executor = Executors.newCachedThreadPool();
-    IntStream.range(0, run).forEach(i -> futures.add(executor.submit(() -> OgnlCache.getValue("data.id", context))));
+    IntStream.range(0, run).forEach(i -> futures.add(executor.submit(() -> parser.getValue("data.id", context))));
     for (int i = 0; i < run; i++) {
       assertNotNull(futures.get(i).get());
     }
@@ -50,10 +53,10 @@ class OgnlCacheTest {
   }
 
   @Test
-  void issue2609() throws Exception {
+  void issue2609() {
     Map<String, Object> context = new HashMap<>();
     context.put("d1", Date.valueOf("2022-01-01"));
     context.put("d2", Date.valueOf("2022-01-02"));
-    assertEquals(-1, OgnlCache.getValue("d1.compareTo(d2)", context));
+    assertEquals(-1, parser.getValue("d1.compareTo(d2)", context));
   }
 }
