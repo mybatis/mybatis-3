@@ -141,16 +141,6 @@ public @interface Options {
   String databaseId() default "";
 
   /**
-   * Denote that a result set is known to be ordered. This is required for building results with collections in their
-   * constructors.
-   *
-   * @return whether the result known to be ordered
-   *
-   * @since 3.6.0
-   */
-  boolean resultOrdered() default false;
-
-  /**
    * The container annotation for {@link Options}.
    *
    * @author Kazuki Shimizu
