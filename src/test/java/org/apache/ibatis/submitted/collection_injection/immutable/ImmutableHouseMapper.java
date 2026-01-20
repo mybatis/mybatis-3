@@ -18,6 +18,7 @@ package org.apache.ibatis.submitted.collection_injection.immutable;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Arg;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectProvider;
@@ -39,12 +40,14 @@ public interface ImmutableHouseMapper {
       ", d.id as room_furniture_defect_id", ", d.defect as room_furniture_defect_defect", "from house h",
       "left join room r on r.house_id = h.id", "left join furniture f on f.room_id = r.id",
       "left join defect d on d.furniture_id = f.id", "where h.id = #{id}" })
+  @Options(resultOrdered = true)
   ImmutableHouse getHouseAnnotated(int it);
 
   @Arg(column = "id", javaType = int.class, id = true)
   @Arg(column = "name", javaType = String.class)
   @Arg(resultMap = "AnnotatedRoomMap", columnPrefix = "room_")
   @SelectProvider(type = ImmutableHouseSqlProvider.class, method = "getHouseSql")
+  @Options(resultOrdered = true)
   ImmutableHouse getHouseAnnotatedWithSelectProvider(int it);
 
   @Results(id = "AnnotatedRoomMap")

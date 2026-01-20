@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -139,6 +139,16 @@ public @interface Options {
    * @since 3.5.5
    */
   String databaseId() default "";
+
+  /**
+   * Denote that a result set is known to be ordered. This is required for building results with collections in their
+   * constructors.
+   *
+   * @return whether the result known to be ordered
+   *
+   * @since 3.6.0
+   */
+  boolean resultOrdered() default false;
 
   /**
    * The container annotation for {@link Options}.
