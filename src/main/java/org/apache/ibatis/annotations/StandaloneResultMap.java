@@ -27,8 +27,13 @@ import java.lang.annotation.Target;
  * Annotation for defining standalone result maps.
  * <p>
  * A standalone result map can be used to define a result map that can be reused with multiple statements. The
- * standalone result map must be attached to an accessible static field in a mapper. The value of the field will be used
- * as the result map id.
+ * standalone result map must be attached to an accessible static field in a mapper. A String field is expected and best
+ * practice. The value of the field will be used as the result map ID. If the field is not a String, then the result map
+ * ID will be the result of calling <code>toString</code> on the field.
+ * </p>
+ * <p>
+ * Users of the annotation can declare any combination of property mappings, constructor arguments, or type
+ * discriminator. At least one of the three must be declared.
  * </p>
  * <p>
  * <b>How to use:</b>
@@ -68,21 +73,23 @@ public @interface StandaloneResultMap {
 
   /**
    * Returns mapping definitions for constructor arguments.
-   * <p>
-   * Either <code>constructorArgs</code> or <code>propertyMappings</code>, but not both, must be specified
    *
    * @return mapping definitions
    */
   Arg[] constructorArguments() default {};
 
   /**
-   * Returns mapping definitions for property.
-   * <p>
-   * Either <code>constructorArgs</code> or <code>propertyMappings</code>, but not both, must be specified
+   * Returns mapping definitions for properties.
    *
    * @return mapping definitions
    */
   Result[] propertyMappings() default {};
 
+  /**
+   * Returns the type discriminator for this result map. The default is effectively null - meaning no type discriminator
+   * is used.
+   *
+   * @return the type discriminator for this result map
+   */
   TypeDiscriminator typeDiscriminator() default @TypeDiscriminator(column = NULL_TYPE_DISCRIMINATOR, cases = {});
 }
