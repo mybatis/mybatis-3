@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -52,6 +52,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Property;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultMap;
+import org.apache.ibatis.annotations.ResultOrdered;
 import org.apache.ibatis.annotations.ResultType;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
@@ -294,6 +295,8 @@ public class MapperAnnotationBuilder {
       final SqlCommandType sqlCommandType = statementAnnotation.getSqlCommandType();
       final Options options = getAnnotationWrapper(method, false, Options.class).map(x -> (Options) x.getAnnotation())
           .orElse(null);
+      final ResultOrdered resultOrderedAnnotation = getAnnotationWrapper(method, false, ResultOrdered.class)
+          .map(x -> (ResultOrdered) x.getAnnotation()).orElse(null);
       final String mappedStatementId = type.getName() + "." + method.getName();
 
       final KeyGenerator keyGenerator;
@@ -341,6 +344,11 @@ public class MapperAnnotationBuilder {
         }
       }
 
+      boolean isResultOrdered = false;
+      if (resultOrderedAnnotation != null) {
+        isResultOrdered = resultOrderedAnnotation.value();
+      }
+
       String resultMapId = null;
       if (isSelect) {
         ResultMap resultMapAnnotation = method.getAnnotation(ResultMap.class);
@@ -355,7 +363,7 @@ public class MapperAnnotationBuilder {
           // ParameterMapID
           null, parameterTypeClass, resultMapId, getReturnType(method, type), resultSetType, flushCache, useCache,
           // TODO gcode issue #577
-          false, keyGenerator, keyProperty, keyColumn, statementAnnotation.getDatabaseId(), languageDriver,
+          isResultOrdered, keyGenerator, keyProperty, keyColumn, statementAnnotation.getDatabaseId(), languageDriver,
           // ResultSets
           options != null ? nullOrEmpty(options.resultSets()) : null, statementAnnotation.isDirtySelect(),
           paramNameResolver);
