@@ -259,17 +259,21 @@ public class MapperAnnotationBuilder {
   }
 
   private void validateStandaloneResultMap(StandaloneResultMap standaloneResultMap, Field field) {
-    if (standaloneResultMap.constructorArguments().length == 0 && standaloneResultMap.propertyMappings().length == 0) {
-      throw new BuilderException(
-          "StandaloneResultMap annotation requires at least one constructor argument or property mapping");
-    }
-
     if (!Modifier.isStatic(field.getModifiers())) {
       throw new BuilderException("StandaloneResultMap annotation can only be used on static fields");
     }
 
     if (!field.canAccess(null)) {
       throw new BuilderException("StandaloneResultMap annotation can only be used on accessible fields");
+    }
+
+    if (!AnnotationConstants.NULL_TYPE_DISCRIMINATOR.equals(standaloneResultMap.typeDiscriminator().column())) {
+      return;
+    }
+
+    if (standaloneResultMap.constructorArguments().length == 0 && standaloneResultMap.propertyMappings().length == 0) {
+      throw new BuilderException("If there is no type discriminator, then StandaloneResultMap annotation "
+          + "requires at least one constructor argument or property mapping");
     }
   }
 

@@ -29,7 +29,8 @@ class StandaloneResultMapTest {
     Configuration configuration = new Configuration();
     MapperAnnotationBuilder builder = new MapperAnnotationBuilder(configuration, MapperWithNoMappings.class);
     assertThatExceptionOfType(BuilderException.class).isThrownBy(builder::parse)
-        .withMessage("StandaloneResultMap annotation requires at least one constructor argument or property mapping");
+        .withMessage("If there is no type discriminator, then StandaloneResultMap annotation "
+            + "requires at least one constructor argument or property mapping");
   }
 
   @Test
