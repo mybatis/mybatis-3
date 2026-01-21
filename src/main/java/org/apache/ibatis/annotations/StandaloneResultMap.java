@@ -32,7 +32,7 @@ import java.lang.annotation.Target;
  * ID will be the result of calling <code>toString</code> on the field.
  * </p>
  * <p>
- * Users of the annotation can declare any combination of property mappings, constructor arguments, or type
+ * Users of the annotation can declare any combination of property mappings, constructor arguments, and/or a type
  * discriminator. At least one of the three must be declared.
  * </p>
  * <p>
