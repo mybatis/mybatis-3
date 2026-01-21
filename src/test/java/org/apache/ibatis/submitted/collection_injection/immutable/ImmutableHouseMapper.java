@@ -19,9 +19,9 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Arg;
 import org.apache.ibatis.annotations.ResultOrdered;
-import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.StandaloneResultMap;
 
 public interface ImmutableHouseMapper {
 
@@ -33,7 +33,7 @@ public interface ImmutableHouseMapper {
 
   @Arg(column = "id", javaType = int.class, id = true)
   @Arg(column = "name", javaType = String.class)
-  @Arg(resultMap = "AnnotatedRoomMap", columnPrefix = "room_")
+  @Arg(resultMap = annotatedRoomMap, columnPrefix = "room_")
   @Select({ "select", "1 as portfolioId", ", h.*", ", r.id as room_id", ", r.name as room_name",
       ", r.size_m2 as room_size_m2", ", r.wall_type as room_wall_type", ", r.wall_height as room_wall_height",
       ", f.id as room_furniture_id", ", f.description as room_furniture_description",
@@ -50,35 +50,22 @@ public interface ImmutableHouseMapper {
   @ResultOrdered()
   ImmutableHouse getHouseAnnotatedWithSelectProvider(int it);
 
-  @Results(id = "AnnotatedRoomMap")
-  @Arg(column = "id", javaType = int.class, id = true)
-  @Arg(column = "name", javaType = String.class)
-  @Arg(resultMap = "AnnotatedRoomDetailMap")
-  @Arg(resultMap = "AnnotatedFurnitureMap", columnPrefix = "furniture_")
-  @Select("-- resultMap holder for ImmutableRoom")
-  @SuppressWarnings("unused")
-  ImmutableRoom roomMapResultHolder();
+  @StandaloneResultMap(javaType = ImmutableRoomDetail.class, constructorArguments = {
+      @Arg(column = "wall_type", javaType = String.class), @Arg(column = "wall_height", javaType = int.class),
+      @Arg(column = "size_m2", javaType = int.class), })
+  String annotatedRoomDetailMap = "AnnotatedRoomDetailMap";
 
-  @Results(id = "AnnotatedRoomDetailMap")
-  @Arg(column = "wall_type", javaType = String.class)
-  @Arg(column = "wall_height", javaType = int.class)
-  @Arg(column = "size_m2", javaType = int.class)
-  @Select("-- resultMap holder for ImmutableRoomDetail")
-  @SuppressWarnings("unused")
-  ImmutableRoomDetail roomDetailMapResultHolder();
+  @StandaloneResultMap(javaType = ImmutableDefect.class, constructorArguments = {
+      @Arg(column = "id", javaType = int.class), @Arg(column = "defect", javaType = String.class) })
+  String annotatedDefectMap = "AnnotatedDefectMap";
 
-  @Results(id = "AnnotatedFurnitureMap")
-  @Arg(column = "id", javaType = int.class)
-  @Arg(column = "description", javaType = String.class)
-  @Arg(resultMap = "AnnotatedDefectsMap", columnPrefix = "defect_")
-  @Select("-- resultMap holder for ImmutableFurniture")
-  @SuppressWarnings("unused")
-  ImmutableFurniture furnitureMapResultHolder();
+  @StandaloneResultMap(javaType = ImmutableFurniture.class, constructorArguments = {
+      @Arg(column = "id", javaType = int.class), @Arg(column = "description", javaType = String.class),
+      @Arg(resultMap = annotatedDefectMap, columnPrefix = "defect_") })
+  String annotatedFurnitureMap = "AnnotatedFurnitureMap";
 
-  @Results(id = "AnnotatedDefectsMap")
-  @Arg(column = "id", javaType = int.class)
-  @Arg(column = "defect", javaType = String.class)
-  @Select("-- resultMap holder for ImmutableDefect")
-  @SuppressWarnings("unused")
-  ImmutableDefect defectMapResultHolder();
+  @StandaloneResultMap(javaType = ImmutableRoom.class, constructorArguments = {
+      @Arg(column = "id", javaType = int.class, id = true), @Arg(column = "name", javaType = String.class),
+      @Arg(resultMap = annotatedRoomDetailMap), @Arg(resultMap = annotatedFurnitureMap, columnPrefix = "furniture_") })
+  String annotatedRoomMap = "AnnotatedRoomMap";
 }

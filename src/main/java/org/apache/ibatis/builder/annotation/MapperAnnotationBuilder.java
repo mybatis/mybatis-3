@@ -19,8 +19,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -36,6 +38,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.ibatis.annotations.AnnotationConstants;
 import org.apache.ibatis.annotations.Arg;
 import org.apache.ibatis.annotations.CacheNamespace;
 import org.apache.ibatis.annotations.CacheNamespaceRef;
@@ -58,6 +61,7 @@ import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.StandaloneResultMap;
 import org.apache.ibatis.annotations.TypeDiscriminator;
 import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.annotations.UpdateProvider;
@@ -138,6 +142,13 @@ public class MapperAnnotationBuilder {
           configuration.addIncompleteMethod(new MethodResolver(this, method));
         }
       }
+
+      for (Field field : type.getDeclaredFields()) {
+        if (field.isAnnotationPresent(StandaloneResultMap.class)) {
+          parseStandaloneResultMap(field);
+        }
+      }
+
     }
     configuration.parsePendingMethods(false);
   }
@@ -221,6 +232,45 @@ public class MapperAnnotationBuilder {
     String resultMapId = generateResultMapName(method);
     applyResultMap(resultMapId, returnType, args, results, typeDiscriminator);
     return resultMapId;
+  }
+
+  private String parseStandaloneResultMap(Field field) {
+    StandaloneResultMap standaloneResultMap = field.getAnnotation(StandaloneResultMap.class);
+    validateStandaloneResultMap(standaloneResultMap, field);
+
+    String resultMapId;
+    try {
+      resultMapId = field.get(null).toString();
+    } catch (IllegalAccessException e) {
+      // should not happen as we've already validated we can access the field
+      throw new BuilderException("StandaloneResultMap annotation can only be used on public static fields");
+    }
+
+    Class<?> returnType = standaloneResultMap.javaType();
+    Arg[] args = standaloneResultMap.constructorArguments();
+    Result[] results = standaloneResultMap.propertyMappings();
+    TypeDiscriminator typeDiscriminator = standaloneResultMap.typeDiscriminator();
+    if (AnnotationConstants.NULL_TYPE_DISCRIMINATOR.equals(typeDiscriminator.column())) {
+      typeDiscriminator = null;
+    }
+
+    applyResultMap(resultMapId, returnType, args, results, typeDiscriminator);
+    return resultMapId;
+  }
+
+  private void validateStandaloneResultMap(StandaloneResultMap standaloneResultMap, Field field) {
+    if (standaloneResultMap.constructorArguments().length == 0 && standaloneResultMap.propertyMappings().length == 0) {
+      throw new BuilderException(
+          "StandaloneResultMap annotation requires at least one constructor argument or property mapping");
+    }
+
+    if (!Modifier.isStatic(field.getModifiers())) {
+      throw new BuilderException("StandaloneResultMap annotation can only be used on static fields");
+    }
+
+    if (!field.canAccess(null)) {
+      throw new BuilderException("StandaloneResultMap annotation can only be used on accessible fields");
+    }
   }
 
   private String generateResultMapName(Method method) {
