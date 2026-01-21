@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.annotations;
 
+import static org.apache.ibatis.annotations.AnnotationConstants.NULL_TYPE_DISCRIMINATOR;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -51,7 +53,7 @@ import java.lang.annotation.Target;
  * }
  * </pre>
  *
- * @author Jeff Butler
+ * @since 3.6.0
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -82,5 +84,5 @@ public @interface StandaloneResultMap {
    */
   Result[] propertyMappings() default {};
 
-  TypeDiscriminator typeDiscriminator() default @TypeDiscriminator(column = AnnotationConstants.NULL_TYPE_DISCRIMINATOR, cases = {});
+  TypeDiscriminator typeDiscriminator() default @TypeDiscriminator(column = NULL_TYPE_DISCRIMINATOR, cases = {});
 }
