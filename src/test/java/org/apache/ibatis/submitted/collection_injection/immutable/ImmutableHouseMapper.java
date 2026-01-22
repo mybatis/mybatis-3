@@ -34,12 +34,17 @@ public interface ImmutableHouseMapper {
   @Arg(column = "id", javaType = int.class, id = true)
   @Arg(column = "name", javaType = String.class)
   @Arg(resultMap = annotatedRoomMap, columnPrefix = "room_")
-  @Select({ "select", "1 as portfolioId", ", h.*", ", r.id as room_id", ", r.name as room_name",
-      ", r.size_m2 as room_size_m2", ", r.wall_type as room_wall_type", ", r.wall_height as room_wall_height",
-      ", f.id as room_furniture_id", ", f.description as room_furniture_description",
-      ", d.id as room_furniture_defect_id", ", d.defect as room_furniture_defect_defect", "from house h",
-      "left join room r on r.house_id = h.id", "left join furniture f on f.room_id = r.id",
-      "left join defect d on d.furniture_id = f.id", "where h.id = #{id}" })
+  // @formatter:off
+  @Select({ "select 1 as portfolioId, h.*, r.id as room_id, r.name as room_name,",
+    "r.size_m2 as room_size_m2, r.wall_type as room_wall_type, r.wall_height as room_wall_height,",
+    "f.id as room_furniture_id, f.description as room_furniture_description,",
+    "d.id as room_furniture_defect_id, d.defect as room_furniture_defect_defect",
+    "from house h left join room r on r.house_id = h.id",
+    "left join furniture f on f.room_id = r.id",
+    "left join defect d on d.furniture_id = f.id",
+    "where h.id = #{id}"
+  })
+  // @formatter:on
   @ResultOrdered()
   ImmutableHouse getHouseAnnotated(int it);
 
@@ -50,22 +55,39 @@ public interface ImmutableHouseMapper {
   @ResultOrdered()
   ImmutableHouse getHouseAnnotatedWithSelectProvider(int it);
 
+  // @formatter:off
   @NamedResultMap(javaType = ImmutableRoomDetail.class, constructorArguments = {
-      @Arg(column = "wall_type", javaType = String.class), @Arg(column = "wall_height", javaType = int.class),
-      @Arg(column = "size_m2", javaType = int.class), })
+    @Arg(column = "wall_type", javaType = String.class),
+    @Arg(column = "wall_height", javaType = int.class),
+    @Arg(column = "size_m2", javaType = int.class)
+  })
+  // @formatter:on
   String annotatedRoomDetailMap = "AnnotatedRoomDetailMap";
 
-  @NamedResultMap(javaType = ImmutableDefect.class, constructorArguments = { @Arg(column = "id", javaType = int.class),
-      @Arg(column = "defect", javaType = String.class) })
+  // @formatter:off
+  @NamedResultMap(javaType = ImmutableDefect.class, constructorArguments = {
+    @Arg(column = "id", javaType = int.class),
+    @Arg(column = "defect", javaType = String.class)
+  })
+  // @formatter:on
   String annotatedDefectMap = "AnnotatedDefectMap";
 
+  // @formatter:off
   @NamedResultMap(javaType = ImmutableFurniture.class, constructorArguments = {
-      @Arg(column = "id", javaType = int.class), @Arg(column = "description", javaType = String.class),
-      @Arg(resultMap = annotatedDefectMap, columnPrefix = "defect_") })
+    @Arg(column = "id", javaType = int.class),
+    @Arg(column = "description", javaType = String.class),
+    @Arg(resultMap = annotatedDefectMap, columnPrefix = "defect_")
+  })
+  // @formatter:on
   String annotatedFurnitureMap = "AnnotatedFurnitureMap";
 
+  // @formatter:off
   @NamedResultMap(javaType = ImmutableRoom.class, constructorArguments = {
-      @Arg(column = "id", javaType = int.class, id = true), @Arg(column = "name", javaType = String.class),
-      @Arg(resultMap = annotatedRoomDetailMap), @Arg(resultMap = annotatedFurnitureMap, columnPrefix = "furniture_") })
+    @Arg(column = "id", javaType = int.class, id = true),
+    @Arg(column = "name", javaType = String.class),
+    @Arg(resultMap = annotatedRoomDetailMap),
+    @Arg(resultMap = annotatedFurnitureMap, columnPrefix = "furniture_")
+  })
+  // @formatter:on
   String annotatedRoomMap = "AnnotatedRoomMap";
 }
