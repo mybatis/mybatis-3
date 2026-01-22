@@ -239,7 +239,7 @@ public class MapperAnnotationBuilder {
 
     String resultMapId;
     try {
-      resultMapId = field.get(null).toString();
+      resultMapId = type.getName() + '.' + field.get(null).toString();
     } catch (IllegalAccessException e) {
       // should not happen as we've already validated we can access the field
       throw new BuilderException("A NamedResultMap annotation can only be used on public static fields");
