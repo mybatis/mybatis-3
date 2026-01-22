@@ -24,12 +24,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation for defining standalone result maps.
+ * Annotation for defining result maps that are not directly tied to select statements.
  * <p>
- * A standalone result map can be used to define a result map that can be reused with multiple statements. The
- * standalone result map must be attached to an accessible static field in a mapper. A String field is expected and best
- * practice. The value of the field will be used as the result map ID. If the field is not a String, then the result map
- * ID will be the result of calling <code>toString</code> on the field.
+ * A named result map can be used to define a result map that can be reused with multiple statements. The named result
+ * map must be attached to an accessible static field in a mapper. A String field is expected and best practice. The
+ * value of the field will be used as the result map ID. If the field is not a String, then the result map ID will be
+ * the result of calling <code>toString</code> on the field.
  * </p>
  * <p>
  * Users of the annotation can declare any combination of property mappings, constructor arguments, and/or a type
@@ -40,7 +40,7 @@ import java.lang.annotation.Target;
  *
  * <pre>
  * public interface UserMapper {
- *   &#064;StandaloneResultMap(javaType = User.class, propertyMappings = {
+ *   &#064;NamedResultMap(javaType = User.class, propertyMappings = {
  *       &#064;Result(property = "id", column = "id", id = true),
  *       &#064;Result(property = "name", column = "name"),
  *       &#064;Result(property = "email" column = "id", one = @One(select = "selectUserEmailById", fetchType = FetchType.LAZY)),
@@ -63,7 +63,7 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface StandaloneResultMap {
+public @interface NamedResultMap {
   /**
    * Returns the Java type created with this result map.
    *

@@ -49,6 +49,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Lang;
 import org.apache.ibatis.annotations.MapKey;
+import org.apache.ibatis.annotations.NamedResultMap;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Options.FlushCachePolicy;
 import org.apache.ibatis.annotations.Param;
@@ -61,7 +62,6 @@ import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.SelectProvider;
-import org.apache.ibatis.annotations.StandaloneResultMap;
 import org.apache.ibatis.annotations.TypeDiscriminator;
 import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.annotations.UpdateProvider;
@@ -144,11 +144,10 @@ public class MapperAnnotationBuilder {
       }
 
       for (Field field : type.getDeclaredFields()) {
-        if (field.isAnnotationPresent(StandaloneResultMap.class)) {
-          parseStandaloneResultMap(field);
+        if (field.isAnnotationPresent(NamedResultMap.class)) {
+          parseNamedResultMap(field);
         }
       }
-
     }
     configuration.parsePendingMethods(false);
   }
@@ -234,22 +233,22 @@ public class MapperAnnotationBuilder {
     return resultMapId;
   }
 
-  private String parseStandaloneResultMap(Field field) {
-    StandaloneResultMap standaloneResultMap = field.getAnnotation(StandaloneResultMap.class);
-    validateStandaloneResultMap(standaloneResultMap, field);
+  private String parseNamedResultMap(Field field) {
+    NamedResultMap namedResultMap = field.getAnnotation(NamedResultMap.class);
+    validateNamedResultMap(namedResultMap, field);
 
     String resultMapId;
     try {
       resultMapId = field.get(null).toString();
     } catch (IllegalAccessException e) {
       // should not happen as we've already validated we can access the field
-      throw new BuilderException("StandaloneResultMap annotation can only be used on public static fields");
+      throw new BuilderException("A NamedResultMap annotation can only be used on public static fields");
     }
 
-    Class<?> returnType = standaloneResultMap.javaType();
-    Arg[] args = standaloneResultMap.constructorArguments();
-    Result[] results = standaloneResultMap.propertyMappings();
-    TypeDiscriminator typeDiscriminator = standaloneResultMap.typeDiscriminator();
+    Class<?> returnType = namedResultMap.javaType();
+    Arg[] args = namedResultMap.constructorArguments();
+    Result[] results = namedResultMap.propertyMappings();
+    TypeDiscriminator typeDiscriminator = namedResultMap.typeDiscriminator();
     if (AnnotationConstants.NULL_TYPE_DISCRIMINATOR.equals(typeDiscriminator.column())) {
       typeDiscriminator = null;
     }
@@ -258,21 +257,21 @@ public class MapperAnnotationBuilder {
     return resultMapId;
   }
 
-  private void validateStandaloneResultMap(StandaloneResultMap standaloneResultMap, Field field) {
+  private void validateNamedResultMap(NamedResultMap namedResultMap, Field field) {
     if (!Modifier.isStatic(field.getModifiers())) {
-      throw new BuilderException("StandaloneResultMap annotation can only be used on static fields");
+      throw new BuilderException("A NamedResultMap annotation can only be used on static fields");
     }
 
     if (!field.canAccess(null)) {
-      throw new BuilderException("StandaloneResultMap annotation can only be used on accessible fields");
+      throw new BuilderException("A NamedResultMap annotation can only be used on accessible fields");
     }
 
-    if (!AnnotationConstants.NULL_TYPE_DISCRIMINATOR.equals(standaloneResultMap.typeDiscriminator().column())) {
+    if (!AnnotationConstants.NULL_TYPE_DISCRIMINATOR.equals(namedResultMap.typeDiscriminator().column())) {
       return;
     }
 
-    if (standaloneResultMap.constructorArguments().length == 0 && standaloneResultMap.propertyMappings().length == 0) {
-      throw new BuilderException("If there is no type discriminator, then StandaloneResultMap annotation "
+    if (namedResultMap.constructorArguments().length == 0 && namedResultMap.propertyMappings().length == 0) {
+      throw new BuilderException("If there is no type discriminator, then the NamedResultMap annotation "
           + "requires at least one constructor argument or property mapping");
     }
   }

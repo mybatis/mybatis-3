@@ -18,10 +18,10 @@ package org.apache.ibatis.submitted.collection_injection.immutable;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Arg;
+import org.apache.ibatis.annotations.NamedResultMap;
 import org.apache.ibatis.annotations.ResultOrdered;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectProvider;
-import org.apache.ibatis.annotations.StandaloneResultMap;
 
 public interface ImmutableHouseMapper {
 
@@ -50,21 +50,21 @@ public interface ImmutableHouseMapper {
   @ResultOrdered()
   ImmutableHouse getHouseAnnotatedWithSelectProvider(int it);
 
-  @StandaloneResultMap(javaType = ImmutableRoomDetail.class, constructorArguments = {
+  @NamedResultMap(javaType = ImmutableRoomDetail.class, constructorArguments = {
       @Arg(column = "wall_type", javaType = String.class), @Arg(column = "wall_height", javaType = int.class),
       @Arg(column = "size_m2", javaType = int.class), })
   String annotatedRoomDetailMap = "AnnotatedRoomDetailMap";
 
-  @StandaloneResultMap(javaType = ImmutableDefect.class, constructorArguments = {
-      @Arg(column = "id", javaType = int.class), @Arg(column = "defect", javaType = String.class) })
+  @NamedResultMap(javaType = ImmutableDefect.class, constructorArguments = { @Arg(column = "id", javaType = int.class),
+      @Arg(column = "defect", javaType = String.class) })
   String annotatedDefectMap = "AnnotatedDefectMap";
 
-  @StandaloneResultMap(javaType = ImmutableFurniture.class, constructorArguments = {
+  @NamedResultMap(javaType = ImmutableFurniture.class, constructorArguments = {
       @Arg(column = "id", javaType = int.class), @Arg(column = "description", javaType = String.class),
       @Arg(resultMap = annotatedDefectMap, columnPrefix = "defect_") })
   String annotatedFurnitureMap = "AnnotatedFurnitureMap";
 
-  @StandaloneResultMap(javaType = ImmutableRoom.class, constructorArguments = {
+  @NamedResultMap(javaType = ImmutableRoom.class, constructorArguments = {
       @Arg(column = "id", javaType = int.class, id = true), @Arg(column = "name", javaType = String.class),
       @Arg(resultMap = annotatedRoomDetailMap), @Arg(resultMap = annotatedFurnitureMap, columnPrefix = "furniture_") })
   String annotatedRoomMap = "AnnotatedRoomMap";

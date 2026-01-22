@@ -18,49 +18,49 @@ package org.apache.ibatis.builder.annotation;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import org.apache.ibatis.annotations.Arg;
-import org.apache.ibatis.annotations.StandaloneResultMap;
+import org.apache.ibatis.annotations.NamedResultMap;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.session.Configuration;
 import org.junit.jupiter.api.Test;
 
-class StandaloneResultMapTest {
+class NamedResultMapTest {
   @Test
-  void standaloneResultMapWithNoMappingsShouldFail() {
+  void namedResultMapWithNoMappingsShouldFail() {
     Configuration configuration = new Configuration();
     MapperAnnotationBuilder builder = new MapperAnnotationBuilder(configuration, MapperWithNoMappings.class);
     assertThatExceptionOfType(BuilderException.class).isThrownBy(builder::parse)
-        .withMessage("If there is no type discriminator, then StandaloneResultMap annotation "
+        .withMessage("If there is no type discriminator, then the NamedResultMap annotation "
             + "requires at least one constructor argument or property mapping");
   }
 
   @Test
-  void standaloneResultMapWithPrivateFieldShouldFail() {
+  void namedResultMapWithPrivateFieldShouldFail() {
     Configuration configuration = new Configuration();
     MapperAnnotationBuilder builder = new MapperAnnotationBuilder(configuration, MapperWithPrivateStaticField.class);
     assertThatExceptionOfType(BuilderException.class).isThrownBy(builder::parse)
-        .withMessage("StandaloneResultMap annotation can only be used on accessible fields");
+        .withMessage("A NamedResultMap annotation can only be used on accessible fields");
   }
 
   @Test
-  void standaloneResultMapWithNonStaticFieldShouldFail() {
+  void namedResultMapWithNonStaticFieldShouldFail() {
     Configuration configuration = new Configuration();
     MapperAnnotationBuilder builder = new MapperAnnotationBuilder(configuration, MapperWithNonStaticField.class);
     assertThatExceptionOfType(BuilderException.class).isThrownBy(builder::parse)
-        .withMessage("StandaloneResultMap annotation can only be used on static fields");
+        .withMessage("A NamedResultMap annotation can only be used on static fields");
   }
 
   private interface MapperWithNoMappings {
-    @StandaloneResultMap(javaType = String.class)
+    @NamedResultMap(javaType = String.class)
     String badMap = "badMap";
   }
 
   private static class MapperWithPrivateStaticField {
-    @StandaloneResultMap(javaType = String.class, constructorArguments = { @Arg(column = "id", javaType = int.class) })
+    @NamedResultMap(javaType = String.class, constructorArguments = { @Arg(column = "id", javaType = int.class) })
     private static String badMap = "badMap";
   }
 
   private static class MapperWithNonStaticField {
-    @StandaloneResultMap(javaType = String.class, constructorArguments = { @Arg(column = "id", javaType = int.class) })
+    @NamedResultMap(javaType = String.class, constructorArguments = { @Arg(column = "id", javaType = int.class) })
     public String badMap = "badMap";
   }
 }

@@ -21,11 +21,11 @@ import org.apache.ibatis.annotations.Arg;
 import org.apache.ibatis.annotations.Case;
 import org.apache.ibatis.annotations.ConstructorArgs;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.NamedResultMap;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.StandaloneResultMap;
 import org.apache.ibatis.annotations.TypeDiscriminator;
 import org.apache.ibatis.submitted.enumtypehandler_on_annotation.Person.PersonType;
 import org.apache.ibatis.type.EnumOrdinalTypeHandler;
@@ -60,7 +60,7 @@ public interface PersonMapper {
   @Insert("${sql}")
   int insertDynamic(@Param("sql") String sql, @Param("parameters") Map<String, Object> parameters);
 
-  @StandaloneResultMap(javaType = Person.class, typeDiscriminator = @TypeDiscriminator(
+  @NamedResultMap(javaType = Person.class, typeDiscriminator = @TypeDiscriminator(
       // target for test (ordinal number -> Enum constant)
       column = "personType", javaType = PersonType.class, typeHandler = EnumOrdinalTypeHandler.class,
       // Switch using enum constant name(PERSON or EMPLOYEE) at cases attribute
@@ -71,7 +71,7 @@ public interface PersonMapper {
               @Result(property = "personType", column = "personType", typeHandler = EnumOrdinalTypeHandler.class) }) }))
   String personMapUsingDiscriminator = "personMapUsingDiscriminator";
 
-  @StandaloneResultMap(javaType = Person.class, propertyMappings = {
+  @NamedResultMap(javaType = Person.class, propertyMappings = {
       @Result(property = "personType", column = "personType", typeHandler = EnumOrdinalTypeHandler.class) })
   String personMapUsingSetter = "personMapUsingSetter";
 }
