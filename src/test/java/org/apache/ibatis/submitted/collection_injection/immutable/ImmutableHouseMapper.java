@@ -23,7 +23,37 @@ import org.apache.ibatis.annotations.ResultOrdered;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectProvider;
 
+// @formatter:off
+@NamedResultMap(id = ImmutableHouseMapper.annotatedRoomDetailMapId, javaType = ImmutableRoomDetail.class,
+  constructorArguments = {
+    @Arg(column = "wall_type", javaType = String.class),
+    @Arg(column = "wall_height", javaType = int.class),
+    @Arg(column = "size_m2", javaType = int.class)
+})
+@NamedResultMap(id = ImmutableHouseMapper.annotatedDefectMapId, javaType = ImmutableDefect.class,
+  constructorArguments = {
+    @Arg(column = "id", javaType = int.class),
+    @Arg(column = "defect", javaType = String.class)
+})
+@NamedResultMap(id = ImmutableHouseMapper.annotatedFurnitureMapId, javaType = ImmutableFurniture.class,
+  constructorArguments = {
+    @Arg(column = "id", javaType = int.class),
+    @Arg(column = "description", javaType = String.class),
+    @Arg(resultMap = ImmutableHouseMapper.annotatedDefectMapId, columnPrefix = "defect_")
+})
+@NamedResultMap(id = ImmutableHouseMapper.annotatedRoomMapId, javaType = ImmutableRoom.class,
+  constructorArguments = {
+    @Arg(column = "id", javaType = int.class, id = true),
+    @Arg(column = "name", javaType = String.class),
+    @Arg(resultMap = ImmutableHouseMapper.annotatedRoomDetailMapId),
+    @Arg(resultMap = ImmutableHouseMapper.annotatedFurnitureMapId, columnPrefix = "furniture_")
+})
+// @formatter:on
 public interface ImmutableHouseMapper {
+  String annotatedRoomDetailMapId = "AnnotatedRoomDetailMap";
+  String annotatedDefectMapId = "AnnotatedDefectMap";
+  String annotatedFurnitureMapId = "AnnotatedFurnitureMap";
+  String annotatedRoomMapId = "AnnotatedRoomMap";
 
   List<ImmutableHouse> getAllHouses();
 
@@ -33,7 +63,7 @@ public interface ImmutableHouseMapper {
 
   @Arg(column = "id", javaType = int.class, id = true)
   @Arg(column = "name", javaType = String.class)
-  @Arg(resultMap = annotatedRoomMap, columnPrefix = "room_")
+  @Arg(resultMap = annotatedRoomMapId, columnPrefix = "room_")
   // @formatter:off
   @Select({ "select 1 as portfolioId, h.*, r.id as room_id, r.name as room_name,",
     "r.size_m2 as room_size_m2, r.wall_type as room_wall_type, r.wall_height as room_wall_height,",
@@ -50,44 +80,8 @@ public interface ImmutableHouseMapper {
 
   @Arg(column = "id", javaType = int.class, id = true)
   @Arg(column = "name", javaType = String.class)
-  @Arg(resultMap = "AnnotatedRoomMap", columnPrefix = "room_")
+  @Arg(resultMap = annotatedRoomMapId, columnPrefix = "room_")
   @SelectProvider(type = ImmutableHouseSqlProvider.class, method = "getHouseSql")
   @ResultOrdered()
   ImmutableHouse getHouseAnnotatedWithSelectProvider(int it);
-
-  // @formatter:off
-  @NamedResultMap(javaType = ImmutableRoomDetail.class, constructorArguments = {
-    @Arg(column = "wall_type", javaType = String.class),
-    @Arg(column = "wall_height", javaType = int.class),
-    @Arg(column = "size_m2", javaType = int.class)
-  })
-  // @formatter:on
-  String annotatedRoomDetailMap = "AnnotatedRoomDetailMap";
-
-  // @formatter:off
-  @NamedResultMap(javaType = ImmutableDefect.class, constructorArguments = {
-    @Arg(column = "id", javaType = int.class),
-    @Arg(column = "defect", javaType = String.class)
-  })
-  // @formatter:on
-  String annotatedDefectMap = "AnnotatedDefectMap";
-
-  // @formatter:off
-  @NamedResultMap(javaType = ImmutableFurniture.class, constructorArguments = {
-    @Arg(column = "id", javaType = int.class),
-    @Arg(column = "description", javaType = String.class),
-    @Arg(resultMap = annotatedDefectMap, columnPrefix = "defect_")
-  })
-  // @formatter:on
-  String annotatedFurnitureMap = "AnnotatedFurnitureMap";
-
-  // @formatter:off
-  @NamedResultMap(javaType = ImmutableRoom.class, constructorArguments = {
-    @Arg(column = "id", javaType = int.class, id = true),
-    @Arg(column = "name", javaType = String.class),
-    @Arg(resultMap = annotatedRoomDetailMap),
-    @Arg(resultMap = annotatedFurnitureMap, columnPrefix = "furniture_")
-  })
-  // @formatter:on
-  String annotatedRoomMap = "AnnotatedRoomMap";
 }

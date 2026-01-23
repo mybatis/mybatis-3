@@ -19,6 +19,7 @@ import static org.apache.ibatis.annotations.AnnotationConstants.NULL_TYPE_DISCRI
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -27,9 +28,10 @@ import java.lang.annotation.Target;
  * Annotation for defining result maps that are not directly tied to select statements.
  * <p>
  * A named result map can be used to define a result map that can be reused with multiple statements. The named result
- * map must be attached to an accessible static field in a mapper. A String field is expected and best practice. The
- * value of the field will be used as the result map ID. If the field is not a String, then the result map ID will be
- * the result of calling <code>toString</code> on the field.
+ * map must be attached to a type (typically a mapper interface).
+ * </p>
+ * <p>
+ * Multiple <code>NamedResultMap</code> annotations can be attached to a type.
  * </p>
  * <p>
  * Users of the annotation can declare any combination of property mappings, constructor arguments, and/or a type
@@ -39,21 +41,21 @@ import java.lang.annotation.Target;
  * <b>How to use:</b>
  *
  * <pre>
+ * &#064;NamedResultMap(id = UserMapper.userResultId, javaType = User.class, propertyMappings = {
+ *     &#064;Result(property = "id", column = "id", id = true),
+ *     &#064;Result(property = "name", column = "name"),
+ *     &#064;Result(property = "email" column = "id", one = @One(select = "selectUserEmailById", fetchType = FetchType.LAZY)),
+ *     &#064;Result(property = "telephoneNumbers" column = "id", many = @Many(select = "selectAllUserTelephoneNumberById", fetchType = FetchType.LAZY))
+ * })
  * public interface UserMapper {
- *   &#064;NamedResultMap(javaType = User.class, propertyMappings = {
- *       &#064;Result(property = "id", column = "id", id = true),
- *       &#064;Result(property = "name", column = "name"),
- *       &#064;Result(property = "email" column = "id", one = @One(select = "selectUserEmailById", fetchType = FetchType.LAZY)),
- *       &#064;Result(property = "telephoneNumbers" column = "id", many = @Many(select = "selectAllUserTelephoneNumberById", fetchType = FetchType.LAZY))
- *   })
- *   String userResult = "userResult";
+ *   String userResultId = "userResult";
  *
  *   &#064;Select("SELECT id, name FROM users WHERE id = #{id}")
- *   &#064;ResultMap(userResult)
+ *   &#064;ResultMap(userResultId)
  *   User selectById(int id);
  *
  *   &#064;Select("SELECT id, name FROM users")
- *   &#064;ResultMap(userResult)
+ *   &#064;ResultMap(userResultId)
  *   List&lt;User&gt; selectAll();
  * }
  * </pre>
@@ -62,8 +64,16 @@ import java.lang.annotation.Target;
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
+@Target(ElementType.TYPE)
+@Repeatable(NamedResultMaps.class)
 public @interface NamedResultMap {
+  /**
+   * Returns the result map id.
+   *
+   * @return the result map id
+   */
+  String id();
+
   /**
    * Returns the Java type created with this result map.
    *

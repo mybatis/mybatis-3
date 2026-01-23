@@ -35,7 +35,20 @@ import org.apache.ibatis.type.EnumOrdinalTypeHandler;
  *
  * @author Kazuki Shimizu
  */
+@NamedResultMap(id = PersonMapper.personMapUsingDiscriminator, javaType = Person.class, typeDiscriminator = @TypeDiscriminator(
+    // target for test (ordinal number -> Enum constant)
+    column = "personType", javaType = PersonType.class, typeHandler = EnumOrdinalTypeHandler.class,
+    // Switch using enum constant name(PERSON or EMPLOYEE) at cases attribute
+    cases = {
+        @Case(value = "PERSON", type = Person.class, results = {
+            @Result(property = "personType", column = "personType", typeHandler = EnumOrdinalTypeHandler.class) }),
+        @Case(value = "EMPLOYEE", type = Employee.class, results = {
+            @Result(property = "personType", column = "personType", typeHandler = EnumOrdinalTypeHandler.class) }) }))
+@NamedResultMap(id = PersonMapper.personMapUsingSetter, javaType = Person.class, propertyMappings = {
+    @Result(property = "personType", column = "personType", typeHandler = EnumOrdinalTypeHandler.class) })
 public interface PersonMapper {
+  String personMapUsingDiscriminator = "personMapUsingDiscriminator";
+  String personMapUsingSetter = "personMapUsingSetter";
 
   // @formatter:off
   @ConstructorArgs({
@@ -59,19 +72,4 @@ public interface PersonMapper {
 
   @Insert("${sql}")
   int insertDynamic(@Param("sql") String sql, @Param("parameters") Map<String, Object> parameters);
-
-  @NamedResultMap(javaType = Person.class, typeDiscriminator = @TypeDiscriminator(
-      // target for test (ordinal number -> Enum constant)
-      column = "personType", javaType = PersonType.class, typeHandler = EnumOrdinalTypeHandler.class,
-      // Switch using enum constant name(PERSON or EMPLOYEE) at cases attribute
-      cases = {
-          @Case(value = "PERSON", type = Person.class, results = {
-              @Result(property = "personType", column = "personType", typeHandler = EnumOrdinalTypeHandler.class) }),
-          @Case(value = "EMPLOYEE", type = Employee.class, results = {
-              @Result(property = "personType", column = "personType", typeHandler = EnumOrdinalTypeHandler.class) }) }))
-  String personMapUsingDiscriminator = "personMapUsingDiscriminator";
-
-  @NamedResultMap(javaType = Person.class, propertyMappings = {
-      @Result(property = "personType", column = "personType", typeHandler = EnumOrdinalTypeHandler.class) })
-  String personMapUsingSetter = "personMapUsingSetter";
 }

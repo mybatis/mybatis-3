@@ -19,10 +19,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
-import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -50,6 +48,7 @@ import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Lang;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.NamedResultMap;
+import org.apache.ibatis.annotations.NamedResultMaps;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Options.FlushCachePolicy;
 import org.apache.ibatis.annotations.Param;
@@ -143,10 +142,12 @@ public class MapperAnnotationBuilder {
         }
       }
 
-      for (Field field : type.getDeclaredFields()) {
-        if (field.isAnnotationPresent(NamedResultMap.class)) {
-          parseNamedResultMap(field);
-        }
+      if (type.isAnnotationPresent(NamedResultMap.class)) {
+        parseNamedResultMap(type.getAnnotation(NamedResultMap.class));
+      }
+
+      if (type.isAnnotationPresent(NamedResultMaps.class)) {
+        parseNamedResultMaps();
       }
     }
     configuration.parsePendingMethods(false);
@@ -233,18 +234,17 @@ public class MapperAnnotationBuilder {
     return resultMapId;
   }
 
-  private String parseNamedResultMap(Field field) {
-    NamedResultMap namedResultMap = field.getAnnotation(NamedResultMap.class);
-    validateNamedResultMap(namedResultMap, field);
-
-    String resultMapId;
-    try {
-      resultMapId = type.getName() + '.' + field.get(null).toString();
-    } catch (IllegalAccessException e) {
-      // should not happen as we've already validated we can access the field
-      throw new BuilderException("A NamedResultMap annotation can only be used on public static fields");
+  private void parseNamedResultMaps() {
+    NamedResultMaps namedResultMaps = type.getAnnotation(NamedResultMaps.class);
+    for (NamedResultMap namedResultMap : namedResultMaps.value()) {
+      parseNamedResultMap(namedResultMap);
     }
+  }
 
+  private void parseNamedResultMap(NamedResultMap namedResultMap) {
+    validateNamedResultMap(namedResultMap);
+
+    String resultMapId = type.getName() + '.' + namedResultMap.id();
     Class<?> returnType = namedResultMap.javaType();
     Arg[] args = namedResultMap.constructorArguments();
     Result[] results = namedResultMap.propertyMappings();
@@ -254,18 +254,9 @@ public class MapperAnnotationBuilder {
     }
 
     applyResultMap(resultMapId, returnType, args, results, typeDiscriminator);
-    return resultMapId;
   }
 
-  private void validateNamedResultMap(NamedResultMap namedResultMap, Field field) {
-    if (!Modifier.isStatic(field.getModifiers())) {
-      throw new BuilderException("A NamedResultMap annotation can only be used on static fields");
-    }
-
-    if (!field.canAccess(null)) {
-      throw new BuilderException("A NamedResultMap annotation can only be used on accessible fields");
-    }
-
+  private void validateNamedResultMap(NamedResultMap namedResultMap) {
     if (!AnnotationConstants.NULL_TYPE_DISCRIMINATOR.equals(namedResultMap.typeDiscriminator().column())) {
       return;
     }

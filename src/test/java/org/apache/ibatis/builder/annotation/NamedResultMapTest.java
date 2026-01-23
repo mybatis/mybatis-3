@@ -17,7 +17,6 @@ package org.apache.ibatis.builder.annotation;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-import org.apache.ibatis.annotations.Arg;
 import org.apache.ibatis.annotations.NamedResultMap;
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.session.Configuration;
@@ -33,34 +32,7 @@ class NamedResultMapTest {
             + "requires at least one constructor argument or property mapping");
   }
 
-  @Test
-  void namedResultMapWithPrivateFieldShouldFail() {
-    Configuration configuration = new Configuration();
-    MapperAnnotationBuilder builder = new MapperAnnotationBuilder(configuration, MapperWithPrivateStaticField.class);
-    assertThatExceptionOfType(BuilderException.class).isThrownBy(builder::parse)
-        .withMessage("A NamedResultMap annotation can only be used on accessible fields");
-  }
-
-  @Test
-  void namedResultMapWithNonStaticFieldShouldFail() {
-    Configuration configuration = new Configuration();
-    MapperAnnotationBuilder builder = new MapperAnnotationBuilder(configuration, MapperWithNonStaticField.class);
-    assertThatExceptionOfType(BuilderException.class).isThrownBy(builder::parse)
-        .withMessage("A NamedResultMap annotation can only be used on static fields");
-  }
-
+  @NamedResultMap(id = "badMap", javaType = String.class)
   private interface MapperWithNoMappings {
-    @NamedResultMap(javaType = String.class)
-    String badMap = "badMap";
-  }
-
-  private static class MapperWithPrivateStaticField {
-    @NamedResultMap(javaType = String.class, constructorArguments = { @Arg(column = "id", javaType = int.class) })
-    private static String badMap = "badMap";
-  }
-
-  private static class MapperWithNonStaticField {
-    @NamedResultMap(javaType = String.class, constructorArguments = { @Arg(column = "id", javaType = int.class) })
-    public String badMap = "badMap";
   }
 }
