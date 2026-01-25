@@ -127,6 +127,15 @@ public class MapperAnnotationBuilder {
       assistant.setCurrentNamespace(type.getName());
       parseCache();
       parseCacheRef();
+
+      if (type.isAnnotationPresent(NamedResultMap.class)) {
+        parseNamedResultMap(type.getAnnotation(NamedResultMap.class));
+      }
+
+      if (type.isAnnotationPresent(NamedResultMaps.class)) {
+        parseNamedResultMaps();
+      }
+
       for (Method method : type.getMethods()) {
         if (!canHaveStatement(method)) {
           continue;
@@ -140,14 +149,6 @@ public class MapperAnnotationBuilder {
         } catch (IncompleteElementException e) {
           configuration.addIncompleteMethod(new MethodResolver(this, method));
         }
-      }
-
-      if (type.isAnnotationPresent(NamedResultMap.class)) {
-        parseNamedResultMap(type.getAnnotation(NamedResultMap.class));
-      }
-
-      if (type.isAnnotationPresent(NamedResultMaps.class)) {
-        parseNamedResultMaps();
       }
     }
     configuration.parsePendingMethods(false);
