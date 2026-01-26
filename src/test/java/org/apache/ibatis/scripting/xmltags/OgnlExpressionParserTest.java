@@ -16,6 +16,7 @@
 
 package org.apache.ibatis.scripting.xmltags;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -28,14 +29,22 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.type.TypeAliasRegistry;
+import org.apache.ibatis.type.TypeException;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
-class OgnlExpressionParserTest {
-  private OgnlExpressionParser parser = new OgnlExpressionParser();
+public class OgnlExpressionParserTest {
 
   @Test
   void concurrentAccess() throws Exception {
+    OgnlExpressionParser parser = new OgnlExpressionParser(new Configuration());
     class DataClass {
       @SuppressWarnings("unused")
       private int id;
@@ -54,9 +63,93 @@ class OgnlExpressionParserTest {
 
   @Test
   void issue2609() {
+    OgnlExpressionParser parser = new OgnlExpressionParser(new Configuration());
     Map<String, Object> context = new HashMap<>();
     context.put("d1", Date.valueOf("2022-01-01"));
     context.put("d2", Date.valueOf("2022-01-02"));
     assertEquals(-1, parser.getValue("d1.compareTo(d2)", context));
+  }
+
+  enum DRINK {
+    COFFEE, TEA
+  }
+
+  public interface HasCode {
+    int code();
+  }
+
+  enum DRINK2 implements HasCode {
+    COFFEE {
+      @Override
+      public int code() {
+        return 1;
+      }
+    },
+    TEA {
+      @Override
+      public int code() {
+        return 2;
+      }
+    };
+  }
+
+  public static class Foo {
+    public static final String STR = "yowza";
+
+    String bar() {
+      return "BAR!";
+    }
+  }
+
+  @MethodSource
+  @ParameterizedTest
+  void shouldResolveTypeAlias(Object expected, Class<?> aliasedClass, String expression) {
+    Configuration configuration = new Configuration();
+    TypeAliasRegistry typeAliasRegistry = configuration.getTypeAliasRegistry();
+    typeAliasRegistry.registerAlias(aliasedClass);
+
+    OgnlExpressionParser parser = new OgnlExpressionParser(configuration);
+    Map<String, Object> context = new HashMap<>();
+    assertEquals(expected, parser.getValue(expression, context));
+  }
+
+  static Stream<Arguments> shouldResolveTypeAlias() {
+    return Stream.of(Arguments.arguments("yowza", Foo.class, "@Foo@STR"),
+        Arguments.arguments("yowza", Foo.class, "@foo@STR"), Arguments.arguments("BAR!", Foo.class, "new Foo().bar()"),
+        Arguments.arguments("BAR!", Foo.class, "new foo().bar()"),
+        Arguments.arguments("COFFEE", DRINK.class, "@DRINK@COFFEE.name()"),
+        Arguments.arguments(2, DRINK2.class, "@DRINK2@TEA.code()"));
+  }
+
+  @Test
+  void shouldThrowIfClassNotFound() {
+    OgnlExpressionParser parser = new OgnlExpressionParser(new Configuration());
+    Map<String, Object> context = new HashMap<>();
+    assertThatThrownBy(() -> parser.getValue("@foo@BAR", context)).isInstanceOf(TypeException.class)
+        .hasCauseInstanceOf(ClassNotFoundException.class);
+  }
+
+  @Test
+  @Disabled
+  void typeAliasCornerCases_int() {
+    // Both `int` and `integer` are implicit aliases for `java.lang.Integer`
+    OgnlExpressionParser parser = new OgnlExpressionParser(new Configuration());
+    Map<String, Object> context = new HashMap<>();
+    // This works.
+    assertEquals(Integer.MAX_VALUE, parser.getValue("@integer@MAX_VALUE", context));
+    // This does not. OGNL does not use the custom class resolver because... `int` is a known primitive?
+    assertEquals(Integer.MAX_VALUE, parser.getValue("@int@MAX_VALUE", context));
+  }
+
+  @Test
+  @Disabled
+  void typeAliasCornerCases_boolean() {
+    // `boolean` is a implicit alias for `java.lang.Boolean`
+    OgnlExpressionParser parser = new OgnlExpressionParser(new Configuration());
+    Map<String, Object> context = new HashMap<>();
+    // This works.
+    assertEquals(Boolean.TRUE, parser.getValue("@Boolean@MTRUE", context));
+    // This does not. OGNL does not use the custom class resolver because... `boolean` is a known primitive?
+    assertEquals(Boolean.TRUE, parser.getValue("@boolean@TRUE", context));
   }
 }

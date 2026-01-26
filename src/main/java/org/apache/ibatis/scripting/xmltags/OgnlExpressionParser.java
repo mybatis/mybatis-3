@@ -21,7 +21,7 @@ import java.lang.reflect.Member;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import ognl.DefaultClassResolver;
+import ognl.ClassResolver;
 import ognl.MemberAccess;
 import ognl.Ognl;
 import ognl.OgnlContext;
@@ -30,9 +30,10 @@ import ognl.OgnlRuntime;
 import ognl.PropertyAccessor;
 
 import org.apache.ibatis.builder.BuilderException;
-import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.reflection.Reflector;
 import org.apache.ibatis.scripting.xmltags.DynamicContext.ContextMap;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.type.TypeAliasRegistry;
 
 /**
  * Evaluate expression using OGNL.<br>
@@ -44,12 +45,17 @@ import org.apache.ibatis.scripting.xmltags.DynamicContext.ContextMap;
  */
 public class OgnlExpressionParser implements ExpressionParser {
 
-  private static final OgnlMemberAccess MEMBER_ACCESS = new OgnlMemberAccess();
-  private static final OgnlClassResolver CLASS_RESOLVER = new OgnlClassResolver();
+  private final OgnlMemberAccess MEMBER_ACCESS = new OgnlMemberAccess();
+  private final OgnlClassResolver CLASS_RESOLVER;
   private static final Map<String, Object> expressionCache = new ConcurrentHashMap<>();
 
-  static {
+  public OgnlExpressionParser(Configuration configuration) {
+    TypeAliasRegistry typeAliasRegistry = configuration.getTypeAliasRegistry();
+    if (typeAliasRegistry == null) {
+      throw new IllegalArgumentException("Type alias registry must not be null.");
+    }
     OgnlRuntime.setPropertyAccessor(ContextMap.class, new ContextAccessor());
+    CLASS_RESOLVER = new OgnlClassResolver(typeAliasRegistry);
   }
 
   @Override
@@ -119,16 +125,25 @@ public class OgnlExpressionParser implements ExpressionParser {
 
   /**
    * Custom ognl {@code ClassResolver} which behaves same like ognl's {@code DefaultClassResolver}. But uses the
-   * {@code Resources} utility class to find the target class instead of {@code Class#forName(String)}.
+   * {@link TypeAliasRegistry#resolveAlias(String)} utility class to find the target class instead of
+   * {@code Class#forName(String)}.
    *
    * @author Daniel Guggi
+   * @author Kazuki Shimizu
    *
    * @see <a href='https://github.com/mybatis/mybatis-3/issues/161'>Issue 161</a>
    */
-  static class OgnlClassResolver extends DefaultClassResolver {
+  static class OgnlClassResolver implements ClassResolver {
+    private final TypeAliasRegistry typeAliasRegistry;
+
+    public OgnlClassResolver(TypeAliasRegistry typeAliasRegistry) {
+      super();
+      this.typeAliasRegistry = typeAliasRegistry;
+    }
+
     @Override
-    protected Class toClassForName(String className) throws ClassNotFoundException {
-      return Resources.classForName(className);
+    public <T> Class<T> classForName(String className, OgnlContext context) throws ClassNotFoundException {
+      return typeAliasRegistry.resolveAlias(className);
     }
   }
 

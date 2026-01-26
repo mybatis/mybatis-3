@@ -142,8 +142,6 @@ public class Configuration {
 
   protected boolean lazyLoadingEnabled;
   protected ProxyFactory proxyFactory = new JavassistProxyFactory(); // #224 Using internal Javassist instead of OGNL
-  // Unless something happens to OGNL, we have no reason to make this configurable.
-  protected ExpressionParser expressionParser = new OgnlExpressionParser();
 
   protected String databaseId;
   /**
@@ -158,6 +156,8 @@ public class Configuration {
   protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry(this);
   protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
   protected final LanguageDriverRegistry languageRegistry = new LanguageDriverRegistry();
+  // Unless something happens to OGNL, we have no reason to make this configurable.
+  protected final ExpressionParser expressionParser = new OgnlExpressionParser(this);
 
   protected final Map<String, MappedStatement> mappedStatements = new StrictMap<MappedStatement>(
       "Mapped Statements collection")
