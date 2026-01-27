@@ -150,4 +150,7 @@ public class MetaObject {
     objectWrapper.addAll(list);
   }
 
+  public MetaClass getMetaClass() {
+    return reflectorFactory.findMetaClassForType(originalObject.getClass());
+  }
 }

@@ -24,4 +24,10 @@ public interface ReflectorFactory {
   void setClassCacheEnabled(boolean classCacheEnabled);
 
   Reflector findForClass(Type type);
+
+  default MetaClass findMetaClassForType(Type type) {
+    return findMetaClassForType(type, isClassCacheEnabled());
+  }
+
+  MetaClass findMetaClassForType(Type type, boolean useCache);
 }
