@@ -149,7 +149,7 @@ public class Configuration {
    */
   protected Class<?> configurationFactory;
 
-  protected final MapperRegistry mapperRegistry = new MapperRegistry(this);
+  protected MapperRegistry mapperRegistry = new MapperRegistry(this);
   protected final InterceptorChain interceptorChain = new InterceptorChain();
   protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry(this);
   protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
@@ -164,7 +164,7 @@ public class Configuration {
   protected final Map<String, ParameterMap> parameterMaps = new StrictMap<>("Parameter Maps collection");
   protected final Map<String, KeyGenerator> keyGenerators = new StrictMap<>("Key Generators collection");
 
-  protected final Set<String> loadedResources = new HashSet<>();
+  protected final Set<String> loadedResources = ConcurrentHashMap.newKeySet();
   protected final Map<String, XNode> sqlFragments = new StrictMap<>("XML fragments parsed from previous mappers");
   protected final Collection<XMLStatementBuilder> incompleteStatements = new LinkedList<>();
   protected final Collection<CacheRefResolver> incompleteCacheRefs = new LinkedList<>();
@@ -621,6 +621,22 @@ public class Configuration {
    */
   public MapperRegistry getMapperRegistry() {
     return mapperRegistry;
+  }
+
+  /**
+   * Sets a custom mapper registry.
+   * <p>
+   * This allows injecting a custom {@link MapperRegistry} implementation at runtime.
+   *
+   * @param mapperRegistry
+   *          the custom mapper registry to use
+   *
+   * @since 3.6.0
+   */
+  public void setMapperRegistry(MapperRegistry mapperRegistry) {
+    if (null != mapperRegistry) {
+      this.mapperRegistry = mapperRegistry;
+    }
   }
 
   public ReflectorFactory getReflectorFactory() {
