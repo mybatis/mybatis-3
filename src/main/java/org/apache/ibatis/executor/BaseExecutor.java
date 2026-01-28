@@ -388,7 +388,8 @@ public abstract class BaseExecutor implements Executor {
     }
 
     public boolean canLoad() {
-      return localCache.getObject(key) != null && localCache.getObject(key) != EXECUTION_PLACEHOLDER;
+      Object cached = localCache.getObject(key);
+      return cached != null && cached != EXECUTION_PLACEHOLDER;
     }
 
     public void load() {
