@@ -17,6 +17,7 @@ package org.apache.ibatis.cache.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
@@ -28,7 +29,7 @@ public class PerpetualCache implements Cache {
 
   private final String id;
 
-  private final Map<Object, Object> cache = new HashMap<>();
+  private final Map<Object, Object> cache = new ConcurrentHashMap<>();
 
   public PerpetualCache(String id) {
     this.id = id;

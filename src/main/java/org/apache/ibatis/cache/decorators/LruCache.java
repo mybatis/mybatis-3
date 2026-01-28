@@ -17,6 +17,7 @@ package org.apache.ibatis.cache.decorators;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.ibatis.cache.Cache;
 
@@ -29,7 +30,7 @@ public class LruCache implements Cache {
 
   private final Cache delegate;
   private Map<Object, Object> keyMap;
-  private Object eldestKey;
+  private final AtomicReference<Object> eldestKey = new AtomicReference<>();
 
   public LruCache(Cache delegate) {
     this.delegate = delegate;
@@ -54,7 +55,7 @@ public class LruCache implements Cache {
       protected boolean removeEldestEntry(Map.Entry<Object, Object> eldest) {
         boolean tooBig = size() > size;
         if (tooBig) {
-          eldestKey = eldest.getKey();
+          eldestKey.set(eldest.getKey());
         }
         return tooBig;
       }
@@ -87,9 +88,9 @@ public class LruCache implements Cache {
 
   private void cycleKeyList(Object key) {
     keyMap.put(key, key);
+    Object currentEldestKey = eldestKey.getAndSet(null);
     if (eldestKey != null) {
-      delegate.removeObject(eldestKey);
-      eldestKey = null;
+      delegate.removeObject(currentEldestKey);
     }
   }
 
