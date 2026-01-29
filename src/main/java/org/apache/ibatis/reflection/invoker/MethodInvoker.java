@@ -15,10 +15,9 @@
  */
 package org.apache.ibatis.reflection.invoker;
 
-import java.lang.reflect.InvocationTargetException;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
-
-import org.apache.ibatis.reflection.Reflector;
 
 /**
  * @author Clinton Begin
@@ -26,12 +25,17 @@ import org.apache.ibatis.reflection.Reflector;
 public class MethodInvoker implements Invoker {
 
   private final Class<?> type;
-  private final Method method;
+  private final MethodHandle handle;
 
   public MethodInvoker(Method method) {
-    this.method = method;
+    try {
+      method.setAccessible(true);
+      this.handle = MethodHandles.lookup().unreflect(method);
+    } catch (IllegalAccessException e) {
+      throw new RuntimeException(e);
+    }
 
-    if (method.getParameterTypes().length == 1) {
+    if (method.getParameterCount() == 1) {
       type = method.getParameterTypes()[0];
     } else {
       type = method.getReturnType();
@@ -39,16 +43,18 @@ public class MethodInvoker implements Invoker {
   }
 
   @Override
-  public Object invoke(Object target, Object[] args) throws IllegalAccessException, InvocationTargetException {
-    try {
-      return method.invoke(target, args);
-    } catch (IllegalAccessException e) {
-      if (Reflector.canControlMemberAccessible()) {
-        method.setAccessible(true);
-        return method.invoke(target, args);
-      }
-      throw e;
+  public Object invoke(Object target, Object[] args) throws Throwable {
+    if (args == null || args.length == 0) {
+      return handle.invoke(target);
     }
+    return handle.invokeWithArguments(prepend(target, args));
+  }
+
+  private Object[] prepend(Object target, Object[] args) {
+    Object[] arr = new Object[args.length + 1];
+    arr[0] = target;
+    System.arraycopy(args, 0, arr, 1, args.length);
+    return arr;
   }
 
   @Override
