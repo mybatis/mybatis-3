@@ -15,11 +15,19 @@
  */
 package org.apache.ibatis.reflection.invoker;
 
+import java.lang.invoke.MethodHandles;
+
 /**
  * @author Clinton Begin
  */
 public interface Invoker {
+
   Object invoke(Object target, Object[] args) throws Throwable;
 
   Class<?> getType();
+
+  default MethodHandles.Lookup getMethodHandlesLookup(Class<?> targetClass) throws IllegalAccessException {
+    MethodHandles.Lookup lookup = MethodHandles.lookup();
+    return MethodHandles.privateLookupIn(targetClass, lookup);
+  }
 }

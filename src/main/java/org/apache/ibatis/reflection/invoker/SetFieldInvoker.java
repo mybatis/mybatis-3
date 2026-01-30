@@ -15,36 +15,41 @@
  */
 package org.apache.ibatis.reflection.invoker;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
-
-import org.apache.ibatis.reflection.Reflector;
 
 /**
  * @author Clinton Begin
  */
 public class SetFieldInvoker implements Invoker {
-  private final Field field;
+
+  private final MethodHandle setter;
+  private final Class<?> type;
 
   public SetFieldInvoker(Field field) {
-    this.field = field;
+    try {
+      field.setAccessible(true);
+
+      MethodHandles.Lookup privateLookup = getMethodHandlesLookup(field.getDeclaringClass());
+
+      this.setter = privateLookup.unreflectSetter(field);
+      this.type = field.getType();
+
+    } catch (IllegalAccessException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Override
-  public Object invoke(Object target, Object[] args) throws IllegalAccessException {
-    try {
-      field.set(target, args[0]);
-    } catch (IllegalAccessException e) {
-      if (!Reflector.canControlMemberAccessible()) {
-        throw e;
-      }
-      field.setAccessible(true);
-      field.set(target, args[0]);
-    }
+  public Object invoke(Object target, Object[] args) throws Throwable {
+    setter.invoke(target, args[0]);
     return null;
   }
 
   @Override
   public Class<?> getType() {
-    return field.getType();
+    return type;
   }
 }
+
