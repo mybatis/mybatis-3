@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -388,7 +388,8 @@ public abstract class BaseExecutor implements Executor {
     }
 
     public boolean canLoad() {
-      return localCache.getObject(key) != null && localCache.getObject(key) != EXECUTION_PLACEHOLDER;
+      Object cached = localCache.getObject(key);
+      return cached != null && cached != EXECUTION_PLACEHOLDER;
     }
 
     public void load() {
