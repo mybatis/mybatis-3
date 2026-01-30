@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.ibatis.annotations.AnnotationConstants;
 import org.apache.ibatis.annotations.Arg;
 import org.apache.ibatis.annotations.CacheNamespace;
 import org.apache.ibatis.annotations.CacheNamespaceRef;
@@ -46,12 +47,15 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Lang;
 import org.apache.ibatis.annotations.MapKey;
+import org.apache.ibatis.annotations.NamedResultMap;
+import org.apache.ibatis.annotations.NamedResultMaps;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Options.FlushCachePolicy;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Property;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultMap;
+import org.apache.ibatis.annotations.ResultOrdered;
 import org.apache.ibatis.annotations.ResultType;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
@@ -123,6 +127,15 @@ public class MapperAnnotationBuilder {
       assistant.setCurrentNamespace(type.getName());
       parseCache();
       parseCacheRef();
+
+      if (type.isAnnotationPresent(NamedResultMap.class)) {
+        parseNamedResultMap(type.getAnnotation(NamedResultMap.class));
+      }
+
+      if (type.isAnnotationPresent(NamedResultMaps.class)) {
+        parseNamedResultMaps();
+      }
+
       for (Method method : type.getMethods()) {
         if (!canHaveStatement(method)) {
           continue;
@@ -222,6 +235,39 @@ public class MapperAnnotationBuilder {
     return resultMapId;
   }
 
+  private void parseNamedResultMaps() {
+    NamedResultMaps namedResultMaps = type.getAnnotation(NamedResultMaps.class);
+    for (NamedResultMap namedResultMap : namedResultMaps.value()) {
+      parseNamedResultMap(namedResultMap);
+    }
+  }
+
+  private void parseNamedResultMap(NamedResultMap namedResultMap) {
+    validateNamedResultMap(namedResultMap);
+
+    String resultMapId = type.getName() + '.' + namedResultMap.id();
+    Class<?> returnType = namedResultMap.javaType();
+    Arg[] args = namedResultMap.constructorArguments();
+    Result[] results = namedResultMap.propertyMappings();
+    TypeDiscriminator typeDiscriminator = namedResultMap.typeDiscriminator();
+    if (AnnotationConstants.NULL_TYPE_DISCRIMINATOR.equals(typeDiscriminator.column())) {
+      typeDiscriminator = null;
+    }
+
+    applyResultMap(resultMapId, returnType, args, results, typeDiscriminator);
+  }
+
+  private void validateNamedResultMap(NamedResultMap namedResultMap) {
+    if (!AnnotationConstants.NULL_TYPE_DISCRIMINATOR.equals(namedResultMap.typeDiscriminator().column())) {
+      return;
+    }
+
+    if (namedResultMap.constructorArguments().length == 0 && namedResultMap.propertyMappings().length == 0) {
+      throw new BuilderException("If there is no type discriminator, then the NamedResultMap annotation "
+          + "requires at least one constructor argument or property mapping");
+    }
+  }
+
   private String generateResultMapName(Method method) {
     Results results = method.getAnnotation(Results.class);
     if (results != null && !results.id().isEmpty()) {
@@ -294,6 +340,8 @@ public class MapperAnnotationBuilder {
       final SqlCommandType sqlCommandType = statementAnnotation.getSqlCommandType();
       final Options options = getAnnotationWrapper(method, false, Options.class).map(x -> (Options) x.getAnnotation())
           .orElse(null);
+      final ResultOrdered resultOrderedAnnotation = getAnnotationWrapper(method, false, ResultOrdered.class)
+          .map(x -> (ResultOrdered) x.getAnnotation()).orElse(null);
       final String mappedStatementId = type.getName() + "." + method.getName();
 
       final KeyGenerator keyGenerator;
@@ -341,6 +389,11 @@ public class MapperAnnotationBuilder {
         }
       }
 
+      boolean isResultOrdered = false;
+      if (resultOrderedAnnotation != null) {
+        isResultOrdered = resultOrderedAnnotation.value();
+      }
+
       String resultMapId = null;
       if (isSelect) {
         ResultMap resultMapAnnotation = method.getAnnotation(ResultMap.class);
@@ -355,7 +408,7 @@ public class MapperAnnotationBuilder {
           // ParameterMapID
           null, parameterTypeClass, resultMapId, getReturnType(method, type), resultSetType, flushCache, useCache,
           // TODO gcode issue #577
-          false, keyGenerator, keyProperty, keyColumn, statementAnnotation.getDatabaseId(), languageDriver,
+          isResultOrdered, keyGenerator, keyProperty, keyColumn, statementAnnotation.getDatabaseId(), languageDriver,
           // ResultSets
           options != null ? nullOrEmpty(options.resultSets()) : null, statementAnnotation.isDirtySelect(),
           paramNameResolver);

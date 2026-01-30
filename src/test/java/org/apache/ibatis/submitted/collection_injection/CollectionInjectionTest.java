@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -63,6 +63,58 @@ class CollectionInjectionTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       final ImmutableHouseMapper mapper = sqlSession.getMapper(ImmutableHouseMapper.class);
       ImmutableHouse house = mapper.getHouse(1);
+      Assertions.assertNotNull(house);
+
+      final StringBuilder builder = new StringBuilder();
+      builder.append("\n").append(house.getName());
+      for (ImmutableRoom room : house.getRooms()) {
+        ImmutableRoomDetail roomDetail = room.getRoomDetail();
+        String detailString = String.format(" (size=%d, height=%d, type=%s)", roomDetail.getRoomSize(),
+            roomDetail.getWallHeight(), roomDetail.getWallType());
+        builder.append("\n").append("\t").append(room.getName()).append(detailString);
+        for (ImmutableFurniture furniture : room.getFurniture()) {
+          builder.append("\n").append("\t\t").append(furniture.getDescription());
+          for (ImmutableDefect defect : furniture.getDefects()) {
+            builder.append("\n").append("\t\t\t").append(defect.getDefect());
+          }
+        }
+      }
+
+      assertResult(builder);
+    }
+  }
+
+  @Test
+  void shouldSelectAllHousesUsingConstructorInjectionWithAnnotatedMapper() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      final ImmutableHouseMapper mapper = sqlSession.getMapper(ImmutableHouseMapper.class);
+      ImmutableHouse house = mapper.getHouseAnnotated(1);
+      Assertions.assertNotNull(house);
+
+      final StringBuilder builder = new StringBuilder();
+      builder.append("\n").append(house.getName());
+      for (ImmutableRoom room : house.getRooms()) {
+        ImmutableRoomDetail roomDetail = room.getRoomDetail();
+        String detailString = String.format(" (size=%d, height=%d, type=%s)", roomDetail.getRoomSize(),
+            roomDetail.getWallHeight(), roomDetail.getWallType());
+        builder.append("\n").append("\t").append(room.getName()).append(detailString);
+        for (ImmutableFurniture furniture : room.getFurniture()) {
+          builder.append("\n").append("\t\t").append(furniture.getDescription());
+          for (ImmutableDefect defect : furniture.getDefects()) {
+            builder.append("\n").append("\t\t\t").append(defect.getDefect());
+          }
+        }
+      }
+
+      assertResult(builder);
+    }
+  }
+
+  @Test
+  void shouldSelectAllHousesUsingConstructorInjectionWithAnnotatedMapperAndSelectProvider() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      final ImmutableHouseMapper mapper = sqlSession.getMapper(ImmutableHouseMapper.class);
+      ImmutableHouse house = mapper.getHouseAnnotatedWithSelectProvider(1);
       Assertions.assertNotNull(house);
 
       final StringBuilder builder = new StringBuilder();

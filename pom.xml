@@ -72,7 +72,7 @@
 
     <clirr.comparisonVersion>3.4.6</clirr.comparisonVersion>
 
-    <byte-buddy.version>1.18.3</byte-buddy.version>
+    <byte-buddy.version>1.18.4</byte-buddy.version>
     <derby.version>10.17.1.0</derby.version>
     <log4j.version>2.25.3</log4j.version>
     <mockito.version>5.21.0</mockito.version>
@@ -129,13 +129,13 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
-      <version>6.0.1</version>
+      <version>6.0.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-params</artifactId>
-      <version>6.0.1</version>
+      <version>6.0.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -196,7 +196,7 @@
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <version>42.7.8</version>
+      <version>42.7.9</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -214,7 +214,7 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>3.27.6</version>
+      <version>3.27.7</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -305,7 +305,7 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.5.23</version>
+      <version>1.5.26</version>
       <scope>test</scope>
     </dependency>
     <dependency>

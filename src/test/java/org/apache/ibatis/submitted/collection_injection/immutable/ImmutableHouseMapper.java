@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,11 +17,71 @@ package org.apache.ibatis.submitted.collection_injection.immutable;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Arg;
+import org.apache.ibatis.annotations.NamedResultMap;
+import org.apache.ibatis.annotations.ResultOrdered;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectProvider;
+
+// @formatter:off
+@NamedResultMap(id = ImmutableHouseMapper.annotatedRoomDetailMapId, javaType = ImmutableRoomDetail.class,
+  constructorArguments = {
+    @Arg(column = "wall_type", javaType = String.class),
+    @Arg(column = "wall_height", javaType = int.class),
+    @Arg(column = "size_m2", javaType = int.class)
+})
+@NamedResultMap(id = ImmutableHouseMapper.annotatedDefectMapId, javaType = ImmutableDefect.class,
+  constructorArguments = {
+    @Arg(column = "id", javaType = int.class),
+    @Arg(column = "defect", javaType = String.class)
+})
+@NamedResultMap(id = ImmutableHouseMapper.annotatedFurnitureMapId, javaType = ImmutableFurniture.class,
+  constructorArguments = {
+    @Arg(column = "id", javaType = int.class),
+    @Arg(column = "description", javaType = String.class),
+    @Arg(resultMap = ImmutableHouseMapper.annotatedDefectMapId, columnPrefix = "defect_")
+})
+@NamedResultMap(id = ImmutableHouseMapper.annotatedRoomMapId, javaType = ImmutableRoom.class,
+  constructorArguments = {
+    @Arg(column = "id", javaType = int.class, id = true),
+    @Arg(column = "name", javaType = String.class),
+    @Arg(resultMap = ImmutableHouseMapper.annotatedRoomDetailMapId),
+    @Arg(resultMap = ImmutableHouseMapper.annotatedFurnitureMapId, columnPrefix = "furniture_")
+})
+// @formatter:on
 public interface ImmutableHouseMapper {
+  String annotatedRoomDetailMapId = "AnnotatedRoomDetailMap";
+  String annotatedDefectMapId = "AnnotatedDefectMap";
+  String annotatedFurnitureMapId = "AnnotatedFurnitureMap";
+  String annotatedRoomMapId = "AnnotatedRoomMap";
 
   List<ImmutableHouse> getAllHouses();
 
   ImmutableHouse getHouse(int it);
 
   HousePortfolio getHousePortfolio(int id);
+
+  @Arg(column = "id", javaType = int.class, id = true)
+  @Arg(column = "name", javaType = String.class)
+  @Arg(resultMap = annotatedRoomMapId, columnPrefix = "room_")
+  // @formatter:off
+  @Select({ "select 1 as portfolioId, h.*, r.id as room_id, r.name as room_name,",
+    "r.size_m2 as room_size_m2, r.wall_type as room_wall_type, r.wall_height as room_wall_height,",
+    "f.id as room_furniture_id, f.description as room_furniture_description,",
+    "d.id as room_furniture_defect_id, d.defect as room_furniture_defect_defect",
+    "from house h left join room r on r.house_id = h.id",
+    "left join furniture f on f.room_id = r.id",
+    "left join defect d on d.furniture_id = f.id",
+    "where h.id = #{id}"
+  })
+  // @formatter:on
+  @ResultOrdered()
+  ImmutableHouse getHouseAnnotated(int it);
+
+  @Arg(column = "id", javaType = int.class, id = true)
+  @Arg(column = "name", javaType = String.class)
+  @Arg(resultMap = annotatedRoomMapId, columnPrefix = "room_")
+  @SelectProvider(type = ImmutableHouseSqlProvider.class, method = "getHouseSql")
+  @ResultOrdered()
+  ImmutableHouse getHouseAnnotatedWithSelectProvider(int it);
 }
