@@ -126,13 +126,13 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
-      <version>6.0.2</version>
+      <version>6.0.3</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-params</artifactId>
-      <version>6.0.2</version>
+      <version>6.0.3</version>
       <scope>test</scope>
     </dependency>
     <dependency>
