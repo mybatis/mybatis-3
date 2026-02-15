@@ -130,26 +130,24 @@ public class OgnlExpressionParserTest {
   }
 
   @Test
-  @Disabled
+  @Disabled("In MyBatis, 'int' is an alias for 'java.lang.Integer', but OGNL does not use class resolver for primitives, it seems.")
   void typeAliasCornerCases_int() {
-    // Both `int` and `integer` are implicit aliases for `java.lang.Integer`
     OgnlExpressionParser parser = new OgnlExpressionParser(new Configuration());
     Map<String, Object> context = new HashMap<>();
     // This works.
     assertEquals(Integer.MAX_VALUE, parser.getValue("@integer@MAX_VALUE", context));
-    // This does not. OGNL does not use the custom class resolver because... `int` is a known primitive?
+    // This does not.
     assertEquals(Integer.MAX_VALUE, parser.getValue("@int@MAX_VALUE", context));
   }
 
   @Test
-  @Disabled
+  @Disabled("In MyBatis, 'boolean' is an alias for 'java.lang.Boolean', but OGNL does not use class resolver for primitives, it seems.")
   void typeAliasCornerCases_boolean() {
-    // `boolean` is a implicit alias for `java.lang.Boolean`
     OgnlExpressionParser parser = new OgnlExpressionParser(new Configuration());
     Map<String, Object> context = new HashMap<>();
     // This works.
     assertEquals(Boolean.TRUE, parser.getValue("@Boolean@MTRUE", context));
-    // This does not. OGNL does not use the custom class resolver because... `boolean` is a known primitive?
+    // This does not.
     assertEquals(Boolean.TRUE, parser.getValue("@boolean@TRUE", context));
   }
 }
