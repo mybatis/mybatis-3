@@ -67,7 +67,7 @@
     <java.version>11</java.version>
     <java.release.version>11</java.release.version>
 
-    <!-- Override impsort comliance to 17 (remove after parent 49 release) -->
+    <!-- Override import compliance to 17 (remove after parent 49 release) -->
     <impsort.compliance>17</impsort.compliance>
 
     <clirr.comparisonVersion>3.4.6</clirr.comparisonVersion>
