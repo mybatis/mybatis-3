@@ -8,7 +8,7 @@ body:
     id: about-the-bug
     attributes:
       label: About the Bug...
-      description: Plesae check a few things before start writing the report.
+      description: Please check a few things before start writing the report.
       options:
         - label: >
             I have checked that this issue has not already been reported.

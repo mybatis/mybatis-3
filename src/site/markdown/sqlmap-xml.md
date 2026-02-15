@@ -1355,7 +1355,7 @@ This more advanced configuration creates a FIFO cache that flushes once every 60
 
 The available eviction policies available are:
 
-- `LRU` – Least Recently Used: Removes objects that haven't been used for the longst period of time.
+- `LRU` – Least Recently Used: Removes objects that haven't been used for the longest period of time.
 - `FIFO` – First In First Out: Removes objects in the order that they entered the cache.
 - `SOFT` – Soft Reference: Removes objects based on the garbage collector state and the rules of Soft References.
 - `WEAK` – Weak Reference: More aggressively removes objects based on the garbage collector state and rules of Weak References.
