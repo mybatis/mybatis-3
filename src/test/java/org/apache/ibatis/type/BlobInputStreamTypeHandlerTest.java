@@ -150,10 +150,14 @@ class BlobInputStreamTypeHandlerTest extends BaseTypeHandlerTest {
   }
 
   interface Mapper {
+    // @formatter:off
     @Select("SELECT ID, CONTENT FROM TEST_BLOB WHERE ID = #{id}")
+    // @formatter:on
     BlobContent findOne(int id);
 
+    // @formatter:off
     @Insert("INSERT INTO TEST_BLOB (ID, CONTENT) VALUES(#{id}, #{content})")
+    // @formatter:on
     void insert(BlobContent blobContent);
   }
 
