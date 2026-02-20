@@ -14,18 +14,18 @@ Please use [the mailing list](https://groups.google.com/group/mybatis-user) inst
 
 ## Improving documentation
 
-- Documentations are placed under [src/site](https://github.com/mybatis/mybatis-3/tree/master/src/site) directory in [the xdoc format](https://maven.apache.org/doxia/references/xdoc-format.html), so it is basically the same as creating a patch to contribute documentation changes. Please see the [Contributing code](CONTRIBUTING.md#contributing-code) section.
+- Documentation is located under the [src/site](https://github.com/mybatis/mybatis-3/tree/master/src/site) directory in [the xdoc format](https://maven.apache.org/doxia/references/xdoc-format.html); thus, contributing documentation changes is essentially similar to submitting a patch for code changes. Please refer to the [Contributing code](CONTRIBUTING.md#contributing-code) section.
 
 ## Contributing code
 
 ### Formatting
 
-Mybatis-core is now being auto formatted.  Given nature of some code logic with mybatis, it is more appropriate to force a formatting structure manually for snippets such as sql statements.  To do so, add following blocks around code.
+MyBatis-core is now automatically formatted. Given the nature of some code logic in MyBatis, it is sometimes necessary to enforce a manual formatting structure for specific code snippets (e.g., SQL statements). To achieve this, enclose the code snippet with the following comments:
 
-- ```// @formatter:off``` to start the block of unformatted code
-- ```// @formatter:on``` to end the block of unformatted code
+// @formatter:off // 开始未格式化代码块
+// @formatter:on // 结束未格式化代码块
 
-If comment sections need same behaviour such as javadocs, note that the entire block must be around entire comment as direct usage does not properly indicate that formatter treats it all as one comment block regardless.
+If a comment block (such as Javadoc) requires the same behavior, ensure that the entire comment is enclosed within these markers; otherwise, the formatter may not correctly treat it as a single block.
 
 ### Copyright and License
 
