@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ public class BlockingCache implements Cache {
     try {
       delegate.putObject(key, value);
     } finally {
-      releaseLock(key);
+      releaseLock(key, false);
     }
   }
 
@@ -69,7 +69,7 @@ public class BlockingCache implements Cache {
     acquireLock(key);
     Object value = delegate.getObject(key);
     if (value != null) {
-      releaseLock(key);
+      releaseLock(key, true);
     }
     return value;
   }
@@ -77,7 +77,7 @@ public class BlockingCache implements Cache {
   @Override
   public Object removeObject(Object key) {
     // despite its name, this method is called only to release locks
-    releaseLock(key);
+    releaseLock(key, false);
     return null;
   }
 
@@ -109,9 +109,12 @@ public class BlockingCache implements Cache {
     }
   }
 
-  private void releaseLock(Object key) {
+  private void releaseLock(Object key, boolean failIfMissing) {
     CountDownLatch latch = locks.remove(key);
     if (latch == null) {
+      if (!failIfMissing) {
+        return;
+      }
       throw new IllegalStateException("Detected an attempt at releasing unacquired lock. This should never happen.");
     }
     latch.countDown();
