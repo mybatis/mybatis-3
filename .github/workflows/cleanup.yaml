@@ -15,7 +15,7 @@ jobs:
   cleanup:
     runs-on: ubuntu-latest
     steps:
-      - uses: Mattraks/delete-workflow-runs@bd2822c9d98065c9766fb1f4bbc32325c47de4fb # v2
+      - uses: Mattraks/delete-workflow-runs@b3018382ca039b53d238908238bd35d1fb14f8ee # v2
         with:
           repository: ${{ github.repository }}
           retain_days: 30
