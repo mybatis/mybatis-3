@@ -56,7 +56,7 @@ public class XMLStatementBuilder extends BaseBuilder {
 
   public XMLStatementBuilder(Configuration configuration, MapperBuilderAssistant builderAssistant, XNode context,
       String databaseId) {
-    this(configuration, builderAssistant, context, null, null);
+    this(configuration, builderAssistant, context, databaseId, null);
   }
 
   public XMLStatementBuilder(Configuration configuration, MapperBuilderAssistant builderAssistant, XNode context,
