@@ -292,6 +292,18 @@ If a parameter object of type User was passed into that statement, the id, usern
 
 That's nice and simple for passing parameters into statements. But there are a lot of other features of parameter maps.
 
+When MyBatis evaluates an OGNL expression, you can also call static methods or reference static fields using the `@class@member` syntax. For example:
+
+```xml
+<if test="@org.apache.commons.lang3.StringUtils@isEmpty(title)">
+  AND title is null
+</if>
+```
+
+```xml
+${@java.lang.Math@PI}
+```
+
 First, like other parts of MyBatis, parameters can specify a more specific data type.
 
 ```
