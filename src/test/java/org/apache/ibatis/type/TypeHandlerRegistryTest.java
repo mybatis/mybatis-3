@@ -34,6 +34,9 @@ import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
+
 import org.apache.ibatis.domain.misc.RichType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -249,5 +252,21 @@ class TypeHandlerRegistryTest {
     } finally {
       executorService.shutdownNow();
     }
+  }
+
+  @Test
+  void shouldUseEnumHandlerForNonAnonymousEnumSubclass() {
+    typeHandlerRegistry.register(SomeInterfaceTypeHandler.class);
+
+    Class<?> enumBaseClass = new ByteBuddy().subclass(Enum.class).implement(SomeInterface.class)
+        .name(TypeHandlerRegistryTest.class.getName() + "$KotlinLikeEnumBase").make()
+        .load(TypeHandlerRegistryTest.class.getClassLoader(), ClassLoadingStrategy.Default.INJECTION).getLoaded();
+    Class<?> kotlinLikeEnumSubclass = new ByteBuddy().subclass(enumBaseClass)
+        .name(enumBaseClass.getName() + "$Subclass").make()
+        .load(TypeHandlerRegistryTest.class.getClassLoader(), ClassLoadingStrategy.Default.INJECTION).getLoaded();
+
+    assertFalse(kotlinLikeEnumSubclass.isAnonymousClass());
+    assertSame(enumBaseClass, kotlinLikeEnumSubclass.getSuperclass());
+    assertSame(SomeInterfaceTypeHandler.class, typeHandlerRegistry.getTypeHandler(kotlinLikeEnumSubclass).getClass());
   }
 }

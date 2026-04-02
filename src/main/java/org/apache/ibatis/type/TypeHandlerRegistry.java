@@ -265,7 +265,7 @@ public final class TypeHandlerRegistry {
     if (type instanceof Class) {
       Class<?> clazz = (Class<?>) type;
       if (Enum.class.isAssignableFrom(clazz)) {
-        if (clazz.isAnonymousClass()) {
+        if (isEnumSubclass(clazz)) {
           return getJdbcHandlerMap(clazz.getSuperclass());
         }
         jdbcHandlerMap = getJdbcHandlerMapForEnumInterfaces(clazz, clazz);
@@ -279,6 +279,11 @@ public final class TypeHandlerRegistry {
     }
     typeHandlerMap.put(type, jdbcHandlerMap == null ? NULL_TYPE_HANDLER_MAP : jdbcHandlerMap);
     return jdbcHandlerMap;
+  }
+
+  private boolean isEnumSubclass(Class<?> clazz) {
+    Class<?> superclass = clazz.getSuperclass();
+    return superclass != null && superclass != Enum.class && Enum.class.isAssignableFrom(superclass);
   }
 
   private Map<JdbcType, TypeHandler<?>> getJdbcHandlerMapForEnumInterfaces(Class<?> clazz, Class<?> enumClazz) {
