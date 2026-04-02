@@ -193,6 +193,39 @@ The one parameter that might be new to you is `ExecutorType`. This enumeration d
 
 <span class="label important">NOTE</span> If you've used a previous version of MyBatis, you'll recall that sessions, transactions and batches were all something separate. This is no longer the case. All three are neatly contained within the scope of a session. You need not deal with transactions or batches separately to get the full benefit of them.
 
+#### SqlSessionManager
+
+`SqlSessionManager` is a thread-safe helper that implements both `SqlSessionFactory` and `SqlSession`. It can be useful when you want a single object that can either:
+
+- create regular `SqlSession` instances via the `SqlSessionFactory` API, or
+- manage a thread-bound `SqlSession` and expose the usual `SqlSession` methods directly
+
+You can create it from the same inputs accepted by `SqlSessionFactoryBuilder`, or from an existing `SqlSessionFactory`.
+
+```java
+String resource = "org/mybatis/builder/MapperConfig.xml";
+Reader reader = Resources.getResourceAsReader(resource);
+SqlSessionManager manager = SqlSessionManager.newInstance(reader);
+```
+
+To work with an explicit managed session, start one for the current thread, use the regular `SqlSession` methods or mappers, and then commit/rollback and close it.
+
+```java
+manager.startManagedSession();
+try {
+  AuthorMapper mapper = manager.getMapper(AuthorMapper.class);
+  mapper.insertAuthor(author);
+  manager.commit();
+} catch (Exception e) {
+  manager.rollback();
+  throw e;
+} finally {
+  manager.close();
+}
+```
+
+If no managed session has been started, invoking a `SqlSession` method on `SqlSessionManager` will open a session automatically, commit it if the call succeeds, and roll it back if the call fails.
+
 #### SqlSession
 
 As mentioned above, the SqlSession instance is the most powerful class in MyBatis. It is where you'll find all of the methods to execute statements, commit or rollback transactions and acquire mapper instances.
