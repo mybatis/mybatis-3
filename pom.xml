@@ -111,7 +111,7 @@
     <dependency>
       <groupId>org.javassist</groupId>
       <artifactId>javassist</artifactId>
-      <version>3.30.2-GA</version>
+      <version>3.31.0-GA</version>
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
