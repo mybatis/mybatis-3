@@ -99,7 +99,7 @@ public class ReuseExecutor extends BaseExecutor {
   private boolean hasStatementFor(String sql) {
     try {
       Statement statement = statementMap.get(sql);
-      return statement != null && !statement.getConnection().isClosed();
+      return statement != null && !statement.isClosed() && !statement.getConnection().isClosed();
     } catch (SQLException e) {
       return false;
     }
