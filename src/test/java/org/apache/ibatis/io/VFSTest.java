@@ -17,6 +17,8 @@ package org.apache.ibatis.io;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -95,6 +97,16 @@ class VFSTest {
       VFS.invoke(Integer.class.getMethod("valueOf", String.class), Resources.class, "InvalidIntegerNumber");
     });
 
+  }
+
+  @Test
+  void listShouldSkipClassFiles() throws Exception {
+    // #3689 - DefaultVFS should not attempt to list .class file contents as resources
+    DefaultVFS vfs = new DefaultVFS();
+    URL classUrl = new URL("file:/tmp/com/example/MyClass.class");
+    List<String> result = vfs.list(classUrl, "com/example/MyClass.class");
+    Assertions.assertNotNull(result);
+    Assertions.assertTrue(result.isEmpty(), ".class files should return empty list");
   }
 
   private static class InstanceGetterProcedure implements Runnable {
