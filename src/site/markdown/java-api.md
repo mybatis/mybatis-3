@@ -152,6 +152,92 @@ SqlSessionFactory factory = builder.build(configuration);
 
 Now you have a SqlSessionFactory that can be used to create SqlSession instances.
 
+#### SqlSessionManager
+
+As of version 3.4.0+, MyBatis provides `SqlSessionManager` which implements both `SqlSessionFactory` and `SqlSession` interfaces. Unlike `DefaultSqlSessionFactory` which creates a new `SqlSession` for each call to `openSession()`, `SqlSessionManager` uses a `ThreadLocal` to manage sessions for each thread. This provides a convenient way to manage `SqlSession` lifecycle in multithreaded environments without requiring an external dependency injection framework.
+
+##### Creating a SqlSessionManager
+
+You can create a `SqlSessionManager` in two ways:
+
+1. Using one of the static `newInstance()` methods that accept a MyBatis XML configuration file:
+
+```java
+SqlSessionManager manager = SqlSessionManager.newInstance(inputStream);
+```
+
+Or with an environment and/or properties:
+
+```java
+SqlSessionManager manager = SqlSessionManager.newInstance(inputStream, environment, properties);
+```
+
+2. Wrapping an existing `SqlSessionFactory` instance:
+
+```java
+SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(inputStream);
+SqlSessionManager manager = SqlSessionManager.newInstance(factory);
+```
+
+##### Managed Sessions
+
+The key feature of `SqlSessionManager` is its ability to manage sessions per thread. Once a managed session is started, all calls to `SqlSession` methods through the `SqlSessionManager` proxy will use the thread-local session.
+
+To start a managed session:
+
+```java
+manager.startManagedSession();
+```
+
+Or with specific options:
+
+```java
+// With auto-commit
+manager.startManagedSession(true);
+
+// With a specific executor type
+manager.startManagedSession(ExecutorType.BATCH);
+
+// With a specific isolation level
+manager.startManagedSession(TransactionIsolationLevel.READ_COMMITTED);
+
+// With a specific connection
+manager.startManagedSession(connection);
+```
+
+To check if a managed session has been started for the current thread:
+
+```java
+boolean isStarted = manager.isManagedSessionStarted();
+```
+
+##### Using the SqlSessionManager
+
+When a managed session is started, calling `commit()`, `rollback()`, `close()`, or any data access method (`selectOne`, `selectList`, `insert`, `update`, `delete`, etc.) will operate on the thread-local session. You must ensure to call `close()` when you are done with the session to clean up the thread-local storage:
+
+```java
+try {
+    manager.startManagedSession();
+    // ... use the session ...
+    manager.commit();
+} finally {
+    manager.close();
+}
+```
+
+If no managed session has been started, calling any `SqlSession` method on the `SqlSessionManager` will automatically open a new session, execute the method, commit (or rollback on failure), and close the session. This provides an automatic session management mode similar to using the `openSession()` approach but with automatic commit and close.
+
+##### Difference from DefaultSqlSessionFactory
+
+| Feature | DefaultSqlSessionFactory | SqlSessionManager |
+|---------|-------------------------|-------------------|
+| Session creation | Creates new session per `openSession()` call | Can manage thread-local sessions via `startManagedSession()` |
+| Thread safety | Requires external management | Built-in thread-local session management |
+| Automatic session lifecycle | No | Yes, when no managed session is started |
+| DI framework integration | Manual | Can replace `SqlSessionFactory` and `SqlSession` in non-DI environments |
+
+`SqlSessionManager` is particularly useful in environments where you don't use a dependency injection framework but still need proper session management per thread. If you are using Spring or Guice, you should continue to use `MyBatis-Spring` or `MyBatis-Guice` for session management.
+
 #### SqlSessionFactory
 
 SqlSessionFactory has six methods that are used to create SqlSession instances. In general, the decisions you'll be making when selecting one of these methods are:
