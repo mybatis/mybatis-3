@@ -77,6 +77,9 @@ public class Jdbc3KeyGenerator implements KeyGenerator {
       return;
     }
     try (ResultSet rs = stmt.getGeneratedKeys()) {
+      if (rs == null) {
+        return;
+      }
       final ResultSetMetaData rsmd = rs.getMetaData();
       final Configuration configuration = ms.getConfiguration();
       if (rsmd.getColumnCount() < keyProperties.length) {
