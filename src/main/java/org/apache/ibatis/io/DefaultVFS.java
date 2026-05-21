@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystemException;
 import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -113,8 +112,8 @@ public class DefaultVFS extends VFS {
                   break;
                 }
               }
-            } catch (InvalidPathException | FileSystemException e) {
-              // #1974 #2598
+            } catch (IllegalArgumentException | FileSystemException e) {
+              // #1974 #2598 #3689
               lines.clear();
             }
             if (!lines.isEmpty()) {
