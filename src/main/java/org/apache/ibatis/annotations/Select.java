@@ -29,23 +29,25 @@ import java.lang.annotation.Target;
  * <ul>
  * <li>Simple:
  *
- * <pre>{@code
- * public interface UserMapper {
- *   @Select("SELECT id, name FROM users WHERE id = #{id}")
+ * <pre>
+ * <code>public interface UserMapper {
+ *   &#064;Select("SELECT id, name FROM users WHERE id = #{id}")
  *   User selectById(int id);
  * }
- * }</pre>
+ * </code>
+ * </pre>
  *
  * </li>
  * <li>Dynamic SQL:
  *
- * <pre>{@code
- * public interface UserMapper {
- *   @Select({ "<script>", "select * from users", "where name = #{name}",
- *       "<if test=\"age != null\"> age = #{age} </if>", "</script>" })
+ * <pre>
+ * <code>public interface UserMapper {
+ *   &#064;Select({ "&lt;script&gt;", "select * from users", "where name = #{name}",
+ *       "&lt;if test=\"age != null\"&gt; age = #{age} &lt;/if&gt;", "&lt;/script&gt;" })
  *   User select(@NotNull String name, @Nullable Integer age);
  * }
- * }</pre>
+ * </code>
+ * </pre>
  *
  * </li>
  * </ul>
