@@ -56,6 +56,11 @@ public class DefaultVFS extends VFS {
 
   @Override
   public List<String> list(URL url, String path) throws IOException {
+    // #3689 - .class files are not directories, skip them to avoid exceptions
+    // in Tomcat 9.0.118+ / 10.1.55+ which validates resource paths more strictly
+    if (url.getPath().endsWith(".class")) {
+      return new ArrayList<>();
+    }
     InputStream is = null;
     try {
       List<String> resources = new ArrayList<>();
