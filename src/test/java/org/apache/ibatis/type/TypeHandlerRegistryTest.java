@@ -256,6 +256,43 @@ class TypeHandlerRegistryTest {
     }
   }
 
+  /**
+   * Enum with an abstract method, causing each constant to produce a subclass.
+   * In Java, those subclasses report isAnonymousClass() == true.
+   * In Kotlin the equivalent reports isAnonymousClass() == false but isEnum() == false,
+   * which is the case this fix targets.
+   */
+  enum EnumWithAbstractMethod {
+    CONSTANT_A {
+      @Override
+      public String value() {
+        return "a";
+      }
+    },
+    CONSTANT_B {
+      @Override
+      public String value() {
+        return "b";
+      }
+    };
+
+    public abstract String value();
+  }
+
+  @Test
+  void shouldResolveTypeHandlerForEnumConstantWithAbstractBody() {
+    // CONSTANT_A.getClass() is a subclass of EnumWithAbstractMethod.
+    // isAnonymousClass() == true in Java; the Kotlin equivalent returns false but isEnum() == false.
+    // Both cases must resolve to the handler registered for the base enum type.
+    Class<?> constantClass = EnumWithAbstractMethod.CONSTANT_A.getClass();
+    assertFalse(constantClass.isEnum(),
+        "Enum constant with anonymous body should not report isEnum() == true");
+
+    TypeHandler<?> handler = typeHandlerRegistry.getTypeHandler(constantClass, JdbcType.VARCHAR);
+    assertSame(EnumTypeHandler.class, handler.getClass(),
+        "TypeHandler for enum constant with abstract body must resolve to the base enum handler");
+  }
+
   public static class TestHandlerBase<E> implements TypeHandler<E> {
     // @formatter:off
     public void setParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType) throws SQLException {}
