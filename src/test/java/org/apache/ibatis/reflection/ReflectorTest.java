@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
@@ -405,5 +406,24 @@ class ReflectorTest {
     ParameterizedType setter = (ParameterizedType) reflector.getGenericSetterType("foo").getKey();
     assertEquals(Foo.class, setter.getRawType());
     assertArrayEquals(new Type[] { String.class }, setter.getActualTypeArguments());
+  }
+
+  @Test
+  void shouldReflectRecord() throws Exception {
+    record User(Long id, String name, List<String> props) {
+      @SuppressWarnings("unused")
+      public int foo() {
+        return 1;
+      }
+    }
+
+    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    Reflector reflector = reflectorFactory.findForClass(User.class);
+    List<String> property = Arrays.asList(reflector.getGetablePropertyNames());
+    assertEquals(3, property.size());
+    assertTrue(property.containsAll(Arrays.asList("id", "name", "props")));
+    assertFalse(property.contains("toString"));
+    assertFalse(property.contains("hashCode"));
+    assertFalse(property.contains("foo"));
   }
 }
