@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -85,6 +85,19 @@ class BlobTest {
       BlobRecord result = results.get(0);
       assertEquals(blobRecord.getId(), result.getId());
       assertTrue(blobsAreEqual(blobRecord.getBlob(), result.getBlob()));
+    }
+  }
+
+  @Test
+  void selectBlobByteArrayDirectly() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      BlobMapper blobMapper = sqlSession.getMapper(BlobMapper.class);
+
+      byte[] myblob = { 1, 2, 3, 4, 5 };
+      blobMapper.insert(new BlobRecord(10, myblob));
+
+      byte[] result = blobMapper.selectBlobById(10);
+      assertTrue(blobsAreEqual(myblob, result));
     }
   }
 
