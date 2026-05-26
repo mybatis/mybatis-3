@@ -95,6 +95,7 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
+import org.apache.ibatis.type.TypeHandlerRegistry;
 import org.apache.ibatis.type.UnknownTypeHandler;
 
 /**
@@ -226,7 +227,7 @@ public class MapperAnnotationBuilder {
   }
 
   private String parseResultMap(Method method) {
-    Class<?> returnType = getReturnType(method, type);
+    Class<?> returnType = getReturnType(method, type, configuration.getTypeHandlerRegistry());
     Arg[] args = method.getAnnotationsByType(Arg.class);
     Result[] results = method.getAnnotationsByType(Result.class);
     TypeDiscriminator typeDiscriminator = method.getAnnotation(TypeDiscriminator.class);
@@ -406,7 +407,8 @@ public class MapperAnnotationBuilder {
 
       assistant.addMappedStatement(mappedStatementId, sqlSource, statementType, sqlCommandType, fetchSize, timeout,
           // ParameterMapID
-          null, parameterTypeClass, resultMapId, getReturnType(method, type), resultSetType, flushCache, useCache,
+          null, parameterTypeClass, resultMapId, getReturnType(method, type, configuration.getTypeHandlerRegistry()),
+          resultSetType, flushCache, useCache,
           // TODO gcode issue #577
           isResultOrdered, keyGenerator, keyProperty, keyColumn, statementAnnotation.getDatabaseId(), languageDriver,
           // ResultSets
@@ -441,12 +443,12 @@ public class MapperAnnotationBuilder {
     return parameterType;
   }
 
-  private static Class<?> getReturnType(Method method, Class<?> type) {
+  private static Class<?> getReturnType(Method method, Class<?> type, TypeHandlerRegistry typeHandlerRegistry) {
     Class<?> returnType = method.getReturnType();
     Type resolvedReturnType = TypeParameterResolver.resolveReturnType(method, type);
     if (resolvedReturnType instanceof Class) {
       returnType = (Class<?>) resolvedReturnType;
-      if (returnType.isArray()) {
+      if (returnType.isArray() && (typeHandlerRegistry == null || !typeHandlerRegistry.hasTypeHandler(returnType))) {
         returnType = returnType.getComponentType();
       }
       // gcode issue #508
@@ -699,7 +701,7 @@ public class MapperAnnotationBuilder {
       Class<?> mapperClass = Resources.classForName(mapperFqn);
       for (Method method : mapperClass.getMethods()) {
         if (method.getName().equals(localStatementId) && canHaveStatement(method)) {
-          return getReturnType(method, mapperClass);
+          return getReturnType(method, mapperClass, null);
         }
       }
     } catch (ClassNotFoundException e) {
