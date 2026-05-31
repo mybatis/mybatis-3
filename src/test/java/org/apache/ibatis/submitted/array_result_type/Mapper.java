@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,4 +29,13 @@ public interface Mapper {
 
   @Select("select id from users")
   int[] getUserIdsPrimitive();
+
+  @Select("""
+      select 2 from (values(0))
+      union all
+      select 3 from (values(0))
+      union all
+      select 5 from (values(0))
+      """)
+  byte[] selectByteArray();
 }

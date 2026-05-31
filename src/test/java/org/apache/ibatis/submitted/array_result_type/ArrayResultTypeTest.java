@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -79,6 +79,17 @@ class ArrayResultTypeTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       int[] ids = mapper.getUserIdsPrimitive();
       assertEquals(1, ids[0]);
+    }
+  }
+
+  @Test
+  void ensureByteArrayBackwardCompatibility() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      byte[] bytes = mapper.selectByteArray();
+      assertEquals(2, bytes[0]);
+      assertEquals(3, bytes[1]);
+      assertEquals(5, bytes[2]);
     }
   }
 }
