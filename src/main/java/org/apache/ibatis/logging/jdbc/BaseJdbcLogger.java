@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ public abstract class BaseJdbcLogger {
   private final Map<Object, Object> columnMap = new HashMap<>();
 
   private final List<Object> columnNames = new ArrayList<>();
-  private final List<Object> columnValues = new ArrayList<>();
+  private final List<String> columnValues = new ArrayList<>();
 
   protected final Log statementLog;
   protected final int queryStack;
@@ -77,7 +77,7 @@ public abstract class BaseJdbcLogger {
   protected void setColumn(Object key, Object value) {
     columnMap.put(key, value);
     columnNames.add(key);
-    columnValues.add(value);
+    columnValues.add(parameterValueString(value));
   }
 
   protected Object getColumn(Object key) {
@@ -85,16 +85,15 @@ public abstract class BaseJdbcLogger {
   }
 
   protected String getParameterValueString() {
-    List<Object> typeList = new ArrayList<>(columnValues.size());
-    for (Object value : columnValues) {
-      if (value == null) {
-        typeList.add("null");
-      } else {
-        typeList.add(objectValueString(value) + "(" + value.getClass().getSimpleName() + ")");
-      }
-    }
-    final String parameters = typeList.toString();
+    final String parameters = columnValues.toString();
     return parameters.substring(1, parameters.length() - 1);
+  }
+
+  private String parameterValueString(Object value) {
+    if (value == null) {
+      return "null";
+    }
+    return objectValueString(value) + "(" + value.getClass().getSimpleName() + ")";
   }
 
   protected String objectValueString(Object value) {
