@@ -45,6 +45,15 @@ class ReflectorTest {
   }
 
   @Test
+  void getSetterTypeThrowsReflectionExceptionForPropertyWithoutSetter() {
+    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    Reflector reflector = reflectorFactory.findForClass(Section.class);
+    // a property with no setter (here: an unknown one) must report a ReflectionException,
+    // consistent with getGetterType(); it previously threw a raw NullPointerException.
+    Assertions.assertThrows(ReflectionException.class, () -> reflector.getSetterType("nonexistentProperty"));
+  }
+
+  @Test
   void getGetterType() {
     ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
     Reflector reflector = reflectorFactory.findForClass(Section.class);
