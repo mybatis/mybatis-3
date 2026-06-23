@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -157,5 +158,112 @@ class PooledDataSourceTest {
 
     assertEquals(0, poolState.getActiveConnectionCount());
     assertEquals(0, poolState.getIdleConnectionCount());
+  }
+
+  @Test
+  void shouldCloseConnectionOnRollbackFailureWhenPopping() throws Exception {
+    java.util.concurrent.atomic.AtomicBoolean closed = new java.util.concurrent.atomic.AtomicBoolean(false);
+    Connection mockConnection = (Connection) java.lang.reflect.Proxy.newProxyInstance(
+        PooledDataSourceTest.class.getClassLoader(), new Class<?>[] { Connection.class }, (proxy, method, args) -> {
+          if ("getAutoCommit".equals(method.getName())) {
+            return false;
+          }
+          if ("rollback".equals(method.getName())) {
+            throw new SQLException("Simulated rollback failure");
+          }
+          if ("close".equals(method.getName())) {
+            closed.set(true);
+            return null;
+          }
+          if ("isClosed".equals(method.getName())) {
+            return closed.get();
+          }
+          if ("hashCode".equals(method.getName())) {
+            return 12345;
+          }
+          if ("equals".equals(method.getName())) {
+            return proxy == args[0];
+          }
+          return null;
+        });
+
+    UnpooledDataSource uds = new UnpooledDataSource() {
+      @Override
+      public Connection getConnection() throws SQLException {
+        return mockConnection;
+      }
+
+      @Override
+      public Connection getConnection(String username, String password) throws SQLException {
+        return mockConnection;
+      }
+    };
+
+    PooledDataSource pds = new PooledDataSource(uds);
+    pds.setPoolMaximumActiveConnections(1);
+
+    try {
+      pds.getConnection();
+    } catch (SQLException e) {
+      // Expected
+    }
+
+    assertTrue(closed.get(), "Connection should have been closed after rollback failure");
+  }
+
+  @Test
+  void shouldCloseConnectionOnRollbackFailureWhenPushing() throws Exception {
+    java.util.concurrent.atomic.AtomicBoolean closed = new java.util.concurrent.atomic.AtomicBoolean(false);
+    java.util.concurrent.atomic.AtomicInteger rollbackCount = new java.util.concurrent.atomic.AtomicInteger(0);
+    Connection mockConnection = (Connection) java.lang.reflect.Proxy.newProxyInstance(
+        PooledDataSourceTest.class.getClassLoader(), new Class<?>[] { Connection.class }, (proxy, method, args) -> {
+          if ("getAutoCommit".equals(method.getName())) {
+            return false;
+          }
+          if ("rollback".equals(method.getName())) {
+            if (rollbackCount.incrementAndGet() > 1) {
+              throw new SQLException("Simulated rollback failure");
+            }
+            return null;
+          }
+          if ("close".equals(method.getName())) {
+            closed.set(true);
+            return null;
+          }
+          if ("isClosed".equals(method.getName())) {
+            return closed.get();
+          }
+          if ("hashCode".equals(method.getName())) {
+            return 12345;
+          }
+          if ("equals".equals(method.getName())) {
+            return proxy == args[0];
+          }
+          return null;
+        });
+
+    UnpooledDataSource uds = new UnpooledDataSource() {
+      @Override
+      public Connection getConnection() throws SQLException {
+        return mockConnection;
+      }
+
+      @Override
+      public Connection getConnection(String username, String password) throws SQLException {
+        return mockConnection;
+      }
+    };
+
+    PooledDataSource pds = new PooledDataSource(uds);
+    pds.setPoolMaximumActiveConnections(1);
+
+    Connection conn = pds.getConnection();
+    try {
+      conn.close();
+    } catch (SQLException e) {
+      // Expected
+    }
+
+    assertTrue(closed.get(), "Connection should have been closed after rollback failure on close/push");
   }
 }
