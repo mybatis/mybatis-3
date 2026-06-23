@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -397,8 +397,18 @@ public class PooledDataSource implements DataSource {
         if (state.idleConnections.size() < poolMaximumIdleConnections
             && conn.getConnectionTypeCode() == expectedConnectionTypeCode) {
           state.accumulatedCheckoutTime += conn.getCheckoutTime();
-          if (!conn.getRealConnection().getAutoCommit()) {
-            conn.getRealConnection().rollback();
+          try {
+            if (!conn.getRealConnection().getAutoCommit()) {
+              conn.getRealConnection().rollback();
+            }
+          } catch (SQLException e) {
+            try {
+              conn.getRealConnection().close();
+            } catch (SQLException e2) {
+              // ignore
+            }
+            conn.invalidate();
+            throw e;
           }
           PooledConnection newConn = new PooledConnection(conn.getRealConnection(), this);
           state.idleConnections.add(newConn);
@@ -411,14 +421,23 @@ public class PooledDataSource implements DataSource {
           condition.signal();
         } else {
           state.accumulatedCheckoutTime += conn.getCheckoutTime();
-          if (!conn.getRealConnection().getAutoCommit()) {
-            conn.getRealConnection().rollback();
+          try {
+            if (!conn.getRealConnection().getAutoCommit()) {
+              conn.getRealConnection().rollback();
+            }
+          } catch (SQLException e) {
+            // ignore rollback exception, we are closing the connection anyway
+          } finally {
+            try {
+              conn.getRealConnection().close();
+            } catch (SQLException e) {
+              // ignore
+            }
+            conn.invalidate();
           }
-          conn.getRealConnection().close();
           if (log.isDebugEnabled()) {
             log.debug("Closed connection " + conn.getRealHashCode() + ".");
           }
-          conn.invalidate();
         }
       } else {
         if (log.isDebugEnabled()) {
@@ -508,8 +527,18 @@ public class PooledDataSource implements DataSource {
         if (conn != null) {
           // ping to server and check the connection is valid or not
           if (conn.isValid()) {
-            if (!conn.getRealConnection().getAutoCommit()) {
-              conn.getRealConnection().rollback();
+            try {
+              if (!conn.getRealConnection().getAutoCommit()) {
+                conn.getRealConnection().rollback();
+              }
+            } catch (SQLException e) {
+              try {
+                conn.getRealConnection().close();
+              } catch (SQLException e2) {
+                // ignore
+              }
+              conn.invalidate();
+              throw e;
             }
             conn.setConnectionTypeCode(assembleConnectionTypeCode(dataSource.getUrl(), username, password));
             conn.setCheckoutTimestamp(System.currentTimeMillis());
