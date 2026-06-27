@@ -400,7 +400,7 @@ public class Reflector {
    * @return The Class of the property setter
    */
   public Class<?> getSetterType(String propertyName) {
-    Class<?> clazz = setTypes.get(propertyName).getValue();
+    Class<?> clazz = setTypes.getOrDefault(propertyName, nullEntry).getValue();
     if (clazz == null) {
       throw new ReflectionException("There is no setter for property named '" + propertyName + "' in '" + clazz + "'");
     }
