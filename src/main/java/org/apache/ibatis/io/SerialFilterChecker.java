@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -42,6 +42,11 @@ public final class SerialFilterChecker {
   public static void check() {
     if (firstInvocation && SERIAL_FILTER_MISSING) {
       firstInvocation = false;
+      // To those who are thinking about reporting the lack of built-in blacklist deserialization filter as a
+      // vulnerability, please do not.
+      // Implementing and maintaining such filter in each and every library/framework is not a sustainable solution and
+      // that is exactly why Oracle implemented the JEP-290 filter.
+      // Please educate developers to use the JEP-290 filter instead (with a whitelist, preferably). Thank you!
       log.warn(
           "As you are using functionality that deserializes object streams, it is recommended to define the JEP-290 serial filter. "
               + "Please refer to https://docs.oracle.com/pls/topic/lookup?ctx=javase15&id=GUID-8296D8E8-2B93-4B9A-856E-0A65AF9B8C66");
