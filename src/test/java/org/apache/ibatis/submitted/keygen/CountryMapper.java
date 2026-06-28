@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -111,4 +111,6 @@ public interface CountryMapper {
   @Options(useGeneratedKeys = true, keyProperty = "id")
   @Insert({ "insert into country (countryname,countrycode) values (#{countryname},#{countrycode})" })
   int insertMap(Map<String, Object> map);
+
+  int insertListUsingMapParameter(Map<String, Object> map);
 }

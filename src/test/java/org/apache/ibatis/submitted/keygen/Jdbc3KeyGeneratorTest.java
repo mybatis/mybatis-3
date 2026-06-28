@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -556,6 +556,28 @@ class Jdbc3KeyGeneratorTest {
         when(sqlSession::flushStatements);
         then(caughtException()).isInstanceOf(PersistenceException.class)
             .hasMessageContaining("Too many keys are generated. There are only 2 target objects.");
+      } finally {
+        sqlSession.rollback();
+      }
+    }
+  }
+
+  @Test
+  void shouldFailWithClearMessageWhenMapParameterHoldsTargetList() {
+    // gh-3536 : passing a Map that holds the target list under a key (e.g. "list") is no longer
+    // supported (gh-1249). The user should get an actionable message instead of the misleading
+    // "wrong 'keyProperty' or driver bug" one.
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      try {
+        CountryMapper mapper = sqlSession.getMapper(CountryMapper.class);
+        Map<String, Object> map = new HashMap<>();
+        List<Country> countries = new ArrayList<>();
+        countries.add(new Country("China", "CN"));
+        countries.add(new Country("Canada", "CA"));
+        map.put("list", countries);
+        when(() -> mapper.insertListUsingMapParameter(map));
+        then(caughtException()).isInstanceOf(PersistenceException.class).hasMessageContaining("Map")
+            .hasMessageContaining("@Param");
       } finally {
         sqlSession.rollback();
       }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2022 the original author or authors.
+       Copyright 2009-2026 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -133,6 +133,13 @@
     insert into country (countryname,countrycode) values (#{country.countryname},#{country.countrycode});
   </insert>
   <insert id="insertWeirdCountries" useGeneratedKeys="true" keyProperty="id">
+    insert into country (countryname,countrycode)
+    values
+    <foreach collection="list" separator="," item="country">
+      (#{country.countryname},#{country.countrycode})
+    </foreach>
+  </insert>
+  <insert id="insertListUsingMapParameter" useGeneratedKeys="true" keyProperty="id">
     insert into country (countryname,countrycode)
     values
     <foreach collection="list" separator="," item="country">
