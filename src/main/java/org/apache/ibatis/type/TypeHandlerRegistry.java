@@ -304,7 +304,12 @@ public final class TypeHandlerRegistry {
       if (type instanceof Class) {
         Class<?> clazz = (Class<?>) type;
         if (Enum.class.isAssignableFrom(clazz)) {
-          Class<?> enumClass = clazz.isAnonymousClass() ? clazz.getSuperclass() : clazz;
+          // In Java, enum constants with a body are anonymous classes (isAnonymousClass() == true).
+          // In Kotlin, enum constants with an overridden method are NOT anonymous (isAnonymousClass() == false),
+          // but their superclass is still the enum type. Check both cases to correctly resolve the enum class.
+          Class<?> enumClass = (clazz.isAnonymousClass()
+              || (clazz.getSuperclass() != null && clazz.getSuperclass().isEnum()))
+              ? clazz.getSuperclass() : clazz;
           TypeHandler<?> enumHandler = getInstance(enumClass, defaultEnumTypeHandler);
           register(new Type[] { enumClass }, new JdbcType[] { jdbcType }, enumHandler);
           return enumHandler;
@@ -331,6 +336,10 @@ public final class TypeHandlerRegistry {
       Class<?> clazz = (Class<?>) type;
       if (!Enum.class.isAssignableFrom(clazz)) {
         jdbcHandlerMap = getJdbcHandlerMapForSuperclass(clazz);
+      } else if (clazz.getSuperclass() != null && clazz.getSuperclass().isEnum()) {
+        // Handle Kotlin-style enum constants whose body creates a subclass but isAnonymousClass() == false.
+        // Fall through to parent enum class to find the registered handler.
+        jdbcHandlerMap = typeHandlerMap.get(clazz.getSuperclass());
       }
     }
     typeHandlerMap.put(type, jdbcHandlerMap == null ? NULL_TYPE_HANDLER_MAP : jdbcHandlerMap);
