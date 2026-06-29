@@ -37,9 +37,9 @@
           <ul>
             <li><a href="#properties">properties</a></li>
             <li><a href="#settings">settings</a></li>
-            <li><a href="#typeAliases">typeAliases</a></li>
-            <li><a href="#typeHandlers">typeHandlers</a></li>
-            <li><a href="#objectFactory">objectFactory</a></li>
+            <li><a href="#typealiases">typeAliases</a></li>
+            <li><a href="#typehandlers">typeHandlers</a></li>
+            <li><a href="#objectfactory">objectFactory</a></li>
             <li><a href="#plugins">plugins</a></li>
             <li><a href="#environments">environments</a>
               <ul>
@@ -52,7 +52,7 @@
                 </li>
               </ul>
             </li>
-            <li><a href="#databaseIdProvider">databaseIdProvider</a></li>
+            <li><a href="#databaseidprovider">databaseIdProvider</a></li>
             <li><a href="#mappers">mappers</a></li>
           </ul>
         </li>
