@@ -78,4 +78,10 @@ class PropertyTokenizerTest {
     assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(tokenizer::remove)
         .withMessage("Remove is not supported, as it has no meaning in the context of properties.");
   }
+
+  @Test
+  void shouldThrowExceptionForUnclosedBracket() {
+    assertThatExceptionOfType(IllegalArgumentException.class)
+        .isThrownBy(() -> new PropertyTokenizer("foo[bar"));
+  }
 }
