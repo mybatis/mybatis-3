@@ -19,7 +19,6 @@ package org.apache.ibatis.scripting.xmltags;
  * @author Clinton Begin
  */
 public class IfSqlNode implements SqlNode {
-  private final ExpressionEvaluator evaluator = ExpressionEvaluator.INSTANCE;
   private final String test;
   private final SqlNode contents;
 
@@ -30,7 +29,7 @@ public class IfSqlNode implements SqlNode {
 
   @Override
   public boolean apply(DynamicContext context) {
-    if (evaluator.evaluateBoolean(test, context.getBindings())) {
+    if (context.evaluateBoolean(test)) {
       contents.apply(context);
       return true;
     }

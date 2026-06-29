@@ -13,26 +13,9 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
+
 package org.apache.ibatis.scripting.xmltags;
 
-/**
- * @author Frank D. Martinez [mnesarco]
- */
-public class VarDeclSqlNode implements SqlNode {
-
-  private final String name;
-  private final String expression;
-
-  public VarDeclSqlNode(String name, String exp) {
-    this.name = name;
-    this.expression = exp;
-  }
-
-  @Override
-  public boolean apply(DynamicContext context) {
-    final Object value = context.getValue(expression);
-    context.bind(name, value);
-    return true;
-  }
-
+public interface ExpressionParser {
+  Object getValue(String expression, Object root);
 }
