@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.ibatis.reflection.ExceptionUtil;
 
@@ -29,6 +30,8 @@ import org.apache.ibatis.reflection.ExceptionUtil;
  * @author Clinton Begin
  */
 public class Plugin implements InvocationHandler {
+
+  private static final Map<Class<? extends Interceptor>, Map<Class<?>, Set<Method>>> signatureMapCache = new ConcurrentHashMap<>();
 
   private final Object target;
   private final Interceptor interceptor;
@@ -64,6 +67,10 @@ public class Plugin implements InvocationHandler {
   }
 
   private static Map<Class<?>, Set<Method>> getSignatureMap(Interceptor interceptor) {
+    return signatureMapCache.computeIfAbsent(interceptor.getClass(), (clazz) -> createSignatureMap(interceptor));
+  }
+
+  private static Map<Class<?>, Set<Method>> createSignatureMap(Interceptor interceptor) {
     Intercepts interceptsAnnotation = interceptor.getClass().getAnnotation(Intercepts.class);
     // issue #251
     if (interceptsAnnotation == null) {
