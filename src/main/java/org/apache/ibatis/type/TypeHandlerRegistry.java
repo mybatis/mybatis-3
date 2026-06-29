@@ -304,7 +304,7 @@ public final class TypeHandlerRegistry {
       if (type instanceof Class) {
         Class<?> clazz = (Class<?>) type;
         if (Enum.class.isAssignableFrom(clazz)) {
-          Class<?> enumClass = clazz.isAnonymousClass() ? clazz.getSuperclass() : clazz;
+          Class<?> enumClass = (clazz.isAnonymousClass() || !clazz.isEnum()) ? clazz.getSuperclass() : clazz;
           TypeHandler<?> enumHandler = getInstance(enumClass, defaultEnumTypeHandler);
           register(new Type[] { enumClass }, new JdbcType[] { jdbcType }, enumHandler);
           return enumHandler;
