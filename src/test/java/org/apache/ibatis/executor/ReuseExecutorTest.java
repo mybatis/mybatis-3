@@ -16,22 +16,19 @@
 package org.apache.ibatis.executor;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.sql.Connection;
-import java.sql.Statement;
-import java.util.Map;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
-import org.apache.ibatis.executor.statement.StatementHandler;
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.mapping.BoundSql;
+import org.apache.ibatis.builder.StaticSqlSource;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.transaction.Transaction;
 import org.junit.jupiter.api.Test;
 
@@ -42,68 +39,35 @@ class ReuseExecutorTest extends BaseExecutorTest {
   }
 
   @Test
-  void shouldNotReuseClosedStatement() throws Exception {
-    ReuseExecutor executor = new ReuseExecutor(config, mock(Transaction.class));
-    Connection connection = mock(Connection.class);
-    Statement statement = mock(Statement.class);
-    when(statement.isClosed()).thenReturn(true);
-    when(statement.getConnection()).thenReturn(connection);
-    when(connection.isClosed()).thenReturn(false);
-
-    Field statementMapField = ReuseExecutor.class.getDeclaredField("statementMap");
-    statementMapField.setAccessible(true);
-    @SuppressWarnings("unchecked")
-    Map<String, Statement> statementMap = (Map<String, Statement>) statementMapField.get(executor);
-    statementMap.put("SELECT 1", statement);
-
-    Method hasStatementFor = ReuseExecutor.class.getDeclaredMethod("hasStatementFor", String.class);
-    hasStatementFor.setAccessible(true);
-
-    boolean result = (boolean) hasStatementFor.invoke(executor, "SELECT 1");
-
-    assertFalse(result);
-    verify(statement).isClosed();
-    verify(statement, never()).getConnection();
-  }
-
-  @Test
-  void shouldPrepareNewStatementWhenCachedStatementIsClosed() throws Exception {
+  void shouldPrepareNewStatementWhenCachedStatementIsClosed() throws SQLException {
     Transaction transaction = mock(Transaction.class);
-    ReuseExecutor executor = new ReuseExecutor(config, transaction);
     Connection connection = mock(Connection.class);
-    Log log = mock(Log.class);
-    StatementHandler handler = mock(StatementHandler.class);
-    BoundSql boundSql = mock(BoundSql.class);
-    Statement closedStatement = mock(Statement.class);
-    Statement newStatement = mock(Statement.class);
+    PreparedStatement closedStatement = mock(PreparedStatement.class);
+    PreparedStatement newStatement = mock(PreparedStatement.class);
+    String sql = "UPDATE author SET username = 'someone' WHERE id = 101";
+    MappedStatement ms = new MappedStatement.Builder(config, "updateAuthorForReuseExecutor",
+        new StaticSqlSource(config, sql), SqlCommandType.UPDATE).build();
+    ReuseExecutor executor = new ReuseExecutor(config, transaction);
 
-    when(log.isDebugEnabled()).thenReturn(false);
     when(transaction.getConnection()).thenReturn(connection);
-    when(transaction.getTimeout()).thenReturn(0);
-    when(handler.getBoundSql()).thenReturn(boundSql);
-    when(boundSql.getSql()).thenReturn("SELECT 1");
+    when(transaction.getTimeout()).thenReturn(null);
+    when(connection.prepareStatement(sql)).thenReturn(closedStatement, newStatement);
+    when(connection.isClosed()).thenReturn(false);
     when(closedStatement.isClosed()).thenReturn(true);
     when(closedStatement.getConnection()).thenReturn(connection);
-    when(connection.isClosed()).thenReturn(false);
-    when(handler.prepare(connection, 0)).thenReturn(newStatement);
+    when(closedStatement.execute()).thenReturn(false).thenThrow(new SQLException("Statement is closed."));
+    when(closedStatement.getUpdateCount()).thenReturn(1);
+    when(newStatement.execute()).thenReturn(false);
+    when(newStatement.getUpdateCount()).thenReturn(1);
 
-    Field statementMapField = ReuseExecutor.class.getDeclaredField("statementMap");
-    statementMapField.setAccessible(true);
-    @SuppressWarnings("unchecked")
-    Map<String, Statement> statementMap = (Map<String, Statement>) statementMapField.get(executor);
-    statementMap.put("SELECT 1", closedStatement);
+    assertDoesNotThrow(() -> {
+      executor.update(ms, null);
+      executor.update(ms, null);
+    });
 
-    Method prepareStatement = ReuseExecutor.class.getDeclaredMethod("prepareStatement", StatementHandler.class,
-        Log.class);
-    prepareStatement.setAccessible(true);
-
-    Statement result = (Statement) prepareStatement.invoke(executor, handler, log);
-
-    assertSame(newStatement, result);
+    verify(connection, times(2)).prepareStatement(sql);
     verify(closedStatement).isClosed();
     verify(closedStatement, never()).getConnection();
-    verify(handler).prepare(connection, 0);
-    verify(handler).parameterize(newStatement);
   }
 
   @Override
