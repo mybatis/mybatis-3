@@ -38,7 +38,7 @@ public class PropertyTokenizer implements Iterator<PropertyTokenizer> {
     indexedName = name;
     delim = name.indexOf('[');
     if (delim > -1) {
-      if (!name.endsWith("]")) {
+      if (children == null && !name.endsWith("]")) {
         throw new IllegalArgumentException(
             "Invalid index syntax in property: '" + name + "'. Missing closing bracket.");
       }
