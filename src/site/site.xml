@@ -46,6 +46,7 @@
       <item name="Java API" href="java-api.html" collapse="true">
         <item name="Directory Structure" href="java-api.html#directory-structure" />
         <item name="SqlSessions" href="java-api.html#sqlsessions" />
+        <item name="SqlSessionManager" href="java-api.html#sqlsessionmanager" />
       </item>
       <item name="SQL Builder Class" href="statement-builders.html" collapse="true"/>
       <item name="Logging" href="logging.html"/>
