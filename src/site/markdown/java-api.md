@@ -213,7 +213,7 @@ boolean isStarted = manager.isManagedSessionStarted();
 
 ##### Using the SqlSessionManager
 
-When a managed session is started, calling `commit()`, `rollback()`, `close()`, or any data access method (`selectOne`, `selectList`, `insert`, `update`, `delete`, etc.) will operate on the thread-local session. You must ensure to call `close()` when you are done with the session to clean up the thread-local storage:
+When a managed session is started, calling `commit()`, `rollback()`, `close()`, or any data access method (`selectOne`, `selectList`, `insert`, `update`, `delete`, etc.) will operate on the thread-local session. You must ensure to call `close()` when you are done with the session to clean up the thread-local storage,  Because it uses a ThreadLocal, failing to call `close()` in a pooled web server environment (like Tomcat or Jetty) will leak the SQL session onto the thread, causing unpredictable transaction behavior or connection leaks when that thread is reused for a different HTTP request.:
 
 ```java
 try {
@@ -225,7 +225,7 @@ try {
 }
 ```
 
-If no managed session has been started, calling any `SqlSession` method on the `SqlSessionManager` will automatically open a new session, execute the method, commit (or rollback on failure), and close the session. This provides an automatic session management mode similar to using the `openSession()` approach but with automatic commit and close.
+If no managed session has been started, calling any SqlSession method on the SqlSessionManager will automatically open a short-lived session, execute that single method, and immediately close it. Note that it will not explicitly commit write operations, making this mode ideal primarily for single read queries.
 
 ##### Difference from DefaultSqlSessionFactory
 
@@ -233,8 +233,8 @@ If no managed session has been started, calling any `SqlSession` method on the `
 |---------|-------------------------|-------------------|
 | Session creation | Creates new session per `openSession()` call | Can manage thread-local sessions via `startManagedSession()` |
 | Thread safety | Requires external management | Built-in thread-local session management |
-| Automatic session lifecycle | No | Yes, when no managed session is started |
-| DI framework integration | Manual | Can replace `SqlSessionFactory` and `SqlSession` in non-DI environments |
+| Automatic session lifecycle | No (Requires manual close) | Yes, when no managed session is started |
+| DI framework integration | Requires DI-specific integrations (e.g., `SqlSessionTemplate` in Spring) | Can replace `SqlSessionFactory` and `SqlSession` in non-DI environments |
 
 `SqlSessionManager` is particularly useful in environments where you don't use a dependency injection framework but still need proper session management per thread. If you are using Spring or Guice, you should continue to use `MyBatis-Spring` or `MyBatis-Guice` for session management.
 
