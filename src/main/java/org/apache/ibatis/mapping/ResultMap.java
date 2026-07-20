@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package org.apache.ibatis.mapping;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -53,12 +52,12 @@ public class ResultMap {
     emptyResultMap.configuration = configuration;
     emptyResultMap.id = statementId;
     emptyResultMap.type = resultType;
-    emptyResultMap.resultMappings = Collections.emptyList();
-    emptyResultMap.idResultMappings = Collections.emptyList();
-    emptyResultMap.constructorResultMappings = Collections.emptyList();
-    emptyResultMap.propertyResultMappings = Collections.emptyList();
-    emptyResultMap.mappedColumns = Collections.emptySet();
-    emptyResultMap.mappedProperties = Collections.emptySet();
+    emptyResultMap.resultMappings = List.of();
+    emptyResultMap.idResultMappings = List.of();
+    emptyResultMap.constructorResultMappings = List.of();
+    emptyResultMap.propertyResultMappings = List.of();
+    emptyResultMap.mappedColumns = Set.of();
+    emptyResultMap.mappedProperties = Set.of();
     return emptyResultMap;
   }
 
@@ -141,12 +140,12 @@ public class ResultMap {
       }
 
       // lock down collections
-      resultMap.resultMappings = Collections.unmodifiableList(resultMap.resultMappings);
-      resultMap.idResultMappings = Collections.unmodifiableList(resultMap.idResultMappings);
-      resultMap.constructorResultMappings = Collections.unmodifiableList(resultMap.constructorResultMappings);
-      resultMap.propertyResultMappings = Collections.unmodifiableList(resultMap.propertyResultMappings);
-      resultMap.mappedColumns = Collections.unmodifiableSet(resultMap.mappedColumns);
-      resultMap.mappedProperties = Collections.unmodifiableSet(resultMap.mappedProperties);
+      resultMap.resultMappings = List.copyOf(resultMap.resultMappings);
+      resultMap.idResultMappings = List.copyOf(resultMap.idResultMappings);
+      resultMap.constructorResultMappings = List.copyOf(resultMap.constructorResultMappings);
+      resultMap.propertyResultMappings = List.copyOf(resultMap.propertyResultMappings);
+      resultMap.mappedColumns = Set.copyOf(resultMap.mappedColumns);
+      resultMap.mappedProperties = Set.copyOf(resultMap.mappedProperties);
 
       return resultMap;
     }

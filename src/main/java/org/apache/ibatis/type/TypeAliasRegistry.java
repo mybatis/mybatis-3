@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import java.math.BigInteger;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -184,7 +183,7 @@ public class TypeAliasRegistry {
    * @since 3.2.2
    */
   public Map<String, Class<?>> getTypeAliases() {
-    return Collections.unmodifiableMap(typeAliases);
+    return Map.copyOf(typeAliases);
   }
 
 }

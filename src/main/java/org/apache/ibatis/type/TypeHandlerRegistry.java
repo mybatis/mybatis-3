@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -52,6 +52,7 @@ import org.apache.ibatis.io.ResolverUtil;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.reflection.TypeParameterResolver;
 import org.apache.ibatis.session.Configuration;
+import org.gaul.modernizer_maven_annotations.SuppressModernizer;
 
 /**
  * @author Clinton Begin
@@ -64,7 +65,13 @@ public final class TypeHandlerRegistry {
   private final ConcurrentHashMap<Type, Constructor<?>> smartHandlers = new ConcurrentHashMap<>();
   private final Map<Class<?>, TypeHandler<?>> allTypeHandlersMap = new HashMap<>();
 
-  private static final Map<JdbcType, TypeHandler<?>> NULL_TYPE_HANDLER_MAP = Collections.emptyMap();
+  private static final Map<JdbcType, TypeHandler<?>> NULL_TYPE_HANDLER_MAP = createNullTypeHandlerMap();
+
+  // Map.of() does not permit null keys; this map is intentionally queried with null JdbcType
+  @SuppressModernizer
+  private static Map<JdbcType, TypeHandler<?>> createNullTypeHandlerMap() {
+    return Collections.emptyMap();
+  }
 
   @SuppressWarnings("rawtypes")
   private Class<? extends TypeHandler> defaultEnumTypeHandler = EnumTypeHandler.class;

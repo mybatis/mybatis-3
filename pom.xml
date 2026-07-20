@@ -101,6 +101,14 @@
   </properties>
 
   <dependencies>
+    <!-- TODO Remove this after parent 53 release -->
+    <dependency>
+      <groupId>org.gaul</groupId>
+      <artifactId>modernizer-maven-annotations</artifactId>
+      <version>${modernizer.plugin}</version>
+      <scope>provided</scope>
+    </dependency>
+
     <dependency>
       <groupId>ognl</groupId>
       <artifactId>ognl</artifactId>

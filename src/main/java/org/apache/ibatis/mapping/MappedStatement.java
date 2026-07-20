@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package org.apache.ibatis.mapping;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.ibatis.cache.Cache;
@@ -209,7 +208,7 @@ public final class MappedStatement {
       assert mappedStatement.id != null;
       assert mappedStatement.sqlSource != null;
       assert mappedStatement.lang != null;
-      mappedStatement.resultMaps = Collections.unmodifiableList(mappedStatement.resultMaps);
+      mappedStatement.resultMaps = List.copyOf(mappedStatement.resultMaps);
       return mappedStatement;
     }
   }
