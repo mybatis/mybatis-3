@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.io.Reader;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -682,13 +681,13 @@ class SqlProviderTest {
     {
       Method mapperMethod = mapperType.getMethod("update", int.class, String.class);
       String sql = new ProviderSqlSource(configuration, mapperMethod.getAnnotation(UpdateProvider.class), mapperType,
-          mapperMethod).getBoundSql(Collections.emptyMap()).getSql();
+          mapperMethod).getBoundSql(Map.of()).getSql();
       assertEquals("update foo set name = ? where id = ?", sql);
     }
     {
       Method mapperMethod = mapperType.getMethod("delete", int.class);
       String sql = new ProviderSqlSource(configuration, mapperMethod.getAnnotation(DeleteProvider.class), mapperType,
-          mapperMethod).getBoundSql(Collections.emptyMap()).getSql();
+          mapperMethod).getBoundSql(Map.of()).getSql();
       assertEquals("delete from foo where id = ?", sql);
     }
   }
