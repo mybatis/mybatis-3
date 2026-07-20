@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -79,10 +78,10 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
         throw e;
       }
     } catch (Exception e) {
-      String argTypes = Optional.ofNullable(constructorArgTypes).orElseGet(Collections::emptyList).stream()
-          .map(Class::getSimpleName).collect(Collectors.joining(","));
-      String argValues = Optional.ofNullable(constructorArgs).orElseGet(Collections::emptyList).stream()
-          .map(String::valueOf).collect(Collectors.joining(","));
+      String argTypes = Optional.ofNullable(constructorArgTypes).orElseGet(List::of).stream().map(Class::getSimpleName)
+          .collect(Collectors.joining(","));
+      String argValues = Optional.ofNullable(constructorArgs).orElseGet(List::of).stream().map(String::valueOf)
+          .collect(Collectors.joining(","));
       throw new ReflectionException("Error instantiating " + type + " with invalid types (" + argTypes + ") or values ("
           + argValues + "). Cause: " + e, e);
     }

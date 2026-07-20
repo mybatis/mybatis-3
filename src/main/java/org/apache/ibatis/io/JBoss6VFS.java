@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -174,7 +173,7 @@ public class JBoss6VFS extends VFS {
     VirtualFile directory;
     directory = VFS.getChild(url);
     if (directory == null) {
-      return Collections.emptyList();
+      return List.of();
     }
 
     if (!path.endsWith("/")) {

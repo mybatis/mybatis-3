@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.ibatis.cursor.Cursor;
@@ -116,7 +115,7 @@ public class BatchExecutor extends BaseExecutor {
     try {
       List<BatchResult> results = new ArrayList<>();
       if (isRollback) {
-        return Collections.emptyList();
+        return List.of();
       }
       for (int i = 0, n = statementList.size(); i < n; i++) {
         Statement stmt = statementList.get(i);

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package org.apache.ibatis.mapping;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -152,8 +151,8 @@ public class ResultMapping {
 
     public ResultMapping build() {
       // lock down collections
-      resultMapping.flags = Collections.unmodifiableList(resultMapping.flags);
-      resultMapping.composites = Collections.unmodifiableList(resultMapping.composites);
+      resultMapping.flags = List.copyOf(resultMapping.flags);
+      resultMapping.composites = List.copyOf(resultMapping.composites);
       validate();
       return resultMapping;
     }

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.mapping;
 
-import java.util.Collections;
 import java.util.Map;
 
 import org.apache.ibatis.session.Configuration;
@@ -44,7 +43,7 @@ public class Discriminator {
       assert discriminator.discriminatorMap != null;
       assert !discriminator.discriminatorMap.isEmpty();
       // lock down map
-      discriminator.discriminatorMap = Collections.unmodifiableMap(discriminator.discriminatorMap);
+      discriminator.discriminatorMap = Map.copyOf(discriminator.discriminatorMap);
       return discriminator;
     }
   }
