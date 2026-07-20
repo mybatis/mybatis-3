@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package org.apache.ibatis.mapping;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +29,7 @@ class BoundSqlTest {
 
   @Test
   void hasAdditionalParameter() {
-    List<ParameterMapping> params = Collections.emptyList();
+    List<ParameterMapping> params = List.of();
     BoundSql boundSql = new BoundSql(new Configuration(), "some sql", params, new Object());
 
     Map<String, String> map = new HashMap<>();

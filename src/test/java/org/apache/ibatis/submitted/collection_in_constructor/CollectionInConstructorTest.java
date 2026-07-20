@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import static org.assertj.core.api.Assertions.tuple;
 
 import java.io.Reader;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.ibatis.BaseDataTest;
@@ -195,7 +194,7 @@ class CollectionInConstructorTest {
                   new Store(1, "Store 1",
                       Arrays.asList(new Aisle(101, "Aisle 101"), new Aisle(102, "Aisle 102"),
                           new Aisle(103, "Aisle 103"))),
-                  new Store(2, "Store 2", Collections.emptyList()),
+                  new Store(2, "Store 2", List.of()),
                   new Store(3, "Store 3", Arrays.asList(new Aisle(104, "Aisle 104"), new Aisle(105, "Aisle 105")))),
               container.getStores());
     }
