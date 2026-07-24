@@ -75,7 +75,10 @@ public class XMLStatementBuilder extends BaseBuilder {
     if (!databaseIdMatchesCurrent(id, databaseId, this.requiredDatabaseId)) {
       return;
     }
-
+    if (this.configuration.hasStatement(builderAssistant.applyCurrentNamespace(id, false), false)
+        && requiredDatabaseId != null) {
+      this.configuration.removeMappedStatement(builderAssistant.applyCurrentNamespace(id, false));
+    }
     String nodeName = context.getNode().getNodeName();
     SqlCommandType sqlCommandType = SqlCommandType.valueOf(nodeName.toUpperCase(Locale.ENGLISH));
     boolean isSelect = sqlCommandType == SqlCommandType.SELECT;
