@@ -34,28 +34,16 @@ As of 12/28/2024, using combined system + jdk will result in given number of tes
 
 without adjusting settings (ie use as is, platform does not matter)
 
-- any OS + jdk 17 = 1899 tests
 - any OS + jdk 21 = 1899 tests
-- any OS + jdk 23 = 1899 tests
-- any OS + jdk 24 = 1899 tests
 - any OS + jdk 25 = 1899 tests
 
 our adjustments for GH actions where platform does matter
 
-- windows + jdk 17 = 1899 tests
 - windows + jdk 21 = 1899 tests
-- windows + jdk 23 = 1899 tests
-- windows + jdk 24 = 1899 tests
 - windows + jdk 25 = 1899 tests
 
-- linux + jdk 17 = 1934 tests
 - linux + jdk 21 = 1934 tests
-- linux + jdk 23 = 1934 tests
-- linux + jdk 24 = 1934 tests
 - linux + jdk 25 = 1934 tests
 
-- mac + jdk 17 = 1899 tests
 - mac + jdk 21 = 1899 tests
-- mac + jdk 23 = 1899 tests
-- mac + jdk 24 = 1899 tests
 - mac + jdk 25 = 1899 tests
