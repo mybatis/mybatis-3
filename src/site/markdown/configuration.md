@@ -10,15 +10,15 @@ The MyBatis configuration contains settings and properties that have a dramatic 
 - configuration
   - [properties](#properties)
   - [settings](#settings)
-  - [typeAliases](#typeAliases)
-  - [typeHandlers](#typeHandlers)
-  - [objectFactory](#objectFactory)
+  - [typeAliases](#typealiases)
+  - [typeHandlers](#typehandlers)
+  - [objectFactory](#objectfactory)
   - [plugins](#plugins)
   - [environments](#environments)
     - environment
       - transactionManager
       - dataSource
-  - [databaseIdProvider](#databaseIdProvider)
+  - [databaseIdProvider](#databaseidprovider)
   - [mappers](#mappers)
 
 ### properties
