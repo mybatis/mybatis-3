@@ -75,6 +75,13 @@ public class XMLStatementBuilder extends BaseBuilder {
     if (!databaseIdMatchesCurrent(id, databaseId, this.requiredDatabaseId)) {
       return;
     }
+    if (requiredDatabaseId != null && databaseId != null) {
+      String fullId = builderAssistant.applyCurrentNamespace(id, false);
+      if (configuration.hasStatement(fullId, false)
+          && configuration.getMappedStatement(fullId, false).getDatabaseId() == null) {
+        configuration.removeMappedStatement(fullId);
+      }
+    }
 
     String nodeName = context.getNode().getNodeName();
     SqlCommandType sqlCommandType = SqlCommandType.valueOf(nodeName.toUpperCase(Locale.ENGLISH));
