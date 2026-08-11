@@ -138,7 +138,6 @@ Environment environment = new Environment("development", transactionFactory, dat
 
 Configuration configuration = new Configuration(environment);
 configuration.setLazyLoadingEnabled(true);
-configuration.setEnhancementEnabled(true);
 configuration.getTypeAliasRegistry().registerAlias(Blog.class);
 configuration.getTypeAliasRegistry().registerAlias(Post.class);
 configuration.getTypeAliasRegistry().registerAlias(Author.class);
@@ -288,9 +287,9 @@ void rollback(boolean force)</source>
   Author selectAuthor(int id);
   // (List<Author>) selectList(“selectAuthors”)
   List<Author> selectAuthors();
-  // (Map<Integer,Author>) selectMap("selectAuthors", "id")
+  // (Map<Integer,Author>) selectMap("selectAuthorsAsMap", "id")
   @MapKey("id")
-  Map<Integer, Author> selectAuthors();
+  Map<Integer, Author> selectAuthorsAsMap();
   // insert("insertAuthor", author)
   int insertAuthor(Author author);
   // updateAuthor("updateAuthor", author)
