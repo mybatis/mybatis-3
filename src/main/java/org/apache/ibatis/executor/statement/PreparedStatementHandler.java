@@ -44,9 +44,8 @@ public class PreparedStatementHandler extends BaseStatementHandler {
 
   @Override
   public int update(Statement statement) throws SQLException {
-    PreparedStatement ps = (PreparedStatement) statement;
-    ps.execute();
-    int rows = ps.getUpdateCount();
+    PreparedStatement ps = (PreparedStatement) statement;    
+    int rows = ps.executeUpdate();
     Object parameterObject = boundSql.getParameterObject();
     KeyGenerator keyGenerator = mappedStatement.getKeyGenerator();
     keyGenerator.processAfter(executor, mappedStatement, ps, parameterObject);
