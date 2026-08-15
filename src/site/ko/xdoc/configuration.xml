@@ -174,7 +174,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 true | false
               </td>
               <td>
-                false (3.4.1 부터 true)
+                false (3.4.1 이하에서는 true)
               </td>
             </tr>
             <tr>
@@ -291,21 +291,6 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               </td>
               <td>
                 설정하지 않음(null)
-              </td>
-            </tr>
-            <tr>
-              <td>
-                defaultFetchSize
-              </td>
-              <td>
-                결과를 가져오는 크기를 제어하는 힌트처럼 드라이버에 설정한다.
-        이 파라미터는 쿼리설정으로 변경할 수 있다.
-              </td>
-              <td>
-                양수
-              </td>
-              <td>
-                셋팅되지 않음(null)
               </td>
             </tr>
             <tr>
@@ -460,7 +445,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 returnInstanceForEmptyRow
               </td>
               <td>
-                MyBatis 는 기본적으로 모든 열들의 행이 NULL 이 반환되었을 때 <code>null</code>을 반환한다.
+                MyBatis 는 기본적으로 반환된 행의 모든 칼럼이 NULL 일 때 <code>null</code>을 반환한다.
                 이 설정을 사용하면 MyBatis가 대신 empty 인스턴스를 반환한다.
                 nested results(collection 또는 association) 에도 적용된다. 3.4.2 부터
               </td>
@@ -511,7 +496,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 CGLIB (deprecated since 3.5.10) | JAVASSIST
               </td>
               <td>
-                JAVASSIST (마이바티스 3.3과 이상의 버전)
+                JAVASSIST (마이바티스 3.3 이상의 버전)
               </td>
             </tr>
             <tr>
@@ -523,6 +508,9 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               </td>
               <td>
                 콤마를 사용해서 VFS구현체의 패키지를 포함한 전체 클래스명
+              </td>
+              <td>
+                설정하지 않음
               </td>
             </tr>
             <tr>
@@ -1454,7 +1442,7 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
         </ul>
 
         <p>
-          <code>ResultMap</code>에서 타입핸들러를 사용한다고 결정하면 마이바티스가 자바타입은 잘 처리하지만 JDBC타입은 잘 처리하지 못할 수 있다.
+          <code>ResultMap</code>에서 사용할 타입핸들러를 결정할 때 자바타입은 (결과 타입으로부터) 알 수 있지만 JDBC타입은 알 수 없다.
       그래서 마이바티스는 타입핸들러를 선택하기 위해 <code>javaType=[TheJavaType], jdbcType=null</code>조합을 사용한다.
       <code>@MappedJdbcTypes</code> 애노테이션의 사용은 타입핸들러의  범위를 <i>제한</i>하고 명시적으로 설정하지 않는한 <code>결과매핑</code>을 사용하지 못하도록 만든다.
       <code>결과매핑</code>에서 타입핸들러를 사용할수 있도록 하려면 <code>@MappedJdbcTypes</code>애노테이션에 <code>includeNullJdbcType=true</code>를 설정하자.
@@ -1471,7 +1459,7 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
 
         <p>JDBC타입에 대한 자동검색 기능은 애노테이션을 명시한 경우에만 가능하다는 것을 알아둘 필요가 있다. </p>
         <p>
-          한 개 이상의 클래스를 다루는 제네릭 TypeHandler를 만들수 있다.
+          한 개 이상의 클래스를 다루는 제네릭 TypeHandler를 만들 수 있다.
           파라미터로 클래스를 가져오는 생성자를 추가하고 마이바티스는 TypeHandler를 만들때 실제 클래스를 전달할 것이다.
         </p>
 
@@ -1498,7 +1486,7 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
         <code>Enum</code>을 매핑하고자 한다면 <code>EnumTypeHandler</code> 나 <code>EnumOrdinalTypeHandler</code> 를 사용할 필요가 있을 것이다.
         </p>
 
-        <p>예를들어 순환 방식으로 몇개의 숫자를 사용하는 순환모드를 저장할 필요가 있다고 해보자.
+        <p>예를들어 어떤 숫자를 반올림할 때 사용할 반올림 모드(rounding mode)를 저장해야 한다고 해보자.
         기본적으로 마이바티스는 <code>Enum</code> 값을 각각의 이름으로 변환하기 위해 <code>EnumTypeHandler</code> 를 사용한다.
         </p>
 
@@ -1508,7 +1496,7 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
         <p>아무리 이름을 저장하려해도 DBA는 숫자코드를 고집할수 있다.
     이름 대신 숫자코드를 저장하는 방법은 쉽다.
         설정파일의 <code>typeHandlers</code>에 <code>EnumOrdinalTypeHandler</code> 를 추가하자.
-        그러면 각각의 <code>RoundingMode</code>는 순서값을 사용해서 숫자를 매핑할 것이다.
+        그러면 각각의 <code>RoundingMode</code>는 순서값을 사용해서 숫자로 매핑될 것이다.
         </p>
        <source><![CDATA[<!-- mybatis-config.xml -->
 <typeHandlers>
@@ -1520,11 +1508,11 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
     </p>
         <p>
           자동매퍼는 <code>EnumOrdinalTypeHandler</code> 를 자동으로 사용할 것이다.
-          그래서 평범한 순서를 나타내는 <code>EnumTypeHandler</code> 를 사용하고자 한다면 SQL구문에 사용할 타입핸들러를 명시적으로 설정한다.
+          그래서 원래의 평범한 <code>EnumTypeHandler</code> 를 다시 사용하고자 한다면 SQL구문에 사용할 타입핸들러를 명시적으로 설정한다.
         </p>
         <p>
           (매퍼 파일은 다음 절까지는 다루지 않는다.
-          그래서 문서를 보면서 처음 봤다면 일단 이 부분은 건너띄고 다음에 다시 볼수도 있다. )
+          그래서 문서를 보면서 처음 봤다면 일단 이 부분은 건너뛰고 다음에 다시 볼수도 있다. )
         </p>
         <source><![CDATA[<!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
@@ -1571,7 +1559,7 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
 
       <subsection name="objectFactory">
         <p>매번 마이바티스는 결과 객체의 인스턴스를 만들기 위해 ObjectFactory를 사용한다.
-    디폴트 ObjectFactory 는 디폴트 생성자를 가진 대상 클래스를 인스턴스화하는 것보다 조금 더 많은 작업을 한다.
+    디폴트 ObjectFactory 는 대상 클래스를 디폴트 생성자로(파라미터 매핑이 있으면 파라미터를 받는 생성자로) 인스턴스화하는 것 외에는 거의 하는 일이 없다.
     ObjectFactory 의 디폴트 행위를 오버라이드하고자 한다면 만들 수 있다.
     예를들면:</p>
         <source><![CDATA[// ExampleObjectFactory.java
@@ -1601,7 +1589,7 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
 <objectFactory type="org.mybatis.example.ExampleObjectFactory">
   <property name="someProperty" value="100"/>
 </objectFactory>]]></source>
-        <p>ObjectFactory인터페이스는 매우 간단한다.
+        <p>ObjectFactory인터페이스는 매우 간단하다.
     두 개의 create메소드를 가지고 있으며 하나는 디폴트 생성자를 처리하고 다른 하나는 파라미터를 가진 생성자를 처리한다.
     마지막으로 setProperties 메소드는 ObjectFactory를 설정하기 위해 사용될 수 있다.
     objectFactory엘리먼트에 정의된 프로퍼티는 ObjectFactory인스턴스가 초기화된 후 setProperties에 전달될 것이다.</p>
@@ -1737,7 +1725,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
           <li>MANAGED - 이 설정은 어떤것도 하지 않는다.
       결코 커밋이나 롤백을 하지 않는다.
       대신 컨테이너가 트랜잭션의 모든 생명주기를 관리한다.
-      디플트로 커넥션을 닫긴 한다.
+      디폴트로 커넥션을 닫긴 한다.
       하지만 몇몇 컨테이너는 커넥션을 닫는 것 또한 기대하지 않기 때문에 커넥션 닫는 것으로 멈추고자 한다면 “closeConnection”프로퍼티를 false로 설정하라.
       예를 들면:
             <source><![CDATA[<transactionManager type="MANAGED">
@@ -1781,7 +1769,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
       조금 늦긴 하지만 성능을 크게 필요로 하지 않는 간단한 애플리케이션을 위해서는 괜찮은 선택이다.
       UNPOOLED DataSource에는 다음과 같은 속성이 있습니다.</p>
         <ul>
-          <li><code>driver</code> - JDBC드라이버의 패키지 경로를 포함한 결제 자바 클래스명</li>
+          <li><code>driver</code> - JDBC드라이버의 패키지 경로를 포함한 전체 자바 클래스명</li>
           <li><code>url</code> - 데이터베이스 인스턴스에 대한 JDBC URL</li>
           <li><code>username</code> - 데이터베이스에 로그인 할 때 사용할 사용자명</li>
           <li><code>password</code> - 데이터베이스에 로그인 할 때 사용할 패스워드</li>
@@ -1807,11 +1795,11 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
           <li><code>poolMaximumIdleConnections</code> - 주어진 시간에 존재할 수 있는 유휴 커넥션의 수</li>
           <li><code>poolMaximumCheckoutTime</code> - 강제로 리턴되기 전에 풀에서 “체크아웃” 될 수 있는 커넥션의 시간.
       디폴트는 20000ms(20 초)</li>
-          <li><code>poolTimeToWait</code> - 풀이 로그 상태를 출력하고 비정상적으로 긴 경우 커넥션을 다시 얻을려고 시도하는 로우 레벨 설정.
+          <li><code>poolTimeToWait</code> - 풀이 로그 상태를 출력하고 비정상적으로 긴 경우 커넥션을 다시 얻으려고 시도하는 로우 레벨 설정.
       디폴트는 20000ms(20 초)</li>
           <li><code>poolMaximumLocalBadConnectionTolerance</code> – 이것은 모든 쓰레드에 대해 bad Connection이 허용되는 정도에 대한 낮은 수준의 설정입니다.
             만약 쓰레드가 bad connection 을 얻게 되어도 유효한 또 다른 connection 을 다시 받을 수 있습니다.
-            하지만 재시도 횟수는 <code>poolMaximumIdleConnections</code> 과 <code>poolMaximumLocalBadConnectionTolerance</code> 의 합보다 많아야 합니다.
+            하지만 재시도 횟수는 <code>poolMaximumIdleConnections</code> 와 <code>poolMaximumLocalBadConnectionTolerance</code> 의 합을 넘지 않습니다.
             디폴트는 3이다. (3.4.5 부터)
           </li>
           <li><code>poolPingQuery</code> - 커넥션이 작업하기 좋은 상태이고 요청을 받아서 처리할 준비가 되었는지 체크하기 위해 데이터베이스에 던지는 핑쿼리(Ping Query).
@@ -1831,7 +1819,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
         <ul>
           <li><code>initial_context</code> - 이 프로퍼티는 InitialContext 에서 컨텍스트를 찾기(예를 들어 initialContext.lookup(initial_context))위해 사용된다.
       이 프로퍼티는 선택적인 값이다.
-      이 설정을 생략하면 data_source프로퍼티가 InitialContext에서 직접 찾을 것이다.</li>
+      이 설정을 생략하면 data_source 프로퍼티를 InitialContext에서 직접 찾을 것이다.</li>
           <li><code>data_source</code> - DataSource인스턴스의 참조를 찾을 수 있는 컨텍스트 경로이다.
       initial_context 룩업을 통해 리턴된 컨텍스트에서 찾을 것이다.
       initial_context 가 지원되지 않는다면 InitialContext 에서 직접 찾을 것이다.</li>
@@ -1843,7 +1831,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
         <p>이 설정은 인스턴스화할 때 InitialContext생성자에 “encoding”프로퍼티를 “UTF8”로 전달한다.</p>
 
     <p>
-      <code>org.apache.ibatis.datasource.DataSourceFactory</code> 인터페이스를 구현해서 또다른 DataSource구현체를 만들수 있다.
+      <code>org.apache.ibatis.datasource.DataSourceFactory</code> 인터페이스를 구현해서 또다른 DataSource구현체를 만들 수 있다.
     </p>
 
         <source><![CDATA[public interface DataSourceFactory {
@@ -1882,7 +1870,7 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
       <subsection name="databaseIdProvider">
         <p>마이바티스는 데이터베이스 제품마다 다른 구문을 실행할 수 있다.
     여러 개의 데이터베이스 제품을 가진 업체 제품은 <code>databaseId</code> 속성을 사용한 매핑된 구문을 기반으로 지원한다.
-        마이바티스는 <code>databaseId</code>속성이 없거나 <code>databaseId</code>속성을 가진 모든 구문을 로드한다.
+        마이바티스는 <code>databaseId</code>속성이 없거나 현재 <code>databaseId</code>와 일치하는 <code>databaseId</code>속성을 가진 모든 구문을 로드한다.
         같은 구문인데 하나는 <code>databaseId</code>속성이 있고 하나는 <code>databaseId</code>속성이 없을때 뒤에 나온 것이 무시된다.
         다중 지원을 사용하기 위해서는 mybatis-config.xml파일에 다음처럼 <code>databaseIdProvider</code>를 추가하라:
         </p>
@@ -1900,7 +1888,7 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
   <property name="Oracle" value="oracle" />
 </databaseIdProvider>]]></source>
 
-    <p>프로퍼터가 제공되면 DB_VENDOR databaseIdProvider는 리턴된 데이터베이스 제품명에서 찾은 첫번째 프로퍼티값이나 일치하는 프로퍼티가 없다면 "null" 을 찾을 것이다.
+    <p>프로퍼티가 제공되면 DB_VENDOR databaseIdProvider는 리턴된 데이터베이스 제품명에서 찾은 첫번째 프로퍼티값이나 일치하는 프로퍼티가 없다면 "null" 을 찾을 것이다.
     이 경우 <code>getDatabaseProductName()</code>가 "Oracle (DataDirect)"를 리턴한다면 databaseId는 "oracle"로 설정될 것이다. </p>
 
     <p><code>org.apache.ibatis.mapping.DatabaseIdProvider</code> 인터페이스를 구현해서 자신만의 DatabaseIdProvider를 빌드하고 mybatis-config.xml파일에 등록할 수 있다:
