@@ -118,21 +118,6 @@ public String selectPersonLike(final String id, final String firstName, final St
   }}.toString();
 }
 
-public String deletePersonSql() {
-  return new SQL() {{
-    DELETE_FROM("PERSON");
-    WHERE("ID = #{id}");
-  }}.toString();
-}
-
-public String insertPersonSql() {
-  return new SQL() {{
-    INSERT_INTO("PERSON");
-    VALUES("ID, FIRST_NAME", "#{id}, #{firstName}");
-    VALUES("LAST_NAME", "#{lastName}");
-  }}.toString();
-}
-
 public String updatePersonSql() {
   return new SQL() {{
     UPDATE("PERSON");
