@@ -149,7 +149,7 @@ public class Configuration {
    */
   protected Class<?> configurationFactory;
 
-  protected final MapperRegistry mapperRegistry = new MapperRegistry(this);
+  protected MapperRegistry mapperRegistry = new MapperRegistry(this);
   protected final InterceptorChain interceptorChain = new InterceptorChain();
   protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry(this);
   protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
@@ -621,6 +621,10 @@ public class Configuration {
    */
   public MapperRegistry getMapperRegistry() {
     return mapperRegistry;
+  }
+
+  public void setMapperRegistry(MapperRegistry mapperRegistry) {
+    this.mapperRegistry = mapperRegistry;
   }
 
   public ReflectorFactory getReflectorFactory() {
