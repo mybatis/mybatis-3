@@ -23,7 +23,6 @@
 <configuration>
 
   <properties resource="org/apache/ibatis/submitted/nested_query_cache/mapper.properties">
-    <property name="driver" value="org.apache.derby.jdbc.EmbeddedDriver"/>
   </properties>
 
   <settings>

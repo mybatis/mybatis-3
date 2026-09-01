@@ -95,10 +95,6 @@
     </environment>
   </environments>
 
-  <databaseIdProvider type="DB_VENDOR">
-    <property name="Apache Derby" value="derby"/>
-  </databaseIdProvider>
-
   <mappers>
     <mapper resource="org/apache/ibatis/builder/xsd/BlogMapper.xml"/>
     <mapper url="file:./src/test/resources/org/apache/ibatis/builder/xsd/NestedBlogMapper.xml"/>

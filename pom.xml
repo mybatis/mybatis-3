@@ -70,7 +70,6 @@
     <clirr.comparisonVersion>3.4.6</clirr.comparisonVersion>
 
     <byte-buddy.version>1.18.11</byte-buddy.version>
-    <derby.version>10.17.1.0</derby.version>
     <log4j.version>2.26.1</log4j.version>
     <mockito.version>5.23.0</mockito.version>
     <mssql-jdbc.version>13.4.0.jre11</mssql-jdbc.version>
@@ -147,24 +146,6 @@
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
       <version>2.7.4</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.derby</groupId>
-      <artifactId>derby</artifactId>
-      <version>${derby.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.derby</groupId>
-      <artifactId>derbyshared</artifactId>
-      <version>${derby.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.derby</groupId>
-      <artifactId>derbyoptionaltools</artifactId>
-      <version>${derby.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -339,18 +320,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <systemPropertyVariables>
-            <property>
-              <name>derby.stream.error.file</name>
-              <value>${project.build.directory}/derby.log</value>
-            </property>
-            <property>
-              <name>derby.system.home</name>
-              <value>${project.build.directory}</value>
-            </property>
-          </systemPropertyVariables>
-        </configuration>
       </plugin>
       <!-- Do not run pdf plugin as not compliant with site 2.0
       <plugin>
@@ -463,24 +432,6 @@
       <id>testContainers</id>
       <properties>
         <excludedGroups>RequireIllegalAccess</excludedGroups>
-      </properties>
-    </profile>
-    <profile>
-      <id>17</id>
-      <activation>
-        <jdk>[17,)</jdk>
-      </activation>
-      <properties>
-        <derby.version>10.16.1.1</derby.version>
-      </properties>
-    </profile>
-    <profile>
-      <id>19</id>
-      <activation>
-        <jdk>[19,)</jdk>
-      </activation>
-      <properties>
-        <derby.version>10.17.1.0</derby.version>
       </properties>
     </profile>
 
