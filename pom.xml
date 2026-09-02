@@ -69,7 +69,7 @@
 
     <clirr.comparisonVersion>3.4.6</clirr.comparisonVersion>
 
-    <byte-buddy.version>1.18.11</byte-buddy.version>
+    <byte-buddy.version>1.18.13</byte-buddy.version>
     <log4j.version>2.26.1</log4j.version>
     <mockito.version>5.23.0</mockito.version>
     <mssql-jdbc.version>13.4.0.jre11</mssql-jdbc.version>
@@ -111,14 +111,14 @@
     <dependency>
       <groupId>ognl</groupId>
       <artifactId>ognl</artifactId>
-      <version>3.4.11</version>
+      <version>3.4.12</version>
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.javassist</groupId>
       <artifactId>javassist</artifactId>
-      <version>3.32.0-GA</version>
+      <version>3.33.0-GA</version>
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
