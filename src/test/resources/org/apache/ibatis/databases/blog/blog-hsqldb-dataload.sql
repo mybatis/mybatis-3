@@ -1,5 +1,5 @@
 --
---    Copyright 2009-2025 the original author or authors.
+--    Copyright 2009-2026 the original author or authors.
 --
 --    Licensed under the Apache License, Version 2.0 (the "License");
 --    you may not use this file except in compliance with the License.
@@ -55,4 +55,3 @@ INSERT INTO node (id, parent_id) VALUES (4,2);
 INSERT INTO node (id, parent_id) VALUES (5,2);
 INSERT INTO node (id, parent_id) VALUES (6,3);
 INSERT INTO node (id, parent_id) VALUES (7,3);
-

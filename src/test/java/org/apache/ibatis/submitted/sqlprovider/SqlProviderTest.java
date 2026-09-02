@@ -49,6 +49,7 @@ import org.junit.jupiter.api.Test;
 class SqlProviderTest {
 
   private static SqlSessionFactory sqlSessionFactory;
+  private static SqlSessionFactory sqlSessionFactory;
   private static SqlSessionFactory sqlSessionFactoryForDerby;
 
   @BeforeAll
@@ -62,6 +63,12 @@ class SqlProviderTest {
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
         "org/apache/ibatis/submitted/sqlprovider/CreateDB.sql");
+
+    // create a SqlSessionFactory
+    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/sqlprovider/mybatis-config.xml")) {
+      sqlSessionFactoryForDerby = new SqlSessionFactoryBuilder().build(reader, "development-derby");
+      sqlSessionFactoryForDerby.getConfiguration().addMapper(DatabaseIdMapper.class);
+    }
 
     // create a SqlSessionFactory
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/sqlprovider/mybatis-config.xml")) {
