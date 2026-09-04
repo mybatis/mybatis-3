@@ -433,6 +433,9 @@
             <enforceBytecodeVersion>
               <maxJdkVersion>${java.version}</maxJdkVersion>
               <ignoredScopes>provided,test</ignoredScopes>
+              <ignoredDependencies>
+                <ignoredDependency>ognl:ognl</ignoredDependency>
+              </ignoredDependencies>
             </enforceBytecodeVersion>
           </rules>
         </configuration>
