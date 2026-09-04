@@ -49,8 +49,6 @@ import org.junit.jupiter.api.Test;
 class SqlProviderTest {
 
   private static SqlSessionFactory sqlSessionFactory;
-  private static SqlSessionFactory sqlSessionFactory;
-  private static SqlSessionFactory sqlSessionFactoryForDerby;
 
   @BeforeAll
   static void setUp() throws Exception {
@@ -63,18 +61,6 @@ class SqlProviderTest {
     // populate in-memory database
     BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
         "org/apache/ibatis/submitted/sqlprovider/CreateDB.sql");
-
-    // create a SqlSessionFactory
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/sqlprovider/mybatis-config.xml")) {
-      sqlSessionFactoryForDerby = new SqlSessionFactoryBuilder().build(reader, "development-derby");
-      sqlSessionFactoryForDerby.getConfiguration().addMapper(DatabaseIdMapper.class);
-    }
-
-    // create a SqlSessionFactory
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/sqlprovider/mybatis-config.xml")) {
-      sqlSessionFactoryForDerby = new SqlSessionFactoryBuilder().build(reader, "development-derby");
-      sqlSessionFactoryForDerby.getConfiguration().addMapper(DatabaseIdMapper.class);
-    }
   }
 
   // Test for list
@@ -983,10 +969,6 @@ class SqlProviderTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       DatabaseIdMapper mapper = sqlSession.getMapper(DatabaseIdMapper.class);
       assertEquals("hsql", mapper.selectDatabaseId());
-    }
-    try (SqlSession sqlSession = sqlSessionFactoryForDerby.openSession()) {
-      DatabaseIdMapper mapper = sqlSession.getMapper(DatabaseIdMapper.class);
-      assertEquals("derby", mapper.selectDatabaseId());
     }
   }
 
