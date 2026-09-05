@@ -424,23 +424,6 @@
         </configuration>
       </plugin>
 
-      <!-- Remove enforcer entirely after parent 49 release -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <configuration>
-          <rules>
-            <enforceBytecodeVersion>
-              <maxJdkVersion>${java.version}</maxJdkVersion>
-              <ignoredScopes>provided,test</ignoredScopes>
-              <ignoredDependencies>
-                <ignoredDependency>ognl:ognl</ignoredDependency>
-              </ignoredDependencies>
-            </enforceBytecodeVersion>
-          </rules>
-        </configuration>
-      </plugin>
-
       <plugin>
         <groupId>com.rudikershaw.gitbuildhook</groupId>
         <artifactId>git-build-hook-maven-plugin</artifactId>
