@@ -112,7 +112,7 @@
     <dependency>
       <groupId>ognl</groupId>
       <artifactId>ognl</artifactId>
-      <version>3.4.12</version>
+      <version>3.5.0-BETA5</version>
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
@@ -421,20 +421,6 @@
             <exclude>org.apache.ibatis.ognl.*</exclude>
             <exclude>org.apache.ibatis.javassist.*</exclude>
           </excludes>
-        </configuration>
-      </plugin>
-
-      <!-- Remove enforcer entirely after parent 49 release -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <configuration>
-          <rules>
-            <enforceBytecodeVersion>
-              <maxJdkVersion>${java.version}</maxJdkVersion>
-              <ignoredScopes>provided,test</ignoredScopes>
-            </enforceBytecodeVersion>
-          </rules>
         </configuration>
       </plugin>
 
