@@ -45,7 +45,7 @@ public class BoundSql {
     this.sql = sql;
     this.parameterMappings = parameterMappings;
     this.parameterObject = parameterObject;
-    this.additionalParameters = new HashMap<>();
+    this.additionalParameters = new HashMap<>(this.parameterMappings.size());
     this.metaParameters = configuration.newMetaObject(additionalParameters);
   }
 
