@@ -1226,7 +1226,7 @@ public class UserRole {
       u.id,
       u.username,
       r.id as role_id,
-      r.role as role_role,
+      r.role as role_role
     from user u
       left join user_role ur on u.id = ur.user_id
       inner join role r on r.id = ur.role_id
@@ -1774,7 +1774,7 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
   B.author_id as blog_author_id,
   P.id as post_id,
   P.subject as post_subject,
-  P.body as post_body,
+  P.body as post_body
   from Blog B
   left outer join Post P on B.id = P.blog_id
   where B.id = #{id}
@@ -2039,7 +2039,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
   select
     B.id,
     B.title,
-    A.username,
+    A.username
   from Blog B left outer join Author A on B.author_id = A.id
   where B.id = #{id}
 </select>]]></source>
@@ -2175,7 +2175,6 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
   int getSize();
   void putObject(Object key, Object value);
   Object getObject(Object key);
-  boolean hasKey(Object key);
   Object removeObject(Object key);
   void clear();
 }]]></source>

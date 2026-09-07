@@ -41,7 +41,7 @@
   <source><![CDATA[<select id="findActiveBlogWithTitleLike"
      resultType="Blog">
   SELECT * FROM BLOG
-  WHERE state = ‘ACTIVE’
+  WHERE state = 'ACTIVE'
   <if test="title != null">
     AND title like #{title}
   </if>
@@ -50,7 +50,7 @@
   <p>¿Y cómo hacemos si debemos buscar opcionalmente por título o autor? Primeramente, yo cambiaría el nombre del statement para que tenga algo más de sentido. Y luego añadir otra condición.</p>
   <source><![CDATA[<select id="findActiveBlogLike"
      resultType="Blog">
-  SELECT * FROM BLOG WHERE state = ‘ACTIVE’
+  SELECT * FROM BLOG WHERE state = 'ACTIVE'
   <if test="title != null">
     AND title like #{title}
   </if>
@@ -64,7 +64,7 @@
   <p>Usemos el ejemplo anterior, pero ahora vamos a buscar solamente por título si se ha proporcionado un título y por autor si se ha proporcionado un autor. Si  no se proporciona ninguno devolvemos una lista de Blogs destacados (quizá una lista seleccionada por los administradores en lugar de una gran lista de blogs sin sentido).</p>
   <source><![CDATA[<select id="findActiveBlogLike"
      resultType="Blog">
-  SELECT * FROM BLOG WHERE state = ‘ACTIVE’
+  SELECT * FROM BLOG WHERE state = 'ACTIVE'
   <choose>
     <when test="title != null">
       AND title like #{title}
@@ -100,7 +100,7 @@ WHERE]]></source>
   <p>Y eso fallará. ¿Y qué sucede si se cumple la segunda condición? Acabarías con una sentencia SQL con este aspecto:</p>
   <source><![CDATA[SELECT * FROM BLOG
 WHERE
-AND title like ‘someTitle’]]></source>
+AND title like 'someTitle']]></source>
   <p>Y eso también fallará. Este problema no se resuelve fácil con condicionales, y si alguna vez tienes que hacerlo, posiblemente no quieras repetirlo nunca más.</p>
   <p>MyBatis tiene una respuesta sencilla que funcionará en el 90% de los casos. Y en los casos en los que no funciona puedes personalizarlo para hacerlo funcionar. Con un cambio simple, todo funciona correctamente:</p>
   <source><![CDATA[<select id="findActiveBlogLike"
@@ -190,7 +190,7 @@ AND title like ‘someTitle’]]></source>
       select seq_users.nextval from dual
     </if>
     <if test="_databaseId == 'db2'">
-      select nextval for seq_users from sysibm.sysdummy1"
+      select nextval for seq_users from sysibm.sysdummy1
     </if>
   </selectKey>
   insert into users values (#{id}, #{name})
@@ -231,7 +231,7 @@ AND title like ‘someTitle’]]></source>
     <p><span class="label important">NOTA</span> Puedes utilizar Apache Velocity como lenguaje dinámico. Echa un vistazo al proyecto MyBatis-Velocity para conocer los detalles.</p>
 
     <p>Todos los tags que has visto en las secciones previas se proporcionan por el lenguaje por defecto de MyBatis cuyo driver es
-    <code>org.apache.ibatis.scripting.xmltags.XmlLanguageDriver</code> que tiene un alias llamado <code>xml</code>.</p>
+    <code>org.apache.ibatis.scripting.xmltags.XMLLanguageDriver</code> que tiene un alias llamado <code>xml</code>.</p>
   </subsection>
   </section>
   </body>
