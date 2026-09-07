@@ -26,9 +26,9 @@ org.apache.ibatis.logging.LogFactory.useCommonsLogging();
 org.apache.ibatis.logging.LogFactory.useStdOutLogging();
 ```
 
-마이바티스가 메소드를 호출하기 전에 위 메소드 중 하나를 호출해야 한다. 이 메소드들은 런타임 클래스패스에 구현체가 존재하면 그 로그 구현체를 사용하게 한다. 예를들어 Log4J2 로깅을 선택했지만 런타임에 Log4J2 구현체가 클래스패스에 없다면 마이바티스는 Log4J2 구현체의 사용을 무시하고 로깅 구현체를 찾아 다시 사용할 것이다.
+이 메소드들 중 하나를 호출하기로 했다면 다른 마이바티스 메소드를 호출하기 전에 호출해야 한다. 이 메소드들은 런타임 클래스패스에 구현체가 존재하면 그 로그 구현체를 사용하게 한다. 예를들어 Log4J2 로깅을 선택했지만 런타임에 Log4J2 구현체가 클래스패스에 없다면 마이바티스는 Log4J2 구현체의 사용을 무시하고 로깅 구현체를 찾아 다시 사용할 것이다.
 
-SLF4J, Jakarta Commons 로깅, Log4J 그리고 JDK 로깅 API 에 대한 설명은 이 문서의 범위를 벗어난다. 이러한 로깅 관련 프레임워크에 대해 좀더 알고 싶다면 개별 위치에서 좀더 많은 정보를 얻을 수 있을 것이다.
+SLF4J, Apache Commons Logging, Apache Log4J 그리고 JDK 로깅 API 에 대한 설명은 이 문서의 범위를 벗어난다. 이러한 로깅 관련 프레임워크에 대해 좀더 알고 싶다면 개별 위치에서 좀더 많은 정보를 얻을 수 있을 것이다.
 
 - [SLF4J](https://www.slf4j.org/)
 - [Apache Commons Logging](https://commons.apache.org/proper/commons-logging/)
@@ -47,7 +47,7 @@ SLF4J(Logback)를 사용하기 때문에 애플리케이션에 JAR 파일이 있
 
 웹이나 기업용 애플리케이션에서는 `WEB-INF/lib` 디렉터리에 `logback-classic.jar` ,`logback-core.jar` and `slf4j-api.jar` 파일을 추가할 수 있다. 단독으로 실행되는 애플리케이션에서는 JVM의 `-classpath` 시작 파라미터에서 간단히 추가할 수 있다.
 
-If you use the maven, you can download jar files by adding following settings on your `pom.xml`.
+메이븐을 사용한다면 `pom.xml` 에 다음 설정을 추가해서 jar 파일을 내려받을 수 있다.
 
 ```xml
 <dependency>
@@ -118,7 +118,7 @@ finer레벨로 로깅을 하고자 한다면 전체 매퍼 파일대신 특정 �
 </logger>
 ```
 
-다음처럼 매퍼 인터페이스가 아닌 매퍼 XML을 사용하다면 어떻게 해야 할까?
+다음처럼 매퍼 인터페이스가 아닌 매퍼 XML을 사용한다면 어떻게 해야 할까?
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -164,8 +164,8 @@ finer레벨로 로깅을 하고자 한다면 전체 매퍼 파일대신 특정 �
 ```
 
 ```xml
-<!-- log4j2.xml -->
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- log4j2.xml -->
 <Configuration xmlns="http://logging.apache.org/log4j/2.0/config">
 
   <Appenders>
@@ -213,7 +213,7 @@ log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n
 handlers=java.util.logging.ConsoleHandler
 .level=SEVERE
 
-org.mybatis.example.BlogMapper=FINER
+org.mybatis.example.BlogMapper.level=FINER
 
 java.util.logging.ConsoleHandler.level=ALL
 java.util.logging.ConsoleHandler.formatter=java.util.logging.SimpleFormatter

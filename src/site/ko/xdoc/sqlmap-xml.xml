@@ -35,7 +35,7 @@
       <p>SQL Map XML파일은 첫번째(first class)엘리먼트만을 가진다.</p>
       <ul>
         <li>
-          <code>cache</code> - 해당 네임스페이스을 위한 캐시 설정
+          <code>cache</code> - 해당 네임스페이스를 위한 캐시 설정
         </li>
         <li>
           <code>cache-ref</code> - 다른 네임스페이스의 캐시 설정에 대한 참조</li>
@@ -171,7 +171,7 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td><code>resultSetType</code></td>
               <td>FORWARD_ONLY|SCROLL_SENSITIVE|SCROLL_INSENSITIVE|DEFAULT(same as unset)중 하나를 선택할 수 있다.
-        디폴트는 셋팅하지 않는 것이고 드라이버에 다라 다소 지원되지 않을 수 있다.</td>
+        디폴트는 셋팅하지 않는 것이고 드라이버에 따라 다소 지원되지 않을 수 있다.</td>
             </tr>
             <tr>
               <td><code>databaseId</code></td>
@@ -258,8 +258,8 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td><code>flushCache</code></td>
-              <td>이 값을 true 로 셋팅하면 구문이 호출될때마다 캐시가 지원질것이다(flush).
-        디폴트는 false 이다.</td>
+              <td>이 값을 true 로 셋팅하면 구문이 호출될때마다 2nd 레벨 캐시와 로컬 캐시가 지워질것이다(flush).
+        insert, update, delete 구문의 디폴트는 true 이다.</td>
             </tr>
             <tr>
               <td><code>timeout</code></td>
@@ -275,7 +275,7 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td><code>useGeneratedKeys</code></td>
               <td>(입력(insert, update)에만 적용) 데이터베이스에서 내부적으로 생성한 키
-        (예를들어 MySQL또는 SQL Server와 같은 RDBMS의 자동 증가 필드)를 받는 JDBC getGeneratedKeys메소드를 사용하도록 설정하다.
+        (예를들어 MySQL또는 SQL Server와 같은 RDBMS의 자동 증가 필드)를 받는 JDBC getGeneratedKeys메소드를 사용하도록 설정한다.
         디폴트는 false 이다.</td>
             </tr>
             <tr>
@@ -287,7 +287,7 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td><code>keyColumn</code></td>
               <td>(입력(insert, update)에만 적용) 생성키를 가진 테이블의 칼럼명을 셋팅.
-        키 칼럼이 테이블이 첫번째 칼럼이 아닌 데이터베이스(PostgreSQL 처럼)에서만 필요하다.
+        키 칼럼이 테이블의 첫번째 칼럼이 아닌 데이터베이스(PostgreSQL 처럼)에서만 필요하다.
         여러개의 칼럼을 사용한다면 프로퍼티명에 콤마를 구분자로 나열할수 있다. </td>
             </tr>
             <tr>
@@ -386,7 +386,7 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td><code>resultType</code></td>
               <td>결과의 타입.
-        마이바티스는 이 기능을 제거할 수 있지만 추가하는게 문제가 되지는 않을것이다.
+        마이바티스는 대개 이 타입을 알아낼 수 있지만 확실히 하기 위해 명시해도 문제가 되지는 않는다.
         마이바티스는 String을 포함하여 키로 사용될 수 있는 간단한 타입을 허용한다.</td>
             </tr>
             <tr>
@@ -399,7 +399,7 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td><code>statementType</code></td>
               <td>위 내용과 같다.
-        마이바티스는 Statement, PreparedStatement 그리고 CallableStatement을 매핑하기 위해 STATEMENT, PREPARED 그리고 CALLABLE 구문타입을 지원한다.</td>
+        마이바티스는 Statement, PreparedStatement 그리고 CallableStatement를 매핑하기 위해 STATEMENT, PREPARED 그리고 CALLABLE 구문타입을 지원한다.</td>
             </tr>
           </tbody>
         </table>
@@ -468,7 +468,7 @@ ps.setInt(1,id);]]></source>
 
         <p>위 예제는 매우 간단한 명명된 파라미터 매핑을 보여준다.
     parameterType은 “int”로 설정되어 있다.
-    Integer과 String과 같은 원시타입 이나 간단한 데이터 타입은 프로퍼티를 가지지 않는다.
+    Integer와 String 같은 원시타입이나 간단한 데이터 타입은 프로퍼티를 가지지 않는다.
     그래서 파라미터 전체가 값을 대체하게 된다.
     하지만 복잡한 객체를 전달하고자 한다면 다음의 예제처럼 상황은 조금 다르게 된다.</p>
 
@@ -500,13 +500,13 @@ ps.setInt(1,id);]]></source>
     다소 설정이 장황하게 보일수 있지만 실제로 이렇게 설정할일은 거의 없다.
     </p>
 
-        <p>숫자 타입을 위해서 크기를 판단하기 위한 numericScale속성도 있다.</p>
+        <p>숫자 타입을 위해서 소수점 이하 몇 자리까지 유효한지 지정하는 numericScale속성도 있다.</p>
 
         <source><![CDATA[#{height,javaType=double,jdbcType=NUMERIC,numericScale=2}]]></source>
 
         <p>마지막으로 mode속성은 IN, OUT 또는 INOUT 파라미터를 명시하기 위해 사용한다.
     파라미터가 OUT 또는 INOUT 이라면 파라미터의 실제 값은 변경될 것이다.
-    mode=OUT(또는 INOUT) 이고 jdbcType=CURSOR(예를들어 오라클 REFCURSOR)라면 파라미터의 타입에 ResultSet 를 매핑하기 위해 resultMap을 명시해야만 한다.</p>
+    mode=OUT(또는 INOUT) 이고 jdbcType=CURSOR(예를들어 오라클 REFCURSOR)라면 파라미터의 타입에 ResultSet 을 매핑하기 위해 resultMap을 명시해야만 한다.</p>
 
         <source><![CDATA[#{department, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=departmentResultMap}]]></source>
 
@@ -815,7 +815,7 @@ public class User {
             </tr>
             <tr>
               <td><code>type</code></td>
-              <td>패키지를 포함한 자바 클래스명이나 타입별칭(내장된 타입별칭이 목록은 위 표를 보자).
+              <td>패키지를 포함한 자바 클래스명이나 타입별칭(내장된 타입별칭의 목록은 위 표를 보자).
               </td>
             </tr>
             <tr>
@@ -865,7 +865,7 @@ public class User {
               <td><code>property</code></td>
               <td>결과 칼럼에 매핑하기 위한 필드나 프로퍼티.
         자바빈 프로퍼티가 해당 이름과 일치한다면 그 프로퍼티가 사용될 것이다.
-        반면에 마이바티스는 해당 이름이 필드를 찾을 것이다.
+        반면에 마이바티스는 해당 이름의 필드를 찾을 것이다.
         점 표기를 사용하여 복잡한 프로퍼티 검색을 사용할 수 있다.
         예를들어 “username”과 같이 간단하게 매핑될 수 있거나 “address.street.number” 처럼 복잡하게 매핑될수도 있다.</td>
             </tr>
@@ -964,7 +964,7 @@ public class User {
 
         <p>
           결과를 생성자에 주입하려면 MyBatis 가 어떻게든 생성자를 식별해야 한다.
-          다음 예제에서 MyBatis는 <code>java.lang.Integer</code>, <code>java.lang.String</code> and <code>int</code> 의 순서로 세 개의 매개 변수로 선언 된 생성자를 검색한다.
+          다음 예제에서 MyBatis는 <code>java.lang.Integer</code>, <code>java.lang.String</code> and <code>int</code> 의 순서로 세 개의 매개 변수로 선언된 생성자를 검색한다.
         </p>
 
         <source><![CDATA[<constructor>
@@ -986,7 +986,7 @@ public class User {
 </constructor>]]></source>
 
         <p>
-          같은 이름과 형태의 쓰기 가능한 property 가 있는 경우는 <code>javaType</code> 를 생략 할 수 있다.
+          같은 이름과 형태의 쓰기 가능한 property 가 있는 경우는 <code>javaType</code> 을 생략할 수 있다.
         </p>
 
         <p>나머지 속성과 규칙은 id와 result엘리먼트와 동일하다.</p>
@@ -1096,7 +1096,7 @@ public class UserRole {
       u.id,
       u.username,
       r.id as role_id,
-      r.role as role_role,
+      r.role as role_role
     from user u
       left join user_role ur on u.id = ur.user_id
       inner join role r on r.id = ur.role_id
@@ -1199,7 +1199,7 @@ When using this functionality, it is preferable for the entire mapping hierarchy
               <td><code>property</code></td>
               <td>결과 칼럼에 매핑하기 위한 필드나 프로퍼티.
         자바빈 프로퍼티가 해당 이름과 일치한다면 그 프로퍼티가 사용될 것이다.
-        반면에 마이바티스는 해당 이름이 필드를 찾을 것이다.
+        반면에 마이바티스는 해당 이름의 필드를 찾을 것이다.
         점 표기를 사용하여 복잡한 프로퍼티 검색을 사용할 수 있다.
         예를들어 “username”과 같이 간단하게 매핑될 수 있거나 “address.street.number” 처럼 복잡하게 매핑될수도 있다.</td>
             </tr>
@@ -1280,7 +1280,7 @@ When using this functionality, it is preferable for the entire mapping hierarchy
         <p>다른 프로퍼티들은 칼럼과 프로퍼티명에 일치하는 것들로 자동으로 로드 될 것이다.</p>
 
         <p>이 방법은 간단한 반면에 큰 데이터나 목록에는 제대로 작동하지 않을 것이다.
-    이 방법은 “N+1 Selects 문제” 으로 알려진 문제점을 가진다.
+    이 방법은 “N+1 Selects 문제”로 알려진 문제점을 가진다.
     N+1 조회 문제는 처리과정의 특이성으로 인해 야기된다.</p>
 
         <ul>
@@ -1320,7 +1320,7 @@ When using this functionality, it is preferable for the entire mapping hierarchy
               <td>
                 여러개의 테이블을 조인할때 ResultSet에서 칼럼명의 중복을 피하기 위해 칼럼별칭을 사용할 수 있다.
                 칼럼을 외부 결과매핑에 매핑하기 위해 columnPrefix를 명시하자.
-        이 절의 뒤에 나오는 에제를 보자.
+        이 절의 뒤에 나오는 예제를 보자.
               </td>
             </tr>
             <tr>
@@ -1563,7 +1563,7 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
   <result property="body" column="post_body"/>
 </collection>]]></source>
 
-        <p>collection 엘리먼트는 관계를 파악하기 위해 작동한다.
+        <p>collection 엘리먼트는 association 과 거의 동일하게 작동한다.
     사실 이 내용이 중복되는 내용으로 차이점에 대해서만 주로 살펴보자.</p>
 
         <p>위 예제를 계속 진행하기 위해 Blog는 오직 하나의 Author를 가진다.
@@ -1573,7 +1573,7 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
         <source><![CDATA[private List<Post> posts;]]></source>
 
         <p>List에 내포된 결과를 매핑하기 위해 collection엘리먼트를 사용한다.
-    association 엘리먼트와는 달리 조인에서 내포된 select나 내포된 결과를 사용할 수 있다.</p>
+    association 엘리먼트와 마찬가지로 내포된 select나 조인의 내포된 결과를 사용할 수 있다.</p>
 
         <h4>Collection 을 위한 내포된(Nested) Select</h4>
 
@@ -1603,7 +1603,7 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
         </p>
 
         <p>javaType 속성은 그다지 필요하지 않다.
-    마이바티스는 대부분의 경우 이 속성을 사용하지 않을 것이다.
+    마이바티스가 대부분의 경우 타입을 알아서 판단하기 때문이다.
     그래서 간단하게 설정할 수 있다.</p>
 
         <source><![CDATA[<collection property="posts" column="id" ofType="Post" select="selectPostsForBlog"/>]]></source>
@@ -1611,7 +1611,7 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
         <h4>Collection을 위한 내포된(Nested) Results</h4>
 
         <p>이 시점에 collection 을 위한 내포된 결과가 어떻게 작동하는지 짐작할 수 있을 것이다.
-    왜냐하면 association와 정확히 일치하기 때문이다.
+    왜냐하면 association 과 정확히 일치하기 때문이다.
     하지만 “ofType” 속성이 추가로 적용되었다.</p>
 
         <p>먼저 SQL을 보자.</p>
@@ -1623,7 +1623,7 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
   B.author_id as blog_author_id,
   P.id as post_id,
   P.subject as post_subject,
-  P.body as post_body,
+  P.body as post_body
   from Blog B
   left outer join Post P on B.id = P.blog_id
   where B.id = #{id}
@@ -1732,8 +1732,8 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
     discriminator엘리먼트는 클래스 상속 관계를 포함하여 이러한 상황을 위해 고안되었다.
     discriminator는 자바의 switch와 같이 작동하기 때문에 이해하기 쉽다.</p>
 
-        <p>discriminator정의는 colume과 javaType속성을 명시한다.
-    colume은 마이바티스로 하여금 비교할 값을 찾을 것이다.
+        <p>discriminator정의는 column과 javaType속성을 명시한다.
+    column은 마이바티스가 비교할 값을 찾는 대상이다.
     javaType은 동일성 테스트와 같은 것을 실행하기 위해 필요하다.
     예를들어</p>
 
@@ -1831,7 +1831,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 
         <p>
           자동매핑은 결과매핑을 선언한 경우에도 동작한다.
-          이런 경우 각각의 결과매핑에서 ResultSet의 모든 칼럼은 자동매핑이 아니라 수동매핑으로 처리한다.
+          이런 경우 각각의 결과매핑마다 ResultSet에 존재하지만 수동으로 매핑하지 않은 모든 칼럼이 자동매핑되고, 그 다음에 수동매핑이 처리된다.
           다음 샘플에서 <i>id</i> 와 <i>userName</i> 칼럼은 자동매핑되고 <i>hashed_password</i> 칼럼은 수동으로 매핑한다. </p>
 
         <source><![CDATA[<select id="selectUsers" resultMap="userResultMap">
@@ -1874,7 +1874,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
   select
     B.id,
     B.title,
-    A.username,
+    A.username
   from Blog B left outer join Author A on B.author_id = A.id
   where B.id = #{id}
 </select>]]></source>
@@ -1890,7 +1890,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         <p>
           <i>Blog</i> 와 <i>Author</i> 는 자동매핑으로 처리하지만 <i>Author</i>는 <i>id</i> 프로퍼티를 가지고 ResultSet은 <i>id</i> 칼럼을 가진다.
           그래서 기대한 것과는 달리 저자(Author)의 id는 블로그(Blog)의 id로 채워질것이다.
-          <code>FULL</code> 는 이런 위험을 가진다.
+          <code>FULL</code> 은 이런 위험이 있으니 주의해서 사용하자.
         </p>
 
 
@@ -1948,7 +1948,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
           <li><code>LRU</code> – Least Recently Used: 가장 오랜시간 사용하지 않는 객체를 제거</li>
           <li><code>FIFO</code> – First In First Out: 캐시에 들어온 순서대로 객체를 제거</li>
           <li><code>SOFT</code> – Soft Reference: 가비지 컬렉터의 상태와 강하지 않은 참조(Soft References )의 규칙에 기초하여 객체를 제거</li>
-          <li><code>WEAK</code> – Weak Reference: 가비지 컬렉터의 상태와 약한 참조(Weak References)의 규칙에 기초하여 점진적으로 객체 제거</li>
+          <li><code>WEAK</code> – Weak Reference: 가비지 컬렉터의 상태와 약한 참조(Weak References)의 규칙에 기초하여 더 적극적으로 객체 제거</li>
         </ul>
 
         <p>디폴트 값은 LRU 이다.</p>
@@ -1974,7 +1974,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         <source><![CDATA[<cache type="com.domain.something.MyCustomCache"/>]]></source>
 
         <p>이 예제는 사용자 지정 캐시 구현체를 사용하는 방법을 보여준다.
-    type속성에 명시된 클래스는 org.apache.ibatis.cache.Cache인터페이스를 반드시 구현해야 한다.
+    type속성에 명시된 클래스는 org.apache.ibatis.cache.Cache인터페이스를 반드시 구현하고 String 타입의 id를 인자로 받는 생성자를 제공해야 한다.
     이 인터페이스는 마이바티스 프레임워크의 가장 복잡한 구성엘리먼트 중 하나이다.
     하지만 하는 일은 간단하다.</p>
 
@@ -1983,13 +1983,12 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
   int getSize();
   void putObject(Object key, Object value);
   Object getObject(Object key);
-  boolean hasKey(Object key);
   Object removeObject(Object key);
   void clear();
 }]]></source>
 
         <p>캐시를 설정하기 위해 캐시 구현체에 public 자바빈 프로퍼티를 추가하고 cache 엘리먼트를 통해 프로퍼티를 전달한다.
-    예를들어 다음 예제는 캐시 구현체에서 “setCacheFile(String file)” 를 호출하여 메소드를 호출할 것이다.</p>
+    예를들어 다음 예제는 캐시 구현체의 “setCacheFile(String file)” 메소드를 호출할 것이다.</p>
 
         <source><![CDATA[<cache type="com.domain.something.MyCustomCache">
   <property name="cacheFile" value="/tmp/my-custom-cache.tmp"/>
@@ -2019,13 +2018,13 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 <update ... flushCache="true"/>
 <delete ... flushCache="true"/>]]></source>
 
-        <p>이러한 방법으로 구문을 설정하는 하는 방법은 굉장히 좋지 않다.
+        <p>이러한 방법으로 구문을 명시적으로 설정하는 것은 좋지 않다.
     대신 디폴트 행위를 변경해야 할 경우에만 flushCache와 useCache 속성을 변경하는 것이 좋다.
     예를들어 캐시에서 특정 select 구문의 결과를 제외하고 싶거나 캐시를 지우기 위한 select 구문을 원할 것이다.
     유사하게 실행할때마다 캐시를 지울 필요가 없는 update구문도 있을 것이다.</p>
 
         <h4>cache-ref</h4>
-        <p>이전 섹션 내용을 돌이켜보면서 특정 네임스페이스을 위한 캐시는 오직 하나만 사용되거나 같은 네임스페이스내에서는 구문마다 캐시를 지울수 있다.
+        <p>이전 섹션 내용을 돌이켜보면서 특정 네임스페이스를 위한 캐시는 오직 하나만 사용되거나 같은 네임스페이스내에서는 구문마다 캐시를 지울수 있다.
     네임스페이스간의 캐시 설정과 인스턴스를 공유하고자 할때가 있을 것이다.
     이 경우 cache-ref 엘리먼트를 사용해서 다른 캐시를 참조할 수 있다.</p>
 

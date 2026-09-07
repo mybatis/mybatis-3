@@ -84,7 +84,7 @@
   추가적인 정보는 MyBatis-Spring이나 MyBatis-Guice를 참고하길 바란다. </p>
   <h4>SqlSessionFactoryBuilder</h4>
   <p>SqlSessionFactoryBuilder는 5개의 build() 메소드를 가진다.
-  각각은 서로 다른 소스에서 SqlSessionFactory을 빌드한다.</p>
+  각각은 서로 다른 소스에서 SqlSessionFactory를 빌드한다.</p>
   <source>SqlSessionFactory build(InputStream inputStream)
 SqlSessionFactory build(InputStream inputStream, String environment)
 SqlSessionFactory build(InputStream inputStream, Properties properties)
@@ -125,8 +125,8 @@ SqlSessionFactory build(Configuration config)</source>
   <p>프로퍼티가 한개 이상 존재한다면 마이바티스는 일정한 순서로 로드한다.</p>
   <ul>
   <li>properties엘리먼트에 명시된 속성을 가장 먼저 읽는다.</li>
-  <li>properties엘리먼트의 클래스패스 자원이나 url 속성으로 부터 로드된 속성을 두번재로 읽는다.
-  그래서 이미 읽은 값이 있다면 덮어쓴다.,</li>
+  <li>properties엘리먼트의 클래스패스 자원이나 url 속성으로 부터 로드된 속성을 두번째로 읽는다.
+  그래서 이미 읽은 값이 있다면 덮어쓴다.</li>
   <li>마지막으로 메소드 파라미터로 전달된 속성을 읽는다.
   앞서 로드된 값을 덮어쓴다</li>
   </ul>
@@ -163,7 +163,7 @@ Properties getUrlAsProperties(String urlString)
 Class classForName(String className)</source>
 
   <p>마지막 build메소드는 Configuration의 인스턴스를 가진다.
-  Configuration클래스는 SqlSessionFactory 인스턴스에 대해 알 필요가 있는 모든 것으로 가지고 있다.
+  Configuration클래스는 SqlSessionFactory 인스턴스에 대해 알 필요가 있는 모든 것을 가지고 있다.
   Configuration클래스는 SQL Map을 찾거나 관리하는 것을 포함하여 설정을 살펴보기 위해 유용하다.
   Configuration클래스는 앞서 봤던 모든 설정을 처리할 수 있으며 자바 API 로 나타낼 수 있다.
   SqlSessionFactory를 생성하기 위해 Configuration인스턴스를 build()메소드에 전달하는 예제이다.</p>
@@ -174,7 +174,6 @@ Environment environment = new Environment("development", transactionFactory, dat
 
 Configuration configuration = new Configuration(environment);
 configuration.setLazyLoadingEnabled(true);
-configuration.setEnhancementEnabled(true);
 configuration.getTypeAliasRegistry().registerAlias(Blog.class);
 configuration.getTypeAliasRegistry().registerAlias(Post.class);
 configuration.getTypeAliasRegistry().registerAlias(Author.class);
@@ -192,7 +191,7 @@ SqlSessionFactory factory = builder.build(configuration);</source>
   6개의 메소드가 선택해서 사용하는 것들을 보자.</p>
   <ul>
     <li><strong>Transaction</strong>: 세션에서 트랜잭션 스코프 또는 자동 커밋을 사용하고 싶은가?</li>
-    <li><strong>Connection</strong>: 설정된 DataSource에서 Connection 을 회득하고 싶은가?</li>
+    <li><strong>Connection</strong>: 설정된 DataSource에서 Connection 을 획득하고 싶은가?</li>
     <li><strong>Execution</strong>: PreparedStatements그리고/또는 배치(insert, delete를 포함해서) 업데이트를 재사용하고 싶은가?</li>
   </ul>
   <p>오버로드된 메소드인 openSession() 이 3가지를 적절히 혼합해서 사용할 수 있다.</p>
@@ -209,7 +208,7 @@ Configuration getConfiguration();</source>
   <p>파라미터를 가지지 않는 디폴트 openSession()메소드는 다음과 같은 성격을 가진 SqlSession을 만들것이다.</p>
   <ul>
     <li>트랜잭션 스코프는 시작될 것이다.</li>
-    <li>Connection 객체는 활성화된 환경에 의해 설정된 DataSource인스턴스를 획득할 것이다.</li>
+    <li>Connection 객체는 활성화된 환경에 설정된 DataSource 인스턴스로부터 획득될 것이다.</li>
     <li>트랜잭션 격리 레벨은 드라이버나 데이터소스가 디폴트로 제공하는 옵션을 사용할 것이다.</li>
     <li>PreparedStatements는 재사용되지 않을 것이다.
   그리고 update또한 배치처리되지 않을 것이다.</li>
@@ -220,11 +219,11 @@ Configuration getConfiguration();</source>
   <p>Connection 과 autoCommit 둘다 설정하는 것을 오버라이드하지 않는다.
   왜냐하면 마이바티스는 제공된 connection 객체를 설정할때마다 현재 사용중인 것을 사용한다.
   마이바티스는 TransactionIsolationLevel라고 불리는 트랜잭션 격리 레벨을 위한 자바 enum 래퍼를 사용한다.
-  JDBC를 5가지를 지원한다(NONE, READ_UNCOMMITTED, READ_COMMITTED, REPEATABLE_READ, SERIALIZABLE).</p>
+  JDBC가 지원하는 5가지 레벨을 그대로 제공한다(NONE, READ_UNCOMMITTED, READ_COMMITTED, REPEATABLE_READ, SERIALIZABLE).</p>
   <p>새롭게 보일수 있는 하나의 파라미터는 ExecutorType이다.
   enum으로는 3개의 값을 정의한다.</p>
   <ul>
-    <li><code>ExecutorType.SIMPLE</code>: 이 타입의 실행자는 아무것도 하지 않는다.
+    <li><code>ExecutorType.SIMPLE</code>: 이 타입의 실행자는 특별한 처리를 하지 않는다.
   구문 실행마다 새로운 PreparedStatement를 생성한다.</li>
     <li><code>ExecutorType.REUSE</code>: 이 타입의 실행자는 PreparedStatements를 재사용할 것이다.</li>
     <li><code>ExecutorType.BATCH</code>: 이 실행자는 모든 update구문을 배치처리하고 중간에 select 가 실행될 경우 필요하다면 경계를 표시한다.
@@ -254,8 +253,8 @@ Configuration getConfiguration();</source>
 int insert(String statement, Object parameter)
 int update(String statement, Object parameter)
 int delete(String statement, Object parameter)]]></source>
-  <p>selectOne과 selectList의 차이점은 selectOne메소드는 오직 하나의 객체만을 리턴해야 한다는 것이다.
-  한개 이상을 리턴하거나 null 이 리턴된다면 예외가 발생할 것이다.
+  <p>selectOne과 selectList의 차이점은 selectOne메소드는 정확히 한개의 객체 또는 null(결과 없음)을 리턴해야 한다는 것이다.
+  두개 이상이 리턴되면 예외가 발생할 것이다.
   얼마나 많은 객체가 리턴될지 모른다면 selectList를 사용하라.
   객체의 존재여부를 체크하고 싶다면 개수를 리턴하는 방법이 더 좋다.
   selectMap은 결과 목록을 Map으로 변환하기 위해 디자인된 특별한 경우이다.
@@ -285,7 +284,7 @@ int delete(String statement)]]></source>
 void select (String statement, Object parameter, ResultHandler<T> handler)
 void select (String statement, Object parameter, RowBounds rowBounds, ResultHandler<T> handler)]]></source>
 
-  <p>RowBounds 파라미터는 마이바티스로 하여금 특정 개수 만큼의 레코드를 건너띄게 한다.
+  <p>RowBounds 파라미터는 마이바티스로 하여금 특정 개수 만큼의 레코드를 건너뛰게 한다.
   RowBounds클래스는 offset과 limit 둘다 가지는 생성자가 있다.</p>
 
   <source>int offset = 100;
@@ -303,13 +302,13 @@ public interface ResultHandler<T> {
   void handleResult(ResultContext<? extends T> context);
 }]]></source>
 
-  <p>ResultContext파라미터는 결과 객체에 접근할 수 있도록 해준다.</p>
+  <p>ResultContext파라미터는 결과 객체 자체와 지금까지 생성된 결과 객체의 개수에 접근할 수 있게 해주고, 더 이상 결과를 로딩하지 않도록 중단시키는 stop() 메소드를 제공한다.</p>
 
   <p>ResultHandler를 사용할 때 유의해야 할 제약사항이 2개 있다:</p>
 
   <ul>
     <li>ResultHandler를 사용하여 호출된 메소드의 데이터는 캐싱 되지 않는다.</li>
-    <li>고급 resualtMap을 사용할 경우, 마이바티스는 객체를 완성하기 위해 여러 줄의 코드를 필요로 할 수 있다. ResultHandler를 사용할 때 받는 객체는 associations나 collections가 완전히 채워지지 않은 상태일 수도 있다.</li>
+    <li>고급 resultMap을 사용할 경우, 마이바티스는 객체를 완성하기 위해 여러 줄의 코드를 필요로 할 수 있다. ResultHandler를 사용할 때 받는 객체는 associations나 collections가 완전히 채워지지 않은 상태일 수도 있다.</li>
   </ul>
 
   <h5>배치 수정시 flush메소드</h5>
@@ -317,7 +316,7 @@ public interface ResultHandler<T> {
   이 방법은 <code>ExecutorType</code>을 <code>ExecutorType.BATCH</code>로 설정한 경우 사용가능하다. </p>
   <source><![CDATA[List<BatchResult> flushStatements()]]></source>
 
-  <h5 id="transaction-control-methods">트랙잭션 제어 메소드</h5>
+  <h5 id="transaction-control-methods">트랜잭션 제어 메소드</h5>
   <p>트랜잭션을 제어하기 위해 4개의 메소드가 있다.
   물론 자동커밋을 선택하였거나 외부 트랜잭션 관리자를 사용하면 영향이 없다.
   어쨌든 Connection인스턴스에 의해 관리되고 JDBC 트랜잭션 관리자를 사용하면 이 4개의 메소드를 사용할 수 있다.</p>
@@ -325,15 +324,15 @@ public interface ResultHandler<T> {
 void commit(boolean force)
 void rollback()
 void rollback(boolean force)</source>
-  <p>기본적으로 마이바티스는 insert, update, delete 또는 <code>affectData</code>가 활성화된select 를 호출하여 데이터베이스가 변경된 것으로 감지하지 않는 한 실제로 커밋하지 않는다.
+  <p>기본적으로 마이바티스는 insert, update, delete 또는 <code>affectData</code>가 활성화된 select 를 호출하여 데이터베이스가 변경된 것으로 감지하지 않는 한 실제로 커밋하지 않는다.
   이러한 메소드 호출없이 변경되면 커밋된 것으로 보장하기 위해 commit 와 rollback 메소드에 true 값을 전달한다.</p>
   <p><span class="label important">참고</span> MyBatis-Spring 과 MyBatis-Guice는 선언적인 트랜잭션 관리기법을 제공한다.
   그래서 스프링이나 쥬스와 함께 마이바티스를 사용한다면 해당되는 메뉴얼을 꼭 참고하길 바란다. </p>
 
   <h5>세션 레벨의 캐시를 지우기</h5>
   <source>void clearCache()</source>
-  <p>SqlSession인스턴스는 update, commit, rollback 또는 close 할때마다 지워지는 로컬 캐시이다.
-  명시적으로 닫기 위해서는 clearCache()메소드를 호출할 수 있다.</p>
+  <p>SqlSession인스턴스는 update, commit, rollback 또는 close 할때마다 지워지는 로컬 캐시를 가진다.
+  명시적으로 지우고 싶다면 위의 clearCache() 메소드를 호출하면 된다.</p>
 
   <h5>SqlSession 을 반드시 닫도록 한다.</h5>
   <source>void close()</source>
@@ -360,7 +359,7 @@ void rollback(boolean force)</source>
   <source><![CDATA[public interface AuthorMapper {
   // (Author) selectOne("selectAuthor",5);
   Author selectAuthor(int id);
-  // (List<Author>) selectList(“selectAuthors”)
+  // (List<Author>) selectList("selectAuthors")
   List<Author> selectAuthors();
 
   // (Map<Integer,Author>) selectMap("selectAuthors", "id")
@@ -602,7 +601,7 @@ void rollback(boolean force)</source>
             <li><code>&lt;select&gt;</code></li>
           </ul>
         </td>
-        <td>실행시 SQL 을 리턴할 클래스 과 메소드명을 명시하도록 해주는 대체수단의 애노테이션이다 (Since 3.4.6, you can specify the <code>CharSequence</code> instead of <code>String</code> as a method return type).
+        <td>실행시 SQL 을 리턴할 클래스와 메소드명을 명시하도록 해주는 대체수단의 애노테이션이다 (Since 3.4.6, you can specify the <code>CharSequence</code> instead of <code>String</code> as a method return type).
     매핑된 구문을 실행할 때 마이바티스는 클래스의 인스턴스를 만들고 메소드를 실행한다.
     Mapper 메서드의 인수인 "Mapper interface type" and "Database ID" 과 <code>ProviderContext</code>(Mybatis 3.4.5 부터) 를 이용한 "Mapper method" 로 전달 된 객체를 메서드 매개변수로 전달할 수 있다.(마이바티스 3.4이상에서는 복수 파라미터를 허용한다.)
     사용가능한 속성들 : value, type, method.

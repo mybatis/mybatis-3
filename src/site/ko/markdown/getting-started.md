@@ -19,9 +19,9 @@ author: Clinton Begin, 이동국(한국어 번역)
 
 ## XML에서 SqlSessionFactory 빌드하기
 
-모든 마이바티스 애플리케이션은 SqlSessionFactory 인스턴스를 사용한다. SqlSessionFactory인스턴스는 SqlSessionFactoryBuilder를 사용하여 만들수 있다. SqlSessionFactoryBuilder는 XML설정파일에서 SqlSessionFactory인스턴스를 빌드할 수 있다.
+모든 마이바티스 애플리케이션은 SqlSessionFactory 인스턴스를 사용한다. SqlSessionFactory인스턴스는 SqlSessionFactoryBuilder를 사용하여 만들 수 있다. SqlSessionFactoryBuilder는 XML설정파일에서 SqlSessionFactory인스턴스를 빌드할 수 있다.
 
-XML파일에서 SqlSessionFactory인스턴스를 빌드하는 것은 매우 간단한다. 설정을 위해 클래스패스 자원을 사용하는 것을 추천하나 파일 경로나 `file://` URL로부터 만들어진 InputStream인스턴스를 사용할 수도 있다. 마이바티스는 클래스패스와 다른 위치에서 자원을 로드하는 것으로 좀더 쉽게 해주는 Resources 라는 유틸성 클래스를 가지고 있다.
+XML파일에서 SqlSessionFactory인스턴스를 빌드하는 것은 매우 간단하다. 설정을 위해 클래스패스 자원을 사용하는 것을 추천하나 파일 경로나 `file://` URL로부터 만들어진 InputStream인스턴스를 사용할 수도 있다. 마이바티스는 클래스패스와 다른 위치에서 자원을 로드하는 것으로 좀더 쉽게 해주는 Resources 라는 유틸성 클래스를 가지고 있다.
 
 ```java
 String resource = "org/mybatis/example/mybatis-config.xml";
@@ -29,7 +29,7 @@ InputStream inputStream = Resources.getResourceAsStream(resource);
 SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 ```
 
-XML설정파일에서 지정하는 마이바티스의 핵심이 되는 설정은 트랜잭션을 제어하기 위한 TransactionManager과 함께 데이터베이스 Connection인스턴스를 가져오기 위한 DataSource 를 포함한다. 세부적인 설정은 조금 뒤에 보고 간단한 예제를 먼저보자.
+XML설정파일에서 지정하는 마이바티스의 핵심이 되는 설정은 트랜잭션을 제어하기 위한 TransactionManager와 함께 데이터베이스 Connection인스턴스를 가져오기 위한 DataSource 를 포함한다. 세부적인 설정은 조금 뒤에 보고 간단한 예제를 먼저보자.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -73,7 +73,7 @@ SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(confi
 
 ## SqlSessionFactory 에서 SqlSession 만들기
 
-SqlSessionFactory 이름에서 보듯이 SqlSession 인스턴스를 만들수 있다. SqlSession 은 데이터베이스에 대해 SQL명령어를 실행하기 위해 필요한 모든 메소드를 가지고 있다. 그래서 SqlSession 인스턴스를 통해 직접 SQL 구문을 실행할 수 있다. 예를 들면 :
+SqlSessionFactory 이름에서 보듯이 SqlSession 인스턴스를 만들 수 있다. SqlSession 은 데이터베이스에 대해 SQL명령어를 실행하기 위해 필요한 모든 메소드를 가지고 있다. 그래서 SqlSession 인스턴스를 통해 직접 SQL 구문을 실행할 수 있다. 예를 들면 :
 
 ```java
 try (SqlSession session = sqlSessionFactory.openSession()) {
@@ -118,7 +118,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
 Blog blog = (Blog) session.selectOne("org.mybatis.example.BlogMapper.selectBlog", 101);
 ```
 
-이건 마치 패키지를 포함한 전체 경로의 클래스내 메소드를 호출하는 것과 비슷한 형태이다. 이 이름은 매핑된 select구문의 이름과 파라미터 그리고 리턴타입을 가진 네임스페이스과 같은 이름의 Mapper 클래스와 직접 매핑될 수 있다. 이건 위에서 본것과 같은 Mapper 인터페이스의 메소드를 간단히 호출하도록 허용한다. 위 예제에 대응되는 형태는 아래와 같다.
+이건 마치 패키지를 포함한 전체 경로의 클래스내 메소드를 호출하는 것과 비슷한 형태이다. 이 이름은 매핑된 select구문의 이름과 파라미터 그리고 리턴타입을 가진 네임스페이스와 같은 이름의 Mapper 클래스와 직접 매핑될 수 있다. 이건 위에서 본것과 같은 Mapper 인터페이스의 메소드를 간단히 호출하도록 허용한다. 위 예제에 대응되는 형태는 아래와 같다.
 
 ```java
 BlogMapper mapper = session.getMapper(BlogMapper.class);
@@ -133,12 +133,12 @@ Blog blog = mapper.selectBlog(101);
 
 **네임스페이스(Namespaces)** 가 이전버전에서는 사실 선택사항이었다. 하지만 이제는 패키지경로를 포함한 전체 이름을 가진 구문을 구분하기 위해 필수로 사용해야 한다.
 
-네임스페이스은 인터페이스 바인딩을 가능하게 한다. 네임스페이스을 사용하고 자바 패키지의 네임스페이스을 두면 코드가 깔끔해지고 마이바티스의 사용성이 크게 향상될 것이다.
+네임스페이스는 인터페이스 바인딩을 가능하게 한다. 네임스페이스를 사용하고 자바 패키지의 네임스페이스를 두면 코드가 깔끔해지고 마이바티스의 사용성이 크게 향상될 것이다.
 
 **이름 분석(Name Resolution):** 타이핑을 줄이기 위해 마이바티스는 구문과 결과매핑, 캐시등의 모든 설정엘리먼트를 위한 이름 분석 규칙을 사용한다.
 
 - “com.mypackage.MyMapper.selectAllThings”과 같은 패키지를 포함한 전체 경로명(Fully qualified names)은 같은 형태의 경로가 있다면 그 경로내에서 직접 찾는다.
-- “selectAllThings”과 같은 짧은 형태의 이름은 모호하지 않은 엔트리를 참고하기 위해 사용될 수 있다. 그래서 짧은 이름은 모호해서 에러를 자주 보게 되니 되도록 이면 전체 경로를 사용해야 할 것이다.
+- “selectAllThings”과 같은 짧은 형태의 이름은 모호하지 않은 엔트리를 참고하기 위해 사용될 수 있다. 그래서 짧은 이름은 모호해서 에러를 자주 보게 되니 되도록이면 전체 경로를 사용해야 할 것이다.
 
 ---
 
@@ -170,7 +170,7 @@ public interface BlogMapper {
 
 #### SqlSessionFactoryBuilder
 
-이 클래스는 인스턴스화되어 사용되고 던져질 수 있다. SqlSessionFactory 를 생성한 후 유지할 필요는 없다. 그러므로 SqlSessionFactoryBuilder 인스턴스의 가장 좋은 스코프는 메소드 스코프(예를들면 메소드 지역변수)이다. 여러개의 SqlSessionFactory 인스턴스를 빌드하기 위해 SqlSessionFactoryBuilder를 재사용할 수도 있지만 유지하지 않는 것이 가장 좋다.
+이 클래스는 인스턴스화해서 사용한 뒤 버리면 된다. SqlSessionFactory 를 생성한 후 유지할 필요는 없다. 그러므로 SqlSessionFactoryBuilder 인스턴스의 가장 좋은 스코프는 메소드 스코프(예를들면 메소드 지역변수)이다. 여러개의 SqlSessionFactory 인스턴스를 빌드하기 위해 SqlSessionFactoryBuilder를 재사용할 수도 있지만 유지하지 않는 것이 가장 좋다.
 
 #### SqlSessionFactory
 
@@ -190,7 +190,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
 
 #### Mapper 인스턴스
 
-Mapper는 매핑된 구문을 바인딩 하기 위해 만들어야 할 인터페이스이다. mapper 인터페이스의 인스턴스는 SqlSession 에서 생성한다. 그래서 mapper 인스턴스의 가장 좋은 스코프는 SqlSession 과 동일하다. 어쨌든 mapper 인스턴스의 가장 좋은 스코프는 메소드 스코프이다. 사용할 메소드가 호출되면 생성되고 끝난다. 명시적으로 닫을 필요는 없다.
+Mapper는 매핑된 구문을 바인딩 하기 위해 만들어야 할 인터페이스이다. mapper 인터페이스의 인스턴스는 SqlSession 에서 생성한다. 그래서 엄밀히 말하면 mapper 인스턴스의 가장 넓은 스코프는 그것을 얻어온 SqlSession 과 동일하다. 어쨌든 mapper 인스턴스의 가장 좋은 스코프는 메소드 스코프이다. 사용할 메소드가 호출되면 생성되고 끝난다. 명시적으로 닫을 필요는 없다.
 
 ```java
 try (SqlSession session = sqlSessionFactory.openSession()) {

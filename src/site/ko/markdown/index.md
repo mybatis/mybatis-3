@@ -29,7 +29,7 @@ author: Clinton Begin, 이동국(한국어 번역)
 <!--      <li class="fr"><a href="../fr/index.html">Français</a></li> -->
           <li class="ja"><a href="../ja/index.html">日本語</a></li>
           <li class="ko"><a href="../ko/index.html">한국어</a></li>
-          <li class="zh"><a href="../zh/index.html">简体中文</a></li>
+          <li class="zh"><a href="../zh_CN/index.html">简体中文</a></li>
 </ul>
 
 당신의 모국어로 작성된 마이바티스 문서를 읽고 싶은가? 그렇다면 모국어로 작성된 문서를 패치로 첨부한 이슈를 등록해달라!
