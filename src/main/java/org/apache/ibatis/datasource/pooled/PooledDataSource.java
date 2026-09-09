@@ -385,7 +385,7 @@ public class PooledDataSource implements DataSource {
   }
 
   private int assembleConnectionTypeCode(String url, String username, String password) {
-    return ("" + url + username + password).hashCode();
+    return (url + username + password).hashCode();
   }
 
   protected void pushConnection(PooledConnection conn) throws SQLException {
