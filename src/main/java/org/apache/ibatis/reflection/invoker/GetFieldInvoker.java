@@ -15,35 +15,63 @@
  */
 package org.apache.ibatis.reflection.invoker;
 
-import java.lang.reflect.Field;
-
+import org.apache.ibatis.reflection.ReflectionUtil;
 import org.apache.ibatis.reflection.Reflector;
+
+import java.lang.invoke.VarHandle;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 /**
  * @author Clinton Begin
  */
 public class GetFieldInvoker implements Invoker {
+  private final VarHandle varHandle;
   private final Field field;
+  private final boolean isStatic;
+  private final Class<?> type;
 
   public GetFieldInvoker(Field field) {
-    this.field = field;
+    this.type = field.getType();
+    this.isStatic = Modifier.isStatic(field.getModifiers());
+
+    Class<?> fieldClass = field.getDeclaringClass();
+    if (ReflectionUtil.jdk8Class(fieldClass)) {
+      // JDK internal class (e.g., java.lang.Integer) → use reflection with Field
+      this.field = field;
+      this.varHandle = null;
+      // Use trySetAccessible() which handles both static and instance fields safely
+      field.trySetAccessible();
+    } else {
+      // User's business class → use VarHandle for better performance
+      this.field = null;
+      try {
+        this.varHandle = ReflectionUtil.getMethodHandlesLookup(fieldClass).unreflectVarHandle(field);
+      } catch (IllegalAccessException e) {
+        throw new RuntimeException("Cannot access field: " + field, e);
+      }
+    }
   }
 
   @Override
   public Object invoke(Object target, Object[] args) throws IllegalAccessException {
-    try {
-      return field.get(target);
-    } catch (IllegalAccessException e) {
-      if (Reflector.canControlMemberAccessible()) {
-        field.setAccessible(true);
+    if (varHandle != null) {
+      return isStatic ? varHandle.get() : varHandle.get(target);
+    } else {
+      try {
         return field.get(target);
+      } catch (IllegalAccessException e) {
+        if (Reflector.canControlMemberAccessible()) {
+          field.setAccessible(true);
+          return field.get(target);
+        }
+        throw e;
       }
-      throw e;
     }
   }
 
   @Override
   public Class<?> getType() {
-    return field.getType();
+    return type;
   }
 }
