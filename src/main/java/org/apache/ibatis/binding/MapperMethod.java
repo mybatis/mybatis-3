@@ -23,6 +23,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.apache.ibatis.annotations.Flush;
 import org.apache.ibatis.annotations.MapKey;
@@ -43,6 +47,7 @@ import org.apache.ibatis.session.SqlSession;
  * @author Eduardo Macarron
  * @author Lasse Voss
  * @author Kazuki Shimizu
+ * @author Yanming Zhou
  */
 public class MapperMethod {
 
@@ -82,6 +87,11 @@ public class MapperMethod {
           result = executeForMap(sqlSession, args);
         } else if (method.returnsCursor()) {
           result = executeForCursor(sqlSession, args);
+        } else if (method.returnsStream()) {
+          Cursor<?> cursor = executeForCursor(sqlSession, args);
+          result = StreamSupport
+              .stream(Spliterators.spliteratorUnknownSize(cursor.iterator(), Spliterator.ORDERED), false)
+              .onClose(cursor::close);
         } else {
           Object param = method.convertArgsToSqlCommandParam(args);
           result = sqlSession.selectOne(command.getName(), param);
@@ -274,6 +284,7 @@ public class MapperMethod {
     private final boolean returnsMap;
     private final boolean returnsVoid;
     private final boolean returnsCursor;
+    private final boolean returnsStream;
     private final boolean returnsOptional;
     private final Class<?> returnType;
     private final String mapKey;
@@ -293,6 +304,7 @@ public class MapperMethod {
       this.returnsVoid = void.class.equals(this.returnType);
       this.returnsMany = configuration.getObjectFactory().isCollection(this.returnType) || this.returnType.isArray();
       this.returnsCursor = Cursor.class.equals(this.returnType);
+      this.returnsStream = Stream.class.equals(this.returnType);
       this.returnsOptional = Optional.class.equals(this.returnType);
       this.mapKey = getMapKey(method);
       this.returnsMap = this.mapKey != null;
@@ -339,6 +351,10 @@ public class MapperMethod {
 
     public boolean returnsCursor() {
       return returnsCursor;
+    }
+
+    public boolean returnsStream() {
+      return returnsStream;
     }
 
     /**
