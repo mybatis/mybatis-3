@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -831,6 +831,13 @@ public class Configuration {
   }
 
   public void addMappedStatement(MappedStatement ms) {
+    // Let a database-specific statement override a default (no databaseId) one with the same id, even when they live in
+    // different mapper files. Real duplicates still fall through to StrictMap.put and are rejected.
+    if (ms.getDatabaseId() != null && mappedStatements.containsKey(ms.getId())
+        && mappedStatements.get(ms.getId()).getDatabaseId() == null) {
+      ((StrictMap<MappedStatement>) mappedStatements).replaceValue(ms.getId(), ms);
+      return;
+    }
     mappedStatements.put(ms.getId(), ms);
   }
 
@@ -1167,6 +1174,28 @@ public class Configuration {
         }
       }
       return super.put(key, value);
+    }
+
+    /**
+     * Replaces the value of an existing full key, keeping the short-name index in sync. The short-name entry is updated
+     * only when it still points at the old value; an ambiguous entry is left untouched.
+     *
+     * @param key
+     *          the full key (including namespace) whose value should be replaced
+     * @param value
+     *          the new value
+     *
+     * @return the previous value associated with the key
+     */
+    public V replaceValue(String key, V value) {
+      V previous = super.put(key, value);
+      if (key.contains(".")) {
+        final String shortKey = getShortName(key);
+        if (super.get(shortKey) != AMBIGUITY_INSTANCE) {
+          super.put(shortKey, value);
+        }
+      }
+      return previous;
     }
 
     @Override
