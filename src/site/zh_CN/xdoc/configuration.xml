@@ -37,9 +37,9 @@
           <ul>
             <li><a href="#properties">properties（属性）</a></li>
             <li><a href="#settings">settings（设置）</a></li>
-            <li><a href="#typeAliases">typeAliases（类型别名）</a></li>
-            <li><a href="#typeHandlers">typeHandlers（类型处理器）</a></li>
-            <li><a href="#objectFactory">objectFactory（对象工厂）</a></li>
+            <li><a href="#typealiases">typeAliases（类型别名）</a></li>
+            <li><a href="#typehandlers">typeHandlers（类型处理器）</a></li>
+            <li><a href="#objectfactory">objectFactory（对象工厂）</a></li>
             <li><a href="#plugins">plugins（插件）</a></li>
             <li><a href="#environments">environments（环境配置）</a>
               <ul>
@@ -52,7 +52,7 @@
                 </li>
               </ul>
             </li>
-            <li><a href="#databaseIdProvider">databaseIdProvider（数据库厂商标识）</a></li>
+            <li><a href="#databaseidprovider">databaseIdProvider（数据库厂商标识）</a></li>
             <li><a href="#mappers">mappers（映射器）</a></li>
           </ul>
         </li>
