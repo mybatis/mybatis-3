@@ -78,6 +78,22 @@ class ActualParamNameTest {
         long count = mapper.getUserCountUsingList_RowBounds(new RowBounds(0, 5), Arrays.asList(1, 2));
         assertEquals(2, count);
       }
+      // use 'collection' as alias with a special parameter #3769
+      {
+        long count = mapper.getUserCountUsingListWithAliasIsCollection_RowBounds(new RowBounds(0, 5),
+            Arrays.asList(1, 2));
+        assertEquals(2, count);
+      }
+      // use 'list' as alias with a special parameter #3769
+      {
+        long count = mapper.getUserCountUsingListWithAliasIsList_RowBounds(new RowBounds(0, 5), Arrays.asList(1, 2));
+        assertEquals(2, count);
+      }
+      // use positional 'paramN' names with a special parameter #3769
+      {
+        long count = mapper.getUserCountBetween_RowBounds(new RowBounds(0, 5), 1, 2);
+        assertEquals(2, count);
+      }
     }
   }
 
@@ -93,6 +109,11 @@ class ActualParamNameTest {
       // use 'array' as alias
       {
         long count = mapper.getUserCountUsingArrayWithAliasArray(1, 2);
+        assertEquals(2, count);
+      }
+      // use 'array' as alias with a special parameter #3769
+      {
+        long count = mapper.getUserCountUsingArrayWithAliasArray_RowBounds(new RowBounds(0, 5), new Integer[] { 1, 2 });
         assertEquals(2, count);
       }
     }
@@ -170,6 +191,45 @@ class ActualParamNameTest {
       })
     // @formatter:on
     Long getUserCountUsingList_RowBounds(RowBounds rowBounds, List<Integer> ids);
+
+    // @formatter:off
+    @Select({
+        "<script>",
+        "  select count(*) from users u where u.id in",
+        "  <foreach item='item' index='index' collection='collection' open='(' separator=',' close=')'>",
+        "    #{item}",
+        "  </foreach>",
+        "</script>"
+      })
+    // @formatter:on
+    Long getUserCountUsingListWithAliasIsCollection_RowBounds(RowBounds rowBounds, List<Integer> ids);
+
+    // @formatter:off
+    @Select({
+        "<script>",
+        "  select count(*) from users u where u.id in",
+        "  <foreach item='item' index='index' collection='list' open='(' separator=',' close=')'>",
+        "    #{item}",
+        "  </foreach>",
+        "</script>"
+      })
+    // @formatter:on
+    Long getUserCountUsingListWithAliasIsList_RowBounds(RowBounds rowBounds, List<Integer> ids);
+
+    @Select("select count(*) from users u where u.id between #{param1} and #{param2}")
+    Long getUserCountBetween_RowBounds(RowBounds rowBounds, int idFrom, int idTo);
+
+    // @formatter:off
+    @Select({
+        "<script>",
+        "  select count(*) from users u where u.id in",
+        "  <foreach item='item' index='index' collection='array' open='(' separator=',' close=')'>",
+        "    #{item}",
+        "  </foreach>",
+        "</script>"
+      })
+    // @formatter:on
+    Long getUserCountUsingArrayWithAliasArray_RowBounds(RowBounds rowBounds, Integer[] ids);
   }
 
 }
