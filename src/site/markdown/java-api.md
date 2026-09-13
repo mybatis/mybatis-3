@@ -225,7 +225,7 @@ try {
 }
 ```
 
-If no managed session has been started, calling any SqlSession method on the SqlSessionManager will automatically open a short-lived session, execute that single method, and immediately close it. Note that it will not explicitly commit write operations, making this mode ideal primarily for single read queries.
+If no managed session has been started, calling a data access method (`selectOne`, `selectList`, `selectMap`, `selectCursor`, `select`, `insert`, `update`, `delete`) on the SqlSessionManager will automatically open a short-lived session, execute that single method, and immediately close it. The auto-opened session is committed when the method returns normally and rolled back if it throws. The session lifecycle methods (`commit()`, `rollback()`, `close()`, `clearCache()`, `flushStatements()`, `getConnection()`) do not open a session automatically; they throw `SqlSessionException` when no managed session has been started.
 
 ##### Difference from DefaultSqlSessionFactory
 
