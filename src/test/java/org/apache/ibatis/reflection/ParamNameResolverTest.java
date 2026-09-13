@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.RowBounds;
 import org.junit.jupiter.api.Test;
 
 class ParamNameResolverTest {
@@ -32,6 +33,8 @@ class ParamNameResolverTest {
     void m1(@Param("p") Integer p) {}
     void m2(List<String> p) {}
     void m3(Integer[] p) {}
+    void m4(RowBounds rowBounds, List<String> p) {}
+    void m5(@Param("a") Integer a, RowBounds rowBounds, @Param("b") String b) {}
   }
   // @formatter:on
 
@@ -63,5 +66,24 @@ class ParamNameResolverTest {
     assertEquals(Integer.class, resolver.getType("p[0]"));
     assertEquals(Integer[].class, resolver.getType("param1"));
     assertEquals(Integer.class, resolver.getType("param1[0]"));
+  }
+
+  @Test
+  void testGetTypeListAfterSpecialParameter() throws Exception {
+    Class<?> clazz = A.class;
+    Method method = clazz.getDeclaredMethod("m4", RowBounds.class, List.class);
+    ParamNameResolver resolver = new ParamNameResolver(new Configuration(), method, clazz);
+    assertEquals(String.class, resolver.getType("list[0]"));
+    assertEquals(List.class, ((ParameterizedType) resolver.getType("list")).getRawType());
+    assertEquals(List.class, ((ParameterizedType) resolver.getType("collection")).getRawType());
+  }
+
+  @Test
+  void testGetTypeGenericNameWithSpecialParameter() throws Exception {
+    Class<?> clazz = A.class;
+    Method method = clazz.getDeclaredMethod("m5", Integer.class, RowBounds.class, String.class);
+    ParamNameResolver resolver = new ParamNameResolver(new Configuration(), method, clazz);
+    assertEquals(Integer.class, resolver.getType("param1"));
+    assertEquals(String.class, resolver.getType("param2"));
   }
 }
