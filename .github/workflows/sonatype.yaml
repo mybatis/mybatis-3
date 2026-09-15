@@ -23,7 +23,7 @@ jobs:
         with:
           cache: maven
           distribution: temurin
-          java-version: 25
+          java-version: 25.0.4+101.0.LTS
       - name: Deploy to Sonatype
         run: ./mvnw deploy --batch-mode --no-transfer-progress --settings ./.mvn/settings.xml --show-version  -Dgpg.skip -Dlicense.skip=true -DskipTests -Prelease
         env:
