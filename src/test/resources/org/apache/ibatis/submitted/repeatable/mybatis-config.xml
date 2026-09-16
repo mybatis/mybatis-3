@@ -31,14 +31,6 @@
         <property name="username" value="sa" />
       </dataSource>
     </environment>
-    <environment id="development-derby">
-      <transactionManager type="JDBC" />
-      <dataSource type="UNPOOLED">
-        <property name="driver" value="org.apache.derby.jdbc.EmbeddedDriver" />
-        <property name="url" value="jdbc:derby:target/derby/repeatable;create=true" />
-        <property name="username" value="" />
-      </dataSource>
-    </environment>
     <environment id="development-h2">
       <transactionManager type="JDBC" />
       <dataSource type="UNPOOLED">
@@ -52,8 +44,7 @@
 
   <databaseIdProvider type="DB_VENDOR">
     <property name="HSQL Database Engine" value="hsql"/>
-    <property name="Apache Derby" value="derby"/>
-  </databaseIdProvider>
+    </databaseIdProvider>
 
   <mappers>
     <mapper class="org.apache.ibatis.submitted.repeatable.Mapper" />

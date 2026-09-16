@@ -30,7 +30,7 @@ class RepeatableErrorTest {
   @Test
   void noSuchStatementByCurrentDatabase() throws IOException {
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/repeatable/mybatis-config.xml")) {
-      SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, "development-derby");
+      SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, "development-hsql");
       BuilderException exception = Assertions.assertThrows(BuilderException.class,
           () -> sqlSessionFactory.getConfiguration().addMapper(NoDefineDefaultDatabaseMapper.class));
       Assertions.assertEquals(
@@ -42,7 +42,7 @@ class RepeatableErrorTest {
   @Test
   void bothSpecifySelectAndSelectProvider() throws IOException {
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/repeatable/mybatis-config.xml")) {
-      SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, "development-derby");
+      SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, "development-hsql");
       BuilderException exception = Assertions.assertThrows(BuilderException.class,
           () -> sqlSessionFactory.getConfiguration().addMapper(BothSelectAndSelectProviderMapper.class));
       String message = exception.getMessage();
@@ -58,7 +58,7 @@ class RepeatableErrorTest {
   @Test
   void bothSpecifySelectContainerAndSelectProviderContainer() throws IOException {
     try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/repeatable/mybatis-config.xml")) {
-      SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, "development-derby");
+      SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, "development-hsql");
       BuilderException exception = Assertions.assertThrows(BuilderException.class, () -> sqlSessionFactory
           .getConfiguration().addMapper(BothSelectContainerAndSelectProviderContainerMapper.class));
       String message = exception.getMessage();
