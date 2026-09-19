@@ -146,4 +146,24 @@ class ParameterExpressionTest {
     }
   }
 
+  @Test
+  void shouldThrowForAttributeWithoutValue() {
+    try {
+      new ParameterExpression("id,name");
+      Assertions.fail();
+    } catch (BuilderException e) {
+      Assertions.assertTrue(e.getMessage().contains("Parsing error in {id,name} in position 3"));
+    }
+  }
+
+  @Test
+  void shouldThrowForEmptyPropertyName() {
+    try {
+      new ParameterExpression(",foo=bar");
+      Assertions.fail();
+    } catch (BuilderException e) {
+      Assertions.assertTrue(e.getMessage().contains("Parsing error in {,foo=bar} in position 0"));
+    }
+  }
+
 }
