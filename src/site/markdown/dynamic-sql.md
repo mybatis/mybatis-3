@@ -24,7 +24,7 @@ The most common thing to do in dynamic SQL is conditionally include a part of a 
 <select id="findActiveBlogWithTitleLike"
      resultType="Blog">
   SELECT * FROM BLOG
-  WHERE state = ‘ACTIVE’
+  WHERE state = 'ACTIVE'
   <if test="title != null">
     AND title like #{title}
   </if>
@@ -38,7 +38,7 @@ What if we wanted to optionally search by title and author? First, I’d change 
 ```xml
 <select id="findActiveBlogLike"
      resultType="Blog">
-  SELECT * FROM BLOG WHERE state = ‘ACTIVE’
+  SELECT * FROM BLOG WHERE state = 'ACTIVE'
   <if test="title != null">
     AND title like #{title}
   </if>
@@ -57,7 +57,7 @@ Let’s use the example above, but now let’s search only on title if one is pr
 ```xml
 <select id="findActiveBlogLike"
      resultType="Blog">
-  SELECT * FROM BLOG WHERE state = ‘ACTIVE’
+  SELECT * FROM BLOG WHERE state = 'ACTIVE'
   <choose>
     <when test="title != null">
       AND title like #{title}
@@ -74,7 +74,7 @@ Let’s use the example above, but now let’s search only on title if one is pr
 
 ### trim, where, set
 
-The previous examples have been conveniently dancing around a notorious dynamic SQL challenge. Consider what would happen if we return to our "if" example, but this time we make "ACTIVE = 1" a dynamic condition as well.
+The previous examples have been conveniently dancing around a notorious dynamic SQL challenge. Consider what would happen if we return to our "if" example, but this time we make the state condition dynamic as well.
 
 ```xml
 <select id="findActiveBlogLike"
@@ -105,7 +105,7 @@ This would fail. What if only the second condition was met? You would end up wit
 ```sql
 SELECT * FROM BLOG
 WHERE
-AND title like ‘someTitle’
+AND title like 'someTitle'
 ```
 
 This would also fail. This problem is not easily solved with conditionals, and if you’ve ever had to write it, then you likely never want to do so again.
@@ -233,7 +233,7 @@ If a databaseIdProvider was configured a "_databaseId" variable is available for
       select seq_users.nextval from dual
     </if>
     <if test="_databaseId == 'db2'">
-      select nextval for seq_users from sysibm.sysdummy1"
+      select nextval for seq_users from sysibm.sysdummy1
     </if>
   </selectKey>
   insert into users values (#{id}, #{name})
@@ -285,4 +285,4 @@ public interface Mapper {
 
 <span class="label important">NOTE</span> You can use Apache Velocity as your dynamic language. Have a look at the MyBatis-Velocity project for the details.
 
-All the xml tags you have seen in the previous sections are provided by the default MyBatis language that is provided by the driver `org.apache.ibatis.scripting.xmltags.XmlLanguageDriver` which is aliased as `xml`.
+All the xml tags you have seen in the previous sections are provided by the default MyBatis language that is provided by the driver `org.apache.ibatis.scripting.xmltags.XMLLanguageDriver` which is aliased as `xml`.

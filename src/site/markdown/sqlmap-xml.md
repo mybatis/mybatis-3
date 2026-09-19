@@ -728,7 +728,7 @@ MyBatis needs to be explicitly told that the results have been ordered in such a
       u.id,
       u.username,
       r.id as role_id,
-      r.role as role_role,
+      r.role as role_role
     from user u
       left join user_role ur on u.id = ur.user_id
       inner join role r on r.id = ur.role_id
@@ -1079,7 +1079,7 @@ First, let's look at the SQL:
   B.author_id as blog_author_id,
   P.id as post_id,
   P.subject as post_subject,
-  P.body as post_body,
+  P.body as post_body
   from Blog B
   left outer join Post P on B.id = P.blog_id
   where B.id = #{id}
@@ -1121,7 +1121,7 @@ Also, if you prefer the longer form that allows for more reusability of your res
 #### Nested Cursor for Collection
 
 It might be obvious, but nested cursor can return multiple rows.
-Just like `<association>`, you just need to specify `jdbcType="CURSOR""` in the `<collection>` element.
+Just like `<association>`, you just need to specify `jdbcType="CURSOR"` in the `<collection>` element.
 
 ```xml
 <resultMap id="blogResult" type="Blog">
@@ -1386,7 +1386,6 @@ public interface Cache {
   int getSize();
   void putObject(Object key, Object value);
   Object getObject(Object key);
-  boolean hasKey(Object key);
   Object removeObject(Object key);
   void clear();
 }

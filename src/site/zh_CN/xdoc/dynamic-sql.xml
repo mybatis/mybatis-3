@@ -43,7 +43,7 @@
         <source><![CDATA[<select id="findActiveBlogWithTitleLike"
      resultType="Blog">
   SELECT * FROM BLOG
-  WHERE state = ‘ACTIVE’
+  WHERE state = 'ACTIVE'
   <if test="title != null">
     AND title like #{title}
   </if>
@@ -52,7 +52,7 @@
         <p>如果希望通过 “title” 和 “author” 两个参数进行可选搜索该怎么办呢？首先，我想先将语句名称修改成更名副其实的名称；接下来，只需要加入另一个条件即可。</p>
         <source><![CDATA[<select id="findActiveBlogLike"
      resultType="Blog">
-  SELECT * FROM BLOG WHERE state = ‘ACTIVE’
+  SELECT * FROM BLOG WHERE state = 'ACTIVE'
   <if test="title != null">
     AND title like #{title}
   </if>
@@ -66,7 +66,7 @@
         <p>还是上面的例子，但是策略变为：传入了 “title” 就按 “title” 查找，传入了 “author” 就按 “author” 查找的情形。若两者都没有传入，就返回标记为 featured 的 BLOG（这可能是管理员认为，与其返回大量的无意义随机 Blog，还不如返回一些由管理员精选的 Blog）。</p>
         <source><![CDATA[<select id="findActiveBlogLike"
      resultType="Blog">
-  SELECT * FROM BLOG WHERE state = ‘ACTIVE’
+  SELECT * FROM BLOG WHERE state = 'ACTIVE'
   <choose>
     <when test="title != null">
       AND title like #{title}
@@ -103,7 +103,7 @@ WHERE]]></source>
         </p>
         <source><![CDATA[SELECT * FROM BLOG
 WHERE
-AND title like ‘someTitle’]]></source>
+AND title like 'someTitle']]></source>
         <p>这个查询也会失败。这个问题不能简单地用条件元素来解决。这个问题是如此的难以解决，以至于解决过的人不会再想碰到这种问题。</p>
         <p>MyBatis 有一个简单且适合大多数场景的解决办法。而在其他场景中，可以对其进行自定义以符合需求。而这，只需要一处简单的改动：</p>
         <source><![CDATA[<select id="findActiveBlogLike"
@@ -193,7 +193,7 @@ AND title like ‘someTitle’]]></source>
       select seq_users.nextval from dual
     </if>
     <if test="_databaseId == 'db2'">
-      select nextval for seq_users from sysibm.sysdummy1"
+      select nextval for seq_users from sysibm.sysdummy1
     </if>
   </selectKey>
   insert into users values (#{id}, #{name})
@@ -228,7 +228,7 @@ AND title like ‘someTitle’]]></source>
   List<Blog> selectBlog();
 }]]></source>
         <p><span class="label important">提示</span> 可以使用 Apache Velocity 作为动态语言，更多细节请参考 MyBatis-Velocity 项目。</p>
-        <p>你前面看到的所有 xml 标签都由默认 MyBatis 语言提供，而它由语言驱动 <code>org.apache.ibatis.scripting.xmltags.XmlLanguageDriver</code>（别名为 <code>xml</code>）所提供。</p>
+        <p>你前面看到的所有 xml 标签都由默认 MyBatis 语言提供，而它由语言驱动 <code>org.apache.ibatis.scripting.xmltags.XMLLanguageDriver</code>（别名为 <code>xml</code>）所提供。</p>
       </subsection>
     </section>
   </body>

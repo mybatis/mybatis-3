@@ -44,7 +44,7 @@
   <source><![CDATA[<select id="findActiveBlogWithTitleLike"
      resultType="Blog">
   SELECT * FROM BLOG
-  WHERE state = ‘ACTIVE’
+  WHERE state = 'ACTIVE'
   <if test="title != null">
     AND title like #{title}
   </if>
@@ -56,7 +56,7 @@
   </p>
   <source><![CDATA[<select id="findActiveBlogLike"
      resultType="Blog">
-  SELECT * FROM BLOG WHERE state = ‘ACTIVE’
+  SELECT * FROM BLOG WHERE state = 'ACTIVE'
   <if test="title != null">
     AND title like #{title}
   </if>
@@ -70,7 +70,7 @@
   <p>引き続き上の例を使って、タイトルが指定されたらタイトルのみを条件として検索し、著者が指定されたら著者のみを条件として検索するようにしてみましょう。どちらも指定されなかった場合は注目のブログのみを返すようにしてみましょう（ランダムに選ばれた無意味なリストではなく、管理者が戦略的に選んだリストを返したいという要件があるのでしょう）。</p>
   <source><![CDATA[<select id="findActiveBlogLike"
      resultType="Blog">
-  SELECT * FROM BLOG WHERE state = ‘ACTIVE’
+  SELECT * FROM BLOG WHERE state = 'ACTIVE'
   <choose>
     <when test="title != null">
       AND title like #{title}
@@ -106,7 +106,7 @@ WHERE]]></source>
   <p>この SQL は構文エラーで失敗するでしょう。もし２番目の条件だけが一致したらどうなるのでしょうか？今度は次の SQL になります。</p>
   <source><![CDATA[SELECT * FROM BLOG
 WHERE
-AND title like ‘someTitle’]]></source>
+AND title like 'someTitle']]></source>
   <p>これまた構文エラーで失敗するでしょう。動的 SQL の問題は単なる条件分岐だけで解決できるものではありません。自分で書いたことがある方なら、もう二度と書きたくないと思うはずです。</p>
   <p>MyBatis は約 90% のケースをうまく処理できる簡単な解決策を提供します。残りの 10% についても、カスタマイズすることで処理できるようになります。上記の例は、一箇所修正するだけで期待通りに動作するようになります。</p>
   <source><![CDATA[<select id="findActiveBlogLike"
@@ -196,7 +196,7 @@ AND title like ‘someTitle’]]></source>
       select seq_users.nextval from dual
     </if>
     <if test="_databaseId == 'db2'">
-      select nextval for seq_users from sysibm.sysdummy1"
+      select nextval for seq_users from sysibm.sysdummy1
     </if>
   </selectKey>
   insert into users values (#{id}, #{name})
@@ -232,7 +232,7 @@ AND title like ‘someTitle’]]></source>
 
     <p><span class="label important">NOTE</span> Apache Velocity を使ってダイナミック SQL を記述することができます。MyBatis-Velocity プロジェクトを参照してください。</p>
 
-    <p>これまでのセクションで出てきた XML タグは、全てデフォルトの言語ドライバー <code>org.apache.ibatis.scripting.xmltags.XmlLanguageDriver</code> （エイリアスは <code>xml</code> ）によって提供されているものです。</p>
+    <p>これまでのセクションで出てきた XML タグは、全てデフォルトの言語ドライバー <code>org.apache.ibatis.scripting.xmltags.XMLLanguageDriver</code> （エイリアスは <code>xml</code> ）によって提供されているものです。</p>
 
     </subsection>
     </section>
