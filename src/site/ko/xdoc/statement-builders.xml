@@ -20,7 +20,7 @@
           xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 https://maven.apache.org/xsd/xdoc-2.0.xsd">
 
   <properties>
-    <title>마이바티스 3 | SQL BUilder 클래스</title>
+    <title>마이바티스 3 | SQL Builder 클래스</title>
     <author email="clinton.begin@gmail.com">Clinton Begin</author>
   <author email="fromm0@gmail.com">이동국(한국어 번역)</author>
   </properties>
@@ -105,8 +105,8 @@ public String deletePersonSql() {
 // 빌더 / 깔끔한 형태
 public String insertPersonSql() {
   String sql = new SQL()
-    .INSERT_INTO("PERSON");
-    .VALUES("ID, FIRST_NAME", "#{id}, #{firstName}");
+    .INSERT_INTO("PERSON")
+    .VALUES("ID, FIRST_NAME", "#{id}, #{firstName}")
     .VALUES("LAST_NAME", "#{lastName}")
     .toString();
   return sql;
@@ -127,21 +127,6 @@ public String selectPersonLike(final String id, final String firstName, final St
       WHERE("P.LAST_NAME like #{lastName}");
     }
     ORDER_BY("P.LAST_NAME");
-  }}.toString();
-}
-
-public String deletePersonSql() {
-  return new SQL() {{
-    DELETE_FROM("PERSON");
-    WHERE("ID = #{id}");
-  }}.toString();
-}
-
-public String insertPersonSql() {
-  return new SQL() {{
-    INSERT_INTO("PERSON");
-    VALUES("ID, FIRST_NAME", "#{id}, #{firstName}");
-    VALUES("LAST_NAME", "#{lastName}");
   }}.toString();
 }
 
@@ -266,7 +251,7 @@ public String updatePersonSql() {
                 <code>OR()</code>
               </td>
               <td><code>OR</code>를 사용해서 <code>WHERE</code>조건절을 분리한다.
-        여러번 호출할 수 있지만 한개의 로우에 여러번 호출할 경우 에러를 가진 <code>SQL</code>을 만들수도 있다.
+        여러번 호출할 수 있지만 연속해서 여러번 호출할 경우 잘못된 <code>SQL</code>을 만들수도 있다.
               </td>
             </tr>
             <tr>
@@ -274,7 +259,7 @@ public String updatePersonSql() {
                 <code>AND()</code>
               </td>
               <td><code>AND</code>를 가진 <code>WHERE</code>절을 분리한다.
-        여러번 호출할 수 있지만 여러번 호출할 경우 에러를 가진 <code>SQL</code>을 만들수도 있다.
+        여러번 호출할 수 있지만 연속해서 여러번 호출할 경우 잘못된 <code>SQL</code>을 만들수도 있다.
         <code>WHERE</code>와 <code>HAVING</code> 두가지는 <code>AND</code>를 자동으로 붙이기 때문에
         흔하게 사용하지 않고 필요할때만 사용한다.
               </td>
@@ -398,14 +383,14 @@ public String updatePersonSql() {
                 <code>DELETE_FROM(String)</code>
               </td>
               <td>delete구문을 시작하고 삭제할 테이블을 명시한다.
-        대개는 WHERE구문이 뒤에 붙여서 삭제한 대상 조건을 명시한다.
+        대개는 뒤에 WHERE 구문을 붙여서 삭제할 대상 조건을 명시한다.
               </td>
             </tr>
             <tr>
               <td>
                 <code>INSERT_INTO(String)</code>
               </td>
-              <td>insert구문을 시작하고 입력한 테이블을 명시한다.
+              <td>insert구문을 시작하고 입력할 테이블을 명시한다.
         VALUES() or INTO_COLUMNS() and INTO_VALUES() 메소드 호출은 여러번 해서 입력한 칼럼과 값을 명시한다.
               </td>
             </tr>
@@ -426,7 +411,7 @@ public String updatePersonSql() {
               <td>
                 <code>UPDATE(String)</code>
               </td>
-              <td>update구문을 시작하고 update수정할 테이블을 명시한다.
+              <td>update구문을 시작하고 수정할 테이블을 명시한다.
         수정할 칼럼과 값을 명시하기 위해 SET()메소드 호출을 여러번 할수 있고 대개 수정할 대상 데이터를 한정하기 위해 WHERE()메소드도 호출한다.
               </td>
             </tr>
@@ -435,7 +420,7 @@ public String updatePersonSql() {
                 <code>VALUES(String, String)</code>
               </td>
               <td>insert구문에 덧붙인다.
-        첫번째 파라미터는 입력한 칼럼이고 두번째 파라미터는 입력할 값이다.
+        첫번째 파라미터는 입력할 칼럼이고 두번째 파라미터는 입력할 값이다.
               </td>
             </tr>
             <tr>

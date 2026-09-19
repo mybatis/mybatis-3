@@ -49,7 +49,7 @@
         <source><![CDATA[<select id="findActiveBlogWithTitleLike"
      resultType="Blog">
   SELECT * FROM BLOG
-  WHERE state = ‘ACTIVE’
+  WHERE state = 'ACTIVE'
   <if test="title != null">
     AND title like #{title}
   </if>
@@ -62,7 +62,7 @@
     그리고 다른 조건을 추가한다.</p>
         <source><![CDATA[<select id="findActiveBlogLike"
      resultType="Blog">
-  SELECT * FROM BLOG WHERE state = ‘ACTIVE’
+  SELECT * FROM BLOG WHERE state = 'ACTIVE'
   <if test="title != null">
     AND title like #{title}
   </if>
@@ -79,7 +79,7 @@
     둘다 제공하지 않는다면 featured 상태의 blog가 리턴된다.</p>
         <source><![CDATA[<select id="findActiveBlogLike"
      resultType="Blog">
-  SELECT * FROM BLOG WHERE state = ‘ACTIVE’
+  SELECT * FROM BLOG WHERE state = 'ACTIVE'
   <choose>
     <when test="title != null">
       AND title like #{title}
@@ -119,7 +119,7 @@ WHERE]]></source>
     아마도 다음과 같은 SQL이 만들어질 것이다.</p>
         <source><![CDATA[SELECT * FROM BLOG
 WHERE
-AND title like ‘someTitle’]]></source>
+AND title like 'someTitle']]></source>
         <p>이것도 아마 실패할 것이다.
     이 문제는 조건만 가지고는 해결되지 않았다.
     이렇게 작성했다면 다시는 이렇게 작성하지 않게 될 것이다.</p>
@@ -147,8 +147,8 @@ AND title like ‘someTitle’]]></source>
         <source><![CDATA[<trim prefix="WHERE" prefixOverrides="AND |OR ">
   ...
 </trim>]]></source>
-        <p>override 속성은 오버라이드하는 텍스트의 목록을 제한한다.
-    결과는 override 속성에 명시된 것들을 지우고 with 속성에 명시된 것을 추가한다.</p>
+        <p><em>prefixOverrides</em> 속성은 오버라이드할 텍스트의 목록을 파이프(|)로 구분해서 받으며 이때 공백도 의미가 있다.
+    결과적으로 <em>prefixOverrides</em> 속성에 명시된 것들은 지워지고 <em>prefix</em> 속성에 명시된 것이 추가된다.</p>
         <p>다음 예제는 동적인 update 구문의 유사한 경우이다.
     set 엘리먼트는 update 하고자 하는 칼럼을 동적으로 포함시키기 위해 사용될 수 있다.
     예를 들어:</p>
@@ -162,7 +162,7 @@ AND title like ‘someTitle’]]></source>
     </set>
   where id=#{id}
 </update>]]></source>
-        <p>여기서 set 엘리먼트는 동적으로 SET 키워드를 붙히고 필요없는 콤마를 제거한다.</p>
+        <p>여기서 set 엘리먼트는 동적으로 SET 키워드를 붙이고 필요없는 콤마를 제거한다.</p>
         <p>아마도 trim 엘리먼트로 처리한다면 아래와 같을 것이다.</p>
         <source><![CDATA[<trim prefix="SET" suffixOverrides=",">
   ...
@@ -215,7 +215,7 @@ AND title like ‘someTitle’]]></source>
 </select>]]></source>
   </subsection>
       <subsection name="Multi-db vendor support">
-        <p>"_databaseId" 변수로 설정된 databaseIdProvider가 동적인 코드에도 사용가능하다면 데이터베이스 제품별로 서로다른 구문을 사용할 수 있다.
+        <p>databaseIdProvider가 설정되어 있다면 동적인 코드에서 "_databaseId" 변수를 사용할 수 있고, 이를 통해 데이터베이스 제품별로 서로 다른 구문을 사용할 수 있다.
     다음의 예제를 보라:</p>
         <source><![CDATA[<insert id="insert">
   <selectKey keyProperty="id" resultType="int" order="BEFORE">
@@ -223,7 +223,7 @@ AND title like ‘someTitle’]]></source>
       select seq_users.nextval from dual
     </if>
     <if test="_databaseId == 'db2'">
-      select nextval for seq_users from sysibm.sysdummy1"
+      select nextval for seq_users from sysibm.sysdummy1
     </if>
   </selectKey>
   insert into users values (#{id}, #{name})
