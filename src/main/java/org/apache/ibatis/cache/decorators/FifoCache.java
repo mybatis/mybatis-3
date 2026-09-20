@@ -15,8 +15,9 @@
  */
 package org.apache.ibatis.cache.decorators;
 
-import java.util.Deque;
-import java.util.LinkedList;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import org.apache.ibatis.cache.Cache;
 
@@ -28,12 +29,12 @@ import org.apache.ibatis.cache.Cache;
 public class FifoCache implements Cache {
 
   private final Cache delegate;
-  private final Deque<Object> keyList;
+  private final Set<Object> keyList;
   private int size;
 
   public FifoCache(Cache delegate) {
     this.delegate = delegate;
-    this.keyList = new LinkedList<>();
+    this.keyList = new LinkedHashSet<>();
     this.size = 1024;
   }
 
@@ -75,9 +76,11 @@ public class FifoCache implements Cache {
   }
 
   private void cycleKeyList(Object key) {
-    keyList.addLast(key);
-    if (keyList.size() > size) {
-      Object oldestKey = keyList.removeFirst();
+    // Re-inserting a cached key is an overwrite, not a new entry: it keeps its position and evicts nothing.
+    if (keyList.add(key) && keyList.size() > size) {
+      Iterator<Object> keys = keyList.iterator();
+      Object oldestKey = keys.next();
+      keys.remove();
       delegate.removeObject(oldestKey);
     }
   }
