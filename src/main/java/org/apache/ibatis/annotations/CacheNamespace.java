@@ -30,14 +30,16 @@ import org.apache.ibatis.cache.impl.PerpetualCache;
  * <p>
  * <b>How to use:</b>
  *
- * <pre>{@code
- * @CacheNamespace(implementation = CustomCache.class, properties = {
- *     &#064;Property(name = "host", value = "${mybatis.cache.host}"),
- *     &#064;Property(name = "port", value = "${mybatis.cache.port}"), &#064;Property(name = "name", value = "usersCache") })
+ * <pre>
+ * <code>&#064;CacheNamespace(implementation = CustomCache.class, properties = {
+ *   &#064;Property(name = "host", value = "${mybatis.cache.host}"),
+ *   &#064;Property(name = "port", value = "${mybatis.cache.port}"),
+ *   &#064;Property(name = "name", value = "usersCache") })
  * public interface UserMapper {
  *   // ...
  * }
- * }</pre>
+ * </code>
+ * </pre>
  *
  * @author Clinton Begin
  * @author Kazuki Shimizu
