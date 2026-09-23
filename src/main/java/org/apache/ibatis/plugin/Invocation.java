@@ -15,26 +15,30 @@
  */
 package org.apache.ibatis.plugin;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
-
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.resultset.ResultSetHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
+import org.apache.ibatis.reflection.ReflectionUtil;
+
+import java.lang.invoke.MethodHandle;
+import java.lang.reflect.Method;
+import java.util.Set;
 
 /**
  * @author Clinton Begin
  */
 public class Invocation {
-
-  private static final List<Class<?>> targetClasses = Arrays.asList(Executor.class, ParameterHandler.class,
-      ResultSetHandler.class, StatementHandler.class);
+  private static final Set<Class<?>> targetClasses = Set.of(
+    Executor.class,
+    ParameterHandler.class,
+    ResultSetHandler.class,
+    StatementHandler.class
+  );
   private final Object target;
   private final Method method;
   private final Object[] args;
+  private final MethodHandle methodHandle;
 
   public Invocation(Object target, Method method, Object[] args) {
     if (!targetClasses.contains(method.getDeclaringClass())) {
@@ -43,6 +47,7 @@ public class Invocation {
     this.target = target;
     this.method = method;
     this.args = args;
+    this.methodHandle = ReflectionUtil.getMethodHandle(method);
   }
 
   public Object getTarget() {
@@ -57,8 +62,12 @@ public class Invocation {
     return args;
   }
 
-  public Object proceed() throws InvocationTargetException, IllegalAccessException {
-    return method.invoke(target, args);
+  public Object proceed() throws Throwable {
+    if (methodHandle != null) {
+      return ReflectionUtil.invoke(methodHandle, target, args);
+    } else {
+      return method.invoke(target, args);
+    }
   }
 
 }
