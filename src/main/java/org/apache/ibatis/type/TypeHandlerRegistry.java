@@ -351,7 +351,8 @@ public final class TypeHandlerRegistry {
     }
     Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = typeHandlerMap.get(superclass);
     if (jdbcHandlerMap != null) {
-      return jdbcHandlerMap;
+      // The inherited map is cached for the subclass, whose registrations must not change the superclass.
+      return NULL_TYPE_HANDLER_MAP.equals(jdbcHandlerMap) ? null : new HashMap<>(jdbcHandlerMap);
     }
     return getJdbcHandlerMapForSuperclass(superclass);
   }
