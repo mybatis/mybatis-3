@@ -284,7 +284,7 @@
     <dependency>
       <groupId>ch.qos.reload4j</groupId>
       <artifactId>reload4j</artifactId>
-      <version>1.2.26</version>
+      <version>1.2.27</version>
       <optional>true</optional>
     </dependency>
     <dependency>
