@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.session;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -30,6 +32,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BiFunction;
 
 import org.apache.ibatis.binding.MapperRegistry;
+import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.builder.CacheRefResolver;
 import org.apache.ibatis.builder.IncompleteElementException;
 import org.apache.ibatis.builder.ResultMapResolver;
@@ -73,12 +76,14 @@ import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ParameterMap;
 import org.apache.ibatis.mapping.ResultMap;
+import org.apache.ibatis.mapping.ResultMapping;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.mapping.VendorDatabaseIdProvider;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.InterceptorChain;
 import org.apache.ibatis.reflection.DefaultReflectorFactory;
+import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.ReflectorFactory;
 import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
@@ -117,6 +122,7 @@ public class Configuration {
   protected boolean shrinkWhitespacesInSql;
   protected boolean nullableOnForEach;
   protected boolean argNameBasedConstructorAutoMapping;
+  protected boolean strictResultMapCollectionTypeCheck;
 
   protected String logPrefix;
   protected Class<? extends Log> logImpl;
@@ -339,6 +345,34 @@ public class Configuration {
 
   public void setArgNameBasedConstructorAutoMapping(boolean argNameBasedConstructorAutoMapping) {
     this.argNameBasedConstructorAutoMapping = argNameBasedConstructorAutoMapping;
+  }
+
+  /**
+   * Whether to enable strict type checking for {@code <collection>} elements in ResultMap.
+   * <p>
+   * When enabled, the {@code ofType} attribute of each {@code <collection>} element is validated against the generic
+   * element type of the corresponding collection field in the entity class. A {@link BuilderException} is thrown if the
+   * declared type is not assignable to the expected type. Default is false.
+   * </p>
+   *
+   * @return true if strict collection type checking is enabled
+   *
+   * @since 3.6.0
+   */
+  public boolean isStrictResultMapCollectionTypeCheck() {
+    return strictResultMapCollectionTypeCheck;
+  }
+
+  /**
+   * Enables or disables strict type checking for {@code <collection>} elements in ResultMap.
+   *
+   * @param strictResultMapCollectionTypeCheck
+   *          true to enable strict collection type checking
+   *
+   * @since 3.6.0
+   */
+  public void setStrictResultMapCollectionTypeCheck(boolean strictResultMapCollectionTypeCheck) {
+    this.strictResultMapCollectionTypeCheck = strictResultMapCollectionTypeCheck;
   }
 
   public String getDatabaseId() {
@@ -792,6 +826,119 @@ public class Configuration {
     resultMaps.put(rm.getId(), rm);
     checkLocallyForDiscriminatedNestedResultMaps(rm);
     checkGloballyForDiscriminatedNestedResultMaps(rm);
+    if (strictResultMapCollectionTypeCheck) {
+      validateCollectionResultMapTypes(rm);
+    }
+  }
+
+  /**
+   * Validates that the element type declared via {@code ofType} on each {@code <collection>} element is compatible with
+   * the generic element type of the corresponding collection field in the entity class.
+   * <p>
+   * For each {@link ResultMapping} that maps to a collection property, the expected element type is resolved from the
+   * entity field's generic signature via {@link MetaClass}, and the declared element type is resolved from the XML
+   * mapping. A {@link BuilderException} is thrown if the declared type is not assignable to the expected type.
+   * </p>
+   *
+   * @param rm
+   *          the ResultMap to validate
+   *
+   * @since 3.6.0
+   */
+  private void validateCollectionResultMapTypes(ResultMap rm) {
+    Class<?> entityType = rm.getType();
+    MetaClass metaClass = MetaClass.forClass(entityType, reflectorFactory);
+    for (ResultMapping mapping : rm.getResultMappings()) {
+      if (mapping.getProperty() == null) {
+        continue;
+      }
+      Class<?> expectedElementType = resolveExpectedCollectionElementType(metaClass, mapping.getProperty());
+      if (expectedElementType == null) {
+        continue;
+      }
+      Class<?> declaredElementType = resolveDeclaredElementType(mapping);
+      if (declaredElementType == null) {
+        continue;
+      }
+      if (!expectedElementType.isAssignableFrom(declaredElementType)) {
+        throw new BuilderException("ResultMap '" + rm.getId() + "': " + "Collection property '" + mapping.getProperty()
+            + "' " + "expects elements of type '" + expectedElementType.getName() + "' " + "but XML declares '"
+            + declaredElementType.getName() + "'. "
+            + "Please check the 'ofType' attribute on your <collection> element.");
+      }
+    }
+  }
+
+  /**
+   * Resolves the expected element type of a collection property on the given entity class.
+   * <p>
+   * Uses {@link MetaClass#getGenericSetterType(String)} to obtain the generic type of the setter parameter (or field
+   * type if no setter exists). If the raw type is a {@link Collection} and the generic type is parameterized with a
+   * single {@link Class} argument, that argument is returned.
+   * </p>
+   *
+   * @param metaClass
+   *          the MetaClass for the entity type
+   * @param property
+   *          the collection property name
+   *
+   * @return the expected element type, or {@code null} if the property is not a parameterized collection
+   *
+   * @since 3.6.0
+   */
+  private Class<?> resolveExpectedCollectionElementType(MetaClass metaClass, String property) {
+    if (!metaClass.hasSetter(property)) {
+      return null;
+    }
+    Map.Entry<Type, Class<?>> setterType = metaClass.getGenericSetterType(property);
+    Class<?> rawType = setterType.getValue();
+    if (rawType == null || !Collection.class.isAssignableFrom(rawType)) {
+      return null;
+    }
+    Type genericType = setterType.getKey();
+    if (genericType instanceof ParameterizedType) {
+      Type[] typeArgs = ((ParameterizedType) genericType).getActualTypeArguments();
+      if (typeArgs.length == 1 && typeArgs[0] instanceof Class) {
+        return (Class<?>) typeArgs[0];
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Resolves the element type declared in the XML mapping for a {@code <collection>} element.
+   * <p>
+   * The resolution strategy, in order of priority:
+   * <ol>
+   * <li>The {@code type} of the nested {@link ResultMap} referenced via {@code ofType} or {@code resultMap}
+   * attribute</li>
+   * <li>The {@code javaType} attribute value, only if it is not itself a collection type</li>
+   * </ol>
+   * Returns {@code null} if the declared element type cannot be determined, in which case the type check for this
+   * mapping is skipped.
+   * </p>
+   *
+   * @param mapping
+   *          the ResultMapping to inspect
+   *
+   * @return the declared element type, or {@code null} if it cannot be determined
+   *
+   * @since 3.6.0
+   */
+  private Class<?> resolveDeclaredElementType(ResultMapping mapping) {
+    String nestedResultMapId = mapping.getNestedResultMapId();
+    if (nestedResultMapId != null) {
+      ResultMap nestedResultMap = getResultMap(nestedResultMapId);
+      if (nestedResultMap != null) {
+        return nestedResultMap.getType();
+      }
+      return null;
+    }
+    Class<?> javaType = mapping.getJavaType();
+    if (javaType != null && !Collection.class.isAssignableFrom(javaType)) {
+      return javaType;
+    }
+    return null;
   }
 
   public Collection<String> getResultMapNames() {
