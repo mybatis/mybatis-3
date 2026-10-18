@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,16 +15,15 @@
  */
 package org.apache.ibatis.scripting.xmltags;
 
+import java.lang.reflect.Array;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
 
-import ognl.OgnlContext;
-import ognl.OgnlRuntime;
-import ognl.PropertyAccessor;
-
+import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.builder.ParameterMappingTokenHandler;
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.parsing.GenericTokenParser;
@@ -40,10 +39,6 @@ public class DynamicContext {
   public static final String PARAMETER_OBJECT_KEY = "_parameter";
   public static final String DATABASE_ID_KEY = "_databaseId";
 
-  static {
-    OgnlRuntime.setPropertyAccessor(ContextMap.class, new ContextAccessor());
-  }
-
   protected final ContextMap bindings;
   private final StringJoiner sqlBuilder = new StringJoiner(" ");
 
@@ -52,6 +47,7 @@ public class DynamicContext {
   private final Class<?> parameterType;
   private final ParamNameResolver paramNameResolver;
   private final boolean paramExists;
+  private final ExpressionParser expressionParser;
 
   private GenericTokenParser tokenParser;
   private ParameterMappingTokenHandler tokenHandler;
@@ -76,6 +72,7 @@ public class DynamicContext {
     this.paramExists = paramExists;
     this.parameterType = parameterType;
     this.paramNameResolver = paramNameResolver;
+    this.expressionParser = configuration.getExpressionParser();
   }
 
   public Map<String, Object> getBindings() {
@@ -128,6 +125,52 @@ public class DynamicContext {
     return paramExists;
   }
 
+  public Object getValue(String expression) {
+    return expressionParser.getValue(expression, getBindings());
+  }
+
+  public boolean evaluateBoolean(String expression) {
+    Object value = expressionParser.getValue(expression, getBindings());
+    if (value instanceof Boolean) {
+      return (Boolean) value;
+    }
+    if (value instanceof Number) {
+      return new BigDecimal(String.valueOf(value)).compareTo(BigDecimal.ZERO) != 0;
+    }
+    return value != null;
+  }
+
+  @SuppressWarnings("rawtypes")
+  public Iterable<?> evaluateIterable(String expression, boolean nullable) {
+    Object value = expressionParser.getValue(expression, getBindings());
+    if (value == null) {
+      if (nullable) {
+        return null;
+      }
+      throw new BuilderException("The expression '" + expression + "' evaluated to a null value.");
+    }
+    if (value instanceof Iterable) {
+      return (Iterable<?>) value;
+    }
+    if (value.getClass().isArray()) {
+      // the array may be primitive, so Arrays.asList() may throw
+      // a ClassCastException (issue 209). Do the work manually
+      // Curse primitives! :) (JGB)
+      int size = Array.getLength(value);
+      List<Object> answer = new ArrayList<>();
+      for (int i = 0; i < size; i++) {
+        Object o = Array.get(value, i);
+        answer.add(o);
+      }
+      return answer;
+    }
+    if (value instanceof Map) {
+      return ((Map) value).entrySet();
+    }
+    throw new BuilderException(
+        "Error evaluating expression '" + expression + "'.  Return value (" + value + ") was not iterable.");
+  }
+
   static class ContextMap extends HashMap<String, Object> {
     private static final long serialVersionUID = 2977601501966151582L;
     private final MetaObject parameterMetaObject;
@@ -154,42 +197,6 @@ public class DynamicContext {
       }
       // issue #61 do not modify the context when reading
       return parameterMetaObject.getValue(strKey);
-    }
-  }
-
-  static class ContextAccessor implements PropertyAccessor {
-
-    @Override
-    public Object getProperty(OgnlContext context, Object target, Object name) {
-      Map map = (Map) target;
-
-      Object result = map.get(name);
-      if (map.containsKey(name) || result != null) {
-        return result;
-      }
-
-      Object parameterObject = map.get(PARAMETER_OBJECT_KEY);
-      if (parameterObject instanceof Map) {
-        return ((Map) parameterObject).get(name);
-      }
-
-      return null;
-    }
-
-    @Override
-    public void setProperty(OgnlContext context, Object target, Object name, Object value) {
-      Map<Object, Object> map = (Map<Object, Object>) target;
-      map.put(name, value);
-    }
-
-    @Override
-    public String getSourceAccessor(OgnlContext arg0, Object arg1, Object arg2) {
-      return null;
-    }
-
-    @Override
-    public String getSourceSetter(OgnlContext arg0, Object arg1, Object arg2) {
-      return null;
     }
   }
 }
