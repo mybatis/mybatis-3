@@ -22,6 +22,9 @@ import java.sql.SQLException;
 import java.time.ZonedDateTime;
 
 /**
+ * Since version 3.5.0, this type handler requires a driver that supports JDBC 4.2 API.<br>
+ * For other drivers, there is {@link org.apache.ibatis.type.legacy.LegacyZonedDateTimeTypeHandler}.
+ * 
  * @since 3.4.5
  *
  * @author Tomas Rohovsky

@@ -22,6 +22,9 @@ import java.sql.SQLException;
 import java.time.LocalTime;
 
 /**
+ * Since version 3.5.1, this type handler requires a driver that supports JDBC 4.2 API.<br>
+ * For other drivers, there is {@link org.apache.ibatis.type.legacy.LegacyLocalTimeTypeHandler}.
+ * 
  * @since 3.4.5
  *
  * @author Tomas Rohovsky
