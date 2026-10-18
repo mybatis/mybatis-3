@@ -15,39 +15,64 @@
  */
 package org.apache.ibatis.reflection.invoker;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
+import org.apache.ibatis.reflection.ReflectionUtil;
 import org.apache.ibatis.reflection.Reflector;
+
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 /**
  * @author Clinton Begin
  */
 public class MethodInvoker implements Invoker {
 
-  private final Class<?> type;
+  private final MethodHandle methodHandle;
   private final Method method;
+  private final Class<?> type;
 
   public MethodInvoker(Method method) {
     this.method = method;
 
     if (method.getParameterTypes().length == 1) {
-      type = method.getParameterTypes()[0];
+      this.type = method.getParameterTypes()[0];
     } else {
-      type = method.getReturnType();
+      this.type = method.getReturnType();
+    }
+
+    Class<?> methodClass = method.getDeclaringClass();
+    if (ReflectionUtil.jdk8Class(methodClass)) {
+      // JDK inner class or JDK 8 → fallback
+      this.methodHandle = null;
+    } else {
+      // JDK 9+ business class → MethodHandle
+      try {
+        if (Modifier.isPublic(method.getModifiers()) && Modifier.isPublic(methodClass.getModifiers())) {
+          this.methodHandle = MethodHandles.lookup().unreflect(method);
+        } else {
+          this.methodHandle = ReflectionUtil.getMethodHandlesLookup(methodClass).unreflect(method);
+        }
+      } catch (IllegalAccessException e) {
+        throw new RuntimeException(e);
+      }
     }
   }
 
   @Override
-  public Object invoke(Object target, Object[] args) throws IllegalAccessException, InvocationTargetException {
-    try {
-      return method.invoke(target, args);
-    } catch (IllegalAccessException e) {
-      if (Reflector.canControlMemberAccessible()) {
-        method.setAccessible(true);
+  public Object invoke(Object target, Object[] args) throws Throwable {
+    if (methodHandle != null) {
+      return ReflectionUtil.invoke(methodHandle, target, args);
+    } else {
+      try {
         return method.invoke(target, args);
+      } catch (IllegalAccessException e) {
+        if (Reflector.canControlMemberAccessible()) {
+          method.setAccessible(true);
+          return method.invoke(target, args);
+        }
+        throw e;
       }
-      throw e;
     }
   }
 
