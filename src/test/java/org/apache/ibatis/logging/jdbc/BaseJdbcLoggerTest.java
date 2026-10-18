@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,9 +16,12 @@
 package org.apache.ibatis.logging.jdbc;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
 import java.sql.Array;
+import java.sql.SQLException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.ibatis.logging.Log;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,15 +47,33 @@ class BaseJdbcLoggerTest {
 
   @Test
   void shouldDescribePrimitiveArrayParameter() throws Exception {
-    logger.setColumn("1", array);
     when(array.getArray()).thenReturn(new int[] { 1, 2, 3 });
+    logger.setColumn("1", array);
     assertThat(logger.getParameterValueString()).startsWith("[1, 2, 3]");
   }
 
   @Test
   void shouldDescribeObjectArrayParameter() throws Exception {
-    logger.setColumn("1", array);
     when(array.getArray()).thenReturn(new String[] { "one", "two", "three" });
+    logger.setColumn("1", array);
+    assertThat(logger.getParameterValueString()).startsWith("[one, two, three]");
+  }
+
+  @Test
+  void shouldDescribeArrayParameterAfterArrayIsFreed() throws Exception {
+    AtomicBoolean freed = new AtomicBoolean();
+    when(array.getArray()).thenAnswer(invocation -> {
+      if (freed.get()) {
+        throw new SQLException("Array has been freed.");
+      }
+      return new String[] { "one", "two", "three" };
+    });
+    doAnswer(invocation -> {
+      freed.set(true);
+      return null;
+    }).when(array).free();
+    logger.setColumn("1", array);
+    array.free();
     assertThat(logger.getParameterValueString()).startsWith("[one, two, three]");
   }
 }
