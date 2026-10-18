@@ -76,10 +76,10 @@ public class Reflector {
       this.clazz = (Class<?>) type;
     }
     addDefaultConstructor(clazz);
-    Method[] classMethods = getClassMethods(clazz);
     if (isRecord(clazz)) {
-      addRecordGetMethods(classMethods);
+      addRecordGetMethods(clazz);
     } else {
+      Method[] classMethods = getClassMethods(clazz);
       addGetMethods(classMethods);
       addSetMethods(classMethods);
       addFields(clazz);
@@ -94,9 +94,18 @@ public class Reflector {
     }
   }
 
-  private void addRecordGetMethods(Method[] methods) {
-    Arrays.stream(methods).filter(m -> m.getParameterTypes().length == 0)
-        .forEach(m -> addGetMethod(m.getName(), m, false));
+  private void addRecordGetMethods(Class<?> recordClass) {
+    Arrays.stream(recordClass.getDeclaredFields()).filter(field -> !Modifier.isStatic(field.getModifiers()))
+        .forEach(field -> {
+          try {
+            String fieldName = field.getName();
+            // record's get method and field have the same name
+            Method m = recordClass.getMethod(fieldName);
+            addGetMethod(fieldName, m, false);
+          } catch (NoSuchMethodException ignore) {
+            // A standard record can never throw this exception
+          }
+        });
   }
 
   private void addDefaultConstructor(Class<?> clazz) {
