@@ -5,7 +5,7 @@ author: Clinton Begin, 이동국(한국어 번역)
 
 ## 설치
 
-마이바티스를 사용하기 위해 [mybatis-x.x.x.jar](https://github.com/mybatis/mybatis-3/releases) 파일을 클래스패스에 두어야 한다.
+마이바티스를 사용하기 위해 [mybatis-@project.version@.jar](https://github.com/mybatis/mybatis-3/releases) 파일을 클래스패스에 두어야 한다.
 
 메이븐을 사용한다면 pom.xml에 다음의 설정을 추가하자.
 
@@ -13,7 +13,7 @@ author: Clinton Begin, 이동국(한국어 번역)
 <dependency>
   <groupId>org.mybatis</groupId>
   <artifactId>mybatis</artifactId>
-  <version>x.x.x</version>
+  <version>@project.version@</version>
 </dependency>
 ```
 

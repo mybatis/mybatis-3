@@ -344,7 +344,20 @@ int limit = 25;
 RowBounds rowBounds = new RowBounds(offset, limit);
 ```
 
-Different drivers are able to achieve different levels of efficiency in this regard. For the best performance, use result set types of `SCROLL_SENSITIVE` or `SCROLL_INSENSITIVE` (in other words: not `FORWARD_ONLY`).
+`RowBounds` does not modify the SQL statement to add pagination clauses. It limits results while processing the JDBC `ResultSet`. For a `FORWARD_ONLY` result set, MyBatis calls `ResultSet.next()` once for each row skipped by the offset. For a scrollable result set, it uses `ResultSet.absolute(offset)` instead. The efficiency depends on the JDBC driver, and large offsets can be expensive even when the limit is small.
+
+For large result sets, consider pagination in the SQL statement so that the database can limit the rows returned. Use the pagination syntax supported by your database and an `ORDER BY` clause that produces a stable order. For example, on a database that supports `LIMIT` and `OFFSET`:
+
+```xml
+<select id="selectBlogsPage" resultType="Blog">
+  SELECT id, title
+  FROM BLOG
+  ORDER BY id
+  LIMIT #{limit} OFFSET #{offset}
+</select>
+```
+
+When using SQL pagination, pass `offset` and `limit` as query parameters and omit the `RowBounds` argument (or use `RowBounds.DEFAULT`) to avoid applying pagination twice.
 
 The `ResultHandler` parameter allows you to handle each row however you like. You can add it to a `List`, create a `Map`, `Set`, or throw each result away and instead keep only rolled up totals of calculations. You can do pretty much anything with the `ResultHandler`, and it's what MyBatis uses internally itself to build result set lists.
 

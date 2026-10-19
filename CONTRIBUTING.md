@@ -16,6 +16,14 @@ Please use [the mailing list](https://groups.google.com/group/mybatis-user) inst
 
 - Documentations are placed under [src/site](https://github.com/mybatis/mybatis-3/tree/master/src/site) directory in [the xdoc format](https://maven.apache.org/doxia/references/xdoc-format.html), so it is basically the same as creating a patch to contribute documentation changes. Please see the [Contributing code](CONTRIBUTING.md#contributing-code) section.
 
+To build the reference documentation, run:
+
+```shell
+./mvnw clean site -DgenerateReports=false
+```
+
+The `site` lifecycle runs the `pre-site` version filtering step before rendering the pages in `target/site`. The `clean` goal removes stale copied sources after documentation files are renamed or deleted.
+
 ## Contributing code
 
 ### Formatting

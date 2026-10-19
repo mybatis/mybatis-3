@@ -408,9 +408,48 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>filter-site-version</id>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <phase>pre-site</phase>
+            <configuration>
+              <outputDirectory>${project.build.directory}/site-src</outputDirectory>
+              <!-- Keep MyBatis ${...} examples literal; only @...@ is filtered. -->
+              <useDefaultDelimiters>false</useDefaultDelimiters>
+              <delimiters>
+                <delimiter>@</delimiter>
+              </delimiters>
+              <resources>
+                <resource>
+                  <directory>src/site</directory>
+                  <filtering>false</filtering>
+                  <excludes>
+                    <exclude>**/getting-started.md</exclude>
+                  </excludes>
+                </resource>
+                <resource>
+                  <directory>src/site</directory>
+                  <filtering>true</filtering>
+                  <includes>
+                    <include>**/getting-started.md</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
         <configuration>
           <locales>default,es,ja,fr,zh_CN,ko</locales>
+          <siteDirectory>${project.build.directory}/site-src</siteDirectory>
+          <alternativeSiteSourceDirectories>${basedir}/src/site</alternativeSiteSourceDirectories>
         </configuration>
       </plugin>
       <plugin>

@@ -5,7 +5,7 @@ author: Clinton Begin, Nan Lei, Dongxu Wang
 
 ## 安装
 
-要使用 MyBatis， 只需将 [mybatis-x.x.x.jar](https://github.com/mybatis/mybatis-3/releases) 文件置于类路径（classpath）中即可。
+要使用 MyBatis， 只需将 [mybatis-@project.version@.jar](https://github.com/mybatis/mybatis-3/releases) 文件置于类路径（classpath）中即可。
 
 如果使用 Maven 来构建项目，则需将下面的依赖代码置于 pom.xml 文件中：
 
@@ -13,7 +13,7 @@ author: Clinton Begin, Nan Lei, Dongxu Wang
 <dependency>
   <groupId>org.mybatis</groupId>
   <artifactId>mybatis</artifactId>
-  <version>x.x.x</version>
+  <version>@project.version@</version>
 </dependency>
 ```
 
