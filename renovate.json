@@ -1,7 +1,12 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended",
-    "helpers:pinGitHubActionDigests"
+    "config:best-practices"
+  ],
+  "packageRules": [
+    {
+      "matchPackageNames": ["*"],
+      "allowedVersions": "!/.*jdk5.*/"
+    }
   ]
 }
