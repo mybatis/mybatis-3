@@ -98,6 +98,9 @@
 
     <!-- Reproducible Builds -->
     <project.build.outputTimestamp>1735704225</project.build.outputTimestamp>
+
+    <!-- TODO: Review test failures with 'testcontainers' after 3.6.0 upgrade -->
+    <surefire.plugin>3.5.6</surefire.plugin>
   </properties>
 
   <dependencies>
