@@ -30,7 +30,7 @@ jobs:
         with:
           cache: maven
           distribution: temurin
-          java-version: 25
+          java-version: 27
       - name: Set SONAR_SCANNER_JAVA_OPTS
         run: echo "SONAR_SCANNER_JAVA_OPTS=-Xmx512m" >> ${GITHUB_ENV}
       - name: Analyze with SonarCloud

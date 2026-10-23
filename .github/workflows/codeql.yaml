@@ -31,7 +31,7 @@ jobs:
         with:
           cache: maven
           distribution: 'temurin'
-          java-version: 25
+          java-version: 27
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@6f2ac81f5cd81fe351a197ba0b00d91d03cd2aee # v4.39.0
