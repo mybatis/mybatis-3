@@ -18,6 +18,7 @@ package org.apache.ibatis.builder;
 import java.lang.reflect.Type;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -25,7 +26,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
-import java.util.StringTokenizer;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.decorators.LruCache;
@@ -402,15 +404,11 @@ public class MapperBuilderAssistant extends BaseBuilder {
     return configuration.getLanguageDriver(langClass);
   }
 
-  private Set<String> parseMultipleColumnNames(String columnName) {
-    Set<String> columns = new HashSet<>();
+  private Set<String> parseMultipleColumnNames(final String columnName) {
+    final Set<String> columns = new HashSet<>();
     if (columnName != null) {
-      if (columnName.indexOf(',') > -1) {
-        StringTokenizer parser = new StringTokenizer(columnName, "{}, ", false);
-        while (parser.hasMoreTokens()) {
-          String column = parser.nextToken();
-          columns.add(column);
-        }
+      if (columnName.contains(",")) {
+        Pattern.compile("[{}, ]+").splitAsStream(columnName).filter(column -> !column.isEmpty()).forEach(columns::add);
       } else {
         columns.add(columnName);
       }
@@ -418,14 +416,17 @@ public class MapperBuilderAssistant extends BaseBuilder {
     return columns;
   }
 
-  private List<ResultMapping> parseCompositeColumnName(String columnName) {
-    List<ResultMapping> composites = new ArrayList<>();
-    if (columnName != null && (columnName.indexOf('=') > -1 || columnName.indexOf(',') > -1)) {
-      StringTokenizer parser = new StringTokenizer(columnName, "{}=, ", false);
-      while (parser.hasMoreTokens()) {
-        String property = parser.nextToken();
-        String column = parser.nextToken();
-        ResultMapping complexResultMapping = new ResultMapping.Builder(configuration, property, column,
+  private List<ResultMapping> parseCompositeColumnName(final String columnName) {
+    final List<ResultMapping> composites = new ArrayList<>();
+    if (columnName != null && (columnName.contains("=") || columnName.contains(","))) {
+      final String[] columns = Pattern.compile("[{},= ]+").split(columnName);
+      final List<String> tokens = Arrays.stream(columns).filter(column -> !column.isEmpty())
+          .collect(Collectors.toList());
+
+      for (int i = 0; i + 1 < tokens.size(); i += 2) {
+        final String property = tokens.get(i);
+        final String column = tokens.get(i + 1);
+        final ResultMapping complexResultMapping = new ResultMapping.Builder(configuration, property, column,
             (TypeHandler<?>) null).build();
         composites.add(complexResultMapping);
       }

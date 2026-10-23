@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -150,11 +151,11 @@ public class DefaultVFS extends VFS {
           prefix = prefix + "/";
         }
 
-        // Iterate over immediate children, adding files and recurring into directories
+        // Iterate over immediate child and recursively list their contents
         for (String child : children) {
           String resourcePath = path + "/" + child;
           resources.add(resourcePath);
-          URL childUrl = new URL(prefix + child);
+          URL childUrl = URI.create(prefix + child).toURL();
           resources.addAll(list(childUrl, resourcePath));
         }
       }
@@ -239,11 +240,11 @@ public class DefaultVFS extends VFS {
     boolean continueLoop = true;
     while (continueLoop) {
       try {
-        url = new URL(url.getFile());
+        url = URI.create(url.getFile()).toURL();
         if (log.isDebugEnabled()) {
           log.debug("Inner URL: " + url);
         }
-      } catch (MalformedURLException e) {
+      } catch (IllegalArgumentException | MalformedURLException e) {
         // This will happen at some point and serves as a break in the loop
         continueLoop = false;
       }
@@ -265,7 +266,7 @@ public class DefaultVFS extends VFS {
 
     // Try to open and test it
     try {
-      URL testUrl = new URL(jarUrl.toString());
+      URL testUrl = URI.create(jarUrl.toString()).toURL();
       if (isJar(testUrl)) {
         return testUrl;
       }

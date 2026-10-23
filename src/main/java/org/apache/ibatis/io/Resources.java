@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -268,7 +269,7 @@ public class Resources {
    *           If the resource cannot be found or read
    */
   public static InputStream getUrlAsStream(String urlString) throws IOException {
-    URL url = new URL(urlString);
+    URL url = URI.create(urlString).toURL();
     URLConnection conn = url.openConnection();
     return conn.getInputStream();
   }
