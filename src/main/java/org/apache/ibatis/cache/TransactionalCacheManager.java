@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -40,14 +40,33 @@ public class TransactionalCacheManager {
   }
 
   public void commit() {
-    for (TransactionalCache txCache : transactionalCaches.values()) {
-      txCache.commit();
+    try {
+      for (TransactionalCache txCache : transactionalCaches.values()) {
+        txCache.commit();
+      }
+    } catch (RuntimeException | Error e) {
+      // the failing cache already released its own locks, this cleans up the namespaces that were not committed yet
+      rollbackAfterFailure(e);
+      throw e;
     }
   }
 
   public void rollback() {
     for (TransactionalCache txCache : transactionalCaches.values()) {
       txCache.rollback();
+    }
+  }
+
+  private void rollbackAfterFailure(Throwable firstFailure) {
+    for (TransactionalCache txCache : transactionalCaches.values()) {
+      try {
+        txCache.rollback();
+      } catch (RuntimeException | Error cleanupFailure) {
+        // keep the original failure, roll back the remaining namespaces anyway, and never suppress a failure on itself
+        if (cleanupFailure != firstFailure) {
+          firstFailure.addSuppressed(cleanupFailure);
+        }
+      }
     }
   }
 
