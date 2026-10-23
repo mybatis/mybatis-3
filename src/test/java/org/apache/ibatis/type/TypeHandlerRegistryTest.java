@@ -160,6 +160,89 @@ class TypeHandlerRegistryTest {
     assertEquals(DateTypeHandler.class, typeHandlerRegistry.getTypeHandler(MyDate2.class).getClass());
   }
 
+  @Test
+  void shouldNotReplaceSuperclassHandlerWhenRegisteringHandlerForSubclass() {
+    class MyDate extends Date {
+      private static final long serialVersionUID = 1L;
+    }
+
+    // Resolving a handler for the subclass inherits the handler map registered for java.util.Date.
+    assertSame(DateOnlyTypeHandler.INSTANCE, typeHandlerRegistry.getTypeHandler(MyDate.class, JdbcType.DATE));
+
+    NoopTypeHandler<MyDate> myDateTypeHandler = new NoopTypeHandler<>();
+    typeHandlerRegistry.register(MyDate.class, JdbcType.DATE, myDateTypeHandler);
+
+    assertSame(myDateTypeHandler, typeHandlerRegistry.getTypeHandler(MyDate.class, JdbcType.DATE));
+    // JDBC types that are not overridden for the subclass are still inherited.
+    assertSame(TimeOnlyTypeHandler.INSTANCE, typeHandlerRegistry.getTypeHandler(MyDate.class, JdbcType.TIME));
+    assertSame(DateTypeHandler.INSTANCE, typeHandlerRegistry.getTypeHandler(MyDate.class));
+    // Registering a handler for the subclass must not replace any mapping registered for the superclass.
+    assertSame(DateOnlyTypeHandler.INSTANCE, typeHandlerRegistry.getTypeHandler(Date.class, JdbcType.DATE));
+    assertSame(TimeOnlyTypeHandler.INSTANCE, typeHandlerRegistry.getTypeHandler(Date.class, JdbcType.TIME));
+    assertSame(DateTypeHandler.INSTANCE, typeHandlerRegistry.getTypeHandler(Date.class));
+  }
+
+  @Test
+  void shouldNotReplaceHandlersOfSubclassSiblings() {
+    class MyDate extends Date {
+      private static final long serialVersionUID = 1L;
+    }
+    class MyDateSibling extends Date {
+      private static final long serialVersionUID = 1L;
+    }
+
+    // Both subclasses are resolved before a handler is registered for one of them.
+    assertSame(DateOnlyTypeHandler.INSTANCE, typeHandlerRegistry.getTypeHandler(MyDate.class, JdbcType.DATE));
+    assertSame(DateOnlyTypeHandler.INSTANCE, typeHandlerRegistry.getTypeHandler(MyDateSibling.class, JdbcType.DATE));
+
+    NoopTypeHandler<MyDate> myDateTypeHandler = new NoopTypeHandler<>();
+    typeHandlerRegistry.register(MyDate.class, JdbcType.DATE, myDateTypeHandler);
+
+    assertSame(myDateTypeHandler, typeHandlerRegistry.getTypeHandler(MyDate.class, JdbcType.DATE));
+    assertSame(DateOnlyTypeHandler.INSTANCE, typeHandlerRegistry.getTypeHandler(MyDateSibling.class, JdbcType.DATE));
+    assertSame(DateOnlyTypeHandler.INSTANCE, typeHandlerRegistry.getTypeHandler(Date.class, JdbcType.DATE));
+  }
+
+  @Test
+  void shouldNotReplaceSuperclassHandlerWhenHandlerForSubclassIsRegisteredFirst() {
+    class MyDate extends Date {
+      private static final long serialVersionUID = 1L;
+    }
+
+    // Without a preceding lookup, the handler for the subclass is registered in its own map.
+    NoopTypeHandler<MyDate> myDateTypeHandler = new NoopTypeHandler<>();
+    typeHandlerRegistry.register(MyDate.class, JdbcType.DATE, myDateTypeHandler);
+
+    assertSame(myDateTypeHandler, typeHandlerRegistry.getTypeHandler(MyDate.class, JdbcType.DATE));
+    assertSame(DateOnlyTypeHandler.INSTANCE, typeHandlerRegistry.getTypeHandler(Date.class, JdbcType.DATE));
+  }
+
+  static class NoopTypeHandler<T> extends BaseTypeHandler<T> {
+
+    @Override
+    public void setNonNullParameter(PreparedStatement ps, int i, T parameter, JdbcType jdbcType) throws SQLException {
+      // do nothing, fake method
+    }
+
+    @Override
+    public T getNullableResult(ResultSet rs, String columnName) throws SQLException {
+      // do nothing, fake method
+      return null;
+    }
+
+    @Override
+    public T getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
+      // do nothing, fake method
+      return null;
+    }
+
+    @Override
+    public T getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
+      // do nothing, fake method
+      return null;
+    }
+  }
+
   interface SomeInterface {
   }
 
