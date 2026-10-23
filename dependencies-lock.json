@@ -258,11 +258,11 @@
   }, {
     "groupId" : "org.gaul",
     "artifactId" : "modernizer-maven-annotations",
-    "version" : "3.4.0",
+    "version" : "3.5.0",
     "scope" : "provided",
     "type" : "jar",
     "optional" : false,
-    "integrity" : "sha512:dNKavbh5v/q/IAqwsZvr9VqRe9MnXhPriGzCfo2qE2GPL21KTP1e/CXG2xHo7ICVDIReQfJ5ZgIQVxXATYYoTg=="
+    "integrity" : "sha512:WOB6rb4lU7gJ24p2FMWTKu2Su25e4OiRVEgdA8fnsm1xxuJqF5KBzMVKiZjJlqInqsEfjErgyvhKrgdyRjuw2w=="
   }, {
     "groupId" : "org.hamcrest",
     "artifactId" : "hamcrest-core",
