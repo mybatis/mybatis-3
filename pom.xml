@@ -94,7 +94,7 @@
     <spotbugs.onlyAnalyze>org.apache.ibatis.*</spotbugs.onlyAnalyze>
 
     <!-- Surefire Setup -->
-    <argLine>-Xmx2048m -javaagent:${settings.localRepository}/net/bytebuddy/byte-buddy-agent/${byte-buddy.version}/byte-buddy-agent-${byte-buddy.version}.jar</argLine>
+    <argLine>-Xmx2048m -javaagent:${settings.localRepository}/net/bytebuddy/byte-buddy-agent/${byte-buddy.version}/byte-buddy-agent-${byte-buddy.version}.jar --add-opens java.base/java.lang=ALL-UNNAMED</argLine>
 
     <!-- Reproducible Builds -->
     <project.build.outputTimestamp>1735704225</project.build.outputTimestamp>
