@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package org.apache.ibatis.builder;
 
 import java.util.List;
-import java.util.StringTokenizer;
 
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.SqlSource;
@@ -38,18 +37,8 @@ public class SqlSourceBuilder {
         parameterMappings);
   }
 
-  public static String removeExtraWhitespaces(String original) {
-    StringTokenizer tokenizer = new StringTokenizer(original);
-    StringBuilder builder = new StringBuilder();
-    boolean hasMoreTokens = tokenizer.hasMoreTokens();
-    while (hasMoreTokens) {
-      builder.append(tokenizer.nextToken());
-      hasMoreTokens = tokenizer.hasMoreTokens();
-      if (hasMoreTokens) {
-        builder.append(' ');
-      }
-    }
-    return builder.toString();
+  public static String removeExtraWhitespaces(final String original) {
+    return original.replaceAll("\\s+", " ").trim();
   }
 
 }
