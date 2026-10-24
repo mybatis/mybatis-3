@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -58,7 +58,22 @@ public class JdbcTransaction implements Transaction {
   }
 
   public JdbcTransaction(Connection connection) {
+    this(connection, false);
+  }
+
+  /**
+   * Creates a transaction using an existing connection.
+   *
+   * @param connection
+   *          the JDBC connection
+   * @param skipSetAutoCommitOnClose
+   *          whether to skip resetting auto-commit when closing the connection
+   *
+   * @since 3.6.0
+   */
+  public JdbcTransaction(Connection connection, boolean skipSetAutoCommitOnClose) {
     this.connection = connection;
+    this.skipSetAutoCommitOnClose = skipSetAutoCommitOnClose;
   }
 
   @Override
