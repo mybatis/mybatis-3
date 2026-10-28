@@ -59,24 +59,17 @@ class ExternalResourcesTest {
 
   @Test
   void testcopyExternalResource_fileNotFound() {
-
-    try {
-      badFile = Path.of("/tmp/nofile.sql").toFile();
-      ExternalResources.copyExternalResource(badFile, destFile);
-    } catch (Exception e) {
-      assertTrue(e instanceof NoSuchFileException);
-    }
+    badFile = Path.of("/tmp/nofile.sql").toFile();
+    assertThrows(NoSuchFileException.class, () -> ExternalResources.copyExternalResource(badFile, destFile));
   }
 
   @Test
   void testcopyExternalResource_emptyStringAsFile() {
-
-    try {
+    Exception e = assertThrows(Exception.class, () -> {
       badFile = Path.of(" ").toFile();
       ExternalResources.copyExternalResource(badFile, destFile);
-    } catch (Exception e) {
-      assertTrue(e instanceof InvalidPathException || e instanceof NoSuchFileException);
-    }
+    });
+    assertTrue(e instanceof InvalidPathException || e instanceof NoSuchFileException);
   }
 
   @Test
