@@ -53,10 +53,17 @@ public class BlobByteObjectArrayTypeHandler extends BaseTypeHandler<Byte[]> {
   }
 
   private Byte[] getBytes(Blob blob) throws SQLException {
-    Byte[] returnValue = null;
-    if (blob != null) {
-      returnValue = ByteArrayUtils.convertToObjectArray(blob.getBytes(1, (int) blob.length()));
+    if (blob == null) {
+      return null;
     }
-    return returnValue;
+    try {
+      return ByteArrayUtils.convertToObjectArray(blob.getBytes(1, (int) blob.length()));
+    } finally {
+      try {
+        blob.free();
+      } catch (SQLException | UnsupportedOperationException ignored) {
+        // Ignored for drivers that don't support free()
+      }
+    }
   }
 }

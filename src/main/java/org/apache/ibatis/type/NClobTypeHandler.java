@@ -54,7 +54,18 @@ public class NClobTypeHandler extends BaseTypeHandler<String> {
   }
 
   private String toString(NClob nclob) throws SQLException {
-    return nclob == null ? null : nclob.getSubString(1, (int) nclob.length());
+    if (nclob == null) {
+      return null;
+    }
+    try {
+      return nclob.getSubString(1, (int) nclob.length());
+    } finally {
+      try {
+        nclob.free();
+      } catch (SQLException | UnsupportedOperationException ignored) {
+        // Ignored for drivers that don't support free()
+      }
+    }
   }
 
 }
