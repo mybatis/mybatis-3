@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
@@ -102,6 +103,10 @@ public class PooledDataSource implements DataSource {
 
   @Override
   public Connection getConnection(String username, String password) throws SQLException {
+    if (!Objects.equals(username, dataSource.getUsername()) || !Objects.equals(password, dataSource.getPassword())) {
+      // pooled connections are opened with the configured credentials
+      return dataSource.getConnection(username, password);
+    }
     return popConnection(username, password).getProxyConnection();
   }
 
