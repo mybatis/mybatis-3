@@ -51,6 +51,17 @@ public class BlobTypeHandler extends BaseTypeHandler<byte[]> {
   }
 
   private byte[] toPrimitiveBytes(Blob blob) throws SQLException {
-    return blob == null ? null : blob.getBytes(1, (int) blob.length());
+    if (blob == null) {
+      return null;
+    }
+    try {
+      return blob.getBytes(1, (int) blob.length());
+    } finally {
+      try {
+        blob.free();
+      } catch (SQLException | UnsupportedOperationException ignored) {
+        // Ignored for drivers that don't support free()
+      }
+    }
   }
 }
