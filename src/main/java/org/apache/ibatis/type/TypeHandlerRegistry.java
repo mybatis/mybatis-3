@@ -400,6 +400,10 @@ public final class TypeHandlerRegistry {
 
   // java type + jdbc type + handler
 
+  public void register(Class<?> mappedJavaType, JdbcType mappedJdbcType, TypeHandler<?> handler) {
+    register((Type) mappedJavaType, mappedJdbcType, handler);
+  }
+
   public void register(Type mappedJavaType, JdbcType mappedJdbcType, TypeHandler<?> handler) {
     register(new Type[] { mappedJavaType }, new JdbcType[] { mappedJdbcType }, handler);
   }
