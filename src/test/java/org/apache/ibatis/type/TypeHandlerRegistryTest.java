@@ -61,6 +61,45 @@ class TypeHandlerRegistryTest {
   }
 
   @Test
+  void shouldPreserveClassRegistrationMethodDescriptor() throws Exception {
+    TypeHandler<?> handler = new StringTypeHandler();
+    // Look up the exact descriptor used by clients compiled against 3.5.x.
+    TypeHandlerRegistry.class.getMethod("register", Class.class, JdbcType.class, TypeHandler.class)
+        .invoke(typeHandlerRegistry, String.class, JdbcType.VARCHAR, handler);
+    assertSame(handler, typeHandlerRegistry.getTypeHandler(String.class, JdbcType.VARCHAR));
+  }
+
+  @Test
+  void shouldRegisterClassWithWildcardHandlerAndNullJdbcType() {
+    Class<?> javaType = String.class;
+    TypeHandler<?> handler = new StringTypeHandler();
+    typeHandlerRegistry.register(javaType, null, handler);
+    assertSame(handler, typeHandlerRegistry.getTypeHandler(javaType, null));
+    TypeHandlerRegistry nullTypeRegistry = new TypeHandlerRegistry();
+    StringTypeHandler nullTypeHandler = new StringTypeHandler();
+    nullTypeRegistry.register(null, JdbcType.VARCHAR, nullTypeHandler);
+    assertSame(nullTypeHandler, nullTypeRegistry.getMappingTypeHandler(StringTypeHandler.class));
+
+    nullTypeRegistry = new TypeHandlerRegistry();
+    nullTypeHandler = new StringTypeHandler();
+    nullTypeRegistry.register((Class<?>) null, null, nullTypeHandler);
+    assertSame(nullTypeHandler, nullTypeRegistry.getMappingTypeHandler(StringTypeHandler.class));
+  }
+
+  @Test
+  void shouldKeepTypeRegistrationOverload() {
+    Type javaType = new TypeReference<List<String>>() {
+    }.getRawType();
+    TypeHandler<?> handler = new ObjectTypeHandler();
+    typeHandlerRegistry.register(javaType, JdbcType.VARCHAR, handler);
+    assertSame(handler, typeHandlerRegistry.getTypeHandler(javaType, JdbcType.VARCHAR));
+    TypeHandlerRegistry nullTypeRegistry = new TypeHandlerRegistry();
+    ObjectTypeHandler nullTypeHandler = new ObjectTypeHandler();
+    nullTypeRegistry.register((Type) null, null, nullTypeHandler);
+    assertSame(nullTypeHandler, nullTypeRegistry.getMappingTypeHandler(ObjectTypeHandler.class));
+  }
+
+  @Test
   void shouldRegisterAndRetrieveComplexTypeHandler() {
     TypeHandler<List<URI>> fakeHandler = new TypeHandler<>() {
 
