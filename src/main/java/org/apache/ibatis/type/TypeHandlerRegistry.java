@@ -400,6 +400,10 @@ public final class TypeHandlerRegistry {
 
   // java type + jdbc type + handler
 
+  /**
+   * @deprecated Use {@link #register(Type, JdbcType, TypeHandler)} instead.
+   */
+  @Deprecated(since = "3.6.1", forRemoval = true)
   public void register(Class<?> mappedJavaType, JdbcType mappedJdbcType, TypeHandler<?> handler) {
     register((Type) mappedJavaType, mappedJdbcType, handler);
   }
