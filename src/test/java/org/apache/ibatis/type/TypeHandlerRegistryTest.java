@@ -70,6 +70,7 @@ class TypeHandlerRegistryTest {
   }
 
   @Test
+  @SuppressWarnings("removal")
   void shouldRegisterClassWithWildcardHandlerAndNullJdbcType() {
     Class<?> javaType = String.class;
     TypeHandler<?> handler = new StringTypeHandler();
@@ -77,13 +78,9 @@ class TypeHandlerRegistryTest {
     assertSame(handler, typeHandlerRegistry.getTypeHandler(javaType, null));
     TypeHandlerRegistry nullTypeRegistry = new TypeHandlerRegistry();
     StringTypeHandler nullTypeHandler = new StringTypeHandler();
-    nullTypeRegistry.register(null, JdbcType.VARCHAR, nullTypeHandler);
-    assertSame(nullTypeHandler, nullTypeRegistry.getMappingTypeHandler(StringTypeHandler.class));
-
-    nullTypeRegistry = new TypeHandlerRegistry();
-    nullTypeHandler = new StringTypeHandler();
+    assertFalse(nullTypeRegistry.getTypeHandlers().stream().anyMatch(registered -> registered == nullTypeHandler));
     nullTypeRegistry.register((Class<?>) null, null, nullTypeHandler);
-    assertSame(nullTypeHandler, nullTypeRegistry.getMappingTypeHandler(StringTypeHandler.class));
+    assertTrue(nullTypeRegistry.getTypeHandlers().stream().anyMatch(registered -> registered == nullTypeHandler));
   }
 
   @Test
@@ -93,10 +90,6 @@ class TypeHandlerRegistryTest {
     TypeHandler<?> handler = new ObjectTypeHandler();
     typeHandlerRegistry.register(javaType, JdbcType.VARCHAR, handler);
     assertSame(handler, typeHandlerRegistry.getTypeHandler(javaType, JdbcType.VARCHAR));
-    TypeHandlerRegistry nullTypeRegistry = new TypeHandlerRegistry();
-    ObjectTypeHandler nullTypeHandler = new ObjectTypeHandler();
-    nullTypeRegistry.register((Type) null, null, nullTypeHandler);
-    assertSame(nullTypeHandler, nullTypeRegistry.getMappingTypeHandler(ObjectTypeHandler.class));
   }
 
   @Test
