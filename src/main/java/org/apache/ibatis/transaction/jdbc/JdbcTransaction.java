@@ -69,7 +69,7 @@ public class JdbcTransaction implements Transaction {
    * @param skipSetAutoCommitOnClose
    *          whether to skip resetting auto-commit when closing the connection
    *
-   * @since 3.6.0
+   * @since 3.6.1
    */
   public JdbcTransaction(Connection connection, boolean skipSetAutoCommitOnClose) {
     this.connection = connection;
