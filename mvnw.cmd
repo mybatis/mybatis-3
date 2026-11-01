@@ -18,7 +18,7 @@
 @REM ----------------------------------------------------------------------------
 
 @REM ----------------------------------------------------------------------------
-@REM Apache Maven Wrapper startup batch script, version 3.3.2
+@REM Apache Maven Wrapper startup batch script, version 3.3.4
 @REM
 @REM Required ENV vars:
 @REM JAVA_HOME - location of a JDK home dir
