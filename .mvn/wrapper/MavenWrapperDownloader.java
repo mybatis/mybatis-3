@@ -25,15 +25,25 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * The Class MavenWrapperDownloader.
+ */
 public final class MavenWrapperDownloader {
-    private static final String WRAPPER_VERSION = "3.3.2";
 
+    /** The wrapper version. */
+    private static final String WRAPPER_VERSION = "3.3.4";
+
+    /** The verbose. */
     private static final boolean VERBOSE = Boolean.parseBoolean(System.getenv("MVNW_VERBOSE"));
 
+    /**
+     * Main.
+     *
+     * @param args the args
+     */
     public static void main(String[] args) {
         log("Apache Maven Wrapper Downloader " + WRAPPER_VERSION);
 
@@ -45,8 +55,11 @@ public final class MavenWrapperDownloader {
         try {
             log(" - Downloader started");
             final URL wrapperUrl = URI.create(args[0]).toURL();
-            final String jarPath = args[1].replace("..", ""); // Sanitize path
-            final Path wrapperJarPath = Paths.get(jarPath).toAbsolutePath().normalize();
+            final Path baseDir = Path.of(".").toAbsolutePath().normalize();
+            final Path wrapperJarPath = baseDir.resolve(args[1]).normalize();
+            if (!wrapperJarPath.startsWith(baseDir)) {
+                throw new IOException("Invalid path: outside of allowed directory");
+            }
             downloadFileFromURL(wrapperUrl, wrapperJarPath);
             log("Done");
         } catch (IOException e) {
@@ -58,6 +71,13 @@ public final class MavenWrapperDownloader {
         }
     }
 
+    /**
+     * Download file from url.
+     *
+     * @param wrapperUrl the wrapper url
+     * @param wrapperJarPath the wrapper jar path
+     * @throws IOException the io exception
+     */
     private static void downloadFileFromURL(URL wrapperUrl, Path wrapperJarPath)
             throws IOException {
         log(" - Downloading to: " + wrapperJarPath);
@@ -84,6 +104,11 @@ public final class MavenWrapperDownloader {
         log(" - Downloader complete");
     }
 
+    /**
+     * Log.
+     *
+     * @param msg the msg
+     */
     private static void log(String msg) {
         if (VERBOSE) {
             System.out.println(msg);
