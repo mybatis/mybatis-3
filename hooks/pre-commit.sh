@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-#    Copyright 2009-2025 the original author or authors.
+#    Copyright 2009-2026 the original author or authors.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -19,10 +19,10 @@ set -eo pipefail
 
 function format_and_sort() {
   # Run the validate and import check commands, suppressing all output and errors
-  if ! mvn formatter:validate impsort:check > /dev/null 2>&1; then
+  if ! ./mvnw formatter:validate impsort:check > /dev/null 2>&1; then
       # If validation failed, fix it by ensuring code is formatted correctly
       # and that imports are sorted as some IDEs automatically change it on save
-      mvn formatter:format impsort:sort
+      ./mvnw formatter:format impsort:sort
 
       # Fail the commit, so the author can re-select what to commit
       echo "Formatting and/or import sorting were required. Please check and make another commit."
