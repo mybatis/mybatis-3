@@ -164,20 +164,16 @@ class CursorSimpleTest {
   void cursorIteratorNoSuchElementExceptionWithHasNext() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession();
         Cursor<User> usersCursor = sqlSession.selectCursor("getAllUsers", null, new RowBounds(1, 1))) {
-      try {
-        Iterator<User> iterator = usersCursor.iterator();
+      Iterator<User> iterator = usersCursor.iterator();
 
-        User user = iterator.next();
-        Assertions.assertEquals("User2", user.getName());
-        Assertions.assertEquals(1, usersCursor.getCurrentIndex());
+      User user = iterator.next();
+      Assertions.assertEquals("User2", user.getName());
+      Assertions.assertEquals(1, usersCursor.getCurrentIndex());
 
-        Assertions.assertFalse(iterator.hasNext());
-        iterator.next();
-        Assertions.fail("We should have failed since we call next() when hasNext() returned false");
-      } catch (NoSuchElementException e) {
-        Assertions.assertFalse(usersCursor.isOpen());
-        Assertions.assertTrue(usersCursor.isConsumed());
-      }
+      Assertions.assertFalse(iterator.hasNext());
+      Assertions.assertThrows(NoSuchElementException.class, iterator::next);
+      Assertions.assertFalse(usersCursor.isOpen());
+      Assertions.assertTrue(usersCursor.isConsumed());
     }
   }
 
@@ -185,19 +181,15 @@ class CursorSimpleTest {
   void cursorIteratorNoSuchElementExceptionNoHasNext() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession();
         Cursor<User> usersCursor = sqlSession.selectCursor("getAllUsers", null, new RowBounds(1, 1))) {
-      try {
-        Iterator<User> iterator = usersCursor.iterator();
-        User user = iterator.next();
-        Assertions.assertEquals("User2", user.getName());
-        Assertions.assertEquals(1, usersCursor.getCurrentIndex());
+      Iterator<User> iterator = usersCursor.iterator();
+      User user = iterator.next();
+      Assertions.assertEquals("User2", user.getName());
+      Assertions.assertEquals(1, usersCursor.getCurrentIndex());
 
-        // Trying next() without hasNext()
-        iterator.next();
-        Assertions.fail("We should have failed since we call next() when is no more items");
-      } catch (NoSuchElementException e) {
-        Assertions.assertFalse(usersCursor.isOpen());
-        Assertions.assertTrue(usersCursor.isConsumed());
-      }
+      // Trying next() without hasNext()
+      Assertions.assertThrows(NoSuchElementException.class, iterator::next);
+      Assertions.assertFalse(usersCursor.isOpen());
+      Assertions.assertTrue(usersCursor.isConsumed());
     }
   }
 
@@ -368,24 +360,17 @@ class CursorSimpleTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       usersCursor = sqlSession.getMapper(Mapper.class).getAllUsers();
     }
-    try {
-      usersCursor.iterator();
-      Assertions.fail("Should throws the IllegalStateException when call the iterator method after session is closed.");
-    } catch (IllegalStateException e) {
-      Assertions.assertEquals("A Cursor is already closed.", e.getMessage());
-    }
+    IllegalStateException e = Assertions.assertThrows(IllegalStateException.class, () -> usersCursor.iterator());
+    Assertions.assertEquals("A Cursor is already closed.", e.getMessage());
 
     // verify for checking order
+    Cursor<User> iteratedCursor;
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      usersCursor = sqlSession.getMapper(Mapper.class).getAllUsers();
-      usersCursor.iterator();
+      iteratedCursor = sqlSession.getMapper(Mapper.class).getAllUsers();
+      iteratedCursor.iterator();
     }
-    try {
-      usersCursor.iterator();
-      Assertions.fail("Should throws the IllegalStateException when call the iterator already.");
-    } catch (IllegalStateException e) {
-      Assertions.assertEquals("Cannot open more than one iterator on a Cursor", e.getMessage());
-    }
+    e = Assertions.assertThrows(IllegalStateException.class, () -> iteratedCursor.iterator());
+    Assertions.assertEquals("Cannot open more than one iterator on a Cursor", e.getMessage());
 
   }
 

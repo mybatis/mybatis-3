@@ -17,8 +17,8 @@ package org.apache.ibatis.jdbc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -103,12 +103,8 @@ class ScriptRunnerTest extends BaseDataTest {
       runner.setErrorLogWriter(null);
       runner.setLogWriter(null);
 
-      try {
-        runner.runScript(reader);
-        fail("Expected script runner to fail due to missing end of line terminator.");
-      } catch (Exception e) {
-        assertTrue(e.getMessage().contains("end-of-line terminator"));
-      }
+      Exception e = assertThrows(Exception.class, () -> runner.runScript(reader));
+      assertTrue(e.getMessage().contains("end-of-line terminator"));
     }
   }
 
@@ -137,12 +133,8 @@ class ScriptRunnerTest extends BaseDataTest {
       runner.setStopOnError(true);
       runner.setErrorLogWriter(null);
       runner.setLogWriter(null);
-      try {
-        runner.runScript(reader);
-        fail("Expected script runner to fail due to the usage of invalid delimiter.");
-      } catch (Exception e) {
-        assertTrue(e.getMessage().contains("end-of-line terminator"));
-      }
+      Exception e = assertThrows(Exception.class, () -> runner.runScript(reader));
+      assertTrue(e.getMessage().contains("end-of-line terminator"));
     }
   }
 

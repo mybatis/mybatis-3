@@ -50,14 +50,10 @@ class DefaultObjectFactoryTest {
   @Test
   void createClassThrowsProperErrorMsg() {
     DefaultObjectFactory defaultObjectFactory = new DefaultObjectFactory();
-    try {
-      defaultObjectFactory.create(TestClass.class, List.of(String.class), List.of("foo"));
-      Assertions.fail("Should have thrown ReflectionException");
-    } catch (Exception e) {
-      Assertions.assertTrue(e instanceof ReflectionException, "Should be ReflectionException");
-      Assertions.assertTrue(e.getMessage().contains("(String)"), "Should not have trailing commas in types list");
-      Assertions.assertTrue(e.getMessage().contains("(foo)"), "Should not have trailing commas in values list");
-    }
+    ReflectionException e = Assertions.assertThrows(ReflectionException.class,
+        () -> defaultObjectFactory.create(TestClass.class, List.of(String.class), List.of("foo")));
+    Assertions.assertTrue(e.getMessage().contains("(String)"), "Should not have trailing commas in types list");
+    Assertions.assertTrue(e.getMessage().contains("(foo)"), "Should not have trailing commas in values list");
   }
 
   @Test

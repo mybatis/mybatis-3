@@ -17,7 +17,7 @@ package org.apache.ibatis.executor.loader;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -119,12 +119,7 @@ public abstract class SerializableProxyTest {
 
   @Test
   void shouldGenerateWriteReplace() throws Exception {
-    try {
-      author.getClass().getDeclaredMethod("writeReplace");
-      fail("Author should not have a writeReplace method");
-    } catch (NoSuchMethodException e) {
-      // ok
-    }
+    assertThrows(NoSuchMethodException.class, () -> author.getClass().getDeclaredMethod("writeReplace"));
     Object proxy = proxyFactory.createProxy(author, new ResultLoaderMap(), new Configuration(),
         new DefaultObjectFactory(), new ArrayList<>(), new ArrayList<>());
     proxy.getClass().getDeclaredMethod("writeReplace");

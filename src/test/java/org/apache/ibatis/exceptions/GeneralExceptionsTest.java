@@ -16,6 +16,7 @@
 package org.apache.ibatis.exceptions;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.InvocationTargetException;
@@ -73,12 +74,11 @@ class GeneralExceptionsTest {
   }
 
   private void testThrowException(Exception thrown) {
-    try {
+    Exception caught = assertThrows(Exception.class, () -> {
       throw thrown;
-    } catch (Exception caught) {
-      assertEquals(thrown.getMessage(), caught.getMessage());
-      assertEquals(thrown.getCause(), caught.getCause());
-    }
+    });
+    assertEquals(thrown.getMessage(), caught.getMessage());
+    assertEquals(thrown.getCause(), caught.getCause());
   }
 
 }
