@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   build:
-    if: github.repository_owner == 'mybatis' && ! contains(toJSON(github.event.head_commit.message), '[maven-release-plugin]')
+    if: github.repository_owner == 'mybatis' && contains(toJSON(github.event.head_commit.message), '[maven-release-plugin] prepare release')
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
