@@ -2,26 +2,35 @@ name: Coveralls
 
 on: [push, pull_request]
 
+permissions: read-all
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  build:
+  coveralls:
     if: github.repository_owner == 'mybatis'
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-      - name: Set up JDK
-        uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Setup Java
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
         with:
           cache: maven
           distribution: temurin
-          java-version: 21
+          java-version: 25
+      - name: Run the build
+        run: ./mvnw install --batch-mode --no-transfer-progress --quiet --show-version -Dlicense.skip=true
       - name: Report Coverage to Coveralls for Pull Requests
         if: github.event_name == 'pull_request'
-        run: ./mvnw -B -V test jacoco:report coveralls:report -q -Dlicense.skip=true -DrepoToken=$GITHUB_TOKEN -DserviceName=github -DpullRequest=$PR_NUMBER --no-transfer-progress
+        run: ./mvnw generate-sources jacoco:report coveralls:report --batch-mode --no-transfer-progress -DpullRequest=${{ env.PR_NUMBER }} -DrepoToken=${{ env.GITHUB_TOKEN }} -DserviceName=github
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.number }}
       - name: Report Coverage to Coveralls for General Push
         if: github.event_name == 'push'
-        run: ./mvnw -B -V test jacoco:report coveralls:report -q -Dlicense.skip=true -DrepoToken=$GITHUB_TOKEN -DserviceName=github --no-transfer-progress
+        run: ./mvnw generate-sources jacoco:report coveralls:report --batch-mode --no-transfer-progress -DrepoToken=${{ env.GITHUB_TOKEN }} -DserviceName=github
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -2,23 +2,30 @@ name: Java CI
 
 on: [workflow_dispatch, push, pull_request]
 
+permissions: read-all
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
     strategy:
       matrix:
         cache: [maven]
         distribution: [temurin]
-        java: [17, 21, 23, 24-ea, 25-ea]
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        java: [25]
+        os: [macos-latest, ubuntu-latest, windows-latest]
       fail-fast: false
-      max-parallel: 4
+      max-parallel: 6
     name: Test JDK ${{ matrix.java }}, ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-      - name: Set up JDK ${{ matrix.java }} ${{ matrix.distribution }}
-        uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Setup Java ${{ matrix.java }} ${{ matrix.distribution }}
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
         with:
           cache: ${{ matrix.cache }}
           distribution: ${{ matrix.distribution }}
@@ -27,4 +34,4 @@ jobs:
         if: ${{ matrix.os == 'ubuntu-latest' }}
         run: echo 'TEST_CONTAINERS_PROFILE=-PtestContainers' >> $GITHUB_ENV
       - name: Test with Maven
-        run: ./mvnw test -B -V  --no-transfer-progress -D"license.skip=true" $TEST_CONTAINERS_PROFILE
+        run: ./mvnw test --batch-mode --no-transfer-progress --show-version -D"license.skip=true"

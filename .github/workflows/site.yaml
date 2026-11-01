@@ -5,27 +5,33 @@ on:
     branches:
       - site
 
+permissions:
+  contents: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
-    if: github.repository_owner == 'mybatis' && contains(toJSON(github.event.head_commit.message), '[maven-release-plugin] prepare release')
+    if: github.repository_owner == 'mybatis' && ! contains(toJSON(github.event.head_commit.message), '[maven-release-plugin]')
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-      - name: Set up JDK
-        uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Setup Java
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
         with:
           cache: maven
           distribution: temurin
-          java-version: 21
+          java-version: 25
       - name: Build site
-        run: ./mvnw site site:stage -DskipTests -Dlicense.skip=true -B -V --no-transfer-progress --settings ./.mvn/settings.xml
+        run: ./mvnw site site:stage --batch-mode --no-transfer-progress --settings ./.mvn/settings.xml --show-version -Dlicense.skip=true -DskipTests
         env:
-          CI_DEPLOY_USERNAME: ${{ secrets.CI_DEPLOY_USERNAME }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
       - name: Deploy Site to gh-pages
-        uses: JamesIves/github-pages-deploy-action@fa24774553152dd7873cd16ebd8d959b010c5445 # v4
+        uses: JamesIves/github-pages-deploy-action@fa24774553152dd7873cd16ebd8d959b010c5445 # v4.9.0
         with:
           branch: gh-pages
           folder: target/staging
-          ssh-key: ${{ secrets.DEPLOY_KEY }}
