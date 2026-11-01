@@ -3,6 +3,10 @@
   "extends": [
     "config:best-practices"
   ],
+  "baseBranchPatterns": [
+    "master",
+    "support-java8"
+  ],
   "packageRules": [
     {
       "matchPackageNames": ["*"],
