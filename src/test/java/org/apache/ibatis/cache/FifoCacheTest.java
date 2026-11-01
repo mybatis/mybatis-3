@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -58,6 +58,19 @@ class FifoCacheTest {
     cache.clear();
     assertNull(cache.getObject(0));
     assertNull(cache.getObject(4));
+  }
+
+  @Test
+  void shouldNotEvictOtherEntryWhenExistingKeyIsRePut() {
+    FifoCache cache = new FifoCache(new PerpetualCache("default"));
+    cache.setSize(2);
+    cache.putObject(0, 0);
+    cache.putObject(1, 1);
+    // Updating an existing entry must not evict another entry
+    cache.putObject(1, 11);
+    assertEquals(0, cache.getObject(0));
+    assertEquals(11, cache.getObject(1));
+    assertEquals(2, cache.getSize());
   }
 
   @Test
