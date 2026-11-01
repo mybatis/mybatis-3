@@ -16,7 +16,7 @@
 package org.apache.ibatis.plugin;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.Reader;
 import java.sql.Connection;
@@ -88,18 +88,11 @@ class PluginTest {
 
   @Test
   void shouldPluginNotInvokeArbitraryMethod() {
-    Map<?, ?> map = new HashMap<>();
-    map = (Map<?, ?>) new AlwaysMapPlugin().plugin(map);
-    try {
-      map.get("Anything");
-      fail("Expected IllegalArgumentException, but no exception was thrown.");
-    } catch (IllegalArgumentException e) {
-      assertEquals(
-          "Method 'public abstract java.lang.Object java.util.Map.get(java.lang.Object)' is not supported as a plugin target.",
-          e.getMessage());
-    } catch (Exception e) {
-      fail("Expected IllegalArgumentException, but was " + e.getClass(), e);
-    }
+    Map<?, ?> map = (Map<?, ?>) new AlwaysMapPlugin().plugin(new HashMap<>());
+    IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> map.get("Anything"));
+    assertEquals(
+        "Method 'public abstract java.lang.Object java.util.Map.get(java.lang.Object)' is not supported as a plugin target.",
+        e.getMessage());
   }
 
   @Intercepts({ @Signature(type = Map.class, method = "get", args = { Object.class }) })

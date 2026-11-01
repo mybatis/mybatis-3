@@ -17,8 +17,8 @@ package org.apache.ibatis.submitted.lazy_deserialize;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -86,12 +86,8 @@ class LazyDeserializeTest {
       final LazyObjectFoo foo = mapper.loadFoo(FOO_ID);
       final byte[] serializedFoo = this.serializeFoo(foo);
       final LazyObjectFoo deserializedFoo = this.deserializeFoo(serializedFoo);
-      try {
-        deserializedFoo.getLazyObjectBar();
-        fail();
-      } catch (ExecutorException e) {
-        assertTrue(e.getMessage().contains("Cannot get Configuration as configuration factory was not set."));
-      }
+      ExecutorException e = assertThrows(ExecutorException.class, () -> deserializedFoo.getLazyObjectBar());
+      assertTrue(e.getMessage().contains("Cannot get Configuration as configuration factory was not set."));
     }
   }
 

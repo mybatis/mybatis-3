@@ -116,15 +116,11 @@ class DefaultResultSetHandlerTest {
     when(typeHandler.getResult(any(ResultSet.class), any(String.class))).thenThrow(new SQLException("exception"));
     List<ResultMapping> constructorMappings = List.of(resultMapping);
 
-    try {
-      defaultResultSetHandler.createParameterizedResultObject(rsw, null/* resultType */, constructorMappings,
-          null/* constructorArgTypes */, null/* constructorArgs */, null/* columnPrefix */, false,
-          /* useCollectionConstructorInjection */ null/* parentRowKey */);
-      Assertions.fail("Should have thrown ExecutorException");
-    } catch (Exception e) {
-      Assertions.assertTrue(e instanceof ExecutorException, "Expected ExecutorException");
-      Assertions.assertTrue(e.getMessage().contains("mapping: " + resultMapping.toString()));
-    }
+    ExecutorException e = Assertions.assertThrows(ExecutorException.class,
+        () -> defaultResultSetHandler.createParameterizedResultObject(rsw, null/* resultType */, constructorMappings,
+            null/* constructorArgTypes */, null/* constructorArgs */, null/* columnPrefix */, false,
+            /* useCollectionConstructorInjection */ null/* parentRowKey */));
+    Assertions.assertTrue(e.getMessage().contains("mapping: " + resultMapping.toString()));
   }
 
   MappedStatement getMappedStatement() {

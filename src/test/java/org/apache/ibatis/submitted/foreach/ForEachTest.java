@@ -154,9 +154,8 @@ class ForEachTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = new User();
       user.setFriendList(null);
-      mapper.countUserWithNullableIsOmit(user);
-      Assertions.fail();
-    } catch (PersistenceException e) {
+      PersistenceException e = Assertions.assertThrows(PersistenceException.class,
+          () -> mapper.countUserWithNullableIsOmit(user));
       Assertions.assertEquals("The expression 'friendList' evaluated to a null value.", e.getCause().getMessage());
     }
   }
@@ -180,9 +179,8 @@ class ForEachTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = new User();
       user.setFriendList(null);
-      mapper.countUserWithNullableIsOmit(user);
-      Assertions.fail();
-    } catch (PersistenceException e) {
+      PersistenceException e = Assertions.assertThrows(PersistenceException.class,
+          () -> mapper.countUserWithNullableIsOmit(user));
       Assertions.assertEquals("The expression 'friendList' evaluated to a null value.", e.getCause().getMessage());
     }
   }
@@ -206,9 +204,8 @@ class ForEachTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       User user = new User();
       user.setFriendList(null);
-      mapper.countUserWithNullableIsFalse(user);
-      Assertions.fail();
-    } catch (PersistenceException e) {
+      PersistenceException e = Assertions.assertThrows(PersistenceException.class,
+          () -> mapper.countUserWithNullableIsFalse(user));
       Assertions.assertEquals("The expression 'friendList' evaluated to a null value.", e.getCause().getMessage());
     }
   }

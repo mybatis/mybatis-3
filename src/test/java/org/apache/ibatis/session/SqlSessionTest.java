@@ -18,8 +18,8 @@ package org.apache.ibatis.session;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.Reader;
 import java.util.ArrayList;
@@ -108,12 +108,8 @@ class SqlSessionTest extends BaseDataTest {
     assertEquals(cache1, c.getCache(name1));
     assertEquals(cache2, c.getCache(name2));
 
-    try {
-      c.getCache(shortName);
-      fail("Exception expected.");
-    } catch (Exception e) {
-      assertTrue(e.getMessage().contains("ambiguous"));
-    }
+    Exception e = assertThrows(Exception.class, () -> c.getCache(shortName));
+    assertTrue(e.getMessage().contains("ambiguous"));
 
   }
 
@@ -122,13 +118,11 @@ class SqlSessionTest extends BaseDataTest {
     Configuration c = new Configuration();
     final String fullName = "com.mycache.MyCache";
     final PerpetualCache cache = new PerpetualCache(fullName);
-    try {
+    Exception e = assertThrows(Exception.class, () -> {
       c.addCache(cache);
       c.addCache(cache);
-      fail("Exception expected.");
-    } catch (Exception e) {
-      assertTrue(e.getMessage().contains("already contains key"));
-    }
+    });
+    assertTrue(e.getMessage().contains("already contains key"));
   }
 
   @Test
@@ -421,42 +415,38 @@ class SqlSessionTest extends BaseDataTest {
 
   @Test
   void shouldThrowExceptionIfMappedStatementDoesNotExist() {
-    try (SqlSession session = sqlMapper.openSession()) {
-      session.selectList("ThisStatementDoesNotExist");
-      fail("Expected exception to be thrown due to statement that does not exist.");
-    } catch (Exception e) {
-      assertTrue(e.getMessage().contains("does not contain value for ThisStatementDoesNotExist"));
-    }
+    Exception e = assertThrows(Exception.class, () -> {
+      try (SqlSession session = sqlMapper.openSession()) {
+        session.selectList("ThisStatementDoesNotExist");
+      }
+    });
+    assertTrue(e.getMessage().contains("does not contain value for ThisStatementDoesNotExist"));
   }
 
   @Test
   void shouldThrowExceptionIfTryingToAddStatementWithSameNameInXml() {
     Configuration config = sqlMapper.getConfiguration();
-    try {
+    Exception e = assertThrows(Exception.class, () -> {
       MappedStatement ms = new MappedStatement.Builder(config,
           "org.apache.ibatis.domain.blog.mappers.BlogMapper.selectBlogWithPostsUsingSubSelect",
           Mockito.mock(SqlSource.class), SqlCommandType.SELECT).resource("org/mybatis/TestMapper.xml").build();
       config.addMappedStatement(ms);
-      fail("Expected exception to be thrown due to statement that already exists.");
-    } catch (Exception e) {
-      assertTrue(e.getMessage().contains(
-          "already contains key org.apache.ibatis.domain.blog.mappers.BlogMapper.selectBlogWithPostsUsingSubSelect. please check org/apache/ibatis/builder/BlogMapper.xml and org/mybatis/TestMapper.xml"));
-    }
+    });
+    assertTrue(e.getMessage().contains(
+        "already contains key org.apache.ibatis.domain.blog.mappers.BlogMapper.selectBlogWithPostsUsingSubSelect. please check org/apache/ibatis/builder/BlogMapper.xml and org/mybatis/TestMapper.xml"));
   }
 
   @Test
   void shouldThrowExceptionIfTryingToAddStatementWithSameNameInAnnotation() {
     Configuration config = sqlMapper.getConfiguration();
-    try {
+    Exception e = assertThrows(Exception.class, () -> {
       MappedStatement ms = new MappedStatement.Builder(config,
           "org.apache.ibatis.domain.blog.mappers.AuthorMapper.selectAuthor2", Mockito.mock(SqlSource.class),
           SqlCommandType.SELECT).resource("org/mybatis/TestMapper.xml").build();
       config.addMappedStatement(ms);
-      fail("Expected exception to be thrown due to statement that already exists.");
-    } catch (Exception e) {
-      assertTrue(e.getMessage().contains(
-          "already contains key org.apache.ibatis.domain.blog.mappers.AuthorMapper.selectAuthor2. please check org/apache/ibatis/domain/blog/mappers/AuthorMapper.java (best guess) and org/mybatis/TestMapper.xml"));
-    }
+    });
+    assertTrue(e.getMessage().contains(
+        "already contains key org.apache.ibatis.domain.blog.mappers.AuthorMapper.selectAuthor2. please check org/apache/ibatis/domain/blog/mappers/AuthorMapper.java (best guess) and org/mybatis/TestMapper.xml"));
   }
 
   @Test

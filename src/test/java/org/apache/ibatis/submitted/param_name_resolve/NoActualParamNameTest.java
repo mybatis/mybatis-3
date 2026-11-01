@@ -16,7 +16,7 @@
 package org.apache.ibatis.submitted.param_name_resolve;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.Reader;
 import java.sql.Connection;
@@ -62,13 +62,10 @@ class NoActualParamNameTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       // use actual name -> no available and index parameter("0") is not available too
       {
-        try {
-          mapper.getUserCountUsingList(Arrays.asList(1, 2));
-          fail();
-        } catch (PersistenceException e) {
-          assertEquals("Parameter 'ids' not found. Available parameters are [collection, list]",
-              e.getCause().getMessage());
-        }
+        PersistenceException e = assertThrows(PersistenceException.class,
+            () -> mapper.getUserCountUsingList(Arrays.asList(1, 2)));
+        assertEquals("Parameter 'ids' not found. Available parameters are [collection, list]",
+            e.getCause().getMessage());
       }
       // use 'collection' as alias
       {

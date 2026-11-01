@@ -15,8 +15,8 @@
  */
 package org.apache.ibatis.submitted.stringlist;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.Reader;
 import java.util.List;
@@ -72,13 +72,13 @@ class StringListTest {
 
   @Test
   void shouldFailFastIfCollectionTypeIsAmbiguous() throws Exception {
-    try (Reader reader = Resources
-        .getResourceAsReader("org/apache/ibatis/submitted/stringlist/mybatis-config-invalid.xml")) {
-      new SqlSessionFactoryBuilder().build(reader);
-      fail("Should throw exception when collection type is unresolvable.");
-    } catch (PersistenceException e) {
-      assertTrue(e.getMessage()
-          .contains("Ambiguous collection type for property 'groups'. You must specify 'javaType' or 'resultMap'."));
-    }
+    PersistenceException e = assertThrows(PersistenceException.class, () -> {
+      try (Reader reader = Resources
+          .getResourceAsReader("org/apache/ibatis/submitted/stringlist/mybatis-config-invalid.xml")) {
+        new SqlSessionFactoryBuilder().build(reader);
+      }
+    });
+    assertTrue(e.getMessage()
+        .contains("Ambiguous collection type for property 'groups'. You must specify 'javaType' or 'resultMap'."));
   }
 }

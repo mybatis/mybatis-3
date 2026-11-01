@@ -17,7 +17,7 @@ package org.apache.ibatis.mapping;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -38,12 +38,7 @@ class VendorDatabaseIdProviderTest {
   @Test
   void shouldNpeBeThrownIfDataSourceIsNull() {
     VendorDatabaseIdProvider provider = new VendorDatabaseIdProvider();
-    try {
-      provider.getDatabaseId(null);
-      fail("Should NullPointerException be thrown.");
-    } catch (NullPointerException e) {
-      // pass
-    }
+    assertThrows(NullPointerException.class, () -> provider.getDatabaseId(null));
   }
 
   @Test
@@ -87,12 +82,7 @@ class VendorDatabaseIdProviderTest {
     VendorDatabaseIdProvider provider = new VendorDatabaseIdProvider();
     Properties properties = new Properties();
     properties.put("Ewok DB", "ewok");
-    try {
-      provider.getDatabaseId(dataSource);
-      fail("Should BuilderException be thrown.");
-    } catch (BuilderException e) {
-      // pass
-    }
+    assertThrows(BuilderException.class, () -> provider.getDatabaseId(dataSource));
   }
 
   private DataSource mockDataSource() throws SQLException {

@@ -17,8 +17,8 @@ package org.apache.ibatis.reflection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.List;
 import java.util.Map;
@@ -39,16 +39,12 @@ class MetaClassTest {
 
   @Test
   void shouldThrowReflectionExceptionGetGetterType() {
-    try {
-      ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
-      MetaClass meta = MetaClass.forClass(RichType.class, reflectorFactory);
-      meta.getGetterType("aString");
-      fail("should have thrown ReflectionException");
-    } catch (ReflectionException expected) {
-      assertEquals(
-          "There is no getter for property named \'aString\' in \'class org.apache.ibatis.domain.misc.RichType\'",
-          expected.getMessage());
-    }
+    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    MetaClass meta = MetaClass.forClass(RichType.class, reflectorFactory);
+    ReflectionException expected = assertThrows(ReflectionException.class, () -> meta.getGetterType("aString"));
+    assertEquals(
+        "There is no getter for property named \'aString\' in \'class org.apache.ibatis.domain.misc.RichType\'",
+        expected.getMessage());
   }
 
   @Test
