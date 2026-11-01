@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,9 @@
  */
 package org.apache.ibatis.reflection.wrapper;
 
+import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.apache.ibatis.reflection.ExceptionUtil;
 import org.apache.ibatis.reflection.MetaClass;
@@ -42,18 +44,21 @@ public class BeanWrapper extends BaseWrapper {
 
   @Override
   public Object get(PropertyTokenizer prop) {
-    if (prop.getIndex() != null) {
-      Object collection = resolveCollection(prop, object);
-      return getCollectionValue(prop, collection);
+    if (prop.hasNext()) {
+      return getChildValue(prop);
+    } else if (prop.getIndex() != null) {
+      return getCollectionValue(prop, resolveCollection(prop, object));
+    } else {
+      return getBeanProperty(prop, object);
     }
-    return getBeanProperty(prop, object);
   }
 
   @Override
   public void set(PropertyTokenizer prop, Object value) {
-    if (prop.getIndex() != null) {
-      Object collection = resolveCollection(prop, object);
-      setCollectionValue(prop, collection, value);
+    if (prop.hasNext()) {
+      setChildValue(prop, value);
+    } else if (prop.getIndex() != null) {
+      setCollectionValue(prop, resolveCollection(prop, object), value);
     } else {
       setBeanProperty(prop, object, value);
     }
@@ -88,6 +93,21 @@ public class BeanWrapper extends BaseWrapper {
   }
 
   @Override
+  public Entry<Type, Class<?>> getGenericSetterType(String name) {
+    PropertyTokenizer prop = new PropertyTokenizer(name);
+    if (prop.hasNext()) {
+      MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
+      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
+        return metaClass.getGenericSetterType(name);
+      } else {
+        return metaValue.getGenericSetterType(prop.getChildren());
+      }
+    } else {
+      return metaClass.getGenericSetterType(name);
+    }
+  }
+
+  @Override
   public Class<?> getGetterType(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (!prop.hasNext()) {
@@ -98,6 +118,21 @@ public class BeanWrapper extends BaseWrapper {
       return metaClass.getGetterType(name);
     }
     return metaValue.getGetterType(prop.getChildren());
+  }
+
+  @Override
+  public Entry<Type, Class<?>> getGenericGetterType(String name) {
+    PropertyTokenizer prop = new PropertyTokenizer(name);
+    if (prop.hasNext()) {
+      MetaObject metaValue = metaObject.metaObjectForProperty(prop.getIndexedName());
+      if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
+        return metaClass.getGenericGetterType(name);
+      } else {
+        return metaValue.getGenericGetterType(prop.getChildren());
+      }
+    } else {
+      return metaClass.getGenericGetterType(name);
+    }
   }
 
   @Override

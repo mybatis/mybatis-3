@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,13 +20,13 @@ import java.sql.ResultSet;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
-import org.apache.ibatis.type.TypeHandlerRegistry;
 
 /**
  * @author Clinton Begin
  */
 public class ParameterMapping {
 
+  private static final Object UNSET = new Object();
   private Configuration configuration;
 
   private String property;
@@ -38,6 +38,7 @@ public class ParameterMapping {
   private String resultMapId;
   private String jdbcTypeName;
   private String expression;
+  private Object value = UNSET;
 
   private ParameterMapping() {
   }
@@ -99,34 +100,22 @@ public class ParameterMapping {
       return this;
     }
 
+    public Builder value(Object value) {
+      parameterMapping.value = value;
+      return this;
+    }
+
     public ParameterMapping build() {
-      resolveTypeHandler();
       validate();
       return parameterMapping;
     }
 
     private void validate() {
-      if (ResultSet.class.equals(parameterMapping.javaType)) {
-        if (parameterMapping.resultMapId == null) {
-          throw new IllegalStateException("Missing resultmap in property '" + parameterMapping.property + "'.  "
-              + "Parameters of type java.sql.ResultSet require a resultmap.");
-        }
-      } else if (parameterMapping.typeHandler == null) {
-        throw new IllegalStateException("Type handler was null on parameter mapping for property '"
-            + parameterMapping.property + "'. It was either not specified and/or could not be found for the javaType ("
-            + parameterMapping.javaType.getName() + ") : jdbcType (" + parameterMapping.jdbcType + ") combination.");
+      if (ResultSet.class.equals(parameterMapping.javaType) && parameterMapping.resultMapId == null) {
+        throw new IllegalStateException("Missing resultMap in property '" + parameterMapping.property + "'.  "
+            + "Parameters of type java.sql.ResultSet require a resultMap.");
       }
     }
-
-    private void resolveTypeHandler() {
-      if (parameterMapping.typeHandler == null && parameterMapping.javaType != null) {
-        Configuration configuration = parameterMapping.configuration;
-        TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
-        parameterMapping.typeHandler = typeHandlerRegistry.getTypeHandler(parameterMapping.javaType,
-            parameterMapping.jdbcType);
-      }
-    }
-
   }
 
   public String getProperty() {
@@ -205,6 +194,14 @@ public class ParameterMapping {
     return expression;
   }
 
+  public Object getValue() {
+    return value;
+  }
+
+  public boolean hasValue() {
+    return value != UNSET;
+  }
+
   @Override
   public String toString() {
     final StringBuilder sb = new StringBuilder("ParameterMapping{");
@@ -218,6 +215,7 @@ public class ParameterMapping {
     sb.append(", resultMapId='").append(resultMapId).append('\'');
     sb.append(", jdbcTypeName='").append(jdbcTypeName).append('\'');
     sb.append(", expression='").append(expression).append('\'');
+    sb.append(", value='").append(value).append('\'');
     sb.append('}');
     return sb.toString();
   }

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.apache.ibatis.datasource.unpooled;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.sql.Driver;
@@ -45,13 +46,13 @@ class UnpooledDataSourceTest {
   void shouldRegisterDynamicallyLoadedDriver() throws Exception {
     int before = countRegisteredDrivers();
     ClassLoader driverClassLoader = new URLClassLoader(
-        new URL[] { new URL("jar:file:/PATH_TO/mysql-connector-java-5.1.25.jar!/") });
+        new URL[] { URI.create("jar:file:/PATH_TO/mysql-connector-java-5.1.25.jar!/").toURL() });
     UnpooledDataSource dataSource = new UnpooledDataSource(driverClassLoader, "com.mysql.jdbc.Driver",
         "jdbc:mysql://127.0.0.1/test", "root", "");
     dataSource.getConnection().close();
     assertEquals(before + 1, countRegisteredDrivers());
     driverClassLoader = new URLClassLoader(
-        new URL[] { new URL("jar:file:/PATH_TO/mysql-connector-java-5.1.25.jar!/") });
+        new URL[] { URI.create("jar:file:/PATH_TO/mysql-connector-java-5.1.25.jar!/").toURL() });
     dataSource = new UnpooledDataSource(driverClassLoader, "com.mysql.jdbc.Driver", "jdbc:mysql://127.0.0.1/test",
         "root", "");
     dataSource.getConnection().close();

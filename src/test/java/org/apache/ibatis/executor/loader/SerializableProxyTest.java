@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ package org.apache.ibatis.executor.loader;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -110,7 +110,7 @@ public abstract class SerializableProxyTest {
   }
 
   @Test
-  void shouldSerizaliceAFullLoadedObjectToOriginalClass() throws Exception {
+  void shouldSerializeAFullLoadedObjectToOriginalClass() throws Exception {
     Object proxy = proxyFactory.createProxy(author, new ResultLoaderMap(), new Configuration(),
         new DefaultObjectFactory(), new ArrayList<>(), new ArrayList<>());
     Object proxy2 = deserialize(serialize((Serializable) proxy));
@@ -119,12 +119,7 @@ public abstract class SerializableProxyTest {
 
   @Test
   void shouldGenerateWriteReplace() throws Exception {
-    try {
-      author.getClass().getDeclaredMethod("writeReplace");
-      fail("Author should not have a writeReplace method");
-    } catch (NoSuchMethodException e) {
-      // ok
-    }
+    assertThrows(NoSuchMethodException.class, () -> author.getClass().getDeclaredMethod("writeReplace"));
     Object proxy = proxyFactory.createProxy(author, new ResultLoaderMap(), new Configuration(),
         new DefaultObjectFactory(), new ArrayList<>(), new ArrayList<>());
     proxy.getClass().getDeclaredMethod("writeReplace");
@@ -134,11 +129,9 @@ public abstract class SerializableProxyTest {
   void shouldNotGenerateWriteReplaceItThereIsAlreadyOne() {
     AuthorWithWriteReplaceMethod beanWithWriteReplace = new AuthorWithWriteReplaceMethod(999, "someone", "!@#@!#!@#",
         "someone@somewhere.com", "blah", Section.NEWS);
-    try {
+    Assertions.assertDoesNotThrow(() -> {
       beanWithWriteReplace.getClass().getDeclaredMethod("writeReplace");
-    } catch (NoSuchMethodException e) {
-      fail("Bean should declare a writeReplace method");
-    }
+    }, "Bean should declare a writeReplace method");
     Object proxy = proxyFactory.createProxy(beanWithWriteReplace, new ResultLoaderMap(), new Configuration(),
         new DefaultObjectFactory(), new ArrayList<>(), new ArrayList<>());
     Class<?>[] interfaces = proxy.getClass().getInterfaces();

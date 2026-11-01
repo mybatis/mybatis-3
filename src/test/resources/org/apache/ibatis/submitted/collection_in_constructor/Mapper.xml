@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+       Copyright 2009-2025 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          https://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+  namespace="org.apache.ibatis.submitted.collection_in_constructor.Mapper">
+
+  <resultMap
+    type="org.apache.ibatis.submitted.collection_in_constructor.Store"
+    id="storeRM">
+    <constructor>
+      <idArg column="id" javaType="int" />
+      <arg column="name" javaType="string" />
+      <arg javaType="list" resultMap="aisleRM" columnPrefix="aisle_" />
+    </constructor>
+  </resultMap>
+
+  <resultMap
+    type="org.apache.ibatis.submitted.collection_in_constructor.Aisle"
+    id="aisleRM">
+    <id property="id" column="id" />
+    <result property="name" column="name" />
+  </resultMap>
+
+  <resultMap
+    type="org.apache.ibatis.submitted.collection_in_constructor.Clerk"
+    id="clerkRM">
+    <id property="id" column="id" />
+    <result property="name" column="name" />
+  </resultMap>
+
+  <select id="getAStore" resultMap="storeRM" resultOrdered="true"><![CDATA[
+    select
+      s.id, s.name,
+      i.id aisle_id, i.name aisle_name
+    from store s
+    left join aisle i on i.store_id = s.id
+    where s.id = #{id}
+    order by s.id, i.id
+  ]]></select>
+
+  <select id="getStores" resultMap="storeRM" resultOrdered="true"><![CDATA[
+    select
+      s.id, s.name,
+      i.id aisle_id, i.name aisle_name
+    from store s
+    left join aisle i on i.store_id = s.id
+    order by s.id, i.id
+  ]]></select>
+
+  <resultMap
+    type="org.apache.ibatis.submitted.collection_in_constructor.Store2"
+    id="store2RM">
+    <constructor>
+      <idArg column="id" javaType="int" />
+      <arg javaType="list" resultMap="clerkRM" columnPrefix="clerk_" />
+      <arg javaType="list" resultMap="aisleRM" columnPrefix="aisle_" />
+    </constructor>
+  </resultMap>
+
+  <select id="getAStore2" resultMap="store2RM"
+    resultOrdered="true"><![CDATA[
+    select
+      s.id,
+      c.id clerk_id, c.name clerk_name,
+      i.id aisle_id, i.name aisle_name
+    from store s
+    left join clerk c on c.store_id = s.id
+    left join aisle i on i.store_id = s.id
+    where s.id = #{id}
+    order by s.id, c.id, i.id
+  ]]></select>
+
+  <resultMap
+    type="org.apache.ibatis.submitted.collection_in_constructor.Store3"
+    id="store3RM">
+    <constructor>
+      <idArg column="id" javaType="int" />
+      <arg javaType="list" resultMap="nameRM" columnPrefix="aisle_" />
+    </constructor>
+  </resultMap>
+
+  <resultMap type="string" id="nameRM">
+    <result property="name" column="name" />
+  </resultMap>
+
+  <select id="getAStore3" resultMap="store3RM"
+    resultOrdered="true"><![CDATA[
+    select
+      s.id,
+      i.id aisle_id, i.name aisle_name
+    from store s
+    left join aisle i on i.store_id = s.id
+    where s.id = #{id}
+    order by s.id, i.id
+  ]]></select>
+
+  <resultMap
+    type="org.apache.ibatis.submitted.collection_in_constructor.Store4"
+    id="store4RM">
+    <constructor>
+      <idArg column="id" javaType="int" />
+      <arg javaType="list" resultMap="aisleRM" columnPrefix="aisle_" />
+    </constructor>
+  </resultMap>
+
+  <select id="getAStore4" resultMap="store4RM"
+    resultOrdered="true"><![CDATA[
+    select
+      s.id,
+      i.id aisle_id, i.name aisle_name
+    from store s
+    left join aisle i on i.store_id = s.id
+    where s.id = #{id}
+    order by s.id, i.id
+  ]]></select>
+
+  <resultMap
+    type="org.apache.ibatis.submitted.collection_in_constructor.Store5"
+    id="store5RM">
+    <constructor>
+      <idArg column="id" javaType="int" />
+      <arg javaType="list" resultMap="clerkRM" columnPrefix="clerk_" />
+      <arg javaType="list" resultMap="clerkRM"
+        columnPrefix="manager_" />
+    </constructor>
+  </resultMap>
+
+  <select id="getAStore5" resultMap="store5RM"
+    resultOrdered="true"><![CDATA[
+    select
+      s.id,
+      c.id clerk_id, c.name clerk_name,
+      m.id manager_id, m.name manager_name
+    from store s
+    left join clerk c on c.store_id = s.id
+    left join clerk m on m.store_id = s.id and m.is_manager = 1
+    where s.id = #{id}
+    order by s.id, c.id, m.id
+  ]]></select>
+
+  <resultMap
+    type="org.apache.ibatis.submitted.collection_in_constructor.Store6"
+    id="store6RM">
+    <constructor>
+      <idArg column="id" javaType="int" />
+      <arg javaType="list" resultMap="aisleRM" columnPrefix="aisle_" />
+    </constructor>
+    <result column="name" property="name" />
+  </resultMap>
+
+  <select id="getAStore6" resultMap="store6RM"
+    resultOrdered="true"><![CDATA[
+    select
+      s.id, s.name,
+      i.id aisle_id, i.name aisle_name
+    from store s
+    left join aisle i on i.store_id = s.id
+    where s.id = #{id}
+    order by s.id, i.id
+  ]]></select>
+
+  <resultMap
+    type="org.apache.ibatis.submitted.collection_in_constructor.Store7"
+    id="store7RM">
+    <constructor>
+      <idArg column="id" javaType="int" />
+      <arg javaType="list" resultMap="nameRM" columnPrefix="aisle_" />
+      <arg javaType="list" resultMap="nameRM" columnPrefix="clerk_" />
+    </constructor>
+  </resultMap>
+
+  <select id="getAStore7" resultMap="store7RM"
+    resultOrdered="true"><![CDATA[
+    select
+      s.id,
+      c.id clerk_id, c.name clerk_name,
+      i.id aisle_id, i.name aisle_name
+    from store s
+    left join clerk c on c.store_id = s.id
+    left join aisle i on i.store_id = s.id
+    where s.id = #{id}
+    order by s.id, c.id, i.id
+  ]]></select>
+
+  <resultMap
+    type="org.apache.ibatis.submitted.collection_in_constructor.Store8"
+    id="store8RM">
+    <constructor>
+      <idArg column="id" javaType="int" />
+      <arg column="name" javaType="string" />
+      <arg column="csv" javaType="list"
+        typeHandler="org.apache.ibatis.submitted.collection_in_constructor.CsvToListTypeHandler" />
+    </constructor>
+  </resultMap>
+
+  <select id="getAStore8" resultMap="store8RM"
+    resultOrdered="true"><![CDATA[
+    select
+      s.id, s.name,
+      'a,b,c' csv
+    from store s
+    where s.id = #{id}
+  ]]></select>
+
+  <resultMap
+    type="org.apache.ibatis.submitted.collection_in_constructor.Container"
+    id="containerRM">
+    <id column="num" property="num" />
+    <collection property="stores" resultMap="storeRM"/>
+  </resultMap>
+
+  <select id="getAContainer" resultMap="containerRM"
+    resultOrdered="true"><![CDATA[
+    select
+      1 num,
+      s.id, s.name,
+      i.id aisle_id, i.name aisle_name
+    from store s
+    left join aisle i on i.store_id = s.id
+    order by s.id, i.id
+  ]]></select>
+
+  <resultMap
+      type="org.apache.ibatis.submitted.collection_in_constructor.Clerk"
+      id="immutableClerkRM">
+    <constructor>
+      <idArg column="id" javaType="int" />
+      <arg column="name" javaType="string" />
+    </constructor>
+  </resultMap>
+
+  <resultMap
+      type="org.apache.ibatis.submitted.collection_in_constructor.Store9"
+      id="store9RM">
+    <constructor>
+      <idArg column="id" javaType="int" />
+      <arg column="name" javaType="string" />
+      <arg javaType="list" resultMap="immutableClerkRM" columnPrefix="clerk_" />
+    </constructor>
+  </resultMap>
+
+  <resultMap
+      type="org.apache.ibatis.submitted.collection_in_constructor.Container1"
+      id="container1RM">
+    <id column="type" property="type"/>
+    <result column="num" property="num" />
+    <collection property="stores" resultMap="store9RM"/>
+  </resultMap>
+
+  <select id="getContainers" resultMap="container1RM"
+      resultOrdered="true"><![CDATA[
+    select
+      1 num
+      , casewhen(c.is_manager, rtrim('storesWithManagers'), rtrim('storesWithClerks')) as type
+      , s.id
+      , s.name
+      , c.id clerk_id
+      , c.name clerk_name
+    from store s
+      left join clerk c on c.store_id = s.id
+    order by type, s.id, c.id
+  ]]></select>
+
+  <resultMap
+          type="org.apache.ibatis.submitted.collection_in_constructor.Store10"
+          id="store10RM">
+    <constructor>
+      <idArg column="id" javaType="int" />
+      <arg column="name" javaType="string" />
+      <arg javaType="list" resultMap="immutableClerkRM" columnPrefix="clerk_" />
+      <arg column="csv" javaType="list"
+           typeHandler="org.apache.ibatis.submitted.collection_in_constructor.CsvToListTypeHandler" />
+    </constructor>
+  </resultMap>
+
+  <select id="getStores10" resultMap="store10RM"
+          resultOrdered="true"><![CDATA[
+    select
+      s.id,
+      s.name,
+      c.id clerk_id, c.name clerk_name,
+      i.id aisle_id, i.name aisle_name,
+      CONCAT('a,b,c,', s.id) csv
+    from store s
+    left join clerk c on c.store_id = s.id
+    left join aisle i on i.store_id = s.id
+    order by s.id, c.id, i.id
+  ]]></select>
+
+</mapper>

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -69,6 +69,10 @@ public class ResultLoaderMap {
 
   public int size() {
     return loaderMap.size();
+  }
+
+  public boolean isEmpty() {
+    return loaderMap.isEmpty();
   }
 
   public boolean hasLoader(String property) {
@@ -231,7 +235,7 @@ public class ResultLoaderMap {
               + FACTORY_METHOD + "] is not static.");
         }
 
-        if (!factoryMethod.isAccessible()) {
+        if (!factoryMethod.canAccess(null)) {
           configurationObject = AccessController.doPrivileged((PrivilegedExceptionAction<Object>) () -> {
             try {
               factoryMethod.setAccessible(true);

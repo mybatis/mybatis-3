@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package org.apache.ibatis.submitted.cursor_simple;
 
-import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -31,8 +30,11 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
+@TestMethodOrder(MethodOrderer.MethodName.class)
 class CursorSimpleTest {
 
   private static SqlSessionFactory sqlSessionFactory;
@@ -99,7 +101,7 @@ class CursorSimpleTest {
   }
 
   @Test
-  void testCursorClosedOnSessionClose() {
+  void cursorClosedOnSessionClose() {
     Cursor<User> usersCursor;
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -130,7 +132,7 @@ class CursorSimpleTest {
   }
 
   @Test
-  void testCursorWithRowBound() {
+  void cursorWithRowBound() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       // RowBound starting at offset 1 and limiting to 2 items
       Cursor<User> usersCursor = sqlSession.selectCursor("getAllUsers", null, new RowBounds(1, 3));
@@ -159,49 +161,40 @@ class CursorSimpleTest {
   }
 
   @Test
-  void testCursorIteratorNoSuchElementExceptionWithHasNext() throws IOException {
-
+  void cursorIteratorNoSuchElementExceptionWithHasNext() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession();
         Cursor<User> usersCursor = sqlSession.selectCursor("getAllUsers", null, new RowBounds(1, 1))) {
-      try {
-        Iterator<User> iterator = usersCursor.iterator();
+      Iterator<User> iterator = usersCursor.iterator();
 
-        User user = iterator.next();
-        Assertions.assertEquals("User2", user.getName());
-        Assertions.assertEquals(1, usersCursor.getCurrentIndex());
+      User user = iterator.next();
+      Assertions.assertEquals("User2", user.getName());
+      Assertions.assertEquals(1, usersCursor.getCurrentIndex());
 
-        Assertions.assertFalse(iterator.hasNext());
-        iterator.next();
-        Assertions.fail("We should have failed since we call next() when hasNext() returned false");
-      } catch (NoSuchElementException e) {
-        Assertions.assertFalse(usersCursor.isOpen());
-        Assertions.assertTrue(usersCursor.isConsumed());
-      }
+      Assertions.assertFalse(iterator.hasNext());
+      Assertions.assertThrows(NoSuchElementException.class, iterator::next);
+      Assertions.assertFalse(usersCursor.isOpen());
+      Assertions.assertTrue(usersCursor.isConsumed());
     }
   }
 
   @Test
-  void testCursorIteratorNoSuchElementExceptionNoHasNext() throws IOException {
+  void cursorIteratorNoSuchElementExceptionNoHasNext() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession();
         Cursor<User> usersCursor = sqlSession.selectCursor("getAllUsers", null, new RowBounds(1, 1))) {
-      try {
-        Iterator<User> iterator = usersCursor.iterator();
-        User user = iterator.next();
-        Assertions.assertEquals("User2", user.getName());
-        Assertions.assertEquals(1, usersCursor.getCurrentIndex());
+      Iterator<User> iterator = usersCursor.iterator();
+      User user = iterator.next();
+      Assertions.assertEquals("User2", user.getName());
+      Assertions.assertEquals(1, usersCursor.getCurrentIndex());
 
-        // Trying next() without hasNext()
-        iterator.next();
-        Assertions.fail("We should have failed since we call next() when is no more items");
-      } catch (NoSuchElementException e) {
-        Assertions.assertFalse(usersCursor.isOpen());
-        Assertions.assertTrue(usersCursor.isConsumed());
-      }
+      // Trying next() without hasNext()
+      Assertions.assertThrows(NoSuchElementException.class, iterator::next);
+      Assertions.assertFalse(usersCursor.isOpen());
+      Assertions.assertTrue(usersCursor.isConsumed());
     }
   }
 
   @Test
-  void testCursorWithBadRowBound() {
+  void cursorWithBadRowBound() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       // Trying to start at offset 10 (which does not exist, since there is only 4 items)
       Cursor<User> usersCursor = sqlSession.selectCursor("getAllUsers", null, new RowBounds(10, 2));
@@ -214,7 +207,7 @@ class CursorSimpleTest {
   }
 
   @Test
-  void testCursorMultipleHasNextCall() {
+  void cursorMultipleHasNextCall() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Cursor<User> usersCursor = mapper.getAllUsers();
@@ -236,7 +229,7 @@ class CursorSimpleTest {
   }
 
   @Test
-  void testCursorMultipleIteratorCall() {
+  void cursorMultipleIteratorCall() {
     Iterator<User> iterator2 = null;
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -258,7 +251,7 @@ class CursorSimpleTest {
   }
 
   @Test
-  void testCursorMultipleCloseCall() throws IOException {
+  void cursorMultipleCloseCall() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       Cursor<User> usersCursor = mapper.getAllUsers();
@@ -288,7 +281,7 @@ class CursorSimpleTest {
   }
 
   @Test
-  void testCursorUsageAfterClose() throws IOException {
+  void cursorUsageAfterClose() {
 
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -367,24 +360,17 @@ class CursorSimpleTest {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       usersCursor = sqlSession.getMapper(Mapper.class).getAllUsers();
     }
-    try {
-      usersCursor.iterator();
-      Assertions.fail("Should throws the IllegalStateException when call the iterator method after session is closed.");
-    } catch (IllegalStateException e) {
-      Assertions.assertEquals("A Cursor is already closed.", e.getMessage());
-    }
+    IllegalStateException e = Assertions.assertThrows(IllegalStateException.class, () -> usersCursor.iterator());
+    Assertions.assertEquals("A Cursor is already closed.", e.getMessage());
 
     // verify for checking order
+    Cursor<User> iteratedCursor;
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      usersCursor = sqlSession.getMapper(Mapper.class).getAllUsers();
-      usersCursor.iterator();
+      iteratedCursor = sqlSession.getMapper(Mapper.class).getAllUsers();
+      iteratedCursor.iterator();
     }
-    try {
-      usersCursor.iterator();
-      Assertions.fail("Should throws the IllegalStateException when call the iterator already.");
-    } catch (IllegalStateException e) {
-      Assertions.assertEquals("Cannot open more than one iterator on a Cursor", e.getMessage());
-    }
+    e = Assertions.assertThrows(IllegalStateException.class, () -> iteratedCursor.iterator());
+    Assertions.assertEquals("Cannot open more than one iterator on a Cursor", e.getMessage());
 
   }
 
@@ -410,8 +396,7 @@ class CursorSimpleTest {
       // next() has not been called, index is still -1
       Assertions.assertEquals(-1, cursor.getCurrentIndex());
 
-      User user;
-      user = iterator.next();
+      User user = iterator.next();
       Assertions.assertNull(user);
       Assertions.assertEquals(0, cursor.getCurrentIndex());
 
@@ -453,8 +438,7 @@ class CursorSimpleTest {
       Assertions.assertTrue(cursor.isOpen());
       Assertions.assertFalse(cursor.isConsumed());
 
-      User user;
-      user = iterator.next();
+      User user = iterator.next();
       Assertions.assertEquals("Kate", user.getName());
       Assertions.assertEquals(1, cursor.getCurrentIndex());
 

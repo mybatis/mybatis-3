@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.ParameterMode;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.LocalCacheScope;
@@ -212,17 +213,24 @@ public abstract class BaseExecutor implements Executor {
       if (parameterMapping.getMode() != ParameterMode.OUT) {
         Object value;
         String propertyName = parameterMapping.getProperty();
-        if (boundSql.hasAdditionalParameter(propertyName)) {
+        if (parameterMapping.hasValue()) {
+          value = parameterMapping.getValue();
+        } else if (boundSql.hasAdditionalParameter(propertyName)) {
           value = boundSql.getAdditionalParameter(propertyName);
         } else if (parameterObject == null) {
           value = null;
-        } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
-          value = parameterObject;
         } else {
-          if (metaObject == null) {
-            metaObject = configuration.newMetaObject(parameterObject);
+          ParamNameResolver paramNameResolver = ms.getParamNameResolver();
+          if (paramNameResolver != null
+              && typeHandlerRegistry.hasTypeHandler(paramNameResolver.getType(paramNameResolver.getNames()[0]))
+              || typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
+            value = parameterObject;
+          } else {
+            if (metaObject == null) {
+              metaObject = configuration.newMetaObject(parameterObject);
+            }
+            value = metaObject.getValue(propertyName);
           }
-          value = metaObject.getValue(propertyName);
         }
         cacheKey.update(value);
       }
@@ -380,7 +388,8 @@ public abstract class BaseExecutor implements Executor {
     }
 
     public boolean canLoad() {
-      return localCache.getObject(key) != null && localCache.getObject(key) != EXECUTION_PLACEHOLDER;
+      Object cached = localCache.getObject(key);
+      return cached != null && cached != EXECUTION_PLACEHOLDER;
     }
 
     public void load() {

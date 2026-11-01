@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ class AutomappingTest {
   }
 
   @Test
-  void shouldGetAUserWhithPhoneNumber() {
+  void shouldGetAUserWithPhoneNumber() {
     sqlSessionFactory.getConfiguration().setAutoMappingBehavior(AutoMappingBehavior.NONE);
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -153,7 +153,7 @@ class AutomappingTest {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       // no errors throw
       List<Book> books = mapper.getBooks();
-      Assertions.assertTrue(!books.isEmpty(), "should return results,no errors throw");
+      Assertions.assertFalse(books.isEmpty(), "should return results,no errors throw");
     }
   }
 

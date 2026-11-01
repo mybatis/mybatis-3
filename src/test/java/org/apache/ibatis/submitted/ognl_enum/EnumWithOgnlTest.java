@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ class EnumWithOgnlTest {
   }
 
   @Test
-  void testEnumWithOgnl() {
+  void enumWithOgnl() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       List<Person> persons = personMapper.selectAllByType(null);
@@ -53,7 +53,7 @@ class EnumWithOgnlTest {
   }
 
   @Test
-  void testEnumWithOgnlDirector() {
+  void enumWithOgnlDirector() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       List<Person> persons = personMapper.selectAllByType(Person.Type.DIRECTOR);
@@ -63,7 +63,7 @@ class EnumWithOgnlTest {
 
   @Tag("RequireIllegalAccess")
   @Test
-  void testEnumWithOgnlDirectorNameAttribute() {
+  void enumWithOgnlDirectorNameAttribute() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       List<Person> persons = personMapper.selectAllByTypeNameAttribute(Person.Type.DIRECTOR);
@@ -72,7 +72,7 @@ class EnumWithOgnlTest {
   }
 
   @Test
-  void testEnumWithOgnlDirectorWithInterface() {
+  void enumWithOgnlDirectorWithInterface() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       List<Person> persons = personMapper.selectAllByTypeWithInterface(() -> Type.DIRECTOR);
@@ -81,7 +81,7 @@ class EnumWithOgnlTest {
   }
 
   @Test
-  void testEnumWithOgnlDirectorNameAttributeWithInterface() {
+  void enumWithOgnlDirectorNameAttributeWithInterface() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       List<Person> persons = personMapper.selectAllByTypeNameAttributeWithInterface(() -> Type.DIRECTOR);

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
  */
 package org.apache.ibatis.transaction.jdbc;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 class JdbcTransactionFactoryTest {
 
   @Test
-  void testNullProperties() throws Exception {
+  void nullProperties() throws Exception {
     TestConnection connection = new TestConnection(false);
     JdbcTransactionFactory factory = new JdbcTransactionFactory();
     factory.setProperties(null);
@@ -42,7 +42,7 @@ class JdbcTransactionFactoryTest {
   }
 
   @Test
-  void testSkipSetAutoCommitOnClose() throws Exception {
+  void skipSetAutoCommitOnClose() throws Exception {
     TestConnection connection = new TestConnection(false);
     DataSource ds = mock(DataSource.class);
     when(ds.getConnection()).thenReturn(connection);

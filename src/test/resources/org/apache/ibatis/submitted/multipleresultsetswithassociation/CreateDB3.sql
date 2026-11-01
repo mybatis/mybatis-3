@@ -1,5 +1,5 @@
 --
---    Copyright 2009-2022 the original author or authors.
+--    Copyright 2009-2025 the original author or authors.
 --
 --    Licensed under the Apache License, Version 2.0 (the "License");
 --    you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
     INSERT INTO order_header(order_id, cust_name)
         VALUES (2, 'Barney');
     INSERT INTO order_header(order_id, cust_name)
-        VALUES (3, 'Homer');        
+        VALUES (3, 'Homer');
 
     INSERT INTO order_detail(order_id, line_number, quantity, item_description)
         VALUES (1, 1, 1, 'Pen');

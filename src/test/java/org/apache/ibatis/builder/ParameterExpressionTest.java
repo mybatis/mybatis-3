@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -128,22 +128,27 @@ class ParameterExpressionTest {
 
   @Test
   void invalidOldJdbcTypeFormat() {
-    try {
-      new ParameterExpression("id:");
-      Assertions.fail();
-    } catch (BuilderException e) {
-      Assertions.assertTrue(e.getMessage().contains("Parsing error in {id:} in position 3"));
-    }
+    BuilderException e = Assertions.assertThrows(BuilderException.class, () -> new ParameterExpression("id:"));
+    Assertions.assertTrue(e.getMessage().contains("Parsing error in {id:} in position 3"));
   }
 
   @Test
   void invalidJdbcTypeOptUsingExpression() {
-    try {
-      new ParameterExpression("(expression)+");
-      Assertions.fail();
-    } catch (BuilderException e) {
-      Assertions.assertTrue(e.getMessage().contains("Parsing error in {(expression)+} in position 12"));
-    }
+    BuilderException e = Assertions.assertThrows(BuilderException.class,
+        () -> new ParameterExpression("(expression)+"));
+    Assertions.assertTrue(e.getMessage().contains("Parsing error in {(expression)+} in position 12"));
+  }
+
+  @Test
+  void shouldThrowForAttributeWithoutValue() {
+    BuilderException e = Assertions.assertThrows(BuilderException.class, () -> new ParameterExpression("id,name"));
+    Assertions.assertTrue(e.getMessage().contains("Parsing error in {id,name} in position 3"));
+  }
+
+  @Test
+  void shouldThrowForEmptyPropertyName() {
+    BuilderException e = Assertions.assertThrows(BuilderException.class, () -> new ParameterExpression(",foo=bar"));
+    Assertions.assertTrue(e.getMessage().contains("Parsing error in {,foo=bar} in position 0"));
   }
 
 }

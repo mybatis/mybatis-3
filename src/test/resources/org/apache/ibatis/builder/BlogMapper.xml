@@ -70,7 +70,7 @@
     <result property="username" column="author_username"/>
     <result property="password" column="author_password"/>
     <result property="email" column="author_email"/>
-    <result property="bio" column="author_bio"/>
+    <result property="bio" column="author_bio" typeHandler="org.apache.ibatis.type.StringTypeHandler" />
     <result property="favouriteSection" column="author_favourite_section"/>
   </resultMap>
 

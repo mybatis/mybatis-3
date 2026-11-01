@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,20 +20,25 @@ import javax.sql.DataSource;
 import org.apache.ibatis.datasource.pooled.PooledDataSource;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
-public class MysqlContainer {
+@Testcontainers
+public final class MysqlContainer {
 
   private static final String DB_NAME = "mybatis_test";
   private static final String USERNAME = "u";
   private static final String PASSWORD = "p";
   private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
 
+  @Container
   private static final MySQLContainer<?> INSTANCE = initContainer();
 
   private static MySQLContainer<?> initContainer() {
     @SuppressWarnings("resource")
-    MySQLContainer<?> container = new MySQLContainer<>().withDatabaseName(DB_NAME).withUsername(USERNAME)
-        .withPassword(PASSWORD).withUrlParam("useSSL", "false");
+    MySQLContainer<?> container = new MySQLContainer<>(DockerImageName.parse("mysql").withTag("9.2"))
+        .withDatabaseName(DB_NAME).withUsername(USERNAME).withPassword(PASSWORD).withUrlParam("useSSL", "false");
     container.start();
     return container;
   }

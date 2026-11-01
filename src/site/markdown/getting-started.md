@@ -1,6 +1,8 @@
 title: MyBatis 3 | Getting started
 author: Clinton Begin
 
+<h1 class="d-none">Avoid blank site</h1>
+
 ## Getting started
 
 ### Installation

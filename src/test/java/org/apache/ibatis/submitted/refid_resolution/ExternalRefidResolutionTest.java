@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.submitted.refid_resolution;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import java.io.Reader;
 
 import org.apache.ibatis.io.Resources;
@@ -27,12 +29,14 @@ import org.junit.jupiter.api.Test;
  */
 class ExternalRefidResolutionTest {
   @Test
-  void testExternalRefAfterSelectKey() throws Exception {
-    String resource = "org/apache/ibatis/submitted/refid_resolution/ExternalMapperConfig.xml";
-    try (Reader reader = Resources.getResourceAsReader(resource)) {
-      SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
-      SqlSessionFactory sqlSessionFactory = builder.build(reader);
-      sqlSessionFactory.getConfiguration().getMappedStatementNames();
-    }
+  void externalRefAfterSelectKey() {
+    assertDoesNotThrow(() -> {
+      String resource = "org/apache/ibatis/submitted/refid_resolution/ExternalMapperConfig.xml";
+      try (Reader reader = Resources.getResourceAsReader(resource)) {
+        SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
+        SqlSessionFactory sqlSessionFactory = builder.build(reader);
+        sqlSessionFactory.getConfiguration().getMappedStatementNames();
+      }
+    });
   }
 }

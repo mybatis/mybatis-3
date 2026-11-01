@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 package org.apache.ibatis.submitted.arg_name_based_constructor_automapping;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.Reader;
 
@@ -75,19 +75,19 @@ class ArgNameBasedConstructorAutoMappingTest {
   @Test
   void shouldErrorMessageBeHelpful() {
     // This test requires -parameters compiler option
-    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Mapper mapper = sqlSession.getMapper(Mapper.class);
-      mapper.selectNameAndIdWithBogusLabel(1);
-      fail("Exception should be thrown");
-    } catch (PersistenceException e) {
-      ExecutorException ex = (ExecutorException) e.getCause();
-      assertEquals(
-          "Constructor auto-mapping of 'public org.apache.ibatis.submitted.arg_name_based_constructor_automapping."
-              + "User(java.lang.Integer,java.lang.String)' failed "
-              + "because '[id]' were not found in the result set; "
-              + "Available columns are '[NAME, BAR]' and mapUnderscoreToCamelCase is 'true'.",
-          ex.getMessage());
-    }
+    PersistenceException e = assertThrows(PersistenceException.class, () -> {
+      try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+        Mapper mapper = sqlSession.getMapper(Mapper.class);
+        mapper.selectNameAndIdWithBogusLabel(1);
+      }
+    });
+    ExecutorException ex = (ExecutorException) e.getCause();
+    assertEquals("""
+        Constructor auto-mapping of 'public org.apache.ibatis.submitted.arg_name_based_constructor_automapping.\
+        User(java.lang.Integer,java.lang.String)' failed \
+        because '[id]' were not found in the result set; \
+        Available columns are '[NAME, BAR]' and mapUnderscoreToCamelCase is 'true'.\
+        """, ex.getMessage());
   }
 
   @Test

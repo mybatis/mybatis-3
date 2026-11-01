@@ -1,6 +1,8 @@
 title: 마이바티스 3 | 소개
 author: Clinton Begin, 이동국(한국어 번역)
 
+<h1 class="d-none">Avoid blank site</h1>
+
 ## 소개
 
 ### 마이바티스는 무엇인가?
@@ -22,12 +24,13 @@ author: Clinton Begin, 이동국(한국어 번역)
 다음의 몇가지 언어로 번역된 마이바티스 문서를 읽을수 있다.
 
 <ul class="i18n">
-          <li class="en"><a href="../getting-started.html">영어</a></li>
-          <li class="es"><a href="../es/index.html">스페인어</a></li>
-<!--      <li class="fr"><a href="../fr/index.html">프랑스어</a></li> -->
-          <li class="ja"><a href="../ja/index.html">일본어</a></li>
+          <li class="en"><a href="../getting-started.html">English</a></li>
+          <li class="es"><a href="../es/index.html">Español</a></li>
+<!--      <li class="fr"><a href="../fr/index.html">Français</a></li> -->
+          <li class="ja"><a href="../ja/index.html">日本語</a></li>
           <li class="ko"><a href="../ko/index.html">한국어</a></li>
-          <li class="zh"><a href="../zh/index.html">중국어번체</a></li>
+          <li class="zh"><a href="../zh_CN/index.html">简体中文</a></li>
+          <li class="zh_tw"><a href="../zh_TW/index.html">繁體中文</a></li>
 </ul>
 
 당신의 모국어로 작성된 마이바티스 문서를 읽고 싶은가? 그렇다면 모국어로 작성된 문서를 패치로 첨부한 이슈를 등록해달라!

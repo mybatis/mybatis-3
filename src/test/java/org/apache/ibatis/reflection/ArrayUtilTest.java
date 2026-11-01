@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,8 +27,7 @@ class ArrayUtilTest {
 
   @Test
   void testHashCode() {
-    Object arr;
-    arr = new long[] { 1 };
+    Object arr = new long[] { 1 };
     assertEquals(Arrays.hashCode((long[]) arr), ArrayUtil.hashCode(arr));
     arr = new int[] { 1 };
     assertEquals(Arrays.hashCode((int[]) arr), ArrayUtil.hashCode(arr));
@@ -84,8 +83,7 @@ class ArrayUtilTest {
 
   @Test
   void testToString() {
-    Object arr;
-    arr = new long[] { 1 };
+    Object arr = new long[] { 1 };
     assertEquals(Arrays.toString((long[]) arr), ArrayUtil.toString(arr));
     arr = new int[] { 1 };
     assertEquals(Arrays.toString((int[]) arr), ArrayUtil.toString(arr));

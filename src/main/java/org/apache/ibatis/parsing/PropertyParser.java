@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,7 +29,6 @@ public class PropertyParser {
    * <p>
    * The default value is {@code false} (indicate disable a default value on placeholder) If you specify the
    * {@code true}, you can specify key and default value on placeholder (e.g. {@code ${db.username:postgres}}).
-   * </p>
    *
    * @since 3.4.2
    */
@@ -39,7 +38,6 @@ public class PropertyParser {
    * The special property key that specify a separator for key and default value on placeholder.
    * <p>
    * The default separator is {@code ":"}.
-   * </p>
    *
    * @since 3.4.2
    */

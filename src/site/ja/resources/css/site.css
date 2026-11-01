@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -28,3 +28,4 @@ li.ja {background: url('../../images/ja.png') left no-repeat;padding-left: 32px;
 li.fr {background: url('../../images/fr.png') left no-repeat;padding-left: 32px; margin: 10px}
 li.zh {background: url('../../images/zh.png') left no-repeat;padding-left: 32px; margin: 10px}
 li.ko {background: url('../../images/ko.png') left no-repeat;padding-left: 32px; margin: 10px}
+.d-none {display: none; margin: 0; padding: 0;}

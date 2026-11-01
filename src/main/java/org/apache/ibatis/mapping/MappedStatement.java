@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package org.apache.ibatis.mapping;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.ibatis.cache.Cache;
@@ -25,6 +24,7 @@ import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.executor.keygen.NoKeyGenerator;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
+import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 
@@ -56,6 +56,7 @@ public final class MappedStatement {
   private Log statementLog;
   private LanguageDriver lang;
   private String[] resultSets;
+  private ParamNameResolver paramNameResolver;
   private boolean dirtySelect;
 
   MappedStatement() {
@@ -71,8 +72,7 @@ public final class MappedStatement {
       mappedStatement.sqlSource = sqlSource;
       mappedStatement.statementType = StatementType.PREPARED;
       mappedStatement.resultSetType = ResultSetType.DEFAULT;
-      mappedStatement.parameterMap = new ParameterMap.Builder(configuration, "defaultParameterMap", null,
-          new ArrayList<>()).build();
+      mappedStatement.parameterMap = ParameterMap.buildEmpty("defaultParameterMap", null);
       mappedStatement.resultMaps = new ArrayList<>();
       mappedStatement.sqlCommandType = sqlCommandType;
       mappedStatement.keyGenerator = configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType)
@@ -182,6 +182,11 @@ public final class MappedStatement {
       return this;
     }
 
+    public Builder paramNameResolver(ParamNameResolver paramNameResolver) {
+      mappedStatement.paramNameResolver = paramNameResolver;
+      return this;
+    }
+
     /**
      * Resul sets.
      *
@@ -203,7 +208,7 @@ public final class MappedStatement {
       assert mappedStatement.id != null;
       assert mappedStatement.sqlSource != null;
       assert mappedStatement.lang != null;
-      mappedStatement.resultMaps = Collections.unmodifiableList(mappedStatement.resultMaps);
+      mappedStatement.resultMaps = List.copyOf(mappedStatement.resultMaps);
       return mappedStatement;
     }
   }
@@ -302,6 +307,10 @@ public final class MappedStatement {
 
   public boolean isDirtySelect() {
     return dirtySelect;
+  }
+
+  public ParamNameResolver getParamNameResolver() {
+    return paramNameResolver;
   }
 
   /**

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,8 +22,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.ibatis.builder.BuilderException;
 import org.apache.ibatis.io.Resources;
@@ -156,11 +158,29 @@ class XPathParserTest {
     try {
       InputSource inputSource = new InputSource(Resources.getResourceAsReader(resource));
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+      String feature = null;
+      try {
+        feature = "http://xml.org/sax/features/external-parameter-entities";
+        factory.setFeature(feature, false);
+
+        feature = "http://apache.org/xml/features/nonvalidating/load-external-dtd";
+        factory.setFeature(feature, false);
+
+        feature = "http://xml.org/sax/features/external-general-entities";
+        factory.setFeature(feature, false);
+
+        factory.setXIncludeAware(false);
+        factory.setExpandEntityReferences(false);
+
+        factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+
+      } catch (ParserConfigurationException e) {
+        throw new IllegalStateException("The feature '" + feature + "' is not supported by your XML processor.", e);
+      }
       factory.setNamespaceAware(false);
       factory.setIgnoringComments(true);
       factory.setIgnoringElementContentWhitespace(false);
       factory.setCoalescing(false);
-      factory.setExpandEntityReferences(true);
       DocumentBuilder builder = factory.newDocumentBuilder();
       return builder.parse(inputSource);// already closed resource in builder.parse method
     } catch (Exception e) {
@@ -204,63 +224,11 @@ class XPathParserTest {
     assertEquals((Float) 3.2f, parser.evalNode("/employee/active").getFloatAttribute("score"));
     assertEquals((Double) 3.2d, parser.evalNode("/employee/active").getDoubleAttribute("score"));
 
-    assertEquals("<id>${id_var}</id>", parser.evalNode("/employee/@id").toString().trim());
+    assertEquals("<id>\n  ${id_var}\n</id>", parser.evalNode("/employee/@id").toString().trim());
     assertEquals(7, parser.evalNodes("/employee/*").size());
     XNode node = parser.evalNode("/employee/height");
     assertEquals("employee/height", node.getPath());
     assertEquals("employee[${id_var}]_height", node.getValueBasedIdentifier());
-  }
-
-  @Test
-  void formatXNodeToString() {
-    XPathParser parser = new XPathParser(
-        "<users><user><id>100</id><name>Tom</name><age>30</age><cars><car index=\"1\">BMW</car><car index=\"2\">Audi</car><car index=\"3\">Benz</car></cars></user></users>");
-    String usersNodeToString = parser.evalNode("/users").toString();
-    String userNodeToString = parser.evalNode("/users/user").toString();
-    String carsNodeToString = parser.evalNode("/users/user/cars").toString();
-
-    // @formatter:off
-    String usersNodeToStringExpect =
-      "<users>\n"
-      + "    <user>\n"
-      + "        <id>100</id>\n"
-      + "        <name>Tom</name>\n"
-      + "        <age>30</age>\n"
-      + "        <cars>\n"
-      + "            <car index=\"1\">BMW</car>\n"
-      + "            <car index=\"2\">Audi</car>\n"
-      + "            <car index=\"3\">Benz</car>\n"
-      + "        </cars>\n"
-      + "    </user>\n"
-      + "</users>\n";
-    // @formatter:on
-
-    // @formatter:off
-    String userNodeToStringExpect =
-      "<user>\n"
-      + "    <id>100</id>\n"
-      + "    <name>Tom</name>\n"
-      + "    <age>30</age>\n"
-      + "    <cars>\n"
-      + "        <car index=\"1\">BMW</car>\n"
-      + "        <car index=\"2\">Audi</car>\n"
-      + "        <car index=\"3\">Benz</car>\n"
-      + "    </cars>\n"
-      + "</user>\n";
-    // @formatter:on
-
-    // @formatter:off
-    String carsNodeToStringExpect =
-      "<cars>\n"
-      + "    <car index=\"1\">BMW</car>\n"
-      + "    <car index=\"2\">Audi</car>\n"
-      + "    <car index=\"3\">Benz</car>\n"
-      + "</cars>\n";
-    // @formatter:on
-
-    assertEquals(usersNodeToStringExpect, usersNodeToString);
-    assertEquals(userNodeToStringExpect, userNodeToString);
-    assertEquals(carsNodeToStringExpect, carsNodeToString);
   }
 
 }

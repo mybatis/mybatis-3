@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ class MultipleDiscriminatorTest {
   }
 
   @Test
-  void testMultipleDiscriminator() {
+  void multipleDiscriminator() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       Person person = personMapper.get(1L);
@@ -53,7 +53,7 @@ class MultipleDiscriminatorTest {
   }
 
   @Test
-  void testMultipleDiscriminator2() {
+  void multipleDiscriminator2() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       Person person = personMapper.get2(1L);
@@ -63,7 +63,7 @@ class MultipleDiscriminatorTest {
   }
 
   @Test
-  void testMultipleDiscriminatorLoop() {
+  void multipleDiscriminatorLoop() {
     Assertions.assertTimeout(Duration.ofMillis(20000), () -> {
       try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
         PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);

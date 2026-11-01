@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.submitted.language;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -72,12 +73,12 @@ public class VelocitySqlSourceBuilder extends BaseBuilder {
     private ParameterMapping buildParameterMapping(String content) {
       Map<String, String> propertiesMap = parseParameterMapping(content);
       String property = propertiesMap.get("property");
-      String jdbcType = propertiesMap.get("jdbcType");
+      JdbcType jdbcType = resolveJdbcType(propertiesMap.get("jdbcType"));
       Class<?> propertyType;
       if (typeHandlerRegistry.hasTypeHandler(parameterType)) {
         propertyType = parameterType;
-      } else if (JdbcType.CURSOR.name().equals(jdbcType)) {
-        propertyType = java.sql.ResultSet.class;
+      } else if (JdbcType.CURSOR.equals(jdbcType)) {
+        propertyType = ResultSet.class;
       } else if (property != null) {
         MetaClass metaClass = MetaClass.forClass(parameterType, configuration.getReflectorFactory());
         if (metaClass.hasGetter(property)) {
@@ -90,39 +91,50 @@ public class VelocitySqlSourceBuilder extends BaseBuilder {
       }
       ParameterMapping.Builder builder = new ParameterMapping.Builder(configuration, property, propertyType);
       if (jdbcType != null) {
-        builder.jdbcType(resolveJdbcType(jdbcType));
+        builder.jdbcType(jdbcType);
       }
       Class<?> javaType = null;
       String typeHandlerAlias = null;
       for (Map.Entry<String, String> entry : propertiesMap.entrySet()) {
         String name = entry.getKey();
         String value = entry.getValue();
-        if ("javaType".equals(name)) {
-          javaType = resolveClass(value);
-          builder.javaType(javaType);
-        } else if ("jdbcType".equals(name)) {
-          builder.jdbcType(resolveJdbcType(value));
-        } else if ("mode".equals(name)) {
-          builder.mode(resolveParameterMode(value));
-        } else if ("numericScale".equals(name)) {
-          builder.numericScale(Integer.valueOf(value));
-        } else if ("resultMap".equals(name)) {
-          builder.resultMapId(value);
-        } else if ("typeHandler".equals(name)) {
-          typeHandlerAlias = value;
-        } else if ("jdbcTypeName".equals(name)) {
-          builder.jdbcTypeName(value);
-        } else if ("property".equals(name)) {
-          // Do Nothing
-        } else if ("expression".equals(name)) {
-          builder.expression(value);
+        if (name != null) {
+          switch (name) {
+            case "javaType":
+              javaType = resolveClass(value);
+              builder.javaType(javaType);
+              break;
+            case "mode":
+              builder.mode(resolveParameterMode(value));
+              break;
+            case "numericScale":
+              builder.numericScale(Integer.valueOf(value));
+              break;
+            case "resultMap":
+              builder.resultMapId(value);
+              break;
+            case "typeHandler":
+              typeHandlerAlias = value;
+              break;
+            case "jdbcTypeName":
+              builder.jdbcTypeName(value);
+              break;
+            case "property":
+              break;
+            case "expression":
+              builder.expression(value);
+              break;
+            default:
+              throw new BuilderException("An invalid property '" + name + "' was found in mapping @{" + content
+                  + "}.  Valid properties are " + parameterProperties);
+          }
         } else {
           throw new BuilderException("An invalid property '" + name + "' was found in mapping @{" + content
               + "}.  Valid properties are " + parameterProperties);
         }
       }
       if (typeHandlerAlias != null) {
-        builder.typeHandler(resolveTypeHandler(javaType, typeHandlerAlias));
+        builder.typeHandler(resolveTypeHandler(propertyType, jdbcType, typeHandlerAlias));
       }
       return builder.build();
     }

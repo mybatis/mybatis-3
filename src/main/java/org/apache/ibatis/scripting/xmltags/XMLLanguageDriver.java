@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.parsing.PropertyParser;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.parsing.XPathParser;
+import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.scripting.defaults.DefaultParameterHandler;
 import org.apache.ibatis.scripting.defaults.RawSqlSource;
@@ -41,12 +42,24 @@ public class XMLLanguageDriver implements LanguageDriver {
 
   @Override
   public SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType) {
-    XMLScriptBuilder builder = new XMLScriptBuilder(configuration, script, parameterType);
+    return createSqlSource(configuration, script, parameterType, null);
+  }
+
+  @Override
+  public SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType,
+      ParamNameResolver paramNameResolver) {
+    XMLScriptBuilder builder = new XMLScriptBuilder(configuration, script, parameterType, paramNameResolver);
     return builder.parseScriptNode();
   }
 
   @Override
   public SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType) {
+    return createSqlSource(configuration, script, parameterType, null);
+  }
+
+  @Override
+  public SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType,
+      ParamNameResolver paramNameResolver) {
     // issue #3
     if (script.startsWith("<script>")) {
       XPathParser parser = new XPathParser(script, false, configuration.getVariables(), new XMLMapperEntityResolver());
@@ -58,7 +71,7 @@ public class XMLLanguageDriver implements LanguageDriver {
     if (textSqlNode.isDynamic()) {
       return new DynamicSqlSource(configuration, textSqlNode);
     } else {
-      return new RawSqlSource(configuration, script, parameterType);
+      return new RawSqlSource(configuration, script, parameterType, paramNameResolver);
     }
   }
 

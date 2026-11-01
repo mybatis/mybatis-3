@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -54,10 +54,8 @@ public interface BoundAuthorMapper {
 
   // ======================================================
 
+  @ConstructorArgs({ @Arg(column = "AUTHOR_ID", javaType = int.class) })
   // @formatter:off
-  @ConstructorArgs({
-      @Arg(column = "AUTHOR_ID", javaType = int.class)
-  })
   @Results({
       @Result(property = "username", column = "AUTHOR_USERNAME"),
       @Result(property = "password", column = "AUTHOR_PASSWORD"),
@@ -111,8 +109,8 @@ public interface BoundAuthorMapper {
       "  USERNAME as AUTHOR_USERNAME,",
       "  PASSWORD as AUTHOR_PASSWORD,",
       "  EMAIL as AUTHOR_EMAIL,",
-      "  BIO as AUTHOR_BIO,"
-          + "  FAVOURITE_SECTION as AUTHOR_SECTION",
+      "  BIO as AUTHOR_BIO,",
+      "  FAVOURITE_SECTION as AUTHOR_SECTION",
       "FROM AUTHOR WHERE ID = #{id}"})
   // @formatter:on
   Author selectAuthorConstructor(int id);
@@ -132,8 +130,8 @@ public interface BoundAuthorMapper {
     "  USERNAME as AUTHOR_USERNAME,",
     "  PASSWORD as AUTHOR_PASSWORD,",
     "  EMAIL as AUTHOR_EMAIL,",
-    "  BIO as AUTHOR_BIO,"
-      + "  FAVOURITE_SECTION as AUTHOR_SECTION",
+    "  BIO as AUTHOR_BIO,",
+    "  FAVOURITE_SECTION as AUTHOR_SECTION",
     "FROM AUTHOR WHERE ID = #{id}"})
   // @formatter:on
   Author selectAuthorMapToConstructorUsingRepeatable(int id);
@@ -171,19 +169,17 @@ public interface BoundAuthorMapper {
     "  USERNAME as AUTHOR_USERNAME,",
     "  PASSWORD as AUTHOR_PASSWORD,",
     "  EMAIL as AUTHOR_EMAIL,",
-    "  BIO as AUTHOR_BIO,"
-      + "  FAVOURITE_SECTION as AUTHOR_SECTION",
+    "  BIO as AUTHOR_BIO,",
+    "  FAVOURITE_SECTION as AUTHOR_SECTION",
     "FROM AUTHOR WHERE ID = #{id}"})
   // @formatter:on
   Author selectAuthorUsingBothArgAndConstructorArgs(int id);
 
   // ======================================================
 
-  // @formatter:off
-  @Results(
-    @Result(property = "id", column = "AUTHOR_ID")
-  )
+  @Results(@Result(property = "id", column = "AUTHOR_ID"))
   @Result(property = "username", column = "AUTHOR_USERNAME")
+  // @formatter:off
   @Select({
     "SELECT ",
     "  ID as AUTHOR_ID,",

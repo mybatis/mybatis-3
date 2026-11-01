@@ -1,5 +1,5 @@
 --
---    Copyright 2009-2022 the original author or authors.
+--    Copyright 2009-2025 the original author or authors.
 --
 --    Licensed under the Apache License, Version 2.0 (the "License");
 --    you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ create table items (
   owner int,
   name varchar(20)
 );
- 
+
 insert into persons (id, name) values (1, 'grandma');
 insert into persons (id, name) values (2, 'sister');
 insert into persons (id, name) values (3, 'brother');

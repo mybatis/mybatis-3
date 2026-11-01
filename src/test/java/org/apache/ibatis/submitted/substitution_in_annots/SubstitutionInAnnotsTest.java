@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ class SubstitutionInAnnotsTest {
   }
 
   @Test
-  void testSubstitutionWithXml() {
+  void substitutionWithXml() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SubstitutionInAnnotsMapper mapper = sqlSession.getMapper(SubstitutionInAnnotsMapper.class);
       assertEquals("Barney", mapper.getPersonNameByIdWithXml(4));
@@ -54,7 +54,7 @@ class SubstitutionInAnnotsTest {
   }
 
   @Test
-  void testSubstitutionWithAnnotsValue() {
+  void substitutionWithAnnotsValue() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SubstitutionInAnnotsMapper mapper = sqlSession.getMapper(SubstitutionInAnnotsMapper.class);
       assertEquals("Barney", mapper.getPersonNameByIdWithAnnotsValue(4));
@@ -62,7 +62,7 @@ class SubstitutionInAnnotsTest {
   }
 
   @Test
-  void testSubstitutionWithAnnotsParameter() {
+  void substitutionWithAnnotsParameter() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SubstitutionInAnnotsMapper mapper = sqlSession.getMapper(SubstitutionInAnnotsMapper.class);
       assertEquals("Barney", mapper.getPersonNameByIdWithAnnotsParameter(4));
@@ -70,7 +70,7 @@ class SubstitutionInAnnotsTest {
   }
 
   @Test
-  void testSubstitutionWithAnnotsParamAnnot() {
+  void substitutionWithAnnotsParamAnnot() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SubstitutionInAnnotsMapper mapper = sqlSession.getMapper(SubstitutionInAnnotsMapper.class);
       assertEquals("Barney", mapper.getPersonNameByIdWithAnnotsParamAnnot(4));

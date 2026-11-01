@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -153,6 +153,35 @@ class BaseStatementHandlerTest {
     handler.setStatementTimeout(statement, 10);
 
     verify(statement).setQueryTimeout(10);
+  }
+
+  @Test
+  void specifyDefaultFetchSizeOnly() throws SQLException {
+    doReturn(50).when(configuration).getDefaultFetchSize();
+    BaseStatementHandler handler = new SimpleStatementHandler(null, mappedStatementBuilder.build(), null, null, null,
+        null);
+    handler.setFetchSize(statement);
+
+    verify(statement).setFetchSize(50);
+  }
+
+  @Test
+  void specifyMappedStatementFetchSizeOnly() throws SQLException {
+    BaseStatementHandler handler = new SimpleStatementHandler(null, mappedStatementBuilder.fetchSize(10).build(), null,
+        null, null, null);
+    handler.setFetchSize(statement);
+
+    verify(statement).setFetchSize(10);
+  }
+
+  @Test
+  void specifyDefaultAndMappedStatementFetchSize() throws SQLException {
+    doReturn(50).when(configuration).getDefaultFetchSize();
+    BaseStatementHandler handler = new SimpleStatementHandler(null, mappedStatementBuilder.fetchSize(10).build(), null,
+        null, null, null);
+    handler.setFetchSize(statement);
+
+    verify(statement).setFetchSize(10);
   }
 
 }

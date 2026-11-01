@@ -1,6 +1,8 @@
 title: MyBatis 3 | ロギング
 author: Clinton Begin, Iwao AVE!
 
+<h1 class="d-none">Avoid blank site</h1>
+
 ## ロギング
 
 MyBatis は、内部の Log Factory を通してログ情報を出力します。この Log Factory は、ログ情報を次に挙げる実装のいずれかに委譲（delegate）します。
@@ -178,8 +180,8 @@ Mapper インターフェイスを使っていない場合、例えば次のよ�
 ```
 
 ```xml
-<!-- log4j2.xml -->
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- log4j2.xml -->
 <Configuration xmlns="http://logging.apache.org/log4j/2.0/config">
 
   <Appenders>
@@ -227,7 +229,7 @@ log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n
 handlers=java.util.logging.ConsoleHandler
 .level=SEVERE
 
-org.mybatis.example.BlogMapper=FINER
+org.mybatis.example.BlogMapper.level=FINER
 
 java.util.logging.ConsoleHandler.level=ALL
 java.util.logging.ConsoleHandler.formatter=java.util.logging.SimpleFormatter

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.apache.ibatis.binding;
 
 import static com.googlecode.catchexception.apis.BDDCatchException.caughtException;
 import static com.googlecode.catchexception.apis.BDDCatchException.when;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -28,11 +29,9 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -45,7 +44,6 @@ import javax.sql.DataSource;
 import net.sf.cglib.proxy.Factory;
 
 import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.binding.MapperProxy.MapperMethodInvoker;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.domain.blog.Author;
 import org.apache.ibatis.domain.blog.Blog;
@@ -62,9 +60,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class BindingTest {
@@ -106,7 +102,7 @@ class BindingTest {
   void shouldFindPostsInList() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       BoundAuthorMapper mapper = session.getMapper(BoundAuthorMapper.class);
-      List<Post> posts = mapper.findPostsInList(new ArrayList<Integer>() {
+      List<Post> posts = mapper.findPostsInList(new ArrayList<>() {
         private static final long serialVersionUID = 1L;
         {
           add(1);
@@ -399,7 +395,6 @@ class BindingTest {
     }
   }
 
-  @Disabled
   @Test // issue #480 and #101
   void shouldExecuteBoundSelectBlogUsingConstructorWithResultMapCollection() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
@@ -409,7 +404,7 @@ class BindingTest {
       assertEquals("Jim Business", blog.getTitle());
       assertNotNull(blog.getAuthor(), "author should not be null");
       List<Post> posts = blog.getPosts();
-      assertTrue(posts != null && !posts.isEmpty(), "posts should not be empty");
+      assertThat(posts).isNotNull().hasSize(2);
     }
   }
 
@@ -430,7 +425,7 @@ class BindingTest {
   void shouldSelectOneBlogAsMap() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      Map<String, Object> blog = mapper.selectBlogAsMap(new HashMap<String, Object>() {
+      Map<String, Object> blog = mapper.selectBlogAsMap(new HashMap<>() {
         private static final long serialVersionUID = 1L;
         {
           put("id", 1);
@@ -554,7 +549,7 @@ class BindingTest {
   void shouldFailWhenSelectingOneBlogWithNonExistentNestedParam() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      mapper.selectBlogByNonExistentNestedParam(1, Collections.<String, Object>emptyMap());
+      mapper.selectBlogByNonExistentNestedParam(1, Map.of());
     }
   }
 
@@ -626,7 +621,7 @@ class BindingTest {
   void shouldGetBlogsWithAuthorsAndPosts() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      List<Blog> blogs = mapper.selectBlogsWithAutorAndPosts();
+      List<Blog> blogs = mapper.selectBlogsWithAuthorAndPosts();
       assertEquals(2, blogs.size());
       assertTrue(blogs.get(0) instanceof Proxy);
       assertEquals(101, blogs.get(0).getAuthor().getId());
@@ -643,7 +638,7 @@ class BindingTest {
   void shouldGetBlogsWithAuthorsAndPostsEagerly() {
     try (SqlSession session = sqlSessionFactory.openSession()) {
       BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
-      List<Blog> blogs = mapper.selectBlogsWithAutorAndPostsEagerly();
+      List<Blog> blogs = mapper.selectBlogsWithAuthorAndPostsEagerly();
       assertEquals(2, blogs.size());
       assertFalse(blogs.get(0) instanceof Factory);
       assertEquals(101, blogs.get(0).getAuthor().getId());
@@ -691,8 +686,6 @@ class BindingTest {
         assertEquals(2, blog.getId());
         assertFalse(blogIterator.hasNext());
       }
-    } catch (IOException e) {
-      Assertions.fail(e.getMessage());
     }
   }
 

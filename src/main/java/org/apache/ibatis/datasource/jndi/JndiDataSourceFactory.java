@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -66,16 +66,15 @@ public class JndiDataSourceFactory implements DataSourceFactory {
   }
 
   private static Properties getEnvProperties(Properties allProps) {
-    final String PREFIX = ENV_PREFIX;
     Properties contextProperties = null;
     for (Entry<Object, Object> entry : allProps.entrySet()) {
       String key = (String) entry.getKey();
       String value = (String) entry.getValue();
-      if (key.startsWith(PREFIX)) {
+      if (key.startsWith(ENV_PREFIX)) {
         if (contextProperties == null) {
           contextProperties = new Properties();
         }
-        contextProperties.put(key.substring(PREFIX.length()), value);
+        contextProperties.put(key.substring(ENV_PREFIX.length()), value);
       }
     }
     return contextProperties;

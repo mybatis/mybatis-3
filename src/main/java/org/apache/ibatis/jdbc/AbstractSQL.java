@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
 
 /**
  * @author Clinton Begin
@@ -526,6 +528,71 @@ public abstract class AbstractSQL<T> {
     return a;
   }
 
+  /**
+   * Apply sql phrases that provide by SQL consumer if condition is matches.
+   *
+   * @param applyCondition
+   *          if {@code true} apply sql phrases
+   * @param sqlConsumer
+   *          a consumer that append sql phrase to SQL instance
+   *
+   * @return a self instance
+   *
+   * @see #applyIf(BooleanSupplier, Consumer)
+   *
+   * @since 3.5.15
+   */
+  public T applyIf(boolean applyCondition, Consumer<T> sqlConsumer) {
+    T self = getSelf();
+    if (applyCondition) {
+      sqlConsumer.accept(self);
+    }
+    return self;
+  }
+
+  /**
+   * Apply sql phrases that provide by SQL consumer if condition is matches.
+   *
+   * @param applyConditionSupplier
+   *          if supplier return {@code true} apply sql phrases
+   * @param sqlConsumer
+   *          a consumer that append sql phrase to SQL instance
+   *
+   * @return a self instance
+   *
+   * @see #applyIf(boolean, Consumer)
+   *
+   * @since 3.5.15
+   */
+  public T applyIf(BooleanSupplier applyConditionSupplier, Consumer<T> sqlConsumer) {
+    return applyIf(applyConditionSupplier.getAsBoolean(), sqlConsumer);
+  }
+
+  /**
+   * Apply sql phrases that provide by SQL consumer for iterable.
+   *
+   * @param iterable
+   *          an iterable
+   * @param forEachSqlConsumer
+   *          a consumer that append sql phrase to SQL instance
+   *
+   * @return a self instance
+   *
+   * @param <E>
+   *          element type of iterable
+   *
+   * @since 3.5.15
+   */
+  public <E> T applyForEach(Iterable<E> iterable, ForEachConsumer<T, E> forEachSqlConsumer) {
+    T self = getSelf();
+    int elementIndex = 0;
+    for (E element : iterable) {
+      forEachSqlConsumer.accept(self, element, elementIndex);
+      elementIndex++;
+    }
+    return self;
+  }
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
@@ -645,7 +712,7 @@ public abstract class AbstractSQL<T> {
         String last = "________";
         for (int i = 0, n = parts.size(); i < n; i++) {
           String part = parts.get(i);
-          if (i > 0 && !part.equals(AND) && !part.equals(OR) && !last.equals(AND) && !last.equals(OR)) {
+          if (i > 0 && !AND.equals(part) && !OR.equals(part) && !AND.equals(last) && !OR.equals(last)) {
             builder.append(conjunction);
           }
           builder.append(part);
@@ -737,4 +804,31 @@ public abstract class AbstractSQL<T> {
       return answer;
     }
   }
+
+  /**
+   * Consumer for 'forEach' operation.
+   *
+   * @param <T>
+   *          SQL type
+   * @param <E>
+   *          Element type of iterable
+   *
+   * @since 3.5.15
+   */
+  public interface ForEachConsumer<T, E> {
+
+    /**
+     * Accept an iterable element with index.
+     *
+     * @param sql
+     *          SQL instance
+     * @param element
+     *          an iterable element
+     * @param elementIndex
+     *          an element index
+     */
+    void accept(T sql, E element, int elementIndex);
+
+  }
+
 }

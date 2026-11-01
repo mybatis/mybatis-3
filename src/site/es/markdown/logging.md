@@ -1,6 +1,8 @@
 title: MyBatis 3 | Logging
 author: Clinton Begin, Eduardo Macarron
 
+<h1 class="d-none">Avoid blank site</h1>
+
 ## Logging
 
 MyBatis proporciona información de logging mediante el uso interno de una factoría. La factoría interna delega la información de logging en alguna de las siguientes implementaciones.
@@ -178,8 +180,8 @@ El resto de la configuración sirve para configurar los appenders, lo cual queda
 ```
 
 ```xml
-<!-- log4j2.xml -->
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- log4j2.xml -->
 <Configuration xmlns="http://logging.apache.org/log4j/2.0/config">
 
   <Appenders>
@@ -227,7 +229,7 @@ log4j.appender.stdout.layout.ConversionPattern=%5p [%t] - %m%n
 handlers=java.util.logging.ConsoleHandler
 .level=SEVERE
 
-org.mybatis.example.BlogMapper=FINER
+org.mybatis.example.BlogMapper.level=FINER
 
 java.util.logging.ConsoleHandler.level=ALL
 java.util.logging.ConsoleHandler.formatter=java.util.logging.SimpleFormatter

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ class CglibNPELazyTest {
   }
 
   @Test
-  void testNoParent() {
+  void noParent() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       Person person = personMapper.selectById(1);
@@ -55,7 +55,7 @@ class CglibNPELazyTest {
   }
 
   @Test
-  void testAncestorSelf() {
+  void ancestorSelf() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       Person person = personMapper.selectById(1);
@@ -66,7 +66,7 @@ class CglibNPELazyTest {
   }
 
   @Test
-  void testAncestorAfterQueryingParents() {
+  void ancestorAfterQueryingParents() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       Person expectedAncestor = personMapper.selectById(1);
@@ -80,7 +80,7 @@ class CglibNPELazyTest {
   }
 
   @Test
-  void testGrandParent() {
+  void grandParent() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       Person expectedParent = personMapper.selectById(2);
@@ -95,7 +95,7 @@ class CglibNPELazyTest {
   }
 
   @Test
-  void testAncestor() {
+  void ancestor() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       Person expectedAncestor = personMapper.selectById(1);

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -116,10 +116,10 @@ public class XMLConfigBuilder extends BaseBuilder {
       // issue #117 read properties first
       propertiesElement(root.evalNode("properties"));
       Properties settings = settingsAsProperties(root.evalNode("settings"));
-      loadCustomVfs(settings);
+      loadCustomVfsImpl(settings);
       loadCustomLogImpl(settings);
       typeAliasesElement(root.evalNode("typeAliases"));
-      pluginElement(root.evalNode("plugins"));
+      pluginsElement(root.evalNode("plugins"));
       objectFactoryElement(root.evalNode("objectFactory"));
       objectWrapperFactoryElement(root.evalNode("objectWrapperFactory"));
       reflectorFactoryElement(root.evalNode("reflectorFactory"));
@@ -127,8 +127,8 @@ public class XMLConfigBuilder extends BaseBuilder {
       // read it after objectFactory and objectWrapperFactory issue #631
       environmentsElement(root.evalNode("environments"));
       databaseIdProviderElement(root.evalNode("databaseIdProvider"));
-      typeHandlerElement(root.evalNode("typeHandlers"));
-      mapperElement(root.evalNode("mappers"));
+      typeHandlersElement(root.evalNode("typeHandlers"));
+      mappersElement(root.evalNode("mappers"));
     } catch (Exception e) {
       throw new BuilderException("Error parsing SQL Mapper Configuration. Cause: " + e, e);
     }
@@ -150,7 +150,7 @@ public class XMLConfigBuilder extends BaseBuilder {
     return props;
   }
 
-  private void loadCustomVfs(Properties props) throws ClassNotFoundException {
+  private void loadCustomVfsImpl(Properties props) throws ClassNotFoundException {
     String value = props.getProperty("vfsImpl");
     if (value == null) {
       return;
@@ -195,7 +195,7 @@ public class XMLConfigBuilder extends BaseBuilder {
     }
   }
 
-  private void pluginElement(XNode context) throws Exception {
+  private void pluginsElement(XNode context) throws Exception {
     if (context != null) {
       for (XNode child : context.getChildren()) {
         String interceptor = child.getStringAttribute("interceptor");
@@ -267,7 +267,6 @@ public class XMLConfigBuilder extends BaseBuilder {
     configuration.setProxyFactory((ProxyFactory) createInstance(props.getProperty("proxyFactory")));
     configuration.setLazyLoadingEnabled(booleanValueOf(props.getProperty("lazyLoadingEnabled"), false));
     configuration.setAggressiveLazyLoading(booleanValueOf(props.getProperty("aggressiveLazyLoading"), false));
-    configuration.setMultipleResultSetsEnabled(booleanValueOf(props.getProperty("multipleResultSetsEnabled"), true));
     configuration.setUseColumnLabel(booleanValueOf(props.getProperty("useColumnLabel"), true));
     configuration.setUseGeneratedKeys(booleanValueOf(props.getProperty("useGeneratedKeys"), false));
     configuration.setDefaultExecutorType(ExecutorType.valueOf(props.getProperty("defaultExecutorType", "SIMPLE")));
@@ -293,6 +292,7 @@ public class XMLConfigBuilder extends BaseBuilder {
         booleanValueOf(props.getProperty("argNameBasedConstructorAutoMapping"), false));
     configuration.setDefaultSqlProviderType(resolveClass(props.getProperty("defaultSqlProviderType")));
     configuration.setNullableOnForEach(booleanValueOf(props.getProperty("nullableOnForEach"), false));
+    configuration.setIgnoreParameterMetaData(booleanValueOf(props.getProperty("ignoreParameterMetaData"), false));
   }
 
   private void environmentsElement(XNode context) throws Exception {
@@ -317,19 +317,20 @@ public class XMLConfigBuilder extends BaseBuilder {
   }
 
   private void databaseIdProviderElement(XNode context) throws Exception {
-    DatabaseIdProvider databaseIdProvider = null;
-    if (context != null) {
-      String type = context.getStringAttribute("type");
-      // awful patch to keep backward compatibility
-      if ("VENDOR".equals(type)) {
-        type = "DB_VENDOR";
-      }
-      Properties properties = context.getChildrenAsProperties();
-      databaseIdProvider = (DatabaseIdProvider) resolveClass(type).getDeclaredConstructor().newInstance();
-      databaseIdProvider.setProperties(properties);
+    if (context == null) {
+      return;
     }
+    String type = context.getStringAttribute("type");
+    // awful patch to keep backward compatibility
+    if ("VENDOR".equals(type)) {
+      type = "DB_VENDOR";
+    }
+    Properties properties = context.getChildrenAsProperties();
+    DatabaseIdProvider databaseIdProvider = (DatabaseIdProvider) resolveClass(type).getDeclaredConstructor()
+        .newInstance();
+    databaseIdProvider.setProperties(properties);
     Environment environment = configuration.getEnvironment();
-    if (environment != null && databaseIdProvider != null) {
+    if (environment != null) {
       String databaseId = databaseIdProvider.getDatabaseId(environment.getDataSource());
       configuration.setDatabaseId(databaseId);
     }
@@ -357,7 +358,7 @@ public class XMLConfigBuilder extends BaseBuilder {
     throw new BuilderException("Environment declaration requires a DataSourceFactory.");
   }
 
-  private void typeHandlerElement(XNode context) {
+  private void typeHandlersElement(XNode context) {
     if (context == null) {
       return;
     }
@@ -385,7 +386,7 @@ public class XMLConfigBuilder extends BaseBuilder {
     }
   }
 
-  private void mapperElement(XNode context) throws Exception {
+  private void mappersElement(XNode context) throws Exception {
     if (context == null) {
       return;
     }

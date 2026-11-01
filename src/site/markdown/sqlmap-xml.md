@@ -1,6 +1,8 @@
 title: MyBatis 3 | Mapper XML Files
 author: Clinton Begin
 
+<h1 class="d-none">Avoid blank site</h1>
+
 ## Mapper XML Files
 
 The true power of MyBatis is in the Mapped Statements. This is where the magic happens. For all of their power, the Mapper XML files are relatively simple. Certainly if you were to compare them to the equivalent JDBC code, you would immediately see a savings of 95% of the code. MyBatis was built to focus on the SQL, and does its best to stay out of your way.
@@ -638,7 +640,7 @@ public class User {
 }
 ```
 
-In order to inject the results into the constructor, MyBatis needs to identify the constructor for somehow. In the following example, MyBatis searches a constructor declared with three parameters: `java.lang.Integer`, `java.lang.String` and `int` in this order.
+In order to inject the results into the constructor, MyBatis needs to identify the constructor somehow. In the following example, MyBatis searches a constructor declared with three parameters: `java.lang.Integer`, `java.lang.String` and `int` in this order.
 
 ```xml
 <constructor>
@@ -673,6 +675,90 @@ The rest of the attributes and rules are the same as for the regular id and resu
 | `resultMap`   | This is the ID of a ResultMap that can map the nested results of this argument into an appropriate object graph. This is an alternative to using a call to another select statement. It allows you to join multiple tables together into a single `ResultSet`. Such a `ResultSet` will contain duplicated, repeating groups of data that needs to be decomposed and mapped properly to a nested object graph. To facilitate this, MyBatis lets you "chain" result maps together, to deal with the nested results. See the Association element below for more. |
 | `name`        | The name of the constructor parameter. Specifying name allows you to write arg elements in any order. See the above explanation. Since 3.4.3.                                                                                                                                                                                                                                                                                                                                                                                                                 |
 
+##### Nested Results for association or collection
+
+While the following sections describe how to use `association` and `collection` for both Nested selects and Nested results, Since 3.6.0 we can now inject both using `constructor` mapping.
+
+Considering the following:
+
+```java
+public class User {
+   //...
+   public User(Integer id, String username, List<UserRole> userRoles) {
+     //...
+   }
+}
+
+public class UserRole {
+    // ...
+    public UserRole(Integer id, String role) {
+      // ...
+    }
+}
+```
+
+We can map `UserRole` as a nested result, MyBatis will wait until the row has been fully 'completed' before creating the object, this means that by the time the `User` gets created, `userRoles` will be complete and cannot be modified anymore.
+
+```xml
+<resultMap id="userResultMap" type="User">
+  <constructor>
+    <idArg column="id" javaType="int" />
+    <arg column="username" javaType="String" />
+    <arg javaType="List" resultMap="userRoleResultMap" columnPrefix="role_"/>
+  </constructor>
+</resultMap>
+```
+
+To achieve fully immutable objects in this example, we can also use constructor injection for `UserRole`
+
+```xml
+<resultMap id="userRoleResultMap" type="UserRole">
+  <constructor>
+    <idArg column="id" javaType="int" />
+    <arg column="role" javaType="String" />
+  </constructor>
+</resultMap>
+```
+
+MyBatis needs to be explicitly told that the results have been ordered in such a way, that when a new main row is retrieved from the result set, no previous row results will be retrieved again. This can be set on the statement with the `resultOrdered` attribute:
+
+```xml
+<select id="getAllUsers" resultMap="userResultMap" resultOrdered="true">
+    select
+      u.id,
+      u.username,
+      r.id as role_id,
+      r.role as role_role
+    from user u
+      left join user_role ur on u.id = ur.user_id
+      inner join role r on r.id = ur.role_id
+    order by u.id, r.id
+</select>
+```
+
+Note that `order by` is specified to order the results correctly. We can imagine the output to look something like:
+
+| row_nr | u.id | u.username | r.id | r.role      |
+|--------|------|------------|------|-------------|
+| 1      | 1    | John       | 1    | Admins      |
+| 2      | 1    | John       | 2    | Users       |
+| 3      | 2    | Jack       | null | null        |
+| 4      | 3    | Peter      | 2    | Users       |
+| 5      | 3    | Peter      | 3    | Maintainers |
+| 6      | 3    | Peter      | 4    | Approvers   |
+
+After this query is run, we would have the following results:
+
+```
+User{username=John, roles=[Admins, Users]}
+User{username=Jack, roles=[]}
+User{username=Peter, roles=[Users, Maintainers, Approvers]}
+```
+
+If the 5th row here would have somehow appeared below the first row (via some `ORDER BY`), MyBatis would not be able to fully construct the `John` user correctly using constructor collection mapping.
+
+It is important to note that mixed mappings have limited support, i.e. property mappings combined with nested constructor mappings are likely to fail.
+When using this functionality, it is preferable for the entire mapping hierarchy to use immutable constructor mappings.
 
 #### association
 
@@ -698,7 +784,6 @@ First, let's examine the properties of the element. As you'll see, it differs fr
 | `javaType`    | A fully qualified Java class name, or a type alias (see the table above for the list of built- in type aliases). MyBatis can usually figure out the type if you're mapping to a JavaBean. However, if you are mapping to a `HashMap`, then you should specify the javaType explicitly to ensure the desired behaviour.                                                                                                |
 | `jdbcType`    | The JDBC Type from the list of supported types that follows this table. The JDBC type is only required for nullable columns upon insert, update or delete. This is a JDBC requirement, not an MyBatis one. So even if you were coding JDBC directly, you'd need to specify this type – but only for nullable values.                                                                                                  |
 | `typeHandler` | We discussed default type handlers previously in this documentation. Using this property you can override the default type handler on a mapping-by-mapping basis. The value is either a fully qualified class name of a TypeHandler implementation, or a type alias.                                                                                                                                                  |
-
 
 #### Nested Select for Association
 
@@ -854,6 +939,32 @@ Because the column names in the results differ from the columns defined in the r
 </resultMap>
 ```
 
+#### Nested Cursor for Association
+
+Some databases can return `java.sql.ResultSet` as a column value.
+Here is the statement and result map.
+
+```xml
+<resultMap id="blogResult" type="Blog">
+  <id property="id" column="id" />
+  <result property="title" column="title" />
+  <association property="author" column="author" jdbcType="CURSOR">
+    <id property="id" column="id" />
+    <result property="username" column="username" />
+  </association>
+</resultMap>
+
+<select id="selectBlog" resultMap="blogResult">
+  select b.id, b.name, cursor(
+    select a.id, a.username from author a where b.author_id = a.id
+  ) author from blog b
+</select>
+```
+
+Compared to the examples in the previous section, the key difference is the `jdbcType` attribute in the `<association>` element.
+Its value `CURSOR` indicates that the value of the column `author` is nested cursor.
+
+
 #### Multiple ResultSets for Association
 
 | Attribute       | Description                                                                                                                                                                                       |
@@ -898,6 +1009,7 @@ Now we can specify that the data to fill the "author" association comes in the "
   </association>
 </resultMap>
 ```
+
 
 You've seen above how to deal with a "has one" type association. But what about "has many"? That's the subject of the next section.
 
@@ -967,7 +1079,7 @@ First, let's look at the SQL:
   B.author_id as blog_author_id,
   P.id as post_id,
   P.subject as post_subject,
-  P.body as post_body,
+  P.body as post_body
   from Blog B
   left outer join Post P on B.id = P.blog_id
   where B.id = #{id}
@@ -1004,6 +1116,29 @@ Also, if you prefer the longer form that allows for more reusability of your res
   <result property="subject" column="subject"/>
   <result property="body" column="body"/>
 </resultMap>
+```
+
+#### Nested Cursor for Collection
+
+It might be obvious, but nested cursor can return multiple rows.
+Just like `<association>`, you just need to specify `jdbcType="CURSOR"` in the `<collection>` element.
+
+```xml
+<resultMap id="blogResult" type="Blog">
+  <id property="id" column="id" />
+  <result property="title" column="title" />
+  <collection property="posts" column="posts" jdbcType="CURSOR">
+    <id property="id" column="id" />
+    <result property="subject" column="subject" />
+    <result property="body" column="body" />
+  </collection>
+</resultMap>
+
+<select id="selectBlog" resultMap="blogResult">
+  select b.id, b.name, cursor(
+    select p.id, p.subject, p.body from post p where p.blog_id = b.id
+  ) posts from blog b
+</select>
 ```
 
 #### Multiple ResultSets for Collection
@@ -1159,7 +1294,7 @@ The default value is `PARTIAL`, and it is so for a reason. When `FULL` is used a
   select
     B.id,
     B.title,
-    A.username,
+    A.username
   from Blog B left outer join Author A on B.author_id = A.id
   where B.id = #{id}
 </select>
@@ -1220,7 +1355,7 @@ This more advanced configuration creates a FIFO cache that flushes once every 60
 
 The available eviction policies available are:
 
-- `LRU` – Least Recently Used: Removes objects that haven't been used for the longst period of time.
+- `LRU` – Least Recently Used: Removes objects that haven't been used for the longest period of time.
 - `FIFO` – First In First Out: Removes objects in the order that they entered the cache.
 - `SOFT` – Soft Reference: Removes objects based on the garbage collector state and the rules of Soft References.
 - `WEAK` – Weak Reference: More aggressively removes objects based on the garbage collector state and rules of Weak References.
@@ -1251,7 +1386,6 @@ public interface Cache {
   int getSize();
   void putObject(Object key, Object value);
   Object getObject(Object key);
-  boolean hasKey(Object key);
   Object removeObject(Object key);
   void clear();
 }

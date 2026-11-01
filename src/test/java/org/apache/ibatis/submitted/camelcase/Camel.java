@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@ public class Camel {
 
   private String id;
   private String firstName;
+
+  // Required to be upper cased
   private String LAST_NAME;
 
   public String getId() {
@@ -41,8 +43,8 @@ public class Camel {
     return LAST_NAME;
   }
 
-  public void setLAST_NAME(String last_name) {
-    LAST_NAME = last_name;
+  public void setLAST_NAME(String lastName) {
+    LAST_NAME = lastName;
   }
 
 }

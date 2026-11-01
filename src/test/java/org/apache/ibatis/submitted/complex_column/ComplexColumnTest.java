@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ class ComplexColumnTest {
   }
 
   @Test
-  void testWithoutComplex() {
+  void withoutComplex() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       Person person = personMapper.getWithoutComplex(2L);
@@ -56,7 +56,7 @@ class ComplexColumnTest {
   }
 
   @Test
-  void testWithComplex() {
+  void withComplex() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       Person person = personMapper.getWithComplex(2L);
@@ -71,7 +71,7 @@ class ComplexColumnTest {
   }
 
   @Test
-  void testWithComplex2() {
+  void withComplex2() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       Person person = personMapper.getWithComplex2(2L);
@@ -86,7 +86,7 @@ class ComplexColumnTest {
   }
 
   @Test
-  void testWithComplex3() {
+  void withComplex3() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       Person person = personMapper.getWithComplex3(2L);
@@ -101,7 +101,7 @@ class ComplexColumnTest {
   }
 
   @Test
-  void testWithComplex4() {
+  void withComplex4() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       Person criteria = new Person();
@@ -119,7 +119,7 @@ class ComplexColumnTest {
   }
 
   @Test
-  void testWithParamAttributes() {
+  void withParamAttributes() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       Person person = personMapper.getComplexWithParamAttributes(2L);

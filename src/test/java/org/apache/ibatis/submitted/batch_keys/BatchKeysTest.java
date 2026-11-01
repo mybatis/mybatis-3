@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -73,7 +73,7 @@ class BatchKeysTest {
   }
 
   @Test
-  void testInsert() {
+  void insert() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
       User user1 = new User(null, "Pocoyo");
       sqlSession.insert("insert", user1);
@@ -91,7 +91,7 @@ class BatchKeysTest {
   }
 
   @Test
-  void testInsertJdbc3() {
+  void insertJdbc3() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
       User user1 = new User(null, "Pocoyo");
       sqlSession.insert("insertIdentity", user1);
@@ -110,7 +110,7 @@ class BatchKeysTest {
   }
 
   @Test
-  void testInsertWithMapper() {
+  void insertWithMapper() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
       Mapper userMapper = sqlSession.getMapper(Mapper.class);
       User user1 = new User(null, "Pocoyo");
@@ -130,7 +130,7 @@ class BatchKeysTest {
   }
 
   @Test
-  void testInsertMapperJdbc3() {
+  void insertMapperJdbc3() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
       Mapper userMapper = sqlSession.getMapper(Mapper.class);
       User user1 = new User(null, "Pocoyo");
@@ -150,7 +150,7 @@ class BatchKeysTest {
   }
 
   @Test
-  void testInsertMapperNoBatchJdbc3() {
+  void insertMapperNoBatchJdbc3() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper userMapper = sqlSession.getMapper(Mapper.class);
       User user1 = new User(null, "Pocoyo");

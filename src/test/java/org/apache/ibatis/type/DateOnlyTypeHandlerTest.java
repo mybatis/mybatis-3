@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.apache.ibatis.type;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -42,7 +43,9 @@ class DateOnlyTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultFromResultSetByName() throws Exception {
     when(rs.getDate("column")).thenReturn(SQL_DATE);
-    assertEquals(DATE, TYPE_HANDLER.getResult(rs, "column"));
+    Date actual = TYPE_HANDLER.getResult(rs, "column");
+    assertEquals(DATE, actual);
+    assertSame(DATE.getClass(), actual.getClass());
     verify(rs, never()).wasNull();
   }
 
@@ -58,7 +61,9 @@ class DateOnlyTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultFromResultSetByPosition() throws Exception {
     when(rs.getDate(1)).thenReturn(SQL_DATE);
-    assertEquals(DATE, TYPE_HANDLER.getResult(rs, 1));
+    Date actual = TYPE_HANDLER.getResult(rs, 1);
+    assertEquals(DATE, actual);
+    assertSame(DATE.getClass(), actual.getClass());
     verify(rs, never()).wasNull();
   }
 
@@ -74,7 +79,9 @@ class DateOnlyTypeHandlerTest extends BaseTypeHandlerTest {
   @Test
   public void shouldGetResultFromCallableStatement() throws Exception {
     when(cs.getDate(1)).thenReturn(SQL_DATE);
-    assertEquals(DATE, TYPE_HANDLER.getResult(cs, 1));
+    Date actual = TYPE_HANDLER.getResult(cs, 1);
+    assertEquals(DATE, actual);
+    assertSame(DATE.getClass(), actual.getClass());
     verify(cs, never()).wasNull();
   }
 

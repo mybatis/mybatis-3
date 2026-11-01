@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ class BlobTest {
   /*
    * This test demonstrates the use of type aliases for primitive types in constructor based result maps
    */
-  void testInsertBlobThenSelectAll() {
+  void insertBlobThenSelectAll() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       BlobMapper blobMapper = sqlSession.getMapper(BlobMapper.class);
 
@@ -69,7 +69,7 @@ class BlobTest {
   /*
    * This test demonstrates the use of type aliases for primitive types in constructor based result maps
    */
-  void testInsertBlobObjectsThenSelectAll() {
+  void insertBlobObjectsThenSelectAll() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       BlobMapper blobMapper = sqlSession.getMapper(BlobMapper.class);
 

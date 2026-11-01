@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -75,14 +75,14 @@ public @interface Arg {
   Class<? extends TypeHandler> typeHandler() default UnknownTypeHandler.class;
 
   /**
-   * Return the statement id for retrieving a object that map to this argument.
+   * Return the statement id for retrieving an object that map to this argument.
    *
    * @return the statement id
    */
   String select() default "";
 
   /**
-   * Returns the result map id for mapping to a object that map to this argument.
+   * Returns the result map id for mapping to an object that map to this argument.
    *
    * @return the result map id
    */

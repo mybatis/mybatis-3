@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,9 +16,13 @@
 package org.apache.ibatis.reflection;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,6 +31,7 @@ import java.util.TreeMap;
 
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.binding.MapperMethod.ParamMap;
+import org.apache.ibatis.reflection.property.PropertyTokenizer;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
@@ -35,15 +40,21 @@ public class ParamNameResolver {
 
   public static final String GENERIC_NAME_PREFIX = "param";
 
+  public static final String[] GENERIC_NAME_CACHE = new String[10];
+
+  static {
+    for (int i = 0; i < 10; i++) {
+      GENERIC_NAME_CACHE[i] = GENERIC_NAME_PREFIX + (i + 1);
+    }
+  }
+
   private final boolean useActualParamName;
 
   /**
-   * <p>
    * The key is the index and the value is the name of the parameter.<br />
    * The name is obtained from {@link Param} if specified. When {@link Param} is not specified, the parameter index is
    * used. Note that this index could be different from the actual index when the method has special parameters (i.e.
    * {@link RowBounds} or {@link ResultHandler}).
-   * </p>
    * <ul>
    * <li>aMethod(@Param("M") int a, @Param("N") int b) -&gt; {{0, "M"}, {1, "N"}}</li>
    * <li>aMethod(int a, int b) -&gt; {{0, "0"}, {1, "1"}}</li>
@@ -51,14 +62,17 @@ public class ParamNameResolver {
    * </ul>
    */
   private final SortedMap<Integer, String> names;
+  private final Map<String, Type> typeMap = new HashMap<>();
 
   private boolean hasParamAnnotation;
+  private boolean useParamMap;
 
-  public ParamNameResolver(Configuration config, Method method) {
+  public ParamNameResolver(Configuration config, Method method, Class<?> mapperClass) {
     this.useActualParamName = config.isUseActualParamName();
     final Class<?>[] paramTypes = method.getParameterTypes();
     final Annotation[][] paramAnnotations = method.getParameterAnnotations();
     final SortedMap<Integer, String> map = new TreeMap<>();
+    Type[] actualParamTypes = TypeParameterResolver.resolveParamTypes(method, mapperClass);
     int paramCount = paramAnnotations.length;
     // get names from @Param annotations
     for (int paramIndex = 0; paramIndex < paramCount; paramIndex++) {
@@ -70,6 +84,7 @@ public class ParamNameResolver {
       for (Annotation annotation : paramAnnotations[paramIndex]) {
         if (annotation instanceof Param) {
           hasParamAnnotation = true;
+          useParamMap = true;
           name = ((Param) annotation).value();
           break;
         }
@@ -86,8 +101,31 @@ public class ParamNameResolver {
         }
       }
       map.put(paramIndex, name);
+      typeMap.put(name, actualParamTypes[paramIndex]);
     }
     names = Collections.unmodifiableSortedMap(map);
+    if (names.size() > 1) {
+      useParamMap = true;
+    }
+    if (names.size() == 1) {
+      Type soleParamType = actualParamTypes[0];
+      if (soleParamType instanceof GenericArrayType) {
+        typeMap.put("array", soleParamType);
+      } else {
+        Class<?> soleParamClass = null;
+        if (soleParamType instanceof ParameterizedType) {
+          soleParamClass = (Class<?>) ((ParameterizedType) soleParamType).getRawType();
+        } else if (soleParamType instanceof Class) {
+          soleParamClass = (Class<?>) soleParamType;
+        }
+        if (Collection.class.isAssignableFrom(soleParamClass)) {
+          typeMap.put("collection", soleParamType);
+          if (List.class.isAssignableFrom(soleParamClass)) {
+            typeMap.put("list", soleParamType);
+          }
+        }
+      }
+    }
   }
 
   private String getActualParamName(Method method, int paramIndex) {
@@ -108,10 +146,8 @@ public class ParamNameResolver {
   }
 
   /**
-   * <p>
    * A single non-special parameter is returned without a name. Multiple parameters are named using the naming rule. In
    * addition to the default names, this method also adds the generic names (param1, param2, ...).
-   * </p>
    *
    * @param args
    *          the args
@@ -132,7 +168,7 @@ public class ParamNameResolver {
       for (Map.Entry<Integer, String> entry : names.entrySet()) {
         param.put(entry.getValue(), args[entry.getKey()]);
         // add generic param names (param1, param2, ...)
-        final String genericParamName = GENERIC_NAME_PREFIX + (i + 1);
+        final String genericParamName = i < 10 ? GENERIC_NAME_CACHE[i] : GENERIC_NAME_PREFIX + (i + 1);
         // ensure not to overwrite parameter named with @Param
         if (!names.containsValue(genericParamName)) {
           param.put(genericParamName, args[entry.getKey()]);
@@ -141,6 +177,34 @@ public class ParamNameResolver {
       }
       return param;
     }
+  }
+
+  public Type getType(String name) {
+    PropertyTokenizer propertyTokenizer = new PropertyTokenizer(name);
+    String unindexed = propertyTokenizer.getName();
+    Type type = typeMap.get(unindexed);
+
+    if (type == null && unindexed.startsWith(GENERIC_NAME_PREFIX)) {
+      try {
+        Integer paramIndex = Integer.valueOf(unindexed.substring(GENERIC_NAME_PREFIX.length())) - 1;
+        unindexed = names.get(paramIndex);
+        if (unindexed != null) {
+          type = typeMap.get(unindexed);
+        }
+      } catch (NumberFormatException e) {
+        // user mistake
+      }
+    }
+
+    if (propertyTokenizer.getIndex() != null) {
+      if (type instanceof ParameterizedType) {
+        Type[] typeArgs = ((ParameterizedType) type).getActualTypeArguments();
+        return typeArgs[0];
+      } else if (type instanceof Class && ((Class<?>) type).isArray()) {
+        return ((Class<?>) type).getComponentType();
+      }
+    }
+    return type;
   }
 
   /**
@@ -174,4 +238,7 @@ public class ParamNameResolver {
     return object;
   }
 
+  public boolean isUseParamMap() {
+    return useParamMap;
+  }
 }

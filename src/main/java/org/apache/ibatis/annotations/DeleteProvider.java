@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -27,10 +27,10 @@ import java.lang.annotation.Target;
  * <p>
  * <b>How to use:</b>
  *
- * <pre>
+ * <pre>{@code
  * public interface UserMapper {
  *
- *   &#064;DeleteProvider(type = SqlProvider.class, method = "deleteById")
+ *   @DeleteProvider(type = SqlProvider.class, method = "deleteById")
  *   boolean deleteById(int id);
  *
  *   public static class SqlProvider {
@@ -40,7 +40,7 @@ import java.lang.annotation.Target;
  *   }
  *
  * }
- * </pre>
+ * }</pre>
  *
  * @author Clinton Begin
  */
@@ -65,7 +65,6 @@ public @interface DeleteProvider {
    * Specify a type that implements an SQL provider method.
    * <p>
    * This attribute is alias of {@link #value()}.
-   * </p>
    *
    * @return a type that implements an SQL provider method
    *
@@ -73,7 +72,6 @@ public @interface DeleteProvider {
    */
   Class<?> type() default void.class;
 
-  // @formatter:off
   /**
    * Specify a method for providing an SQL.
    * <p>
@@ -81,20 +79,16 @@ public @interface DeleteProvider {
    * <p>
    * If this attribute omit, the MyBatis will call a method that decide by following rules.
    * <ul>
-   *   <li>
-   *     If class that specified the {@link #type()} attribute implements the
-   *     {@link org.apache.ibatis.builder.annotation.ProviderMethodResolver},
-   *     the MyBatis use a method that returned by it
-   *   </li>
-   *   <li>
-   *     If cannot resolve a method by {@link org.apache.ibatis.builder.annotation.ProviderMethodResolver}(= not implement it or it was returned {@code null}),
-   *     the MyBatis will search and use a fallback method that named {@code provideSql} from specified type
-   *   </li>
+   * <li>If class that specified the {@link #type()} attribute implements the
+   * {@link org.apache.ibatis.builder.annotation.ProviderMethodResolver}, the MyBatis use a method that returned by it
+   * </li>
+   * <li>If cannot resolve a method by {@link org.apache.ibatis.builder.annotation.ProviderMethodResolver} (= not
+   * implement it or it was returned <code>null</code>), the MyBatis will search and use a fallback method that named
+   * <code>provideSql</code> from specified type</li>
    * </ul>
    *
    * @return a method name of method for providing an SQL
    */
-  // @formatter:on
   String method() default "";
 
   /**

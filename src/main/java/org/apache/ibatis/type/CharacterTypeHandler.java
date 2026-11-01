@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -33,28 +33,20 @@ public class CharacterTypeHandler extends BaseTypeHandler<Character> {
 
   @Override
   public Character getNullableResult(ResultSet rs, String columnName) throws SQLException {
-    String columnValue = rs.getString(columnName);
-    if (columnValue != null && !columnValue.isEmpty()) {
-      return columnValue.charAt(0);
-    }
-    return null;
+    return toCharacter(rs.getString(columnName));
   }
 
   @Override
   public Character getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
-    String columnValue = rs.getString(columnIndex);
-    if (columnValue != null && !columnValue.isEmpty()) {
-      return columnValue.charAt(0);
-    }
-    return null;
+    return toCharacter(rs.getString(columnIndex));
   }
 
   @Override
   public Character getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
-    String columnValue = cs.getString(columnIndex);
-    if (columnValue != null && !columnValue.isEmpty()) {
-      return columnValue.charAt(0);
-    }
-    return null;
+    return toCharacter(cs.getString(columnIndex));
+  }
+
+  private Character toCharacter(String value) {
+    return value == null || value.isEmpty() ? null : value.charAt(0);
   }
 }

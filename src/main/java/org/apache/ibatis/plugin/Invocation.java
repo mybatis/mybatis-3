@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,17 +17,29 @@ package org.apache.ibatis.plugin;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.ibatis.executor.Executor;
+import org.apache.ibatis.executor.parameter.ParameterHandler;
+import org.apache.ibatis.executor.resultset.ResultSetHandler;
+import org.apache.ibatis.executor.statement.StatementHandler;
 
 /**
  * @author Clinton Begin
  */
 public class Invocation {
 
+  private static final List<Class<?>> targetClasses = Arrays.asList(Executor.class, ParameterHandler.class,
+      ResultSetHandler.class, StatementHandler.class);
   private final Object target;
   private final Method method;
   private final Object[] args;
 
   public Invocation(Object target, Method method, Object[] args) {
+    if (!targetClasses.contains(method.getDeclaringClass())) {
+      throw new IllegalArgumentException("Method '" + method + "' is not supported as a plugin target.");
+    }
     this.target = target;
     this.method = method;
     this.args = args;

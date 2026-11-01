@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,12 +16,10 @@
 package org.apache.ibatis.scripting.xmltags;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.StringTokenizer;
 
+import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.session.Configuration;
 
 /**
@@ -60,16 +58,17 @@ public class TrimSqlNode implements SqlNode {
     return result;
   }
 
-  private static List<String> parseOverrides(String overrides) {
+  private static List<String> parseOverrides(final String overrides) {
     if (overrides != null) {
-      final StringTokenizer parser = new StringTokenizer(overrides, "|", false);
-      final List<String> list = new ArrayList<>(parser.countTokens());
-      while (parser.hasMoreTokens()) {
-        list.add(parser.nextToken().toUpperCase(Locale.ENGLISH));
+      final List<String> list = new ArrayList<>();
+      for (final String override : overrides.split("\\|")) {
+        if (!override.isEmpty()) {
+          list.add(override.toUpperCase(Locale.ENGLISH));
+        }
       }
       return list;
     }
-    return Collections.emptyList();
+    return List.of();
   }
 
   private class FilteredDynamicContext extends DynamicContext {
@@ -79,17 +78,19 @@ public class TrimSqlNode implements SqlNode {
     private StringBuilder sqlBuffer;
 
     public FilteredDynamicContext(DynamicContext delegate) {
-      super(configuration, null);
+      super(configuration, delegate.getParameterObject(), delegate.getParameterType(), delegate.getParamNameResolver(),
+          delegate.isParamExists());
       this.delegate = delegate;
       this.prefixApplied = false;
       this.suffixApplied = false;
       this.sqlBuffer = new StringBuilder();
+      this.bindings.putAll(delegate.getBindings());
     }
 
     public void applyAll() {
       sqlBuffer = new StringBuilder(sqlBuffer.toString().trim());
       String trimmedUppercaseSql = sqlBuffer.toString().toUpperCase(Locale.ENGLISH);
-      if (trimmedUppercaseSql.length() > 0) {
+      if (!trimmedUppercaseSql.isEmpty()) {
         applyPrefix(sqlBuffer, trimmedUppercaseSql);
         applySuffix(sqlBuffer, trimmedUppercaseSql);
       }
@@ -97,28 +98,21 @@ public class TrimSqlNode implements SqlNode {
     }
 
     @Override
-    public Map<String, Object> getBindings() {
-      return delegate.getBindings();
-    }
-
-    @Override
-    public void bind(String name, Object value) {
-      delegate.bind(name, value);
-    }
-
-    @Override
-    public int getUniqueNumber() {
-      return delegate.getUniqueNumber();
-    }
-
-    @Override
     public void appendSql(String sql) {
+      if (sqlBuffer.length() > 0) {
+        sqlBuffer.append(" ");
+      }
       sqlBuffer.append(sql);
     }
 
     @Override
     public String getSql() {
       return delegate.getSql();
+    }
+
+    @Override
+    public List<ParameterMapping> getParameterMappings() {
+      return delegate.getParameterMappings();
     }
 
     private void applyPrefix(StringBuilder sql, String trimmedUppercaseSql) {

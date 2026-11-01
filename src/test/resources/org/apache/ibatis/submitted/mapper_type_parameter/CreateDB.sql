@@ -1,5 +1,5 @@
 --
---    Copyright 2009-2022 the original author or authors.
+--    Copyright 2009-2025 the original author or authors.
 --
 --    Licensed under the Apache License, Version 2.0 (the "License");
 --    you may not use this file except in compliance with the License.
@@ -27,5 +27,5 @@ create table country(
     name varchar(20)
 );
 
-insert into person (id, name) values (1, 'Jane'), (2, 'John'); 
-insert into country (id, name) values (1, 'Japan'), (2, 'New Zealand'); 
+insert into person (id, name) values (1, 'Jane'), (2, 'John');
+insert into country (id, name) values (1, 'Japan'), (2, 'New Zealand');

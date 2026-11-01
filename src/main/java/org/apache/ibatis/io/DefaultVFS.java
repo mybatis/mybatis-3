@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,13 +21,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystemException;
-import java.nio.file.InvalidPathException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -79,9 +80,14 @@ public class DefaultVFS extends VFS {
               if (log.isDebugEnabled()) {
                 log.debug("Listing " + url);
               }
+              Path destinationDir = Path.of(path);
               for (JarEntry entry; (entry = jarInput.getNextJarEntry()) != null;) {
                 if (log.isDebugEnabled()) {
                   log.debug("Jar entry: " + entry.getName());
+                }
+                File entryFile = destinationDir.resolve(entry.getName()).toFile().getCanonicalFile();
+                if (!entryFile.getPath().startsWith(destinationDir.toFile().getCanonicalPath())) {
+                  throw new IOException("Bad zip entry: " + entry.getName());
                 }
                 children.add(entry.getName());
               }
@@ -107,8 +113,8 @@ public class DefaultVFS extends VFS {
                   break;
                 }
               }
-            } catch (InvalidPathException | FileSystemException e) {
-              // #1974 #2598
+            } catch (IllegalArgumentException | FileSystemException e) {
+              // #1974 #2598 #3689
               lines.clear();
             }
             if (!lines.isEmpty()) {
@@ -127,11 +133,11 @@ public class DefaultVFS extends VFS {
             // No idea where the exception came from so rethrow it
             throw e;
           }
-          File file = new File(url.getFile());
+          File file = Path.of(url.getFile()).toFile();
           if (log.isDebugEnabled()) {
             log.debug("Listing directory " + file.getAbsolutePath());
           }
-          if (file.isDirectory()) {
+          if (Files.isDirectory(file.toPath())) {
             if (log.isDebugEnabled()) {
               log.debug("Listing " + url);
             }
@@ -145,11 +151,11 @@ public class DefaultVFS extends VFS {
           prefix = prefix + "/";
         }
 
-        // Iterate over immediate children, adding files and recurring into directories
+        // Iterate over immediate child and recursively list their contents
         for (String child : children) {
           String resourcePath = path + "/" + child;
           resources.add(resourcePath);
-          URL childUrl = new URL(prefix + child);
+          URL childUrl = URI.create(prefix + child).toURL();
           resources.addAll(list(childUrl, resourcePath));
         }
       }
@@ -234,11 +240,11 @@ public class DefaultVFS extends VFS {
     boolean continueLoop = true;
     while (continueLoop) {
       try {
-        url = new URL(url.getFile());
+        url = URI.create(url.getFile()).toURL();
         if (log.isDebugEnabled()) {
           log.debug("Inner URL: " + url);
         }
-      } catch (MalformedURLException e) {
+      } catch (IllegalArgumentException | MalformedURLException e) {
         // This will happen at some point and serves as a break in the loop
         continueLoop = false;
       }
@@ -260,7 +266,7 @@ public class DefaultVFS extends VFS {
 
     // Try to open and test it
     try {
-      URL testUrl = new URL(jarUrl.toString());
+      URL testUrl = URI.create(jarUrl.toString()).toURL();
       if (isJar(testUrl)) {
         return testUrl;
       }
@@ -269,15 +275,11 @@ public class DefaultVFS extends VFS {
         log.debug("Not a JAR: " + jarUrl);
       }
       jarUrl.replace(0, jarUrl.length(), testUrl.getFile());
-      File file = new File(jarUrl.toString());
+      File file = Path.of(jarUrl.toString()).toFile();
 
       // File name might be URL-encoded
       if (!file.exists()) {
-        try {
-          file = new File(URLEncoder.encode(jarUrl.toString(), StandardCharsets.UTF_8.name()));
-        } catch (UnsupportedEncodingException e) {
-          throw new RuntimeException("Unsupported encoding?  UTF-8?  That's impossible.");
-        }
+        file = Path.of(URLEncoder.encode(jarUrl.toString(), StandardCharsets.UTF_8)).toFile();
       }
 
       if (file.exists()) {

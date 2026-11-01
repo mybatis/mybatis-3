@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ class FlushStatementNpeTest {
   }
 
   @Test
-  void testSameUpdateAfterCommitSimple() {
+  void sameUpdateAfterCommitSimple() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.SIMPLE)) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       Person person = personMapper.selectById(1);
@@ -59,7 +59,7 @@ class FlushStatementNpeTest {
   }
 
   @Test
-  void testSameUpdateAfterCommitReuse() {
+  void sameUpdateAfterCommitReuse() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.REUSE)) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       Person person = personMapper.selectById(1);
@@ -76,7 +76,7 @@ class FlushStatementNpeTest {
   }
 
   @Test
-  void testSameUpdateAfterCommitBatch() {
+  void sameUpdateAfterCommitBatch() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {
       PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
       Person person = personMapper.selectById(1);

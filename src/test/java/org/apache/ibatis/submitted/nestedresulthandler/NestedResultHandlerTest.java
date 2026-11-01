@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ class NestedResultHandlerTest {
   }
 
   @Test
-  void testGetPerson() {
+  void getPerson() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
 
@@ -72,7 +72,7 @@ class NestedResultHandlerTest {
 
   @Test
   // issue #542
-  void testGetPersonWithHandler() {
+  void getPersonWithHandler() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       sqlSession.select("getPersons", context -> {
         Person person = (Person) context.getResultObject();
@@ -84,7 +84,7 @@ class NestedResultHandlerTest {
   }
 
   @Test
-  void testUnorderedGetPersonWithHandler() {
+  void unorderedGetPersonWithHandler() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Assertions.assertThrows(PersistenceException.class,
           () -> sqlSession.select("getPersonsWithItemsOrdered", context -> {
@@ -101,7 +101,7 @@ class NestedResultHandlerTest {
    * some records and end up with duplicates instead.
    */
   @Test
-  void testGetPersonOrderedByItem() {
+  void getPersonOrderedByItem() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
 
@@ -127,7 +127,7 @@ class NestedResultHandlerTest {
   }
 
   @Test // reopen issue 39? (not a bug?)
-  void testGetPersonItemPairs() {
+  void getPersonItemPairs() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
       List<PersonItemPair> pairs = mapper.getPersonItemPairs();

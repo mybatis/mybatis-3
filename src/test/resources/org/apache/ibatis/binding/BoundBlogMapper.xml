@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
 
-       Copyright 2009-2022 the original author or authors.
+       Copyright 2009-2024 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -48,6 +48,20 @@
         </constructor>
     </resultMap>
 
+    <resultMap id="postForConstructorInit" type="org.apache.ibatis.domain.blog.Post">
+        <id property="id" column="post_id"/>
+        <!--    <result property="blog" column="blog_id"/> impossible due to chicken egg -->
+        <result property="createdOn" column="created_on"/>
+        <result property="section" column="section" javaType="org.apache.ibatis.domain.blog.Section"/>
+        <result property="subject" column="subject"/>
+        <result property="body" column="body"/>
+        <discriminator javaType="int" column="draft">
+            <case value="1">
+                <association property="author" column="author_id" select="selectAuthorWithInlineParams"/>
+            </case>
+        </discriminator>
+    </resultMap>
+
     <resultMap id="blogUsingConstructorWithResultMap" type="Blog">
         <constructor>
             <idArg column="id" javaType="_int"/>
@@ -71,7 +85,7 @@
             <idArg column="id" javaType="_int"/>
             <arg column="title" javaType="java.lang.String"/>
             <arg javaType="org.apache.ibatis.domain.blog.Author" resultMap="org.apache.ibatis.binding.BoundAuthorMapper.authorResultMap"/>
-            <arg javaType="java.util.List" resultMap="blogWithPosts"/>
+            <arg javaType="java.util.List" resultMap="postForConstructorInit"/>
         </constructor>
     </resultMap>
 
@@ -122,7 +136,7 @@
     </select>
 
     <select id="selectBlogUsingConstructorWithResultMapCollection" parameterType="int"
-            resultMap="blogUsingConstructorWithResultMapCollection">
+            resultMap="blogUsingConstructorWithResultMapCollection" resultOrdered="true">
       select b.*, p.*,
         a.id as author_id,
         a.username as author_username,

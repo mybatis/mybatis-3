@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ class DaoTest {
   }
 
   @Test
-  void testWithEmptyList() {
+  void withEmptyList() {
     final List<TodoLists> actual = dao.selectWithEmptyList();
     Assertions.assertEquals(1, actual.size());
     final List<TodoItem> todoItems = actual.get(0).getTodoItems();
@@ -62,13 +62,13 @@ class DaoTest {
   }
 
   @Test
-  void testWithNonEmptyList() {
+  void withNonEmptyList() {
     final List<TodoLists> actual = dao.selectWithNonEmptyList();
     checkNonEmptyList(actual);
   }
 
   @Test
-  void testWithNonEmptyList_noCollectionId() {
+  void withNonEmptyListNoCollectionId() {
     final List<TodoLists> actual = dao.selectWithNonEmptyList_noCollectionId();
 
     checkNonEmptyList(actual);

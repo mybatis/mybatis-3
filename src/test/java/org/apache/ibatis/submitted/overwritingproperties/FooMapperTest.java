@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package org.apache.ibatis.submitted.overwritingproperties;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
@@ -29,12 +28,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/*
+/**
  * @author jjensen
  */
 class FooMapperTest {
 
-  private final static String SQL_MAP_CONFIG = "org/apache/ibatis/submitted/overwritingproperties/sqlmap.xml";
+  private static final String SQL_MAP_CONFIG = "org/apache/ibatis/submitted/overwritingproperties/sqlmap.xml";
   private static SqlSession session;
   private static Connection conn;
 
@@ -57,7 +56,7 @@ class FooMapperTest {
   }
 
   @Test
-  void testOverwriteWithDefault() {
+  void overwriteWithDefault() {
     final FooMapper mapper = session.getMapper(FooMapper.class);
     final Bar bar = new Bar(2L);
     final Foo inserted = new Foo(1L, bar, 3, 4);
@@ -73,7 +72,7 @@ class FooMapperTest {
     // <result property="field4" column="field3" jdbcType="INTEGER"/>
     Assertions.assertEquals(inserted.getField3(), selected.getField4());
 
-    // field4 is explicitly remapped to field3 in the resultmap
+    // field4 is explicitly remapped to field3 in the resultMap
     // <result property="field3" column="field4" jdbcType="INTEGER"/>
     Assertions.assertEquals(inserted.getField4(), selected.getField3());
 
@@ -87,11 +86,9 @@ class FooMapperTest {
 
   @AfterAll
   static void tearDownAfterClass() {
-    try {
+    Assertions.assertDoesNotThrow(() -> {
       conn.close();
-    } catch (SQLException e) {
-      Assertions.fail(e.getMessage());
-    }
+    });
     session.close();
   }
 

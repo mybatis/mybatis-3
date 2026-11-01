@@ -1,5 +1,5 @@
 --
---    Copyright 2009-2022 the original author or authors.
+--    Copyright 2009-2025 the original author or authors.
 --
 --    Licensed under the Apache License, Version 2.0 (the "License");
 --    you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ CREATE TABLE mbtest.users (
   name character varying(30)
 );
 
-INSERT INTO mbtest.users (name) values 
+INSERT INTO mbtest.users (name) values
 ('Jimmy');
 
 
@@ -32,5 +32,5 @@ CREATE TABLE mbtest.sections (
   name character varying(30)
 );
 
-INSERT INTO mbtest.sections (section_id, name) values 
+INSERT INTO mbtest.sections (section_id, name) values
 (1, 'Section 1');

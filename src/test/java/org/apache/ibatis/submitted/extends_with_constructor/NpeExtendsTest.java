@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-/*
+/**
  * Test for NPE when using extends.
  *
  * @author poitrac
@@ -49,7 +49,7 @@ class NpeExtendsTest {
   }
 
   @Test
-  void testNoConstructorConfiguration() {
+  void noConstructorConfiguration() {
     Configuration configuration = new Configuration();
     configuration.addMapper(StudentMapper.class);
     configuration.addMapper(TeacherMapper.class);
@@ -57,7 +57,7 @@ class NpeExtendsTest {
   }
 
   @Test
-  void testWithConstructorConfiguration() {
+  void withConstructorConfiguration() {
     Configuration configuration = new Configuration();
     configuration.addMapper(StudentConstructorMapper.class);
     configuration.addMapper(TeacherMapper.class);
@@ -85,7 +85,7 @@ class NpeExtendsTest {
   }
 
   @Test
-  void testSelectWithTeacher() {
+  void selectWithTeacher() {
     SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryWithConstructor();
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       StudentConstructorMapper studentConstructorMapper = sqlSession.getMapper(StudentConstructorMapper.class);
@@ -96,7 +96,7 @@ class NpeExtendsTest {
   }
 
   @Test
-  void testSelectNoName() {
+  void selectNoName() {
     SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryWithConstructor();
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       StudentConstructorMapper studentConstructorMapper = sqlSession.getMapper(StudentConstructorMapper.class);

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+
+       Copyright 2009-2025 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          https://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.ibatis.immutable.ImmutableBlogMapper">
+
+    <resultMap id="immutableBlogResultMap" type="org.apache.ibatis.domain.blog.immutable.ImmutableBlog">
+        <constructor>
+            <idArg column="id"/>
+            <arg column="title" />
+            <arg resultMap="immutableAuthorResultMap" columnPrefix="author_"/>
+            <arg resultMap="immutablePostResultMap" columnPrefix="post_" />
+        </constructor>
+    </resultMap>
+
+    <resultMap id="immutableAuthorResultMap" type="org.apache.ibatis.domain.blog.immutable.ImmutableAuthor">
+        <constructor>
+            <idArg column="id" javaType="_int"/>
+            <arg column="username" javaType="String"/>
+            <arg column="password" javaType="String"/>
+            <arg column="email" javaType="String"/>
+            <arg column="bio" javaType="String"/>
+            <arg column="favorite_section"/>
+        </constructor>
+    </resultMap>
+
+    <resultMap id="immutablePostResultMap" type="org.apache.ibatis.domain.blog.immutable.ImmutablePost">
+        <constructor>
+            <idArg column="id" javaType="_int"/>
+            <arg javaType="org.apache.ibatis.domain.blog.immutable.ImmutableAuthor" resultMap="immutableAuthorResultMap" columnPrefix="author_"/>
+            <arg column="created_on" javaType="Date"/>
+            <arg column="section" javaType="org.apache.ibatis.domain.blog.Section"/>
+            <arg column="subject" javaType="String"/>
+            <arg column="body" javaType="String"/>
+            <arg javaType="java.util.List" resultMap="immutablePostCommentResultMap" columnPrefix="comment_" />
+            <arg javaType="java.util.List" resultMap="immutablePostTagResultMap" columnPrefix="tag_" />
+        </constructor>
+    </resultMap>
+
+    <resultMap id="immutablePostCommentResultMap" type="org.apache.ibatis.domain.blog.immutable.ImmutableComment">
+        <constructor>
+            <idArg column="id" javaType="_int"/>
+            <arg column="name" javaType="String"/>
+            <arg column="comment" javaType="String"/>
+        </constructor>
+    </resultMap>
+
+    <resultMap id="immutablePostTagResultMap" type="org.apache.ibatis.domain.blog.immutable.ImmutableTag">
+        <constructor>
+            <idArg column="id" javaType="_int"/>
+            <arg column="name" javaType="String"/>
+        </constructor>
+    </resultMap>
+
+    <resultMap id="immutableBlogWithoutPostsResultMap" type="org.apache.ibatis.domain.blog.immutable.ImmutableBlog">
+        <constructor>
+            <idArg column="id" javaType="_int"/>
+            <arg column="title" javaType="java.lang.String"/>
+            <arg javaType="org.apache.ibatis.domain.blog.immutable.ImmutableAuthor" resultMap="immutableAuthorResultMap" columnPrefix="author_"/>
+        </constructor>
+    </resultMap>
+
+    <resultMap id="immutableBlogWithPostsButNoCommentsOrTagsResultMap" type="org.apache.ibatis.domain.blog.immutable.ImmutableBlog">
+        <constructor>
+            <idArg column="id" javaType="_int"/>
+            <arg column="title" javaType="java.lang.String"/>
+            <arg javaType="org.apache.ibatis.domain.blog.immutable.ImmutableAuthor" resultMap="immutableAuthorResultMap" columnPrefix="author_"/>
+            <arg javaType="java.util.List" resultMap="immutablePostWithNoCommentsOrTagsResultMap" columnPrefix="post_" />
+        </constructor>
+    </resultMap>
+
+    <resultMap id="immutablePostWithNoCommentsOrTagsResultMap" type="org.apache.ibatis.domain.blog.immutable.ImmutablePost">
+        <constructor>
+            <idArg column="id" javaType="_int"/>
+            <arg javaType="org.apache.ibatis.domain.blog.immutable.ImmutableAuthor" resultMap="immutableAuthorResultMap" columnPrefix="author_"/>
+            <arg column="created_on" javaType="Date"/>
+            <arg column="section" javaType="org.apache.ibatis.domain.blog.Section"/>
+            <arg column="subject" javaType="String"/>
+            <arg column="body" javaType="String"/>
+        </constructor>
+    </resultMap>
+
+    <resultMap id="immutableBlogWithMissingConstructorResultMap" type="org.apache.ibatis.domain.blog.immutable.ImmutableBlog">
+        <constructor>
+            <idArg column="id" javaType="_int"/>
+            <arg column="title" javaType="java.lang.String"/>
+            <arg javaType="org.apache.ibatis.domain.blog.immutable.ImmutableAuthor" resultMap="immutableAuthorResultMap" columnPrefix="author_"/>
+            <arg javaType="java.util.List" resultMap="immutablePostWithMissingConstructor" columnPrefix="post_" />
+        </constructor>
+    </resultMap>
+
+    <resultMap id="immutablePostWithMissingConstructor" type="org.apache.ibatis.domain.blog.immutable.ImmutablePost">
+        <constructor>
+            <idArg column="id" javaType="_int"/>
+            <arg javaType="org.apache.ibatis.domain.blog.immutable.ImmutableAuthor" resultMap="immutableAuthorResultMap" columnPrefix="author_"/>
+            <arg column="created_on" javaType="Date"/>
+            <arg column="section" javaType="org.apache.ibatis.domain.blog.Section"/>
+            <arg column="subject" javaType="String"/>
+            <arg column="body" javaType="String"/>
+            <arg javaType="java.util.List" resultMap="immutablePostCommentResultMap" columnPrefix="comment_" />
+        </constructor>
+    </resultMap>
+
+    <sql id="authorColumns">
+        , a.id as author_id
+        , a.username as author_username
+        , a.password as author_password
+        , a.email as author_email
+        , a.bio as author_bio
+        , a.favourite_section as AUTHOR_favorite_section
+    </sql>
+
+    <sql id="postColumns">
+        , p.id as post_id
+        , p.blog_id as post_blog_id
+        , p.author_id as post_author_id
+        , p.created_on as post_created_on
+        , p.section as post_section
+        , p.subject as post_subject
+        , p.body as post_body
+        , p.draft as post_draft
+
+        , pa.id as post_author_id
+        , pa.username as post_author_username
+        , pa.password as post_author_password
+        , pa.email as post_author_email
+        , pa.bio as post_author_bio
+        , pa.favourite_section as post_author_favorite_section
+    </sql>
+
+    <sql id="commentColumns">
+        , c.id as post_comment_id
+        , c.name as post_comment_name
+        , c.comment as post_comment_comment
+    </sql>
+
+    <sql id="tagColumns">
+        , t.id as post_tag_id
+        , t.name as post_tag_name
+    </sql>
+
+    <sql id="allResultsJoined">
+        select b.*
+          <include refid="authorColumns"/>
+          <include refid="postColumns"/>
+          <include refid="commentColumns"/>
+          <include refid="tagColumns"/>
+        from Blog b
+          join Author a on b.author_id = a.id
+          join Post p on b.id = p.blog_id
+          join Author pa on p.author_id = pa.id
+          left join Comment c on c.post_id = p.id
+
+          left join Post_Tag pt on pt.post_id = p.id
+          left join Tag t on t.id = pt.tag_id
+    </sql>
+
+    <select id="retrieveFullImmutableBlog" parameterType="int" resultMap="immutableBlogResultMap" resultOrdered="true">
+        <include refid="allResultsJoined"/>
+        where b.id = #{id}
+    </select>
+
+    <select id="retrieveAllBlogsAndPostsJoined" resultMap="immutableBlogResultMap" resultOrdered="true">
+        <include refid="allResultsJoined"/>
+    </select>
+
+    <select id="retrieveAllBlogsWithoutPosts" resultMap="immutableBlogWithoutPostsResultMap" resultOrdered="true">
+        select b.*
+          <include refid="authorColumns"/>
+        from blog b
+          join Author a on b.author_id = a.id
+    </select>
+
+    <select id="retrieveAllBlogsWithPostsButNoCommentsOrTags" resultMap="immutableBlogWithPostsButNoCommentsOrTagsResultMap" resultOrdered="true">
+        select b.*
+          <include refid="authorColumns"/>
+          <include refid="postColumns"/>
+        from blog b
+          join Author a on b.author_id = a.id
+          join Post p on b.id = p.blog_id
+          join Author pa on p.author_id = pa.id
+    </select>
+
+    <select id="retrieveAllBlogsWithMissingConstructor" resultMap="immutableBlogWithMissingConstructorResultMap" resultOrdered="true">
+        select b.*
+          <include refid="authorColumns"/>
+          <include refid="postColumns"/>
+          <include refid="commentColumns"/>
+        from blog b
+          join Author a on b.author_id = a.id
+          join Post p on b.id = p.blog_id
+          join Author pa on p.author_id = pa.id
+          left join Comment c on c.post_id = p.id
+    </select>
+
+</mapper>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+       Copyright 2009-2025 the original author or authors.
+
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+
+          https://www.apache.org/licenses/LICENSE-2.0
+
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+
+-->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+  namespace="org.apache.ibatis.submitted.typebasedtypehandlerresolution.GloballyRegisteredHandlerMapper">
+
+  <resultMap id="userRM"
+    type="org.apache.ibatis.submitted.typebasedtypehandlerresolution.User">
+    <id property="id" column="id" />
+    <result property="strvalue" column="strvalue" />
+    <result property="intvalue" column="intvalue" />
+    <result property="strings" column="strings" />
+    <result property="integers" column="integers" />
+  </resultMap>
+
+  <select id="selectXml" resultMap="userRM"><![CDATA[
+    select id, strvalue, intvalue, strings, integers
+    from users where id = #{id}
+  ]]></select>
+
+  <insert id="insertXml"
+    parameterType="org.apache.ibatis.submitted.typebasedtypehandlerresolution.User"><![CDATA[
+    insert into users (id, strvalue, intvalue, strings, integers) values
+    (#{id}, #{strvalue}, #{intvalue}, #{strings}, #{integers})
+  ]]></insert>
+
+  <insert id="insertXmlWithoutParameterType"><![CDATA[
+    insert into users (id, strvalue, intvalue, strings, integers) values
+    (#{id}, #{strvalue}, #{intvalue}, #{strings}, #{integers})
+  ]]></insert>
+
+  <resultMap id="parentBeanRM_SingleParam" type="org.apache.ibatis.submitted.typebasedtypehandlerresolution.ParentBean">
+    <id property="id" column="id" />
+    <association property="user" column="strvalue" select="selectUserByStrvalue" />
+  </resultMap>
+
+  <select id="selectNestedUser_SingleParam" resultMap="parentBeanRM_SingleParam">
+    select id, strvalue, intvalue from users where id = #{id}
+  </select>
+
+  <select id="selectUserByStrvalue" parameterType="org.apache.ibatis.submitted.typebasedtypehandlerresolution.User" resultMap="userRM">
+    select id, strvalue, intvalue, strings, integers from users
+    where strvalue = #{strvalue}
+  </select>
+
+  <resultMap id="parentBeanRM_MultiParam" type="org.apache.ibatis.submitted.typebasedtypehandlerresolution.ParentBean">
+    <id property="id" column="id" />
+    <association property="user" column="{strvalue=strvalue,intvalue=intvalue}" select="selectUserByStrvalueAndIntvalue" />
+  </resultMap>
+
+  <select id="selectNestedUser_MultiParam" resultMap="parentBeanRM_MultiParam">
+    select id, strvalue, intvalue from users where id = #{id}
+  </select>
+
+  <select id="selectUserByStrvalueAndIntvalue" parameterType="org.apache.ibatis.submitted.typebasedtypehandlerresolution.User" resultMap="userRM">
+    select id, strvalue, intvalue, strings, integers from users
+    where strvalue = #{strvalue} and intvalue = #{intvalue}
+  </select>
+
+  <insert id="insertProducts" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+    insert into product (name) values
+    <foreach collection="list" item="product" separator=",">
+      (#{product.name})
+    </foreach>
+  </insert>
+
+  <insert id="insertProducts2" useGeneratedKeys="true" keyColumn="id" keyProperty="products.id">
+    insert into product (name) values
+    <foreach collection="products" item="product" separator=",">
+      (#{product.name})
+    </foreach>
+  </insert>
+</mapper>

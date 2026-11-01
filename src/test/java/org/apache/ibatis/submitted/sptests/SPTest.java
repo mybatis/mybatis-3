@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2025 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ class SPTest {
    * This test shows using a multi-property parameter.
    */
   @Test
-  void testAdderAsSelect() {
+  void adderAsSelect() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Parameter parameter = new Parameter();
       parameter.setAddend1(2);
@@ -80,7 +80,7 @@ class SPTest {
    * This test shows using a multi-property parameter.
    */
   @Test
-  void testAdderAsSelectDoubleCall1() {
+  void adderAsSelectDoubleCall1() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Parameter parameter = new Parameter();
       parameter.setAddend1(2);
@@ -106,7 +106,7 @@ class SPTest {
    * This test shows using a multi-property parameter.
    */
   @Test
-  void testAdderAsSelectDoubleCall2() {
+  void adderAsSelectDoubleCall2() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Parameter parameter = new Parameter();
       parameter.setAddend1(2);
@@ -132,7 +132,7 @@ class SPTest {
    * This test shows using a multi-property parameter.
    */
   @Test
-  void testAdderAsUpdate() {
+  void adderAsUpdate() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Parameter parameter = new Parameter();
       parameter.setAddend1(2);
@@ -153,7 +153,7 @@ class SPTest {
 
   // issue #145
   @Test
-  void testEchoDate() {
+  void echoDate() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       HashMap<String, Object> parameter = new HashMap<>();
       Date now = new Date();
@@ -162,8 +162,11 @@ class SPTest {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
       spMapper.echoDate(parameter);
 
-      java.sql.Date outDate = new java.sql.Date(now.getTime());
-      assertEquals(outDate.toString(), parameter.get("output date").toString());
+      // For DATE, DateOnlyTypeHandler is used.
+
+      // Cut-off time part
+      Date expected = new Date(java.sql.Date.valueOf(new java.sql.Date(now.getTime()).toLocalDate()).getTime());
+      assertEquals(expected, parameter.get("output date"));
     }
   }
 
@@ -172,7 +175,7 @@ class SPTest {
    * more intuitive (no pesky question marks), but a parameter map will work.
    */
   @Test
-  void testAdderAsUpdateWithParameterMap() {
+  void adderAsUpdateWithParameterMap() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Map<String, Object> parms = new HashMap<>();
       parms.put("addend1", 3);
@@ -197,7 +200,7 @@ class SPTest {
    * This test shows using a single value parameter.
    */
   @Test
-  void testCallWithResultSet1() {
+  void callWithResultSet1() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -213,7 +216,7 @@ class SPTest {
    * This test shows using a single value parameter.
    */
   @Test
-  void testCallWithResultSet2() {
+  void callWithResultSet2() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -231,7 +234,7 @@ class SPTest {
    * This test shows using a Map parameter.
    */
   @Test
-  void testCallWithResultSet3() {
+  void callWithResultSet3() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -255,7 +258,7 @@ class SPTest {
    * This test shows using a Map parameter.
    */
   @Test
-  void testCallWithResultSet4() {
+  void callWithResultSet4() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -279,7 +282,7 @@ class SPTest {
    * @throws SQLException
    */
   @Test
-  void testGetNamesWithArray() throws SQLException {
+  void getNamesWithArray() throws SQLException {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -301,7 +304,7 @@ class SPTest {
    * @throws SQLException
    */
   @Test
-  void testGetNamesAndItems() {
+  void getNamesAndItems() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -319,7 +322,7 @@ class SPTest {
    * This test shows using annotations for stored procedures.
    */
   @Test
-  void testAdderAsSelectAnnotated() {
+  void adderAsSelectAnnotated() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Parameter parameter = new Parameter();
       parameter.setAddend1(2);
@@ -339,7 +342,7 @@ class SPTest {
    * This test shows using annotations for stored procedures.
    */
   @Test
-  void testAdderAsSelectDoubleCallAnnotated1() {
+  void adderAsSelectDoubleCallAnnotated1() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Parameter parameter = new Parameter();
       parameter.setAddend1(2);
@@ -369,7 +372,7 @@ class SPTest {
    * This test shows using annotations for stored procedures.
    */
   @Test
-  void testAdderAsSelectDoubleCallAnnotated2() {
+  void adderAsSelectDoubleCallAnnotated2() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Parameter parameter = new Parameter();
       parameter.setAddend1(2);
@@ -397,7 +400,7 @@ class SPTest {
    * This test shows using annotations for stored procedures.
    */
   @Test
-  void testAdderAsUpdateAnnotated() {
+  void adderAsUpdateAnnotated() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Parameter parameter = new Parameter();
       parameter.setAddend1(2);
@@ -424,7 +427,7 @@ class SPTest {
    * This test shows using annotations for stored procedures.
    */
   @Test
-  void testCallWithResultSet1Annotated() {
+  void callWithResultSet1Annotated() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -442,7 +445,7 @@ class SPTest {
    * This test shows using annotations for stored procedures and using a resultMap in XML.
    */
   @Test
-  void testCallWithResultSet1_a2() {
+  void callWithResultSet1A2() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -460,7 +463,7 @@ class SPTest {
    * This test shows using annotations for stored procedures.
    */
   @Test
-  void testCallWithResultSet2_a1() {
+  void callWithResultSet2A1() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -480,7 +483,7 @@ class SPTest {
    * This test shows using annotations for stored procedures and using a resultMap in XML.
    */
   @Test
-  void testCallWithResultSet2_a2() {
+  void callWithResultSet2A2() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -500,7 +503,7 @@ class SPTest {
    * This test shows using annotations for stored procedures.
    */
   @Test
-  void testCallWithResultSet3_a1() {
+  void callWithResultSet3A1() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -526,7 +529,7 @@ class SPTest {
    * This test shows using annotations for stored procedures and using a resultMap in XML.
    */
   @Test
-  void testCallWithResultSet3_a2() {
+  void callWithResultSet3A2() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -552,7 +555,7 @@ class SPTest {
    * This test shows using annotations for stored procedures.
    */
   @Test
-  void testCallWithResultSet4_a1() {
+  void callWithResultSet4A1() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -578,7 +581,7 @@ class SPTest {
    * This test shows using annotations for stored procedures and using a resultMap in XML.
    */
   @Test
-  void testCallWithResultSet4_a2() {
+  void callWithResultSet4A2() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -602,7 +605,7 @@ class SPTest {
    * This test shows using annotations for stored procedures and using a resultMap in XML
    */
   @Test
-  void testCallLowHighWithResultSet() {
+  void callLowHighWithResultSet() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
       List<Name> names = spMapper.getNamesAnnotatedLowHighWithXMLResultMap(1, 1);
@@ -618,7 +621,7 @@ class SPTest {
    * @throws SQLException
    */
   @Test
-  void testGetNamesWithArray_a1() throws SQLException {
+  void getNamesWithArrayA1() throws SQLException {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -642,7 +645,7 @@ class SPTest {
    * @throws SQLException
    */
   @Test
-  void testGetNamesWithArray_a2() throws SQLException {
+  void getNamesWithArrayA2() throws SQLException {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -666,7 +669,7 @@ class SPTest {
    * @throws SQLException
    */
   @Test
-  void testGetNamesAndItems_a2() {
+  void getNamesAndItemsA2() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -678,7 +681,7 @@ class SPTest {
   }
 
   @Test
-  void testGetNamesAndItems_a3() {
+  void getNamesAndItemsA3() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -690,7 +693,7 @@ class SPTest {
   }
 
   @Test
-  void testGetNamesAndItemsLinked() {
+  void getNamesAndItemsLinked() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -704,7 +707,7 @@ class SPTest {
   }
 
   @Test
-  void testGetNamesAndItemsLinkedWithNoMatchingInfo() {
+  void getNamesAndItemsLinkedWithNoMatchingInfo() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
 
@@ -715,7 +718,7 @@ class SPTest {
   }
 
   @Test
-  void testMultipleForeignKeys() {
+  void multipleForeignKeys() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       SPMapper spMapper = sqlSession.getMapper(SPMapper.class);
       List<Book> books = spMapper.getBookAndGenre();

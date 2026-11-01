@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2022 the original author or authors.
+ *    Copyright 2009-2024 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.submitted.serializecircular;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import java.io.Reader;
 
 import org.apache.ibatis.BaseDataTest;
@@ -27,32 +29,40 @@ import org.junit.jupiter.api.Test;
 class SerializeCircularTest {
 
   @Test
-  void serializeAndDeserializeObjectsWithAggressiveLazyLoadingWithoutPreloadingAttribute() throws Exception {
-    try (SqlSession sqlSession = createSessionWithAggressiveLazyLoading()) {
-      testSerializeWithoutPreloadingAttribute(sqlSession);
-    }
+  void serializeAndDeserializeObjectsWithAggressiveLazyLoadingWithoutPreloadingAttribute() {
+    assertDoesNotThrow(() -> {
+      try (SqlSession sqlSession = createSessionWithAggressiveLazyLoading()) {
+        testSerializeWithoutPreloadingAttribute(sqlSession);
+      }
+    });
   }
 
   @Test
-  void serializeAndDeserializeObjectsWithAggressiveLazyLoadingWithPreloadingAttribute() throws Exception {
-    try (SqlSession sqlSession = createSessionWithAggressiveLazyLoading()) {
-      testSerializeWithPreloadingAttribute(sqlSession);
-    }
+  void serializeAndDeserializeObjectsWithAggressiveLazyLoadingWithPreloadingAttribute() {
+    assertDoesNotThrow(() -> {
+      try (SqlSession sqlSession = createSessionWithAggressiveLazyLoading()) {
+        testSerializeWithPreloadingAttribute(sqlSession);
+      }
+    });
   }
 
   @Test
-  void serializeAndDeserializeObjectsWithoutAggressiveLazyLoadingWithoutPreloadingAttribute() throws Exception {
-    try (SqlSession sqlSession = createSessionWithoutAggressiveLazyLoading()) {
-      // expected problem with deserializing
-      testSerializeWithoutPreloadingAttribute(sqlSession);
-    }
+  void serializeAndDeserializeObjectsWithoutAggressiveLazyLoadingWithoutPreloadingAttribute() {
+    assertDoesNotThrow(() -> {
+      try (SqlSession sqlSession = createSessionWithoutAggressiveLazyLoading()) {
+        // expected problem with deserializing
+        testSerializeWithoutPreloadingAttribute(sqlSession);
+      }
+    });
   }
 
   @Test
-  void serializeAndDeserializeObjectsWithoutAggressiveLazyLoadingWithPreloadingAttribute() throws Exception {
-    try (SqlSession sqlSession = createSessionWithoutAggressiveLazyLoading()) {
-      testSerializeWithPreloadingAttribute(sqlSession);
-    }
+  void serializeAndDeserializeObjectsWithoutAggressiveLazyLoadingWithPreloadingAttribute() {
+    assertDoesNotThrow(() -> {
+      try (SqlSession sqlSession = createSessionWithoutAggressiveLazyLoading()) {
+        testSerializeWithPreloadingAttribute(sqlSession);
+      }
+    });
   }
 
   private SqlSession createSessionWithoutAggressiveLazyLoading() throws Exception {

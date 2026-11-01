@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@ package org.apache.ibatis.submitted.lazy_deserialize;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -63,7 +63,7 @@ class LazyDeserializeTest {
   }
 
   @Test
-  void testLoadLazyDeserialize() throws Exception {
+  void loadLazyDeserialize() throws Exception {
     factory.getConfiguration().setConfigurationFactory(this.getClass());
     try (SqlSession session = factory.openSession()) {
       final Mapper mapper = session.getMapper(Mapper.class);
@@ -80,18 +80,14 @@ class LazyDeserializeTest {
   }
 
   @Test
-  void testLoadLazyDeserializeWithoutConfigurationFactory() throws Exception {
+  void loadLazyDeserializeWithoutConfigurationFactory() throws Exception {
     try (SqlSession session = factory.openSession()) {
       final Mapper mapper = session.getMapper(Mapper.class);
       final LazyObjectFoo foo = mapper.loadFoo(FOO_ID);
       final byte[] serializedFoo = this.serializeFoo(foo);
       final LazyObjectFoo deserializedFoo = this.deserializeFoo(serializedFoo);
-      try {
-        deserializedFoo.getLazyObjectBar();
-        fail();
-      } catch (ExecutorException e) {
-        assertTrue(e.getMessage().contains("Cannot get Configuration as configuration factory was not set."));
-      }
+      ExecutorException e = assertThrows(ExecutorException.class, () -> deserializedFoo.getLazyObjectBar());
+      assertTrue(e.getMessage().contains("Cannot get Configuration as configuration factory was not set."));
     }
   }
 

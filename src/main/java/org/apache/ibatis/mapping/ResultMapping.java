@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,14 +16,12 @@
 package org.apache.ibatis.mapping;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
-import org.apache.ibatis.type.TypeHandlerRegistry;
 
 /**
  * @author Clinton Begin
@@ -70,6 +68,25 @@ public class ResultMapping {
       resultMapping.flags = new ArrayList<>();
       resultMapping.composites = new ArrayList<>();
       resultMapping.lazy = configuration.isLazyLoadingEnabled();
+    }
+
+    public Builder(ResultMapping otherMapping) {
+      this(otherMapping.configuration, otherMapping.property);
+
+      resultMapping.flags.addAll(otherMapping.flags);
+      resultMapping.composites.addAll(otherMapping.composites);
+
+      resultMapping.column = otherMapping.column;
+      resultMapping.javaType = otherMapping.javaType;
+      resultMapping.jdbcType = otherMapping.jdbcType;
+      resultMapping.typeHandler = otherMapping.typeHandler;
+      resultMapping.nestedResultMapId = otherMapping.nestedResultMapId;
+      resultMapping.nestedQueryId = otherMapping.nestedQueryId;
+      resultMapping.notNullColumns = otherMapping.notNullColumns;
+      resultMapping.columnPrefix = otherMapping.columnPrefix;
+      resultMapping.resultSet = otherMapping.resultSet;
+      resultMapping.foreignColumn = otherMapping.foreignColumn;
+      resultMapping.lazy = otherMapping.lazy;
     }
 
     public Builder javaType(Class<?> javaType) {
@@ -134,9 +151,8 @@ public class ResultMapping {
 
     public ResultMapping build() {
       // lock down collections
-      resultMapping.flags = Collections.unmodifiableList(resultMapping.flags);
-      resultMapping.composites = Collections.unmodifiableList(resultMapping.composites);
-      resolveTypeHandler();
+      resultMapping.flags = List.copyOf(resultMapping.flags);
+      resultMapping.composites = List.copyOf(resultMapping.composites);
       validate();
       return resultMapping;
     }
@@ -147,12 +163,7 @@ public class ResultMapping {
         throw new IllegalStateException(
             "Cannot define both nestedQueryId and nestedResultMapId in property " + resultMapping.property);
       }
-      // Issue #5: there should be no mappings without typehandler
-      if (resultMapping.nestedQueryId == null && resultMapping.nestedResultMapId == null
-          && resultMapping.typeHandler == null) {
-        throw new IllegalStateException("No typehandler found for property " + resultMapping.property);
-      }
-      // Issue #4 and GH #39: column is optional only in nested resultmaps but not in the rest
+      // Issue #4 and GH #39: column is optional only in nested resultMaps but not in the rest
       if (resultMapping.nestedResultMapId == null && resultMapping.column == null
           && resultMapping.composites.isEmpty()) {
         throw new IllegalStateException("Mapping is missing column attribute for property " + resultMapping.property);
@@ -170,14 +181,6 @@ public class ResultMapping {
           throw new IllegalStateException(
               "There should be the same number of columns and foreignColumns in property " + resultMapping.property);
         }
-      }
-    }
-
-    private void resolveTypeHandler() {
-      if (resultMapping.typeHandler == null && resultMapping.javaType != null) {
-        Configuration configuration = resultMapping.configuration;
-        TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
-        resultMapping.typeHandler = typeHandlerRegistry.getTypeHandler(resultMapping.javaType, resultMapping.jdbcType);
       }
     }
 
@@ -243,6 +246,7 @@ public class ResultMapping {
     return foreignColumn;
   }
 
+  @Deprecated
   public void setForeignColumn(String foreignColumn) {
     this.foreignColumn = foreignColumn;
   }
@@ -251,6 +255,7 @@ public class ResultMapping {
     return lazy;
   }
 
+  @Deprecated
   public void setLazy(boolean lazy) {
     this.lazy = lazy;
   }

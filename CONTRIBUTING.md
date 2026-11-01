@@ -12,12 +12,20 @@ Please use [the mailing list](https://groups.google.com/group/mybatis-user) inst
 - It is a good idea to discuss your changes on [the mailing list](https://groups.google.com/group/mybatis-user) to get feedback from the community.
 - If you have a patch with unit tests, send a pull request. Please see the [Contributing code](CONTRIBUTING.md#contributing-code) section.
 
-
 ## Improving documentation
 
 - Documentations are placed under [src/site](https://github.com/mybatis/mybatis-3/tree/master/src/site) directory in [the xdoc format](https://maven.apache.org/doxia/references/xdoc-format.html), so it is basically the same as creating a patch to contribute documentation changes. Please see the [Contributing code](CONTRIBUTING.md#contributing-code) section.
 
 ## Contributing code
+
+### Formatting
+
+Mybatis-core is now being auto formatted.  Given nature of some code logic with mybatis, it is more appropriate to force a formatting structure manually for snippets such as sql statements.  To do so, add following blocks around code.
+
+- ```// @formatter:off``` to start the block of unformatted code
+- ```// @formatter:on``` to end the block of unformatted code
+
+If comment sections need same behaviour such as javadocs, note that the entire block must be around entire comment as direct usage does not properly indicate that formatter treats it all as one comment block regardless.
 
 ### Copyright and License
 

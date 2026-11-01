@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,10 +19,7 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -33,6 +30,7 @@ import org.apache.ibatis.builder.CacheRefResolver;
 import org.apache.ibatis.builder.IncompleteElementException;
 import org.apache.ibatis.builder.MapperBuilderAssistant;
 import org.apache.ibatis.builder.ResultMapResolver;
+import org.apache.ibatis.builder.ResultMappingConstructorResolver;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.io.Resources;
@@ -59,8 +57,9 @@ public class XMLMapperBuilder extends BaseBuilder {
   private final MapperBuilderAssistant builderAssistant;
   private final Map<String, XNode> sqlFragments;
   private final String resource;
+  private Class<?> mapperClass;
 
-  @Deprecated
+  @Deprecated(since = "3.6.0", forRemoval = true)
   public XMLMapperBuilder(Reader reader, Configuration configuration, String resource, Map<String, XNode> sqlFragments,
       String namespace) {
     this(reader, configuration, resource, sqlFragments);
@@ -72,6 +71,12 @@ public class XMLMapperBuilder extends BaseBuilder {
       Map<String, XNode> sqlFragments) {
     this(new XPathParser(reader, true, configuration.getVariables(), new XMLMapperEntityResolver()), configuration,
         resource, sqlFragments);
+  }
+
+  public XMLMapperBuilder(InputStream inputStream, Configuration configuration, String resource,
+      Map<String, XNode> sqlFragments, Class<?> mapperClass) {
+    this(inputStream, configuration, resource, sqlFragments, mapperClass.getName());
+    this.mapperClass = mapperClass;
   }
 
   public XMLMapperBuilder(InputStream inputStream, Configuration configuration, String resource,
@@ -101,10 +106,9 @@ public class XMLMapperBuilder extends BaseBuilder {
       configuration.addLoadedResource(resource);
       bindMapperForNamespace();
     }
-
-    parsePendingResultMaps();
-    parsePendingCacheRefs();
-    parsePendingStatements();
+    configuration.parsePendingResultMaps(false);
+    configuration.parsePendingCacheRefs(false);
+    configuration.parsePendingStatements(false);
   }
 
   public XNode getSqlFragment(String refid) {
@@ -139,56 +143,11 @@ public class XMLMapperBuilder extends BaseBuilder {
   private void buildStatementFromContext(List<XNode> list, String requiredDatabaseId) {
     for (XNode context : list) {
       final XMLStatementBuilder statementParser = new XMLStatementBuilder(configuration, builderAssistant, context,
-          requiredDatabaseId);
+          requiredDatabaseId, mapperClass);
       try {
         statementParser.parseStatementNode();
       } catch (IncompleteElementException e) {
         configuration.addIncompleteStatement(statementParser);
-      }
-    }
-  }
-
-  private void parsePendingResultMaps() {
-    Collection<ResultMapResolver> incompleteResultMaps = configuration.getIncompleteResultMaps();
-    synchronized (incompleteResultMaps) {
-      Iterator<ResultMapResolver> iter = incompleteResultMaps.iterator();
-      while (iter.hasNext()) {
-        try {
-          iter.next().resolve();
-          iter.remove();
-        } catch (IncompleteElementException e) {
-          // ResultMap is still missing a resource...
-        }
-      }
-    }
-  }
-
-  private void parsePendingCacheRefs() {
-    Collection<CacheRefResolver> incompleteCacheRefs = configuration.getIncompleteCacheRefs();
-    synchronized (incompleteCacheRefs) {
-      Iterator<CacheRefResolver> iter = incompleteCacheRefs.iterator();
-      while (iter.hasNext()) {
-        try {
-          iter.next().resolveCacheRef();
-          iter.remove();
-        } catch (IncompleteElementException e) {
-          // Cache ref is still missing a resource...
-        }
-      }
-    }
-  }
-
-  private void parsePendingStatements() {
-    Collection<XMLStatementBuilder> incompleteStatements = configuration.getIncompleteStatements();
-    synchronized (incompleteStatements) {
-      Iterator<XMLStatementBuilder> iter = incompleteStatements.iterator();
-      while (iter.hasNext()) {
-        try {
-          iter.next().parseStatementNode();
-          iter.remove();
-        } catch (IncompleteElementException e) {
-          // Statement is still missing a resource...
-        }
       }
     }
   }
@@ -259,7 +218,7 @@ public class XMLMapperBuilder extends BaseBuilder {
   }
 
   private ResultMap resultMapElement(XNode resultMapNode) {
-    return resultMapElement(resultMapNode, Collections.emptyList(), null);
+    return resultMapElement(resultMapNode, List.of(), null);
   }
 
   private ResultMap resultMapElement(XNode resultMapNode, List<ResultMapping> additionalResultMappings,
@@ -271,12 +230,17 @@ public class XMLMapperBuilder extends BaseBuilder {
     if (typeClass == null) {
       typeClass = inheritEnclosingType(resultMapNode, enclosingType);
     }
+
+    String id = resultMapNode.getStringAttribute("id", resultMapNode::getValueBasedIdentifier);
+    String extend = resultMapNode.getStringAttribute("extends");
+    Boolean autoMapping = resultMapNode.getBooleanAttribute("autoMapping");
+
     Discriminator discriminator = null;
     List<ResultMapping> resultMappings = new ArrayList<>(additionalResultMappings);
     List<XNode> resultChildren = resultMapNode.getChildren();
     for (XNode resultChild : resultChildren) {
       if ("constructor".equals(resultChild.getName())) {
-        processConstructorElement(resultChild, typeClass, resultMappings);
+        processConstructorElement(resultChild, typeClass, resultMappings, id);
       } else if ("discriminator".equals(resultChild.getName())) {
         discriminator = processDiscriminatorElement(resultChild, typeClass, resultMappings);
       } else {
@@ -287,9 +251,7 @@ public class XMLMapperBuilder extends BaseBuilder {
         resultMappings.add(buildResultMappingFromContext(resultChild, typeClass, flags));
       }
     }
-    String id = resultMapNode.getStringAttribute("id", resultMapNode.getValueBasedIdentifier());
-    String extend = resultMapNode.getStringAttribute("extends");
-    Boolean autoMapping = resultMapNode.getBooleanAttribute("autoMapping");
+
     ResultMapResolver resultMapResolver = new ResultMapResolver(builderAssistant, id, typeClass, extend, discriminator,
         resultMappings, autoMapping);
     try {
@@ -313,16 +275,24 @@ public class XMLMapperBuilder extends BaseBuilder {
     return null;
   }
 
-  private void processConstructorElement(XNode resultChild, Class<?> resultType, List<ResultMapping> resultMappings) {
+  private void processConstructorElement(XNode resultChild, Class<?> resultType, List<ResultMapping> resultMappings,
+      String id) {
     List<XNode> argChildren = resultChild.getChildren();
+
+    final List<ResultMapping> mappings = new ArrayList<>();
     for (XNode argChild : argChildren) {
       List<ResultFlag> flags = new ArrayList<>();
       flags.add(ResultFlag.CONSTRUCTOR);
       if ("idArg".equals(argChild.getName())) {
         flags.add(ResultFlag.ID);
       }
-      resultMappings.add(buildResultMappingFromContext(argChild, resultType, flags));
+
+      mappings.add(buildResultMappingFromContext(argChild, resultType, flags));
     }
+
+    final ResultMappingConstructorResolver resolver = new ResultMappingConstructorResolver(configuration, mappings,
+        resultType, id);
+    resultMappings.addAll(resolver.resolveWithConstructor());
   }
 
   private Discriminator processDiscriminatorElement(XNode context, Class<?> resultType,
@@ -338,7 +308,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     for (XNode caseChild : context.getChildren()) {
       String value = caseChild.getStringAttribute("value");
       String resultMap = caseChild.getStringAttribute("resultMap",
-          processNestedResultMappings(caseChild, resultMappings, resultType));
+          () -> processNestedResultMappings(caseChild, resultMappings, resultType));
       discriminatorMap.put(value, resultMap);
     }
     return builderAssistant.buildDiscriminator(resultType, column, javaTypeClass, jdbcTypeEnum, typeHandlerClass,
@@ -390,7 +360,7 @@ public class XMLMapperBuilder extends BaseBuilder {
     String jdbcType = context.getStringAttribute("jdbcType");
     String nestedSelect = context.getStringAttribute("select");
     String nestedResultMap = context.getStringAttribute("resultMap",
-        () -> processNestedResultMappings(context, Collections.emptyList(), resultType));
+        () -> processNestedResultMappings(context, List.of(), resultType));
     String notNullColumn = context.getStringAttribute("notNullColumn");
     String columnPrefix = context.getStringAttribute("columnPrefix");
     String typeHandler = context.getStringAttribute("typeHandler");
