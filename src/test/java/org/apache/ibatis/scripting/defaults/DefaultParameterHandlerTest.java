@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -81,13 +81,8 @@ class DefaultParameterHandlerTest {
 
     PreparedStatement ps = mock(PreparedStatement.class);
     when(ps.getParameterMetaData()).thenReturn(mock(ParameterMetaData.class));
-    try {
-      defaultParameterHandler.setParameters(ps);
-      Assertions.fail("Should have thrown TypeException");
-    } catch (Exception e) {
-      Assertions.assertTrue(e instanceof TypeException, "expected TypeException");
-      Assertions.assertTrue(e.getMessage().contains("mapping: ParameterMapping"));
-    }
+    TypeException e = Assertions.assertThrows(TypeException.class, () -> defaultParameterHandler.setParameters(ps));
+    Assertions.assertTrue(e.getMessage().contains("mapping: ParameterMapping"));
 
   }
 

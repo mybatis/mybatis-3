@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -94,6 +94,7 @@ class XmlConfigBuilderTest {
       assertNull(config.getConfigurationFactory());
       assertFalse(config.isShrinkWhitespacesInSql());
       assertFalse(config.isArgNameBasedConstructorAutoMapping());
+      assertFalse(config.isIgnoreParameterMetaData());
     } finally {
       // System.clearProperty(XPathParser.KEY_USE_XSD);
     }
@@ -133,6 +134,7 @@ class XmlConfigBuilderTest {
       assertEquals(String.class.getName(), config.getConfigurationFactory().getName());
       assertTrue(config.isShrinkWhitespacesInSql());
       assertTrue(config.isArgNameBasedConstructorAutoMapping());
+      assertTrue(config.isIgnoreParameterMetaData());
 
       assertEquals(Author.class, config.getTypeAliasRegistry().getTypeAliases().get("blogauthor"));
       assertEquals(Blog.class, config.getTypeAliasRegistry().getTypeAliases().get("blog"));

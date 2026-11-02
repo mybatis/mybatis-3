@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@ package org.apache.ibatis.reflection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.List;
 import java.util.Map;
@@ -39,16 +39,12 @@ class MetaClassTest {
 
   @Test
   void shouldThrowReflectionExceptionGetGetterType() {
-    try {
-      ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
-      MetaClass meta = MetaClass.forClass(RichType.class, reflectorFactory);
-      meta.getGetterType("aString");
-      fail("should have thrown ReflectionException");
-    } catch (ReflectionException expected) {
-      assertEquals(
-          "There is no getter for property named \'aString\' in \'class org.apache.ibatis.domain.misc.RichType\'",
-          expected.getMessage());
-    }
+    ReflectorFactory reflectorFactory = new DefaultReflectorFactory();
+    MetaClass meta = MetaClass.forClass(RichType.class, reflectorFactory);
+    ReflectionException expected = assertThrows(ReflectionException.class, () -> meta.getGetterType("aString"));
+    assertEquals(
+        "There is no getter for property named \'aString\' in \'class org.apache.ibatis.domain.misc.RichType\'",
+        expected.getMessage());
   }
 
   @Test

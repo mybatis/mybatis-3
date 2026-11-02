@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,8 +18,8 @@ package org.apache.ibatis.submitted.typehandler;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.Reader;
 import java.sql.Time;
@@ -210,27 +210,27 @@ class TypeHandlerTest {
   @Test
   void shouldThrowProperExceptionWhenNoHandlerFoundForParam() {
     addMapper();
-    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Mapper mapper = sqlSession.getMapper(Mapper.class);
-      mapper.insertVague(new VagueBean());
-      fail("Should throw exception");
-    } catch (Exception e) {
-      assertThat(e).cause().isExactlyInstanceOf(TypeException.class).hasMessage(
-          "Could not find type handler for Java type '" + VagueBean.class.getName() + "' nor JDBC type 'OTHER'");
-    }
+    Exception e = assertThrows(Exception.class, () -> {
+      try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+        Mapper mapper = sqlSession.getMapper(Mapper.class);
+        mapper.insertVague(new VagueBean());
+      }
+    });
+    assertThat(e).cause().isExactlyInstanceOf(TypeException.class).hasMessage(
+        "Could not find type handler for Java type '" + VagueBean.class.getName() + "' nor JDBC type 'OTHER'");
   }
 
   @Test
   void shouldThrowProperExceptionWhenNoHandlerFoundForResult() {
     addMapper();
-    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Mapper mapper = sqlSession.getMapper(Mapper.class);
-      mapper.selectVague(1);
-      fail("Should throw exception");
-    } catch (Exception e) {
-      assertThat(e).cause().isExactlyInstanceOf(ExecutorException.class)
-          .hasMessage("No type handler found for 'java.util.Set<?>' and JDBC type 'OTHER'");
-    }
+    Exception e = assertThrows(Exception.class, () -> {
+      try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+        Mapper mapper = sqlSession.getMapper(Mapper.class);
+        mapper.selectVague(1);
+      }
+    });
+    assertThat(e).cause().isExactlyInstanceOf(ExecutorException.class)
+        .hasMessage("No type handler found for 'java.util.Set<?>' and JDBC type 'OTHER'");
   }
 
   @Test

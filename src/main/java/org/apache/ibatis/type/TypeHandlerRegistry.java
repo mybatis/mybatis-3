@@ -104,41 +104,41 @@ public final class TypeHandlerRegistry {
     register(new Type[] { Float.class, float.class }, new JdbcType[] { null }, FloatTypeHandler.INSTANCE);
     register(new Type[] { Double.class, double.class }, new JdbcType[] { null }, DoubleTypeHandler.INSTANCE);
     register(new Type[] { Character.class, char.class }, new JdbcType[] { null }, new CharacterTypeHandler());
-    register(String.class, null, StringTypeHandler.INSTANCE);
-    register(Reader.class, null, new ClobReaderTypeHandler());
-    register(BigInteger.class, null, new BigIntegerTypeHandler());
-    register(BigDecimal.class, null, BigDecimalTypeHandler.INSTANCE);
-    register(InputStream.class, null, new BlobInputStreamTypeHandler());
-    register(Byte[].class, null, new ByteObjectArrayTypeHandler());
-    register(byte[].class, null, ByteArrayTypeHandler.INSTANCE);
-    register(Date.class, null, DateTypeHandler.INSTANCE);
-    register(java.sql.Date.class, null, new SqlDateTypeHandler());
-    register(Time.class, null, new SqlTimeTypeHandler());
-    register(Timestamp.class, null, new SqlTimestampTypeHandler());
-    register(Instant.class, null, new InstantTypeHandler());
-    register(LocalDateTime.class, null, new LocalDateTimeTypeHandler());
-    register(LocalDate.class, null, new LocalDateTypeHandler());
-    register(LocalTime.class, null, new LocalTimeTypeHandler());
-    register(OffsetDateTime.class, null, new OffsetDateTimeTypeHandler());
-    register(OffsetTime.class, null, new OffsetTimeTypeHandler());
-    register(ZonedDateTime.class, null, new ZonedDateTimeTypeHandler());
-    register(Month.class, null, new MonthTypeHandler());
-    register(Year.class, null, new YearTypeHandler());
-    register(YearMonth.class, null, new YearMonthTypeHandler());
-    register(JapaneseDate.class, null, new JapaneseDateTypeHandler());
+    register((Type) String.class, null, StringTypeHandler.INSTANCE);
+    register((Type) Reader.class, null, new ClobReaderTypeHandler());
+    register((Type) BigInteger.class, null, new BigIntegerTypeHandler());
+    register((Type) BigDecimal.class, null, BigDecimalTypeHandler.INSTANCE);
+    register((Type) InputStream.class, null, new BlobInputStreamTypeHandler());
+    register((Type) Byte[].class, null, new ByteObjectArrayTypeHandler());
+    register((Type) byte[].class, null, ByteArrayTypeHandler.INSTANCE);
+    register((Type) Date.class, null, DateTypeHandler.INSTANCE);
+    register((Type) java.sql.Date.class, null, new SqlDateTypeHandler());
+    register((Type) Time.class, null, new SqlTimeTypeHandler());
+    register((Type) Timestamp.class, null, new SqlTimestampTypeHandler());
+    register((Type) Instant.class, null, new InstantTypeHandler());
+    register((Type) LocalDateTime.class, null, new LocalDateTimeTypeHandler());
+    register((Type) LocalDate.class, null, new LocalDateTypeHandler());
+    register((Type) LocalTime.class, null, new LocalTimeTypeHandler());
+    register((Type) OffsetDateTime.class, null, new OffsetDateTimeTypeHandler());
+    register((Type) OffsetTime.class, null, new OffsetTimeTypeHandler());
+    register((Type) ZonedDateTime.class, null, new ZonedDateTimeTypeHandler());
+    register((Type) Month.class, null, new MonthTypeHandler());
+    register((Type) Year.class, null, new YearTypeHandler());
+    register((Type) YearMonth.class, null, new YearMonthTypeHandler());
+    register((Type) JapaneseDate.class, null, new JapaneseDateTypeHandler());
 
     // These type handlers are used only for specific combinations of Java type and JDBC type.
-    register(String.class, JdbcType.CLOB, ClobTypeHandler.INSTANCE);
-    register(String.class, JdbcType.NCLOB, NClobTypeHandler.INSTANCE);
+    register((Type) String.class, JdbcType.CLOB, ClobTypeHandler.INSTANCE);
+    register((Type) String.class, JdbcType.NCLOB, NClobTypeHandler.INSTANCE);
     register(new Type[] { String.class }, new JdbcType[] { JdbcType.NCHAR, JdbcType.NVARCHAR, JdbcType.LONGNVARCHAR },
         NStringTypeHandler.INSTANCE);
     register(new Type[] { Byte[].class }, new JdbcType[] { JdbcType.BLOB, JdbcType.LONGVARBINARY },
         new BlobByteObjectArrayTypeHandler());
     register(new Type[] { byte[].class }, new JdbcType[] { JdbcType.BLOB, JdbcType.LONGVARBINARY },
         BlobTypeHandler.INSTANCE);
-    register(Date.class, JdbcType.DATE, DateOnlyTypeHandler.INSTANCE);
-    register(Date.class, JdbcType.TIME, TimeOnlyTypeHandler.INSTANCE);
-    register(String.class, JdbcType.SQLXML, new SqlxmlTypeHandler());
+    register((Type) Date.class, JdbcType.DATE, DateOnlyTypeHandler.INSTANCE);
+    register((Type) Date.class, JdbcType.TIME, TimeOnlyTypeHandler.INSTANCE);
+    register((Type) String.class, JdbcType.SQLXML, new SqlxmlTypeHandler());
 
     // Type handlers in the `jdbcTypeHandlerMap` are used when Java type is unknown or
     // as a last resort when no matching handler is found for the target Java type.
@@ -399,6 +399,14 @@ public final class TypeHandlerRegistry {
   }
 
   // java type + jdbc type + handler
+
+  /**
+   * @deprecated Use {@link #register(Type, JdbcType, TypeHandler)} instead.
+   */
+  @Deprecated(since = "3.6.1", forRemoval = true)
+  public void register(Class<?> mappedJavaType, JdbcType mappedJdbcType, TypeHandler<?> handler) {
+    register((Type) mappedJavaType, mappedJdbcType, handler);
+  }
 
   public void register(Type mappedJavaType, JdbcType mappedJdbcType, TypeHandler<?> handler) {
     register(new Type[] { mappedJavaType }, new JdbcType[] { mappedJdbcType }, handler);

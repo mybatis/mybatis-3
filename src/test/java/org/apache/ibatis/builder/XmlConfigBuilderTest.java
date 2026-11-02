@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -110,6 +110,7 @@ class XmlConfigBuilderTest {
       assertThat(config.isArgNameBasedConstructorAutoMapping()).isFalse();
       assertThat(config.getDefaultSqlProviderType()).isNull();
       assertThat(config.isNullableOnForEach()).isFalse();
+      assertThat(config.isIgnoreParameterMetaData()).isFalse();
     }
   }
 
@@ -215,6 +216,7 @@ class XmlConfigBuilderTest {
       assertThat(config.isArgNameBasedConstructorAutoMapping()).isTrue();
       assertThat(config.getDefaultSqlProviderType().getName()).isEqualTo(MySqlProvider.class.getName());
       assertThat(config.isNullableOnForEach()).isTrue();
+      assertThat(config.isIgnoreParameterMetaData()).isTrue();
 
       assertThat(config.getTypeAliasRegistry().getTypeAliases().get("blogauthor")).isEqualTo(Author.class);
       assertThat(config.getTypeAliasRegistry().getTypeAliases().get("blog")).isEqualTo(Blog.class);

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.apache.ibatis.submitted.dynsql;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -181,26 +182,22 @@ class DynSqlTest {
       DynSqlMapper mapper = sqlSession.getMapper(DynSqlMapper.class);
       DynSqlMapper.Conditions conditions = new DynSqlMapper.Conditions();
       conditions.setId(3);
-      try {
-        mapper.selectDescriptionByConditions2(conditions);
-      } catch (PersistenceException e) {
-        assertEquals(
-            "There is no getter for property named 'conditions' in 'class org.apache.ibatis.submitted.dynsql.DynSqlMapper$Conditions'",
-            e.getCause().getMessage());
-      }
+      PersistenceException e = assertThrows(PersistenceException.class,
+          () -> mapper.selectDescriptionByConditions2(conditions));
+      assertEquals(
+          "There is no getter for property named 'conditions' in 'class org.apache.ibatis.submitted.dynsql.DynSqlMapper$Conditions'",
+          e.getCause().getMessage());
       assertEquals(7, mapper.selectDescriptionByConditions2(null).size());
     }
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       DynSqlMapper mapper = sqlSession.getMapper(DynSqlMapper.class);
       DynSqlMapper.Conditions conditions = new DynSqlMapper.Conditions();
       conditions.setId(3);
-      try {
-        mapper.selectDescriptionByConditions3(conditions);
-      } catch (PersistenceException e) {
-        assertEquals(
-            "There is no getter for property named 'conditions' in 'class org.apache.ibatis.submitted.dynsql.DynSqlMapper$Conditions'",
-            e.getCause().getMessage());
-      }
+      PersistenceException e = assertThrows(PersistenceException.class,
+          () -> mapper.selectDescriptionByConditions3(conditions));
+      assertEquals(
+          "There is no getter for property named 'conditions' in 'class org.apache.ibatis.submitted.dynsql.DynSqlMapper$Conditions'",
+          e.getCause().getMessage());
       assertEquals(7, mapper.selectDescriptionByConditions3(null).size());
     }
 

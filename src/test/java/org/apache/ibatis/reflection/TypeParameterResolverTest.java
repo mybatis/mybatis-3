@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -41,6 +41,8 @@ import org.apache.ibatis.reflection.typeparam.Level1Mapper;
 import org.apache.ibatis.reflection.typeparam.Level2Mapper;
 import org.apache.ibatis.type.TypeReference;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class TypeParameterResolverTest {
 
@@ -574,19 +576,29 @@ class TypeParameterResolverTest {
     assertTrue(typeMybatis instanceof TypeParameterResolver.ParameterizedTypeImpl);
     assertTrue(typeJdk.equals(typeMybatis));
     assertTrue(typeMybatis.equals(typeJdk));
+    assertEquals(typeJdk.hashCode(), typeMybatis.hashCode());
   }
 
-  @Test
-  void shouldWildcardTypeBeEqual() throws Exception {
+  @ParameterizedTest
+  @ValueSource(strings = { "foo", "lowerBound", "unbounded" })
+  void shouldWildcardTypeBeEqual(String methodName) throws Exception {
+    @SuppressWarnings("unused")
     class WildcardTypeTester {
-      @SuppressWarnings("unused")
       public List<? extends Serializable> foo() {
+        return null;
+      }
+
+      public List<? super Integer> lowerBound() {
+        return null;
+      }
+
+      public List<?> unbounded() {
         return null;
       }
     }
 
     Class<?> clazz = WildcardTypeTester.class;
-    Method foo = clazz.getMethod("foo");
+    Method foo = clazz.getMethod(methodName);
     Type typeMybatis = TypeParameterResolver.resolveReturnType(foo, clazz);
     Type typeJdk = foo.getGenericReturnType();
 
@@ -595,8 +607,10 @@ class TypeParameterResolverTest {
 
     assertTrue(wildcardJdk instanceof WildcardType && !(wildcardJdk instanceof TypeParameterResolver.WildcardTypeImpl));
     assertTrue(wildcardMybatis instanceof TypeParameterResolver.WildcardTypeImpl);
+    assertEquals(wildcardJdk.hashCode(), wildcardMybatis.hashCode());
     assertTrue(typeJdk.equals(typeMybatis));
     assertTrue(typeMybatis.equals(typeJdk));
+    assertEquals(typeJdk.hashCode(), typeMybatis.hashCode());
   }
 
   @Test
@@ -617,6 +631,7 @@ class TypeParameterResolverTest {
     assertTrue(typeMybatis instanceof TypeParameterResolver.GenericArrayTypeImpl);
     assertTrue(typeJdk.equals(typeMybatis));
     assertTrue(typeMybatis.equals(typeJdk));
+    assertEquals(typeJdk.hashCode(), typeMybatis.hashCode());
   }
 
   @Test

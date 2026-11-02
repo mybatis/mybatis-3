@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -66,6 +66,9 @@ public class ParameterExpression extends HashMap<String, String> {
   private void property(String expression, int left) {
     if (left < expression.length()) {
       int right = skipUntil(expression, left, ",:");
+      if (right <= left) {
+        throw new BuilderException("Parsing error in {" + expression + "} in position " + left);
+      }
       put("property", trimmedStr(expression, left, right));
       jdbcTypeOpt(expression, right);
     }
@@ -117,6 +120,9 @@ public class ParameterExpression extends HashMap<String, String> {
     int left = skipWS(expression, p);
     if (left < expression.length()) {
       int right = skipUntil(expression, left, "=");
+      if (right == expression.length()) {
+        throw new BuilderException("Parsing error in {" + expression + "} in position " + left);
+      }
       String name = trimmedStr(expression, left, right);
       left = right + 1;
       right = skipUntil(expression, left, ",");

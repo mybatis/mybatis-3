@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,18 +59,10 @@ class BeanWrapperTest {
     assertEquals(String.class, metaObj.getSetterType("bean2.name"));
 
     assertTrue(metaObj.hasGetter("bean2List[0]"));
-    try {
-      metaObj.getValue("bean2List[0]");
-      fail();
-    } catch (ReflectionException e) {
-      assertEquals("Cannot get the value 'bean2List[0]' because the property 'bean2List' is null.", e.getMessage());
-    }
-    try {
-      metaObj.setValue("bean2List[0]", new Bean2());
-      fail();
-    } catch (ReflectionException e) {
-      assertEquals("Cannot set the value 'bean2List[0]' because the property 'bean2List' is null.", e.getMessage());
-    }
+    ReflectionException e = assertThrows(ReflectionException.class, () -> metaObj.getValue("bean2List[0]"));
+    assertEquals("Cannot get the value 'bean2List[0]' because the property 'bean2List' is null.", e.getMessage());
+    e = assertThrows(ReflectionException.class, () -> metaObj.setValue("bean2List[0]", new Bean2()));
+    assertEquals("Cannot set the value 'bean2List[0]' because the property 'bean2List' is null.", e.getMessage());
     assertTrue(metaObj.hasSetter("bean2List[0]"));
 
     List<Bean2> bean2List = new ArrayList<>();
@@ -86,30 +78,17 @@ class BeanWrapperTest {
 
     metaObj.setValue("attrVal", "value");
     assertEquals("value", bean.getAttrVal());
-    try {
-      metaObj.getValue("attrVal[0]");
-      fail();
-    } catch (ReflectionException e) {
-      assertEquals("Cannot get the value 'attrVal[0]' because the property 'attrVal' is not Map, List or Array.",
-          e.getMessage());
-    }
-    try {
-      metaObj.setValue("attrVal[0]", "blur");
-      fail();
-    } catch (ReflectionException e) {
-      assertEquals("Cannot set the value 'attrVal[0]' because the property 'attrVal' is not Map, List or Array.",
-          e.getMessage());
-    }
+    e = assertThrows(ReflectionException.class, () -> metaObj.getValue("attrVal[0]"));
+    assertEquals("Cannot get the value 'attrVal[0]' because the property 'attrVal' is not Map, List or Array.",
+        e.getMessage());
+    e = assertThrows(ReflectionException.class, () -> metaObj.setValue("attrVal[0]", "blur"));
+    assertEquals("Cannot set the value 'attrVal[0]' because the property 'attrVal' is not Map, List or Array.",
+        e.getMessage());
 
     metaObj.setValue("bean2List[1].name", "new name 1");
     assertEquals("new name 1", bean.getBean2List().get(1).getName());
 
-    try {
-      metaObj.getValue("nums[0]");
-      fail();
-    } catch (ReflectionException e) {
-      // pass
-    }
+    assertThrows(ReflectionException.class, () -> metaObj.getValue("nums[0]"));
     metaObj.setValue("nums", new Integer[] { 5, 6, 7 });
     assertTrue(metaObj.hasGetter("bean2List[0].child.id"));
     assertTrue(metaObj.hasSetter("bean2List[0].child.id"));
@@ -123,12 +102,7 @@ class BeanWrapperTest {
       assertEquals(String.class, metaObj.getSetterType("bean2.name"));
     }
 
-    try {
-      metaObj.setValue("bean2.child.bean2", "bogus");
-      fail();
-    } catch (ReflectionException e) {
-      // pass
-    }
+    assertThrows(ReflectionException.class, () -> metaObj.setValue("bean2.child.bean2", "bogus"));
 
     {
       Bean2 bean2 = new Bean2();
@@ -145,28 +119,13 @@ class BeanWrapperTest {
     assertFalse(metaObj.hasSetter("x[0].y"));
     assertFalse(metaObj.hasGetter("x[0].y"));
 
-    try {
-      metaObj.getValue("x");
-      fail();
-    } catch (ReflectionException e) {
-      // pass
-    }
+    assertThrows(ReflectionException.class, () -> metaObj.getValue("x"));
     // assertEquals(Integer.class, metaObj.getSetterType("my_name"));
     // assertEquals("100", metaObj.getValue("a"));
     // assertNull(metaObj.getValue("b"));
     // assertEquals(Integer.valueOf(200), metaObj.getValue("my_name"));
-    try {
-      metaObj.add("x");
-      fail();
-    } catch (UnsupportedOperationException e) {
-      // pass
-    }
-    try {
-      metaObj.addAll(Arrays.asList("x", "y"));
-      fail();
-    } catch (UnsupportedOperationException e) {
-      // pass
-    }
+    assertThrows(UnsupportedOperationException.class, () -> metaObj.add("x"));
+    assertThrows(UnsupportedOperationException.class, () -> metaObj.addAll(Arrays.asList("x", "y")));
   }
 
   static class Bean1 {

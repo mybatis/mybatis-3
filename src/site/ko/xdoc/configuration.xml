@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2025 the original author or authors.
+       Copyright 2009-2026 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -593,6 +593,20 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               </td>
               <td>
                 생성자 자동 매핑을 적용할 때 칼럼 순서가 아닌 칼럼 이름과 생성자 인수들의 이름을 기반으로 매핑한다. (3.5.10 부터)
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+            <tr>
+              <td>
+                ignoreParameterMetaData
+              </td>
+              <td>
+                Skips retrieving parameter meta data when resolving type handler. (Since 3.6.1)
               </td>
               <td>
                 true | false

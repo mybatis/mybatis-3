@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -66,18 +66,8 @@ class MapWrapperTest {
     assertEquals("100", metaObj.getValue("a"));
     assertNull(metaObj.getValue("b"));
     assertEquals(Integer.valueOf(200), metaObj.getValue("my_name"));
-    try {
-      metaObj.add("x");
-      fail();
-    } catch (UnsupportedOperationException e) {
-      // pass
-    }
-    try {
-      metaObj.addAll(Arrays.asList("x", "y"));
-      fail();
-    } catch (UnsupportedOperationException e) {
-      // pass
-    }
+    assertThrows(UnsupportedOperationException.class, () -> metaObj.add("x"));
+    assertThrows(UnsupportedOperationException.class, () -> metaObj.addAll(Arrays.asList("x", "y")));
     metaObj.setValue("a", Long.valueOf(900L));
     assertEquals(Long.valueOf(900L), map.get("a"));
   }
@@ -162,12 +152,7 @@ class MapWrapperTest {
     metaObj.setValue("list[2]", "x");
     assertEquals("x", list.get(2));
 
-    try {
-      metaObj.setValue("list[3]", "y");
-      fail();
-    } catch (IndexOutOfBoundsException e) {
-      // pass
-    }
+    assertThrows(IndexOutOfBoundsException.class, () -> metaObj.setValue("list[3]", "y"));
 
     assertTrue(metaObj.hasGetter("list[1]"));
     assertTrue(metaObj.hasSetter("list[1]"));

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.apache.ibatis.session;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
@@ -139,11 +140,9 @@ class AutoMappingUnknownColumnBehaviorTest {
     sqlSessionFactory.getConfiguration().setAutoMappingUnknownColumnBehavior(AutoMappingUnknownColumnBehavior.FAILING);
     try (SqlSession session = sqlSessionFactory.openSession()) {
       Mapper mapper = session.getMapper(Mapper.class);
-      mapper.selectAuthor(101);
-    } catch (PersistenceException e) {
-      assertThat(e.getCause()).isInstanceOf(SqlSessionException.class);
-      assertThat(e.getCause().getMessage()).isEqualTo(
-          "Unknown column is detected on 'org.apache.ibatis.session.AutoMappingUnknownColumnBehaviorTest$Mapper.selectAuthor' auto-mapping. Mapping parameters are [columnName=USERNAMEEEE,propertyName=USERNAMEEEE,propertyType=null]");
+      assertThatThrownBy(() -> mapper.selectAuthor(101)).isInstanceOf(PersistenceException.class).cause()
+          .isInstanceOf(SqlSessionException.class).hasMessage(
+              "Unknown column is detected on 'org.apache.ibatis.session.AutoMappingUnknownColumnBehaviorTest$Mapper.selectAuthor' auto-mapping. Mapping parameters are [columnName=USERNAMEEEE,propertyName=USERNAMEEEE,propertyType=null]");
     }
   }
 

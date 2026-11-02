@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,6 +29,8 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class HandlerByJdbcTypeTest {
 
@@ -73,24 +75,37 @@ class HandlerByJdbcTypeTest {
     }
   }
 
-  @Test
-  void shouldParameterMappingChooseTypeHandlerBasedOnJdbcType() throws Exception {
-    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Mapper mapper = sqlSession.getMapper(Mapper.class);
-      BoolsBean bools = new BoolsBean();
-      bools.setId(2);
-      bools.setB1(true);
-      bools.setB2(true);
-      mapper.insertBools(bools);
-      sqlSession.commit();
-    }
-    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      try (Statement stmt = sqlSession.getConnection().createStatement();
-          ResultSet rs = stmt.executeQuery("select * from bools where id = 2")) {
-        assertTrue(rs.next());
-        assertEquals("1", rs.getString("B1"));
-        assertEquals("T", rs.getString("B2"));
+  @ParameterizedTest
+  @CsvSource({ "2,false", "3,true" })
+  void shouldParameterMappingChooseTypeHandlerBasedOnJdbcType(int id, boolean ignoreParameterMetaData)
+      throws Exception {
+    boolean original = sqlSessionFactory.getConfiguration().isIgnoreParameterMetaData();
+    sqlSessionFactory.getConfiguration().setIgnoreParameterMetaData(ignoreParameterMetaData);
+    try {
+      try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+        Mapper mapper = sqlSession.getMapper(Mapper.class);
+        BoolsBean bools = new BoolsBean();
+        bools.setId(id);
+        bools.setB1(true);
+        bools.setB2(true);
+        mapper.insertBools(bools);
+        sqlSession.commit();
       }
+      try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+        try (Statement stmt = sqlSession.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery("select * from bools where id = " + id)) {
+          assertTrue(rs.next());
+          assertEquals("1", rs.getString("B1"));
+          if (ignoreParameterMetaData) {
+            // The default handler (BooleanTypeHandler) will take effect
+            assertEquals("1", rs.getString("B2"));
+          } else {
+            assertEquals("T", rs.getString("B2"));
+          }
+        }
+      }
+    } finally {
+      sqlSessionFactory.getConfiguration().setIgnoreParameterMetaData(original);
     }
   }
 

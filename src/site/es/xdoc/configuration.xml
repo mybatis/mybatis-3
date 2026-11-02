@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009-2025 the original author or authors.
+       Copyright 2009-2026 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -597,6 +597,20 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               </td>
               <td>
                 When applying constructor auto-mapping, argument name is used to search the column to map instead of relying on the column order. (Since 3.5.10)
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+            <tr>
+              <td>
+                ignoreParameterMetaData
+              </td>
+              <td>
+                Skips retrieving parameter meta data when resolving type handler. (Since 3.6.1)
               </td>
               <td>
                 true | false

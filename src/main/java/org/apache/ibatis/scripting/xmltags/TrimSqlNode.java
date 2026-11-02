@@ -18,7 +18,6 @@ package org.apache.ibatis.scripting.xmltags;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.StringTokenizer;
 
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.session.Configuration;
@@ -59,12 +58,13 @@ public class TrimSqlNode implements SqlNode {
     return result;
   }
 
-  private static List<String> parseOverrides(String overrides) {
+  private static List<String> parseOverrides(final String overrides) {
     if (overrides != null) {
-      final StringTokenizer parser = new StringTokenizer(overrides, "|", false);
-      final List<String> list = new ArrayList<>(parser.countTokens());
-      while (parser.hasMoreTokens()) {
-        list.add(parser.nextToken().toUpperCase(Locale.ENGLISH));
+      final List<String> list = new ArrayList<>();
+      for (final String override : overrides.split("\\|")) {
+        if (!override.isEmpty()) {
+          list.add(override.toUpperCase(Locale.ENGLISH));
+        }
       }
       return list;
     }

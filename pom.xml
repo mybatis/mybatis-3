@@ -23,13 +23,13 @@
   <parent>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis-parent</artifactId>
-    <version>52</version>
+    <version>53</version>
     <relativePath />
   </parent>
 
   <groupId>org.mybatis</groupId>
   <artifactId>mybatis</artifactId>
-  <version>3.6.0-SNAPSHOT</version>
+  <version>3.6.1-SNAPSHOT</version>
 
   <name>mybatis</name>
   <description>The MyBatis SQL mapper framework makes it easier to use a relational database with object-oriented
@@ -69,7 +69,7 @@
 
     <clirr.comparisonVersion>3.4.6</clirr.comparisonVersion>
 
-    <byte-buddy.version>1.18.15</byte-buddy.version>
+    <byte-buddy.version>1.18.17</byte-buddy.version>
     <derby.version>10.17.1.0</derby.version>
     <log4j.version>2.26.1</log4j.version>
     <mockito.version>5.24.0</mockito.version>
@@ -94,10 +94,13 @@
     <spotbugs.onlyAnalyze>org.apache.ibatis.*</spotbugs.onlyAnalyze>
 
     <!-- Surefire Setup -->
-    <argLine>-Xmx2048m -javaagent:${settings.localRepository}/net/bytebuddy/byte-buddy-agent/${byte-buddy.version}/byte-buddy-agent-${byte-buddy.version}.jar</argLine>
+    <argLine>-Xmx2048m -javaagent:${settings.localRepository}/net/bytebuddy/byte-buddy-agent/${byte-buddy.version}/byte-buddy-agent-${byte-buddy.version}.jar --add-opens java.base/java.lang=ALL-UNNAMED</argLine>
 
     <!-- Reproducible Builds -->
-    <project.build.outputTimestamp>1735704225</project.build.outputTimestamp>
+    <project.build.outputTimestamp>1792728812</project.build.outputTimestamp>
+
+    <!-- TODO: Review test failures with 'testcontainers' after 3.6.0 upgrade -->
+    <surefire.plugin>3.5.6</surefire.plugin>
   </properties>
 
   <dependencies>
@@ -112,7 +115,7 @@
     <dependency>
       <groupId>ognl</groupId>
       <artifactId>ognl</artifactId>
-      <version>3.4.16</version>
+      <version>3.4.17</version>
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
@@ -207,13 +210,13 @@
     <dependency>
       <groupId>com.mysql</groupId>
       <artifactId>mysql-connector-j</artifactId>
-      <version>26.7.0</version>
+      <version>26.10.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.oracle.database.jdbc</groupId>
       <artifactId>ojdbc11</artifactId>
-      <version>23.26.3.0.0</version>
+      <version>23.26.4.0.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -310,7 +313,7 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.6.5</version>
+      <version>1.6.6</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -447,7 +450,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
         <configuration>
-          <locales>default,es,ja,fr,zh_CN,ko</locales>
+          <locales>default,es,ja,fr,zh_CN,ko,zh_TW</locales>
           <siteDirectory>${project.build.directory}/site-src</siteDirectory>
           <alternativeSiteSourceDirectories>${basedir}/src/site</alternativeSiteSourceDirectories>
         </configuration>

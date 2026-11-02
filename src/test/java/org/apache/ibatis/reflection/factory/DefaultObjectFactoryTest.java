@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -50,14 +50,10 @@ class DefaultObjectFactoryTest {
   @Test
   void createClassThrowsProperErrorMsg() {
     DefaultObjectFactory defaultObjectFactory = new DefaultObjectFactory();
-    try {
-      defaultObjectFactory.create(TestClass.class, List.of(String.class), List.of("foo"));
-      Assertions.fail("Should have thrown ReflectionException");
-    } catch (Exception e) {
-      Assertions.assertTrue(e instanceof ReflectionException, "Should be ReflectionException");
-      Assertions.assertTrue(e.getMessage().contains("(String)"), "Should not have trailing commas in types list");
-      Assertions.assertTrue(e.getMessage().contains("(foo)"), "Should not have trailing commas in values list");
-    }
+    ReflectionException e = Assertions.assertThrows(ReflectionException.class,
+        () -> defaultObjectFactory.create(TestClass.class, List.of(String.class), List.of("foo")));
+    Assertions.assertTrue(e.getMessage().contains("(String)"), "Should not have trailing commas in types list");
+    Assertions.assertTrue(e.getMessage().contains("(foo)"), "Should not have trailing commas in values list");
   }
 
   @Test

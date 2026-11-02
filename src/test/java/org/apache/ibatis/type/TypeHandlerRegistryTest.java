@@ -61,6 +61,38 @@ class TypeHandlerRegistryTest {
   }
 
   @Test
+  void shouldPreserveClassRegistrationMethodDescriptor() throws Exception {
+    TypeHandler<?> handler = new StringTypeHandler();
+    // Look up the exact descriptor used by clients compiled against 3.5.x.
+    TypeHandlerRegistry.class.getMethod("register", Class.class, JdbcType.class, TypeHandler.class)
+        .invoke(typeHandlerRegistry, String.class, JdbcType.VARCHAR, handler);
+    assertSame(handler, typeHandlerRegistry.getTypeHandler(String.class, JdbcType.VARCHAR));
+  }
+
+  @Test
+  @SuppressWarnings("removal")
+  void shouldRegisterClassWithWildcardHandlerAndNullJdbcType() {
+    Class<?> javaType = String.class;
+    TypeHandler<?> handler = new StringTypeHandler();
+    typeHandlerRegistry.register(javaType, null, handler);
+    assertSame(handler, typeHandlerRegistry.getTypeHandler(javaType, null));
+    TypeHandlerRegistry nullTypeRegistry = new TypeHandlerRegistry();
+    StringTypeHandler nullTypeHandler = new StringTypeHandler();
+    assertFalse(nullTypeRegistry.getTypeHandlers().stream().anyMatch(registered -> registered == nullTypeHandler));
+    nullTypeRegistry.register((Class<?>) null, null, nullTypeHandler);
+    assertTrue(nullTypeRegistry.getTypeHandlers().stream().anyMatch(registered -> registered == nullTypeHandler));
+  }
+
+  @Test
+  void shouldKeepTypeRegistrationOverload() {
+    Type javaType = new TypeReference<List<String>>() {
+    }.getRawType();
+    TypeHandler<?> handler = new ObjectTypeHandler();
+    typeHandlerRegistry.register(javaType, JdbcType.VARCHAR, handler);
+    assertSame(handler, typeHandlerRegistry.getTypeHandler(javaType, JdbcType.VARCHAR));
+  }
+
+  @Test
   void shouldRegisterAndRetrieveComplexTypeHandler() {
     TypeHandler<List<URI>> fakeHandler = new TypeHandler<>() {
 

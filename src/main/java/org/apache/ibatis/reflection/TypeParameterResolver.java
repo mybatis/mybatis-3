@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -330,11 +330,7 @@ public class TypeParameterResolver {
 
     @Override
     public int hashCode() {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + Arrays.hashCode(lowerBounds);
-      result = prime * result + Arrays.hashCode(upperBounds);
-      return result;
+      return Arrays.hashCode(lowerBounds) ^ Arrays.hashCode(upperBounds);
     }
 
     @Override
@@ -376,7 +372,7 @@ public class TypeParameterResolver {
 
     @Override
     public int hashCode() {
-      return Objects.hash(genericComponentType);
+      return Objects.hashCode(genericComponentType);
     }
 
     @Override
