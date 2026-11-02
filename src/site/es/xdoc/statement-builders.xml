@@ -502,7 +502,12 @@ public String selectPersonsSql(boolean activeOnly) {
     .toString();
 }
 
-public String insertPersonsSql(List<Person> persons) {
+// Mapper interface
+@InsertProvider(type = PersonSqlProvider.class, method = "insertPersonsSql")
+void insertPersons(@Param("persons") List<Person> persons);
+
+// PersonSqlProvider
+public String insertPersonsSql(@Param("persons") List<Person> persons) {
   return new SQL()
     .INSERT_INTO("PERSON")
     .INTO_COLUMNS("ID", "NAME")

@@ -251,7 +251,7 @@ try {
 | 功能 | DefaultSqlSessionFactory | SqlSessionManager |
 |---|---|---|
 | 工作階段建立 | 每次 `openSession()` 呼叫皆建立新工作階段 | 可透過 `startManagedSession()` 管理執行緒區域工作階段 |
-| 執行緒安全 | 需要外部管理 | 內建執行緒區域工作階段管理 |
+| 跨執行緒的工作階段管理 | 呼叫端須為每個執行緒開啟並關閉各自的 `SqlSession` | 受控工作階段儲存於執行緒區域空間，呼叫端仍須關閉 |
 | 自動工作階段生命週期 | 否（需手動關閉） | 是，當未啟動受控工作階段時 |
 | DI 框架整合 | 需要特定 DI 整合（例如 Spring 中的 `SqlSessionTemplate`） | 可在非 DI 環境中取代 `SqlSessionFactory` 與 `SqlSession` |
 

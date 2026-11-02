@@ -347,8 +347,8 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 safeRowBoundsEnabled
               </td>
               <td>
-                ネストされたステートメントに対して RowBounds の使用を許可するかどうかを設定します。
-                許可する場合は、 false を設定します。
+                true の場合、ネストされた結果マッピングで RowBounds のオフセットが 0 より大きいか、上限がデフォルト値より小さいと例外が発生します。
+                このチェックを省略する場合は false を設定します。
               </td>
               <td>
                 true | false
@@ -392,7 +392,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               </td>
               <td>
                 MyBatis は循環参照の解決やネストされたクエリのスピード向上のためにローカルキャッシュを使用します。
-                デフォルト（SESSION）では同一セッション内の通常のクエリ結果がキャッシュされます。Cursor を使うクエリやカスタム ResultHandler を渡すクエリはローカルキャッシュに保存されません。localCacheScope に STATEMENT を設定した場合、ローカルキャッシュはステートメントごとに適用されます。言い換えると、同一 SqlSession に対する複数の呼び出しでデータが共有されることはありません。
+                デフォルト（SESSION）では同一セッション内の通常のクエリ結果がキャッシュされます。カスタム ResultHandler を渡すクエリはローカルキャッシュを読み込まず、Cursor を使うクエリはローカルキャッシュを使用しません。localCacheScope に STATEMENT を設定した場合、ローカルキャッシュはステートメントごとに適用されます。言い換えると、同一 SqlSession に対する複数の呼び出しでデータが共有されることはありません。
               </td>
               <td>
                 SESSION | STATEMENT
@@ -1515,7 +1515,7 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
 
         <p>
           上記のようにして登録された TypeHandler は、String 型のプロパティと VARCHAR 型の引数または結果のマッピング時に使用されるデフォルトのタイプハンドラーよりも優先的に使用されます。
-          <code>ignoreParameterMetaData</code> が <code>false</code>（デフォルト）の場合、パラメーターの JDBC 型が明示されていなければ、MyBatis は JDBC のパラメーターメタデータを参照してタイプハンドラーを選択できます。ドライバーがメタデータを提供しない場合は、パラメーターマッピングに <code>jdbcType="VARCHAR"</code> を指定してください。結果マッピングではタイプハンドラー選択時に JDBC 型が分からないため、必要に応じて明示します（後述）。
+          <code>ignoreParameterMetaData</code> が <code>false</code>（デフォルト）の場合、パラメーターの JDBC 型が明示されていなければ、MyBatis は JDBC のパラメーターメタデータを参照してタイプハンドラーを選択できます。ドライバーがメタデータを提供しない場合は、パラメーターマッピングに <code>jdbcType="VARCHAR"</code> を指定してください。結果マッピングで <code>typeHandler</code> と <code>jdbcType</code> のどちらも指定していない場合は、結果セットのメタデータを使ってタイプハンドラーを選択できます（後述）。
         </p>
 
         <p>
@@ -1528,18 +1528,18 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
           </li>
         </ul>
 
-        <p>typeHandler 要素に jdbcType 属性を追加することで適用対象の JDBC タイプを指定することもできます（例：jdbcType=VARCHAR）。jdbcType 属性が指定されている場合、<code>@MappedJdbcTypes</code> の指定は無視されます。
-        </p>
         <p>適用対象の JDBC タイプを指定する方法は二つあります。</p>
         <ul>
-          <li>typeHandler 要素に jdbcType 属性を追加する（例：jdbcType=VARCHAR）。</li>
-          <li>TypeHandler の実装クラスに <code>@MappedJdbcTypes</code> を付加し、JDBC タイプのリストを指定します。jdbcType 属性が指定されている場合、このアノテーションは無視されます。</li>
+          <li>同じ typeHandler 要素に <code>javaType</code> と <code>jdbcType</code> の両方を指定します（例：<code>javaType="String" jdbcType="VARCHAR"</code>）。<code>javaType</code> を省略すると XML の <code>jdbcType</code> 属性は無視され、<code>@MappedJdbcTypes</code> があればその指定が使用されます。</li>
+          <li>TypeHandler の実装クラスに <code>@MappedJdbcTypes</code> を付加し、JDBC タイプのリストを指定します。同じ要素に <code>javaType</code> と <code>jdbcType</code> の両方を指定した場合、このアノテーションは無視されます。</li>
         </ul>
 
         <p>
-          <code>ResultMap</code>　でプロパティの指定に <code>typeHandler</code> と <code>jdbcType</code> が明示的に指定されていない場合、パース時点で <code>javaType</code> はプロパティの型から推測可能ですが <code>jdbcType</code> は未知となります。 MyBatis は javaType=[推測された型] と jdbcType=null にマップされた TypeHandler を探します。
-          TypeHandler を jdbcType=null にマップするためには <code>@MappedJdbcTypes</code> の <code>includeNullJdbcType</code> 属性に <code>true</code> を指定します。<br />
-          MyBatis 3.4.0 以降は javaType に対してマップされている TypeHandler が１つの場合は登録時の jdbcType に関わらずこの TypeHandler が使われるようになりました。
+          <code>ResultMap</code> の結果マッピングに <code>typeHandler</code> を明示すると、そのハンドラーが使用されます。
+          <code>typeHandler</code> を指定せずに <code>jdbcType</code> を指定した場合は、マッピングの解析時に Java 型と指定された JDBC 型からハンドラーを解決します。
+          どちらも指定していない場合は、結果を読み込む際に Java 型と結果セットのメタデータから取得した実際の列の JDBC 型を使ってハンドラーを選択します。
+          そのため、<code>@MappedJdbcTypes</code> で登録したハンドラーは、<code>includeNullJdbcType=true</code> を指定しなくても一致する結果列に使用できます。
+          <code>includeNullJdbcType=true</code> はハンドラーを <code>jdbcType=null</code> にも登録する設定であり、<code>ResultMap</code> で使用するための必須条件ではありません。
         </p>
 
         <p>また、MyBatis にタイプハンドラーを自動検出させることもできます。</p>
@@ -1697,14 +1697,13 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
       <subsection name="plugins">
         <p>
           MyBatis が Mapped Statement を実行する際、いくつかのタイミングで処理をインターセプトすることができます。
-          プラグインを使って下記のインターフェースで宣言されたメソッド呼び出しをインターセプトできます。
+          以下は、サポートされているインターフェースでプラグインがインターセプトできるメソッドの例です。
         </p>
         <ul>
           <li>
             Executor
             (update, query, queryCursor, flushStatements, commit, rollback,
-            createCacheKey, isCached, clearLocalCache, deferLoad,
-            getTransaction, close, isClosed, setExecutorWrapper)
+            getTransaction, close, isClosed)
           </li>
           <li>
             ParameterHandler
@@ -1716,8 +1715,7 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
           </li>
           <li>
             StatementHandler
-            (prepare, parameterize, batch, update, query, queryCursor,
-            getBoundSql, getParameterHandler)
+            (prepare, parameterize, batch, update, query, queryCursor)
           </li>
         </ul>
         <p>

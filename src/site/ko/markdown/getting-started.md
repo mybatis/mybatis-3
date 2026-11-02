@@ -72,7 +72,7 @@ configuration.addMapper(BlogMapper.class);
 SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 ```
 
-이 설정에서 추가로 해야 할 일은 Mapper클래스를 추가하는 것이다. Mapper클래스는 SQL 매핑 애노테이션을 가진 자바 클래스이다. 애노테이션으로 중첩 조인 결과도 매핑할 수 있지만, 복잡한 매핑은 XML로 작성하는 편이 읽기 쉬울 수 있다. 좀 더 세부적인 내용은 조금 뒤 다시 보도록 하자.
+이 설정에서는 매퍼 인터페이스를 등록한다. 매퍼 인터페이스에 SQL 매핑 애노테이션을 정의할 수 있으므로 XML 매퍼가 반드시 필요한 것은 아니다. MyBatis는 같은 클래스패스 경로에 `BlogMapper.xml`이 있으면 자동으로 찾아 로드하므로 애노테이션과 XML 매핑을 함께 사용할 수 있다. 자세한 내용은 뒤에서 설명한다.
 
 ## SqlSessionFactory 에서 SqlSession 만들기
 

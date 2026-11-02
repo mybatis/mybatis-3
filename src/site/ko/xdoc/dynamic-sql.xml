@@ -263,25 +263,6 @@ AND title like 'someTitle']]></source>
   SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType);
   SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType);
 }]]></source>
-    <p>사용자 정의 언어 드라이버를 구현한 뒤에는 mybatis-config.xml에서 기본 언어로 설정할 수 있다.</p>
-  <source><![CDATA[<settings>
-  <setting name="defaultScriptingLanguage" value="myLanguage"/>
-</settings>
-<typeAliases>
-  <typeAlias type="org.sample.MyLanguageDriver" alias="myLanguage"/>
-</typeAliases>]]></source>
-    <p>기본 언어를 바꾸지 않고 특정 구문에만 적용하려면 <code>lang</code> 속성을 사용한다.</p>
-  <source><![CDATA[<select id="selectBlog" lang="myLanguage">
-  SELECT * FROM BLOG
-</select>]]></source>
-    <p>매퍼 인터페이스에서는 <code>@Lang</code> 애노테이션으로 사용자 정의 언어 드라이버를 지정할 수 있다.</p>
-  <source><![CDATA[public interface Mapper {
-  @Lang(MyLanguageDriver.class)
-  @Select("SELECT * FROM BLOG")
-  List<Blog> selectBlog();
-}]]></source>
-    <p><span class="label important">참고</span> Apache Velocity도 동적 SQL 언어로 사용할 수 있다. 자세한 내용은 MyBatis-Velocity 프로젝트를 참고한다.</p>
-    <p>앞 절에서 설명한 XML 태그들은 기본 언어 드라이버인 <code>org.apache.ibatis.scripting.xmltags.XMLLanguageDriver</code>가 제공하며, 이 드라이버의 별칭은 <code>xml</code>이다.</p>
   </subsection>
     </section>
   </body>

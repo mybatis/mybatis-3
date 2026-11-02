@@ -32,7 +32,7 @@
         </p>
 
         <source><![CDATA[
-String sql = "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME, "
+String sql = "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME, " +
 "P.LAST_NAME,P.CREATED_ON, P.UPDATED_ON " +
 "FROM PERSON P, ACCOUNT A " +
 "INNER JOIN DEPARTMENT D on D.ID = P.DEPARTMENT_ID " +
@@ -516,7 +516,12 @@ public String selectPersonsSql(boolean activeOnly) {
     .toString();
 }
 
-public String insertPersonsSql(List<Person> persons) {
+// Mapper interface
+@InsertProvider(type = PersonSqlProvider.class, method = "insertPersonsSql")
+void insertPersons(@Param("persons") List<Person> persons);
+
+// PersonSqlProvider
+public String insertPersonsSql(@Param("persons") List<Person> persons) {
   return new SQL()
     .INSERT_INTO("PERSON")
     .INTO_COLUMNS("ID", "NAME")

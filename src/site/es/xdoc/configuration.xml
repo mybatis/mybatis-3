@@ -360,7 +360,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               </td>
               <td>
                 MyBatis usa una caché local para resolver referencias circulares y acelerar consultas anidadas repetidas.
-                Por defecto (SESSION), los resultados de las consultas ordinarias se almacenan durante toda la sesión. Las consultas con Cursor o con un ResultHandler personalizado no se almacenan en la caché local. Si localCacheScope=STATEMENT,
+                Por defecto (SESSION), los resultados de las consultas ordinarias se almacenan durante toda la sesión. Las consultas con un ResultHandler personalizado no leen la caché local, y las consultas con Cursor no la utilizan. Si localCacheScope=STATEMENT,
                 la caché local solo se usará durante la ejecución de una sentencia y no se compartirán datos entre distintas llamadas
                 a SqlSession.
               </td>
@@ -1469,7 +1469,7 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
 </typeHandlers>
 ]]></source>
 
-        <p>Al usar este TypeHandler se sobrescribe el TypeHandler existente para los tipos String y los parámetros y resultados VARCHAR. Cuando <code>ignoreParameterMetaData</code> es <code>false</code> (el valor por defecto), MyBatis puede consultar los metadatos de parámetros JDBC para elegir un TypeHandler según el tipo JDBC si no se especifica en el mapeo del parámetro. Si el driver no proporciona esos metadatos, especifica <code>jdbcType="VARCHAR"</code> en el mapeo del parámetro. En los mapeos de resultados, el tipo JDBC se desconoce al elegir el TypeHandler, así que debes indicarlo explícitamente cuando sea necesario, como se explica más adelante.</p>
+        <p>Al usar este TypeHandler se sobrescribe el TypeHandler existente para los tipos String y los parámetros y resultados VARCHAR. Cuando <code>ignoreParameterMetaData</code> es <code>false</code> (el valor por defecto), MyBatis puede consultar los metadatos de parámetros JDBC para elegir un TypeHandler según el tipo JDBC si no se especifica en el mapeo del parámetro. Si el driver no proporciona esos metadatos, especifica <code>jdbcType="VARCHAR"</code> en el mapeo del parámetro. Si un mapeo de resultados no especifica <code>typeHandler</code> ni <code>jdbcType</code>, MyBatis puede usar los metadatos del conjunto de resultados para elegir el TypeHandler, como se explica más adelante.</p>
         <p>
           MyBatis conoce el tipo Java que quieres gestionar introspecionando tipo genérico del TypeHandler, pero puedes modificar este comportamiento de dos maneras.
         </p>
@@ -1485,23 +1485,19 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
         <p>El tipo JDBC asociado se puede especificar de dos maneras:</p>
         <ul>
           <li>
-           Añadiendo un atributo <code>jdbcType</code> al elemento typeHandler (por ejemplo: <code>jdbcType="VARCHAR"</code>).
+           Añadiendo los atributos <code>javaType</code> y <code>jdbcType</code> al mismo elemento typeHandler (por ejemplo: <code>javaType="String" jdbcType="VARCHAR"</code>). Si se omite <code>javaType</code>, el atributo XML <code>jdbcType</code> se ignora y se usa <code>@MappedJdbcTypes</code> si está presente.
           </li>
           <li>Añadiendo una anotación <code>@MappedJdbcTypes</code> a tu clase TypeHandler especificando la lista de tipos JDBC a la que asociarlo.
-          Esta anotación será ignorada si se ha especificado también un atributo <code>jdbcType</code>.
+          Esta anotación se ignora si se han especificado tanto <code>javaType</code> como <code>jdbcType</code> en el mismo elemento.
           </li>
         </ul>
 
         <p>
-          When deciding which TypeHandler to use in a <code>ResultMap</code>, the Java type is known
-          (from the result type), but the JDBC type is unknown. MyBatis therefore uses the combination
-          <code>javaType=[TheJavaType], jdbcType=null</code> to choose a TypeHandler. This means that
-          using a <code>@MappedJdbcTypes</code> annotation <i>restricts</i> the scope of a TypeHandler
-          and makes it unavailable for use in <code>ResultMap</code>s unless explicity set. To make a
-          TypeHandler available for use in a <code>ResultMap</code>, set <code>includeNullJdbcType=true</code>
-          on the <code>@MappedJdbcTypes</code> annotation. Since Mybatis 3.4.0 however, if a <b>single</b>
-          TypeHandler is registered to handle a Java type, it will be used by default in <code>ResultMap</code>s
-          using this Java type (i.e. even without <code>includeNullJdbcType=true</code>).
+          En un mapeo de <code>ResultMap</code>, un <code>typeHandler</code> explícito selecciona directamente el manejador.
+          Si se especifica <code>jdbcType</code> sin <code>typeHandler</code>, MyBatis resuelve el manejador a partir del tipo Java y del tipo JDBC indicado al analizar el mapeo.
+          Si no se especifica ninguno, el manejador se selecciona al leer los resultados, usando el tipo Java y el tipo JDBC real de la columna obtenido de los metadatos del conjunto de resultados.
+          Por tanto, un manejador anotado con <code>@MappedJdbcTypes</code> puede usarse para columnas de resultados compatibles sin <code>includeNullJdbcType=true</code>.
+          Esta opción también registra el manejador para <code>jdbcType=null</code>; no es un requisito para usarlo en un <code>ResultMap</code>.
         </p>
 
         <p>Y finalmente puedes hacer que MyBatis busque tus TypeHandlers:</p>
@@ -1657,14 +1653,13 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
 
       </subsection>
       <subsection name="plugins">
-        <p>MyBatis permite interceptar las llamadas en ciertos puntos de la ejecución de un mapped statement. Los plugins pueden interceptar los métodos declarados en estas interfaces:
+        <p>MyBatis permite interceptar las llamadas en ciertos puntos de la ejecución de un mapped statement. Estos son ejemplos de métodos de las interfaces admitidas que los plugins pueden interceptar:
         </p>
         <ul>
           <li>
             Executor
             (update, query, queryCursor, flushStatements, commit, rollback,
-            createCacheKey, isCached, clearLocalCache, deferLoad,
-            getTransaction, close, isClosed, setExecutorWrapper)
+            getTransaction, close, isClosed)
           </li>
           <li>
             ParameterHandler
@@ -1676,8 +1671,7 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
           </li>
           <li>
             StatementHandler
-            (prepare, parameterize, batch, update, query, queryCursor,
-            getBoundSql, getParameterHandler)
+            (prepare, parameterize, batch, update, query, queryCursor)
           </li>
         </ul>
         <p>Los detalles de estos métodos se pueden conocer observando sus firmas y el código fuente de los mismos que está disponible en el sitio de MyBatis. Es recomendable que comprendas el funcionamiento del método que estas sobrescribiendo siempre que vayas a hacer algo más complejo que monitorizar llamadas. Ten en cuenta que si modificas el comportamiento de alguno de estos métodos existe la posibilidad de que rompas el funcionamiento de MyBatis. Estas clases son de bajo nivel y por tanto debes usar los plugins con cuidado.

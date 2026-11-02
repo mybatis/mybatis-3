@@ -121,7 +121,7 @@ InputStream <strong>inputStream</strong> = Resources.getResourceAsStream(resourc
 SqlSessionFactoryBuilder <strong>builder</strong> = new SqlSessionFactoryBuilder();
 SqlSessionFactory <strong>factory</strong> = builder.build(inputStream);</source>
 
-  <p>Observa que estamos usando la clase de utilidad Resources, que está ubicada en el paquete org.mybatis.io. La clase Resources, tal y como su nombre indica, te ayuda a cargar recursos desde el classpath, el sistema de ficheros o desde una web o URL. Con un vistazo rápido al código fuente en tu IDE descubrirás un conjunto bastante obvio de métodos. Rápidamente:</p>
+  <p>Observa que estamos usando la clase de utilidad Resources, que está ubicada en el paquete org.apache.ibatis.io. La clase Resources, tal y como su nombre indica, te ayuda a cargar recursos desde el classpath, el sistema de ficheros o desde una web o URL. Con un vistazo rápido al código fuente en tu IDE descubrirás un conjunto bastante obvio de métodos. Rápidamente:</p>
   <source>URL getResourceURL(String resource)
 URL getResourceURL(ClassLoader loader, String resource)
 InputStream getResourceAsStream(String resource)
@@ -243,7 +243,7 @@ public interface ResultHandler<T> {
   void handleResult(ResultContext<? extends T> context);
 }]]></source>
 
-  <p>Hay cuatro métodos para controlar la transacción. En modo auto-commit o con un gestor de transacciones externo, no ejecutan un commit o rollback JDBC, pero sí limpian la caché local y ejecutan o descartan las sentencias pendientes por lotes. Con el gestor de transacciones JDBC, también controlan la transacción de la base de datos:</p>
+  <p>El parámetro ResultContext te da acceso al objeto resultado, al número de objetos creados y al método stop(), que permite indicar a MyBatis que detenga la carga de resultados.</p>
 
   <p>Using a ResultHandler has two limitations that you should be aware of:</p>
 
@@ -257,7 +257,7 @@ public interface ResultHandler<T> {
   <source><![CDATA[List<BatchResult> flushStatements()]]></source>
 
   <h5 id="transaction-control-methods">Métodos de control de transacción</h5>
-  <p>El parámetro ResultContext te da acceso al objeto resultado en sí mismo, un contador del número de objetos creados y un método booleano stop() que te permite indicar a MyBatis que pare la carga de datos.</p>
+  <p>Hay cuatro métodos para controlar la transacción. En modo auto-commit o con un gestor de transacciones externo, no ejecutan un commit o rollback JDBC, pero sí limpian la caché local y ejecutan o descartan las sentencias pendientes por lotes. Con el gestor de transacciones JDBC, también controlan la transacción de la base de datos:</p>
   <source>void commit()
 void commit(boolean force)
 void rollback()
@@ -267,7 +267,7 @@ void rollback(boolean force)</source>
 
   <h5>Local Cache</h5>
   <p>MyBatis utiliza dos cachés: la caché local y la caché de segundo nivel.</p>
-  <p>Cada vez que se crea una sesión, MyBatis crea una caché local y la asocia a dicha sesión. Las consultas ordinarias ejecutadas en la sesión se almacenan en esta caché, de forma que si se repite la misma consulta con los mismos parámetros, los datos se obtienen de la caché sin acceder a la base de datos. Las consultas con Cursor o con un ResultHandler personalizado no utilizan la caché local. La caché local se vacía al ejecutar update, commit, rollback o close.</p>
+  <p>Cada vez que se crea una sesión, MyBatis crea una caché local y la asocia a dicha sesión. Las consultas ordinarias ejecutadas en la sesión se almacenan en esta caché, de forma que si se repite la misma consulta con los mismos parámetros, los datos se obtienen de la caché sin acceder a la base de datos. Las consultas con un ResultHandler personalizado no leen de la caché local; las consultas con Cursor la omiten por completo. La caché local se vacía al ejecutar update, commit, rollback o close.</p>
   <p>Por defecto, la caché local se utiliza durante toda la sesión. Esta caché es necesaria para resolver referencias circulares y acelerar consultas anidadas repetidas, así que no puede desactivarse por completo. Sin embargo, puede configurarse para que se utilice solo durante la ejecución de una sentencia mediante localCacheScope=STATEMENT.</p>
   <p>Cuando localCacheScope está configurado como SESSION (valor por defecto), MyBatis devuelve referencias a los objetos almacenados en la caché. Cualquier modificación de un objeto o una lista influye en el contenido de la caché y en los valores que se devolverán posteriormente durante la sesión. Por lo tanto, evita modificar los objetos devueltos por MyBatis.</p>
   <p>Puedes borrar el contenido de la caché local en el momento que desees invocando:</p>
@@ -343,7 +343,7 @@ void rollback(boolean force)</source>
         <td><code>Class</code></td>
         <td><code>&lt;cache-ref&gt;</code></td>
         <td>
-          Referencia una caché definida en otro namespace. Un mapper XML cuyo namespace coincide con el nombre completo de la interfaz mapper de Java comparte con ella el mismo namespace y la misma caché. Atributos: <code>value</code> y <code>name</code>.
+          Referencia la caché de un namespace. Las sentencias definidas mediante anotaciones no usan automáticamente la caché declarada en el mapper XML asociado, aunque compartan el mismo namespace. Para usar esa caché, hay que referenciarla con esta anotación. Atributos: <code>value</code> y <code>name</code>.
           If you use this annotation, you should be specified either <code>value</code> or <code>name</code> attribute.
           For the <code>value</code> attribute specify a java type indicating the namespace(the namespace name become a FQCN of specified java type),
           and for the <code>name</code> attribute(this attribute is available since 3.4.2) specify a name indicating the namespace.

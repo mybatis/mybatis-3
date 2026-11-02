@@ -245,7 +245,7 @@ RowBounds rowBounds = new RowBounds(offset, limit);</source>
 public interface ResultHandler<T> {
   void handleResult(ResultContext<? extends T> context);
 }]]></source>
-  <p>ResultContext 参数允许你访问结果对象和当前已被创建的对象数目，另外还提供了一个返回值为 Boolean 的 stop 方法，你可以使用此 stop 方法来停止 MyBatis 加载更多的结果。</p>
+  <p>ResultContext 参数允许你访问结果对象和当前已被创建的对象数目，另外还提供了 stop() 方法，你可以使用此方法来停止 MyBatis 加载更多的结果。</p>
   <p>使用 ResultHandler 的时候需要注意以下两个限制：</p>
   <ul>
     <li>使用带 ResultHandler 参数的方法时，收到的数据不会被缓存。</li>

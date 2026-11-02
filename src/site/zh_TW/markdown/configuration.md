@@ -117,7 +117,7 @@ SqlSessionFactory factory =
 | defaultStatementTimeout            | 設定驅動程式等待資料庫回應的逾時秒數。                                                                                                                                                                                                                                                                                                                                                                           | 大於或等於 0 的整數                                                                                                                        | 未設定 (null)                                         |
 | defaultFetchSize                   | 為驅動程式提供擷取資料列數（fetch size）的提示，以控制回傳結果的大小。此參數值可由個別查詢設定覆寫。                                                                                                                                                                                                                                                                                                             | 大於或等於 0 的整數                                                                                                                        | 未設定 (null)                                         |
 | defaultResultSetType               | 當省略個別陳述式設定時，指定預設的結果集捲動策略。（自 3.5.2 起）                                                                                                                                                                                                                                                                                                                                                | FORWARD_ONLY &#124; SCROLL_SENSITIVE &#124; SCROLL_INSENSITIVE &#124; DEFAULT（行為與「未設定」相同）                                      | 未設定 (null)                                         |
-| safeRowBoundsEnabled               | 設為 true 時，禁止在巢狀結果映射中使用非預設的 RowBounds；若要略過此檢查，請設為 false。                                                                                                                                                                                                                                                                                                                          | true &#124; false                                                                                                                          | false                                                 |
+| safeRowBoundsEnabled               | 設為 true 時，若巢狀結果映射使用大於零的 RowBounds offset 或小於預設值的 limit，則會拒絕執行；若要略過此檢查，請設為 false。                                                                                                                                                                                                                                                                                       | true &#124; false                                                                                                                          | false                                                 |
 | safeResultHandlerEnabled           | 設為 true 時，禁止在未設定 `resultOrdered=true` 的巢狀結果映射中使用自訂 ResultHandler；若要略過此檢查，請設為 false。                                                                                                                                                                                                                                                                                           | true &#124; false                                                                                                                          | true                                                  |
 | mapUnderscoreToCamelCase           | 啟用從傳統資料庫欄位名稱 A_COLUMN 到傳統 Java 駝峰式屬性名稱 aColumn 的自動映射。                                                                                                                                                                                                                                                                                                                                | true &#124; false                                                                                                                          | false                                                 |
 | localCacheScope                    | MyBatis 使用本地快取（local cache）來防止循環參照並加速重複的巢狀查詢。預設值（SESSION）讓未使用自訂 ResultHandler 的非游標查詢在工作階段期間重複使用快取結果；使用自訂 ResultHandler 的查詢不會讀取快取，游標查詢則完全略過快取。若設為 localCacheScope=STATEMENT，本地快取僅在陳述式執行期間使用，同一個 SqlSession 的不同呼叫之間不會共享快取資料。                                                                                    | SESSION &#124; STATEMENT                                                                                                                   | SESSION                                               |
@@ -335,7 +335,7 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
 </typeHandlers>
 ```
 
-使用這樣的 TypeHandler 將會覆寫 Java String 屬性以及 VARCHAR 參數與結果的現有型別處理器。`ignoreParameterMetaData` 為 `false`（預設值）時，若參數映射未指定 JDBC 型別，MyBatis 可以使用 JDBC 參數中繼資料，依 JDBC 型別選擇 TypeHandler。若驅動程式未提供這項中繼資料，請在參數映射中明確指定 `jdbcType="VARCHAR"`。選擇結果映射的 TypeHandler 時，JDBC 型別仍是未知的，因此必要時也應明確指定，詳見下文。
+使用這樣的 TypeHandler 將會覆寫 Java String 屬性以及 VARCHAR 參數與結果的現有型別處理器。`ignoreParameterMetaData` 為 `false`（預設值）時，若參數映射未指定 JDBC 型別，MyBatis 可以使用 JDBC 參數中繼資料，依 JDBC 型別選擇 TypeHandler。若驅動程式未提供這項中繼資料，請在參數映射中明確指定 `jdbcType="VARCHAR"`。若結果映射未指定 `typeHandler` 與 `jdbcType`，MyBatis 可以使用結果集中繼資料選擇處理器，詳見下文。
 
 MyBatis 會藉由反思檢查其泛型型別來得知您希望此 TypeHandler 處理的 Java 型別，但您可以透過兩種方式覆寫此行為：
 
@@ -344,10 +344,10 @@ MyBatis 會藉由反思檢查其泛型型別來得知您希望此 TypeHandler �
 
 相關聯的 JDBC 型別可透過兩種方式指定：
 
-- 在 typeHandler 元素中新增 `jdbcType` 屬性（例如：`jdbcType="VARCHAR"`）。
-- 在您的 TypeHandler 類別中新增 `@MappedJdbcTypes` 註解，指定要與之關聯的 JDBC 型別清單。若已指定 `jdbcType` 屬性，此註解將會被忽略。
+- 在同一個 typeHandler 元素中同時新增 `javaType` 與 `jdbcType` 屬性（例如：`javaType="String" jdbcType="VARCHAR"`）。若省略 `javaType`，XML 的 `jdbcType` 屬性會被忽略；若有 `@MappedJdbcTypes` 註解，則會使用該註解的設定。
+- 在您的 TypeHandler 類別中新增 `@MappedJdbcTypes` 註解，指定要與之關聯的 JDBC 型別清單。只有在同一個元素中同時指定 `javaType` 與 `jdbcType` 屬性時，此註解才會被忽略。
 
-在決定於 `ResultMap` 中使用哪個 TypeHandler 時，Java 型別是已知的（來自結果型別），但 JDBC 型別是未知的。因此，MyBatis 會使用組合 `javaType=[TheJavaType], jdbcType=null` 來選擇 TypeHandler。這表示使用 `@MappedJdbcTypes` 註解會*限制* TypeHandler 的作用範圍，並使其在 `ResultMap` 中無法使用，除非明確指定。若要讓 TypeHandler 可在 `ResultMap` 中使用，請在 `@MappedJdbcTypes` 註解上設定 `includeNullJdbcType=true`。然而自 MyBatis 3.4.0 起，若僅註冊了**單一** TypeHandler 來處理某個 Java 型別，則在使用此 Java 型別的 `ResultMap` 中將預設使用該處理器（即即使未設定 `includeNullJdbcType=true` 亦同）。
+在 `ResultMap` 的結果映射中明確指定 `typeHandler`，即可直接選擇該處理器。若只指定 `jdbcType` 而未指定 `typeHandler`，MyBatis 會在解析映射時，依 Java 型別與指定的 JDBC 型別選擇處理器。若兩者皆未指定，則會在讀取結果時，依 Java 型別與結果集中繼資料提供的實際欄位 JDBC 型別選擇處理器。因此，透過 `@MappedJdbcTypes` 註冊的處理器不需設定 `includeNullJdbcType=true`，也可以用於型別相符的結果欄位。`includeNullJdbcType=true` 也會將處理器註冊至 `jdbcType=null`，但它不是在 `ResultMap` 中使用處理器的必要條件。
 
 最後，您可以讓 MyBatis 自動搜尋您的 TypeHandler：
 
@@ -484,12 +484,12 @@ ObjectFactory 介面非常單純。它包含兩個 create 方法，一個用於�
 
 ### plugins
 
-MyBatis 允許您在已映射陳述式執行的特定切入點攔截呼叫。外掛模組可以攔截下列介面中宣告的方法：
+MyBatis 允許您在已映射陳述式執行的特定切入點攔截呼叫。以下是外掛模組可以攔截的受支援介面中的方法範例：
 
-- Executor (update, query, queryCursor, flushStatements, commit, rollback, createCacheKey, isCached, clearLocalCache, deferLoad, getTransaction, close, isClosed, setExecutorWrapper)
+- Executor (update, query, queryCursor, flushStatements, commit, rollback, getTransaction, close, isClosed)
 - ParameterHandler (getParameterObject, setParameters)
 - ResultSetHandler (handleResultSets, handleCursorResultSets, handleOutputParameters)
-- StatementHandler (prepare, parameterize, batch, update, query, queryCursor, getBoundSql, getParameterHandler)
+- StatementHandler (prepare, parameterize, batch, update, query, queryCursor)
 
 透過檢視各方法的完整簽名以及隨每個 MyBatis 版本提供的原始碼，可以了解這些類別方法的詳細資訊。假設您要做的不僅僅是監控呼叫，您應當深入了解所覆寫方法的行為。若您嘗試修改或覆寫特定方法的行為，很有可能會破壞 MyBatis 的核心運作。這些是低階類別與方法，因此請謹慎使用外掛模組。
 

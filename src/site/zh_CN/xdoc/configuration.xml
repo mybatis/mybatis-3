@@ -338,7 +338,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 safeRowBoundsEnabled
               </td>
               <td>
-                设置为 true 时，禁止在嵌套结果映射中使用非默认的 RowBounds；设置为 false 可跳过此检查。
+                设置为 true 时，如果嵌套结果映射使用大于零的 RowBounds offset 或小于默认值的 limit，则会拒绝执行；设置为 false 可跳过此检查。
               </td>
               <td>
                 true | false
@@ -1491,7 +1491,7 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
           VARCHAR 类型的参数和结果的类型处理器。
           当 <code>ignoreParameterMetaData</code> 为 <code>false</code>（默认值）时，如果参数映射没有指定 JDBC 类型，
           MyBatis 可以根据 JDBC 参数元数据中的类型选择类型处理器。如果驱动程序未提供此元数据，请在参数映射中指定
-          <code>jdbcType="VARCHAR"</code>。选择结果映射的类型处理器时，JDBC 类型仍是未知的，因此必要时也应显式指定，详见下文。
+          <code>jdbcType="VARCHAR"</code>。如果结果映射没有指定 <code>typeHandler</code> 和 <code>jdbcType</code>，MyBatis 可以使用结果集元数据选择类型处理器，详见下文。
         </p>
         <p>
           通过类型处理器的泛型，MyBatis 可以得知该类型处理器处理的 Java 类型，不过这种行为可以通过两种方法改变：
@@ -1511,28 +1511,22 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
         <p>可以通过两种方式来指定关联的 JDBC 类型：</p>
         <ul>
           <li>
-            在类型处理器的配置元素上增加一个 <code>jdbcType</code>
-            属性（比如：<code>jdbcType="VARCHAR"</code>）；
+            在同一个 typeHandler 元素上同时指定 <code>javaType</code> 和 <code>jdbcType</code>
+            属性（比如：<code>javaType="String" jdbcType="VARCHAR"</code>）。如果省略 <code>javaType</code>，XML 中的 <code>jdbcType</code> 属性将被忽略；若存在 <code>@MappedJdbcTypes</code> 注解，则会使用注解中的设置。
           </li>
           <li>
             在类型处理器的类上增加一个 <code>@MappedJdbcTypes</code>
             注解指定与其关联的 JDBC 类型列表。
-            如果在 <code>jdbcType</code> 属性中也同时指定，则注解上的配置将被忽略。
+            只有在同一个元素上同时指定 <code>javaType</code> 和 <code>jdbcType</code> 属性时，该注解才会被忽略。
           </li>
         </ul>
 
         <p>
-          当在 <code>ResultMap</code> 中决定使用哪种类型处理器时，此时 Java
-          类型是已知的（从结果类型中获得），但是 JDBC 类型是未知的。
-        因此 Mybatis 使用 <code>javaType=[Java 类型], jdbcType=null</code>
-          的组合来选择一个类型处理器。
-        这意味着使用 <code>@MappedJdbcTypes</code>
-          注解可以<i>限制</i>类型处理器的作用范围，并且可以确保，除非显式地设置，否则类型处理器在
-          <code>ResultMap</code> 中将不会生效。
-        如果希望能在 <code>ResultMap</code> 中隐式地使用类型处理器，那么设置
-          <code>@MappedJdbcTypes</code> 注解的 <code>includeNullJdbcType=true</code> 即可。
-        然而从 Mybatis 3.4.0 开始，如果某个 Java 类型<b>只有一个</b>注册的类型处理器，即使没有设置 <code>includeNullJdbcType=true</code>，那么这个类型处理器也会是 <code>ResultMap</code> 使用 Java
-          类型时的默认处理器。
+          在 <code>ResultMap</code> 的结果映射中显式指定 <code>typeHandler</code>，即可直接选择该处理器。
+          如果只指定 <code>jdbcType</code> 而未指定 <code>typeHandler</code>，MyBatis 会在解析映射时根据 Java 类型和指定的 JDBC 类型选择处理器。
+          如果两者都未指定，则会在读取结果时，根据 Java 类型和结果集元数据中的实际列 JDBC 类型选择处理器。
+          因此，通过 <code>@MappedJdbcTypes</code> 注册的处理器无需设置 <code>includeNullJdbcType=true</code>，也可以用于类型匹配的结果列。
+          <code>includeNullJdbcType=true</code> 还会将处理器注册到 <code>jdbcType=null</code>，但它不是在 <code>ResultMap</code> 中使用处理器的必要条件。
         </p>
 
         <p>最后，可以让 MyBatis 帮你查找类型处理器：</p>
@@ -1671,14 +1665,13 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
       <subsection name="插件（plugins）">
         <p><a id="plugins"></a></p>
         <p>
-          MyBatis 允许你在映射语句执行过程中的某一点进行拦截调用。插件可以拦截以下接口中声明的方法：
+          MyBatis 允许你在映射语句执行过程中的某一点进行拦截调用。以下是插件可以拦截的受支持接口中的方法示例：
         </p>
         <ul>
           <li>
             Executor
             (update, query, queryCursor, flushStatements, commit, rollback,
-            createCacheKey, isCached, clearLocalCache, deferLoad,
-            getTransaction, close, isClosed, setExecutorWrapper)
+            getTransaction, close, isClosed)
           </li>
           <li>
             ParameterHandler
@@ -1690,8 +1683,7 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
           </li>
           <li>
             StatementHandler
-            (prepare, parameterize, batch, update, query, queryCursor,
-            getBoundSql, getParameterHandler)
+            (prepare, parameterize, batch, update, query, queryCursor)
           </li>
         </ul>
         <p>这些类中方法的细节可以通过查看每个方法的签名来发现，或者直接查看 MyBatis 发行包中的源代码。
