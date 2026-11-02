@@ -146,6 +146,93 @@ SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
 SqlSessionFactory factory = builder.build(configuration);</source>
   <p>现在你就获得一个可以用来创建 SqlSession 实例的 SqlSessionFactory 了。</p>
 
+  <h4>SqlSessionManager</h4>
+  <p>从 3.4.0 版本开始，MyBatis 提供了同时实现 <code>SqlSessionFactory</code> 和 <code>SqlSession</code> 接口的 <code>SqlSessionManager</code>。<code>DefaultSqlSessionFactory</code> 每次调用 <code>openSession()</code> 都会创建新的 <code>SqlSession</code>，而 <code>SqlSessionManager</code> 使用 <code>ThreadLocal</code> 为每个线程管理会话。这样，无需借助外部依赖注入框架，也能在多线程环境中方便地管理 <code>SqlSession</code> 的生命周期。</p>
+
+  <h5>创建 SqlSessionManager</h5>
+  <p>可以通过以下两种方式创建 <code>SqlSessionManager</code>：</p>
+  <ol>
+    <li>
+      <p>调用接受 MyBatis XML 配置文件的静态 <code>newInstance()</code> 方法：</p>
+      <source>SqlSessionManager manager = SqlSessionManager.newInstance(inputStream);</source>
+      <p>也可以指定环境或属性：</p>
+      <source>SqlSessionManager manager = SqlSessionManager.newInstance(inputStream, environment);
+
+// ... or ...
+
+SqlSessionManager manager = SqlSessionManager.newInstance(inputStream, properties);</source>
+    </li>
+    <li>
+      <p>包装现有的 <code>SqlSessionFactory</code> 实例：</p>
+      <source>SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(inputStream);
+SqlSessionManager manager = SqlSessionManager.newInstance(factory);</source>
+    </li>
+  </ol>
+
+  <h5>受管理的会话</h5>
+  <p><code>SqlSessionManager</code> 的主要功能是按线程管理会话。启动受管理的会话后，通过 <code>SqlSessionManager</code> 代理调用的所有 <code>SqlSession</code> 方法都会使用该线程的会话。</p>
+  <p>启动受管理的会话：</p>
+  <source>manager.startManagedSession();</source>
+  <p>也可以指定选项：</p>
+  <source>// 启用自动提交
+manager.startManagedSession(true);
+
+// 指定执行器类型
+manager.startManagedSession(ExecutorType.BATCH);
+
+// 指定隔离级别
+manager.startManagedSession(TransactionIsolationLevel.READ_COMMITTED);
+
+// 指定连接
+manager.startManagedSession(connection);</source>
+  <p>检查当前线程是否已启动受管理的会话：</p>
+  <source>boolean isStarted = manager.isManagedSessionStarted();</source>
+
+  <h5>使用 SqlSessionManager</h5>
+  <p>启动受管理的会话后，<code>commit()</code>、<code>rollback()</code>、<code>close()</code> 以及数据访问方法（如 <code>selectOne</code>、<code>selectList</code>、<code>insert</code>、<code>update</code>、<code>delete</code>）都会操作该线程的会话。使用完毕后，必须调用 <code>close()</code> 清理线程局部状态。在 Tomcat 或 Jetty 等复用线程的 Web 服务器中，如果没有调用 <code>close()</code>，SQL 会话可能继续留在该线程上，影响其他 HTTP 请求，导致不可预期的事务行为或连接泄漏。</p>
+  <source>try {
+    manager.startManagedSession();
+    // 使用会话
+    manager.commit();
+} finally {
+    manager.close();
+}</source>
+  <p>如果尚未启动受管理的会话，调用 <code>SqlSessionManager</code> 的数据访问方法（<code>selectOne</code>、<code>selectList</code>、<code>selectMap</code>、<code>selectCursor</code>、<code>select</code>、<code>insert</code>、<code>update</code>、<code>delete</code>）时，会自动打开一个短期会话，执行该方法后立即关闭。方法正常返回时，自动打开的会话会提交；方法抛出异常时则会回滚。会话生命周期方法（<code>commit()</code>、<code>rollback()</code>、<code>close()</code>、<code>clearCache()</code>、<code>flushStatements()</code>、<code>getConnection()</code>）不会自动打开会话；如果尚未启动受管理的会话，这些方法会抛出 <code>SqlSessionException</code>。</p>
+
+  <h5>与 DefaultSqlSessionFactory 的区别</h5>
+  <table>
+    <thead>
+      <tr>
+        <th>特性</th>
+        <th>DefaultSqlSessionFactory</th>
+        <th>SqlSessionManager</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>会话创建</td>
+        <td>每次调用 <code>openSession()</code> 都创建新会话</td>
+        <td>可以通过 <code>startManagedSession()</code> 按线程管理会话</td>
+      </tr>
+      <tr>
+        <td>线程安全</td>
+        <td>需要在外部管理</td>
+        <td>内置基于 <code>ThreadLocal</code> 的会话管理</td>
+      </tr>
+      <tr>
+        <td>自动管理会话生命周期</td>
+        <td>否（需要手动关闭）</td>
+        <td>是（尚未启动受管理的会话时）</td>
+      </tr>
+      <tr>
+        <td>与依赖注入框架集成</td>
+        <td>需要专门的集成组件（例如 Spring 中的 <code>SqlSessionTemplate</code>）</td>
+        <td>在没有依赖注入框架的环境中可同时用作 <code>SqlSessionFactory</code> 和 <code>SqlSession</code></td>
+      </tr>
+    </tbody>
+  </table>
+  <p><code>SqlSessionManager</code> 特别适用于不使用依赖注入框架，但仍需要按线程管理会话的环境。如果使用 Spring 或 Guice，应继续通过 <code>MyBatis-Spring</code> 或 <code>MyBatis-Guice</code> 管理会话。</p>
+
   <h4>SqlSessionFactory</h4>
   <p>SqlSessionFactory 有六个方法创建 SqlSession 实例。通常来说，当你选择其中一个方法时，你需要考虑以下几点：</p>
   <ul>

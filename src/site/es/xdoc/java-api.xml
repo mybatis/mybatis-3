@@ -145,6 +145,93 @@ SqlSessionFactory factory = builder.build(configuration);</source>
 
   <p>Ahora tienes un SqlSessionFactory, que puede utilizarse para crear interfaces SqlSession.</p>
 
+  <h4>SqlSessionManager</h4>
+  <p>Desde la versión 3.4.0, MyBatis ofrece <code>SqlSessionManager</code>, que implementa tanto <code>SqlSessionFactory</code> como <code>SqlSession</code>. A diferencia de <code>DefaultSqlSessionFactory</code>, que crea una nueva <code>SqlSession</code> con cada llamada a <code>openSession()</code>, <code>SqlSessionManager</code> utiliza un <code>ThreadLocal</code> para gestionar las sesiones de cada hilo. Esto permite gestionar el ciclo de vida de <code>SqlSession</code> en entornos multihilo sin un framework externo de inyección de dependencias.</p>
+
+  <h5>Creación de un SqlSessionManager</h5>
+  <p>Se puede crear un <code>SqlSessionManager</code> de dos maneras:</p>
+  <ol>
+    <li>
+      <p>Mediante uno de los métodos estáticos <code>newInstance()</code> que aceptan un fichero de configuración XML de MyBatis:</p>
+      <source>SqlSessionManager manager = SqlSessionManager.newInstance(inputStream);</source>
+      <p>También se puede indicar un entorno o un conjunto de propiedades:</p>
+      <source>SqlSessionManager manager = SqlSessionManager.newInstance(inputStream, environment);
+
+// ... or ...
+
+SqlSessionManager manager = SqlSessionManager.newInstance(inputStream, properties);</source>
+    </li>
+    <li>
+      <p>Envolviendo una instancia existente de <code>SqlSessionFactory</code>:</p>
+      <source>SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(inputStream);
+SqlSessionManager manager = SqlSessionManager.newInstance(factory);</source>
+    </li>
+  </ol>
+
+  <h5>Sesiones gestionadas</h5>
+  <p>La característica principal de <code>SqlSessionManager</code> es que gestiona las sesiones por hilo. Una vez iniciada una sesión gestionada, todas las llamadas a los métodos de <code>SqlSession</code> a través del proxy de <code>SqlSessionManager</code> utilizan la sesión asociada al hilo.</p>
+  <p>Para iniciar una sesión gestionada:</p>
+  <source>manager.startManagedSession();</source>
+  <p>También se pueden indicar opciones concretas:</p>
+  <source>// Con auto-commit
+manager.startManagedSession(true);
+
+// Con un tipo de executor específico
+manager.startManagedSession(ExecutorType.BATCH);
+
+// Con un nivel de aislamiento específico
+manager.startManagedSession(TransactionIsolationLevel.READ_COMMITTED);
+
+// Con una conexión específica
+manager.startManagedSession(connection);</source>
+  <p>Para comprobar si se ha iniciado una sesión gestionada en el hilo actual:</p>
+  <source>boolean isStarted = manager.isManagedSessionStarted();</source>
+
+  <h5>Uso de SqlSessionManager</h5>
+  <p>Cuando hay una sesión gestionada, <code>commit()</code>, <code>rollback()</code>, <code>close()</code> y los métodos de acceso a datos (<code>selectOne</code>, <code>selectList</code>, <code>insert</code>, <code>update</code>, <code>delete</code>, etc.) operan sobre la sesión asociada al hilo. Al terminar, se debe llamar a <code>close()</code> para limpiar el estado del hilo. Si no se hace en un servidor web que reutiliza hilos, como Tomcat o Jetty, la sesión puede permanecer asociada al hilo y afectar a otra petición HTTP, provocando un comportamiento transaccional imprevisible o fugas de conexiones.</p>
+  <source>try {
+    manager.startManagedSession();
+    // utilizar la sesión
+    manager.commit();
+} finally {
+    manager.close();
+}</source>
+  <p>Si no se ha iniciado una sesión gestionada, al llamar a un método de acceso a datos (<code>selectOne</code>, <code>selectList</code>, <code>selectMap</code>, <code>selectCursor</code>, <code>select</code>, <code>insert</code>, <code>update</code>, <code>delete</code>) de <code>SqlSessionManager</code>, se abre automáticamente una sesión de corta duración, se ejecuta ese método y se cierra la sesión. La sesión abierta automáticamente se confirma si el método termina con normalidad y se revierte si lanza una excepción. Los métodos del ciclo de vida de la sesión (<code>commit()</code>, <code>rollback()</code>, <code>close()</code>, <code>clearCache()</code>, <code>flushStatements()</code>, <code>getConnection()</code>) no abren una sesión automáticamente; lanzan <code>SqlSessionException</code> si no se ha iniciado una sesión gestionada.</p>
+
+  <h5>Diferencias con DefaultSqlSessionFactory</h5>
+  <table>
+    <thead>
+      <tr>
+        <th>Característica</th>
+        <th>DefaultSqlSessionFactory</th>
+        <th>SqlSessionManager</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Creación de sesiones</td>
+        <td>Crea una nueva sesión en cada llamada a <code>openSession()</code></td>
+        <td>Puede gestionar sesiones por hilo mediante <code>startManagedSession()</code></td>
+      </tr>
+      <tr>
+        <td>Seguridad entre hilos</td>
+        <td>Requiere gestión externa</td>
+        <td>Incluye gestión de sesiones mediante <code>ThreadLocal</code></td>
+      </tr>
+      <tr>
+        <td>Ciclo de vida automático de la sesión</td>
+        <td>No (requiere cerrarla manualmente)</td>
+        <td>Sí, cuando no se ha iniciado una sesión gestionada</td>
+      </tr>
+      <tr>
+        <td>Integración con frameworks de inyección de dependencias</td>
+        <td>Requiere una integración específica (por ejemplo, <code>SqlSessionTemplate</code> en Spring)</td>
+        <td>Puede sustituir a <code>SqlSessionFactory</code> y <code>SqlSession</code> en entornos sin inyección de dependencias</td>
+      </tr>
+    </tbody>
+  </table>
+  <p><code>SqlSessionManager</code> resulta especialmente útil cuando se necesita gestionar sesiones por hilo sin utilizar un framework de inyección de dependencias. Si se utiliza Spring o Guice, se debe seguir usando <code>MyBatis-Spring</code> o <code>MyBatis-Guice</code> para gestionar las sesiones.</p>
+
   <h4>SqlSessionFactory</h4>
   <p>SqlSessionFactory tiene seis métodos que se usan para crear instancias de SqlSession. En general, las decisiones que deberás tomar cuando tengas qué elegir de entre alguno de estos métodos son:</p>
   <ul>

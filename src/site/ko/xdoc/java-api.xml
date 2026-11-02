@@ -186,6 +186,93 @@ SqlSessionFactory factory = builder.build(configuration);</source>
   <p>이제 SqlSessionFactory를 만들었다.
   SqlSession인스턴스를 만들기 위해 사용해보자.</p>
 
+  <h4>SqlSessionManager</h4>
+  <p>MyBatis 3.4.0부터 <code>SqlSessionFactory</code>와 <code>SqlSession</code> 인터페이스를 모두 구현하는 <code>SqlSessionManager</code>를 사용할 수 있다. <code>openSession()</code>을 호출할 때마다 새 <code>SqlSession</code>을 생성하는 <code>DefaultSqlSessionFactory</code>와 달리, <code>SqlSessionManager</code>는 <code>ThreadLocal</code>을 사용해 스레드별로 세션을 관리한다. 이를 통해 외부 의존성 주입 프레임워크 없이도 멀티스레드 환경에서 <code>SqlSession</code>의 생명주기를 관리할 수 있다.</p>
+
+  <h5>SqlSessionManager 생성</h5>
+  <p><code>SqlSessionManager</code>는 다음 두 가지 방법으로 생성할 수 있다.</p>
+  <ol>
+    <li>
+      <p>MyBatis XML 설정 파일을 받는 정적 <code>newInstance()</code> 메서드를 사용하는 방법:</p>
+      <source>SqlSessionManager manager = SqlSessionManager.newInstance(inputStream);</source>
+      <p>환경이나 속성을 지정할 수도 있다.</p>
+      <source>SqlSessionManager manager = SqlSessionManager.newInstance(inputStream, environment);
+
+// ... or ...
+
+SqlSessionManager manager = SqlSessionManager.newInstance(inputStream, properties);</source>
+    </li>
+    <li>
+      <p>기존 <code>SqlSessionFactory</code> 인스턴스를 감싸는 방법:</p>
+      <source>SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(inputStream);
+SqlSessionManager manager = SqlSessionManager.newInstance(factory);</source>
+    </li>
+  </ol>
+
+  <h5>관리 세션</h5>
+  <p><code>SqlSessionManager</code>의 핵심 기능은 스레드별 세션 관리다. 관리 세션을 시작하면 <code>SqlSessionManager</code> 프록시를 통해 호출하는 모든 <code>SqlSession</code> 메서드는 해당 스레드의 세션을 사용한다.</p>
+  <p>관리 세션은 다음과 같이 시작한다.</p>
+  <source>manager.startManagedSession();</source>
+  <p>특정 옵션을 지정할 수도 있다.</p>
+  <source>// 자동 커밋 지정
+manager.startManagedSession(true);
+
+// 실행기 유형 지정
+manager.startManagedSession(ExecutorType.BATCH);
+
+// 트랜잭션 격리 수준 지정
+manager.startManagedSession(TransactionIsolationLevel.READ_COMMITTED);
+
+// 커넥션 지정
+manager.startManagedSession(connection);</source>
+  <p>현재 스레드에서 관리 세션이 시작되었는지 확인하려면 다음과 같이 한다.</p>
+  <source>boolean isStarted = manager.isManagedSessionStarted();</source>
+
+  <h5>SqlSessionManager 사용</h5>
+  <p>관리 세션을 시작한 상태에서는 <code>commit()</code>, <code>rollback()</code>, <code>close()</code> 또는 데이터 접근 메서드(<code>selectOne</code>, <code>selectList</code>, <code>insert</code>, <code>update</code>, <code>delete</code> 등)를 호출하면 해당 스레드의 세션에서 실행된다. 사용을 마치면 반드시 <code>close()</code>를 호출해 스레드 로컬 상태를 정리해야 한다. Tomcat이나 Jetty처럼 스레드를 재사용하는 웹 서버에서 이를 빠뜨리면 SQL 세션이 스레드에 남아 다른 HTTP 요청에서도 사용될 수 있으며, 예기치 않은 트랜잭션 동작이나 커넥션 누수가 발생할 수 있다.</p>
+  <source>try {
+    manager.startManagedSession();
+    // 세션 사용
+    manager.commit();
+} finally {
+    manager.close();
+}</source>
+  <p>관리 세션을 시작하지 않은 상태에서 <code>SqlSessionManager</code>의 데이터 접근 메서드(<code>selectOne</code>, <code>selectList</code>, <code>selectMap</code>, <code>selectCursor</code>, <code>select</code>, <code>insert</code>, <code>update</code>, <code>delete</code>)를 호출하면 짧게 사용할 세션을 자동으로 열고 해당 메서드를 실행한 뒤 즉시 닫는다. 메서드가 정상적으로 반환하면 자동으로 연 세션을 커밋하고, 예외가 발생하면 롤백한다. 세션 생명주기 메서드(<code>commit()</code>, <code>rollback()</code>, <code>close()</code>, <code>clearCache()</code>, <code>flushStatements()</code>, <code>getConnection()</code>)는 세션을 자동으로 열지 않는다. 관리 세션이 시작되지 않았다면 <code>SqlSessionException</code>을 던진다.</p>
+
+  <h5>DefaultSqlSessionFactory와의 차이</h5>
+  <table>
+    <thead>
+      <tr>
+        <th>기능</th>
+        <th>DefaultSqlSessionFactory</th>
+        <th>SqlSessionManager</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>세션 생성</td>
+        <td><code>openSession()</code>을 호출할 때마다 새 세션 생성</td>
+        <td><code>startManagedSession()</code>으로 스레드별 세션 관리 가능</td>
+      </tr>
+      <tr>
+        <td>스레드 안전성</td>
+        <td>외부에서 관리해야 함</td>
+        <td>스레드 로컬 세션 관리를 내장</td>
+      </tr>
+      <tr>
+        <td>자동 세션 생명주기 관리</td>
+        <td>없음(직접 닫아야 함)</td>
+        <td>있음(관리 세션을 시작하지 않은 경우)</td>
+      </tr>
+      <tr>
+        <td>DI 프레임워크 연동</td>
+        <td>DI 전용 연동 기능이 필요함(예: Spring의 <code>SqlSessionTemplate</code>)</td>
+        <td>DI를 사용하지 않는 환경에서 <code>SqlSessionFactory</code>와 <code>SqlSession</code>을 대신할 수 있음</td>
+      </tr>
+    </tbody>
+  </table>
+  <p><code>SqlSessionManager</code>는 의존성 주입 프레임워크를 사용하지 않으면서 스레드별 세션 관리가 필요한 환경에서 특히 유용하다. Spring이나 Guice를 사용한다면 <code>MyBatis-Spring</code>이나 <code>MyBatis-Guice</code>로 계속 세션을 관리해야 한다.</p>
+
   <h4>SqlSessionFactory</h4>
   <p>SqlSessionFactory는 SqlSession인스턴스를 생성하기 위해 사용할 수 있는 6개의 메소드를 가지고 있다.
   6개의 메소드가 선택해서 사용하는 것들을 보자.</p>

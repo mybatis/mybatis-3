@@ -149,6 +149,93 @@ SqlSessionFactory factory = builder.build(configuration);</source>
 
   <p>SqlSessionFactory が手に入ったので、SqlSession のインスタンスを生成することができます。</p>
 
+  <h4>SqlSessionManager</h4>
+  <p>MyBatis 3.4.0 以降では、<code>SqlSessionFactory</code> と <code>SqlSession</code> の両方を実装する <code>SqlSessionManager</code> を利用できます。<code>openSession()</code> を呼び出すたびに新しい <code>SqlSession</code> を作成する <code>DefaultSqlSessionFactory</code> と異なり、<code>SqlSessionManager</code> は <code>ThreadLocal</code> を使ってスレッドごとにセッションを管理します。これにより、外部の依存性注入フレームワークを使わずに、マルチスレッド環境で <code>SqlSession</code> のライフサイクルを管理できます。</p>
+
+  <h5>SqlSessionManager の作成</h5>
+  <p><code>SqlSessionManager</code> は次の２つの方法で作成できます。</p>
+  <ol>
+    <li>
+      <p>MyBatis の XML 設定ファイルを受け取る静的な <code>newInstance()</code> メソッドを使う方法：</p>
+      <source>SqlSessionManager manager = SqlSessionManager.newInstance(inputStream);</source>
+      <p>environment または properties を指定することもできます。</p>
+      <source>SqlSessionManager manager = SqlSessionManager.newInstance(inputStream, environment);
+
+// ... or ...
+
+SqlSessionManager manager = SqlSessionManager.newInstance(inputStream, properties);</source>
+    </li>
+    <li>
+      <p>既存の <code>SqlSessionFactory</code> インスタンスをラップする方法：</p>
+      <source>SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(inputStream);
+SqlSessionManager manager = SqlSessionManager.newInstance(factory);</source>
+    </li>
+  </ol>
+
+  <h5>マネージドセッション</h5>
+  <p><code>SqlSessionManager</code> の主な機能は、スレッドごとにセッションを管理することです。マネージドセッションを開始すると、<code>SqlSessionManager</code> プロキシを通じて呼び出されるすべての <code>SqlSession</code> メソッドは、そのスレッドに紐づくセッションを使用します。</p>
+  <p>マネージドセッションを開始するには、次のようにします。</p>
+  <source>manager.startManagedSession();</source>
+  <p>オプションを指定して開始することもできます。</p>
+  <source>// 自動コミットを指定
+manager.startManagedSession(true);
+
+// ExecutorType を指定
+manager.startManagedSession(ExecutorType.BATCH);
+
+// 分離レベルを指定
+manager.startManagedSession(TransactionIsolationLevel.READ_COMMITTED);
+
+// Connection を指定
+manager.startManagedSession(connection);</source>
+  <p>現在のスレッドでマネージドセッションが開始されているか確認するには、次のようにします。</p>
+  <source>boolean isStarted = manager.isManagedSessionStarted();</source>
+
+  <h5>SqlSessionManager の使用</h5>
+  <p>マネージドセッションが開始されている場合、<code>commit()</code>、<code>rollback()</code>、<code>close()</code>、およびデータアクセスメソッド（<code>selectOne</code>、<code>selectList</code>、<code>insert</code>、<code>update</code>、<code>delete</code> など）は、スレッドに紐づくセッションに対して動作します。処理が終わったら、スレッドローカルの状態を消去するために必ず <code>close()</code> を呼び出してください。Tomcat や Jetty のようにスレッドを再利用する Web サーバーで呼び出しを忘れると、別の HTTP リクエストでもそのセッションが使われ、予期しないトランザクションの動作やコネクションのリークが起こる可能性があります。</p>
+  <source>try {
+    manager.startManagedSession();
+    // セッションを使用
+    manager.commit();
+} finally {
+    manager.close();
+}</source>
+  <p>マネージドセッションが開始されていない場合、<code>SqlSessionManager</code> のデータアクセスメソッド（<code>selectOne</code>、<code>selectList</code>、<code>selectMap</code>、<code>selectCursor</code>、<code>select</code>、<code>insert</code>、<code>update</code>、<code>delete</code>）を呼び出すと、短命のセッションが自動的に開かれ、そのメソッドを実行した後に閉じられます。メソッドが正常に終了すると、自動的に開かれたセッションはコミットされ、例外がスローされるとロールバックされます。セッションのライフサイクルに関わるメソッド（<code>commit()</code>、<code>rollback()</code>、<code>close()</code>、<code>clearCache()</code>、<code>flushStatements()</code>、<code>getConnection()</code>）はセッションを自動的には開かず、マネージドセッションが開始されていなければ <code>SqlSessionException</code> をスローします。</p>
+
+  <h5>DefaultSqlSessionFactory との違い</h5>
+  <table>
+    <thead>
+      <tr>
+        <th>機能</th>
+        <th>DefaultSqlSessionFactory</th>
+        <th>SqlSessionManager</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>セッションの作成</td>
+        <td><code>openSession()</code> を呼び出すたびに新しいセッションを作成</td>
+        <td><code>startManagedSession()</code> でスレッドごとのセッションを管理可能</td>
+      </tr>
+      <tr>
+        <td>スレッドセーフティ</td>
+        <td>外部での管理が必要</td>
+        <td>スレッドローカルのセッション管理を内蔵</td>
+      </tr>
+      <tr>
+        <td>セッションのライフサイクルの自動管理</td>
+        <td>なし（手動で閉じる必要あり）</td>
+        <td>あり（マネージドセッションが開始されていない場合）</td>
+      </tr>
+      <tr>
+        <td>DI フレームワークとの連携</td>
+        <td>DI 固有の仕組みが必要（例：Spring の <code>SqlSessionTemplate</code>）</td>
+        <td>DI を使わない環境では <code>SqlSessionFactory</code> と <code>SqlSession</code> の代わりに使用可能</td>
+      </tr>
+    </tbody>
+  </table>
+  <p><code>SqlSessionManager</code> は、依存性注入フレームワークを使わずにスレッドごとのセッション管理が必要な環境で特に役立ちます。Spring や Guice を使用している場合は、引き続き <code>MyBatis-Spring</code> または <code>MyBatis-Guice</code> を使ってセッションを管理してください。</p>
+
   <h4>SqlSessionFactory</h4>
   <p>SqlSessionFactory には、SqlSession のインスタンスを作成するためのメソッドが６つ用意されています。一般的には、以下のような条件を考慮してメソッドを選ぶことになると思います。</p>
   <ul>
