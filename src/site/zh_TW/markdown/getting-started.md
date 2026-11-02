@@ -7,7 +7,7 @@ author: Clinton Begin
 
 ### 安裝
 
-要使用 MyBatis，您只需將 [mybatis-x.x.x.jar](https://github.com/mybatis/mybatis-3/releases) 檔案加入類別路徑（classpath）中。
+要使用 MyBatis，您只需將 [mybatis-@project.version@.jar](https://github.com/mybatis/mybatis-3/releases) 檔案加入類別路徑（classpath）中。
 
 如果您使用 Maven，只需在 pom.xml 中加入下列相依性：
 
@@ -15,7 +15,7 @@ author: Clinton Begin
 <dependency>
   <groupId>org.mybatis</groupId>
   <artifactId>mybatis</artifactId>
-  <version>x.x.x</version>
+  <version>@project.version@</version>
 </dependency>
 ```
 
