@@ -21,6 +21,7 @@ import java.sql.NClob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 
 /**
  * @author Clinton Begin
@@ -62,7 +63,7 @@ public class NClobTypeHandler extends BaseTypeHandler<String> {
     } finally {
       try {
         nclob.free();
-      } catch (SQLException | UnsupportedOperationException ignored) {
+      } catch (SQLFeatureNotSupportedException | UnsupportedOperationException ignored) {
         // Ignored for drivers that don't support free()
       }
     }

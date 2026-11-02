@@ -21,6 +21,7 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 
 /**
  * @author Clinton Begin
@@ -59,7 +60,7 @@ public class BlobTypeHandler extends BaseTypeHandler<byte[]> {
     } finally {
       try {
         blob.free();
-      } catch (SQLException | UnsupportedOperationException ignored) {
+      } catch (SQLFeatureNotSupportedException | UnsupportedOperationException ignored) {
         // Ignored for drivers that don't support free()
       }
     }

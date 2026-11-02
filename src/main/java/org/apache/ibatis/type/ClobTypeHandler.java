@@ -21,6 +21,7 @@ import java.sql.Clob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 
 /**
  * @author Clinton Begin
@@ -62,7 +63,7 @@ public class ClobTypeHandler extends BaseTypeHandler<String> {
     } finally {
       try {
         clob.free();
-      } catch (SQLException | UnsupportedOperationException ignored) {
+      } catch (SQLFeatureNotSupportedException | UnsupportedOperationException ignored) {
         // Ignored for drivers that don't support free()
       }
     }
