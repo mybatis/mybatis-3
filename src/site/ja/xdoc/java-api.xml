@@ -149,6 +149,7 @@ SqlSessionFactory factory = builder.build(configuration);</source>
 
   <p>SqlSessionFactory が手に入ったので、SqlSession のインスタンスを生成することができます。</p>
 
+  <a name="sqlSessionManager"/>
   <h4>SqlSessionManager</h4>
   <p>MyBatis 3.4.0 以降では、<code>SqlSessionFactory</code> と <code>SqlSession</code> の両方を実装する <code>SqlSessionManager</code> を利用できます。<code>openSession()</code> を呼び出すたびに新しい <code>SqlSession</code> を作成する <code>DefaultSqlSessionFactory</code> と異なり、<code>SqlSessionManager</code> は <code>ThreadLocal</code> を使ってスレッドごとにセッションを管理します。これにより、外部の依存性注入フレームワークを使わずに、マルチスレッド環境で <code>SqlSession</code> のライフサイクルを管理できます。</p>
 
@@ -193,14 +194,14 @@ manager.startManagedSession(connection);</source>
 
   <h5>SqlSessionManager の使用</h5>
   <p>マネージドセッションが開始されている場合、<code>commit()</code>、<code>rollback()</code>、<code>close()</code>、およびデータアクセスメソッド（<code>selectOne</code>、<code>selectList</code>、<code>insert</code>、<code>update</code>、<code>delete</code> など）は、スレッドに紐づくセッションに対して動作します。処理が終わったら、スレッドローカルの状態を消去するために必ず <code>close()</code> を呼び出してください。Tomcat や Jetty のようにスレッドを再利用する Web サーバーで呼び出しを忘れると、別の HTTP リクエストでもそのセッションが使われ、予期しないトランザクションの動作やコネクションのリークが起こる可能性があります。</p>
-  <source>try {
-    manager.startManagedSession();
+  <source>manager.startManagedSession();
+try {
     // セッションを使用
     manager.commit();
 } finally {
     manager.close();
 }</source>
-  <p>マネージドセッションが開始されていない場合、<code>SqlSessionManager</code> のデータアクセスメソッド（<code>selectOne</code>、<code>selectList</code>、<code>selectMap</code>、<code>selectCursor</code>、<code>select</code>、<code>insert</code>、<code>update</code>、<code>delete</code>）を呼び出すと、短命のセッションが自動的に開かれ、そのメソッドを実行した後に閉じられます。メソッドが正常に終了すると、自動的に開かれたセッションはコミットされ、例外がスローされるとロールバックされます。セッションのライフサイクルに関わるメソッド（<code>commit()</code>、<code>rollback()</code>、<code>close()</code>、<code>clearCache()</code>、<code>flushStatements()</code>、<code>getConnection()</code>）はセッションを自動的には開かず、マネージドセッションが開始されていなければ <code>SqlSessionException</code> をスローします。</p>
+  <p>マネージドセッションが開始されていない場合、<code>SqlSessionManager</code> のデータアクセスメソッド（<code>selectOne</code>、<code>selectList</code>、<code>selectMap</code>、<code>selectCursor</code>、<code>select</code>、<code>insert</code>、<code>update</code>、<code>delete</code>）を呼び出すと、短命のセッションが自動的に開かれ、そのメソッドを実行した後に閉じられます。メソッドが正常に終了するとマネージャーは <code>commit()</code> を呼び出し、例外がスローされると <code>rollback()</code> を呼び出します。これらの呼び出しが実際にデータベースのトランザクションを制御するかどうかは、設定されたトランザクションマネージャーによって異なります。返された <code>Cursor</code> はセッションが閉じられると同時に閉じられるため、<code>selectCursor</code> を使う場合はマネージドセッションまたは明示的に開いたセッションを使用してください。セッションのライフサイクルに関わるメソッド（<code>commit()</code>、<code>rollback()</code>、<code>close()</code>、<code>clearCache()</code>、<code>flushStatements()</code>、<code>getConnection()</code>）はセッションを自動的には開かず、マネージドセッションが開始されていなければ <code>SqlSessionException</code> をスローします。</p>
 
   <h5>DefaultSqlSessionFactory との違い</h5>
   <table>

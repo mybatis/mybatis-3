@@ -146,6 +146,7 @@ SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
 SqlSessionFactory factory = builder.build(configuration);</source>
   <p>现在你就获得一个可以用来创建 SqlSession 实例的 SqlSessionFactory 了。</p>
 
+  <a name="sqlSessionManager"/>
   <h4>SqlSessionManager</h4>
   <p>从 3.4.0 版本开始，MyBatis 提供了同时实现 <code>SqlSessionFactory</code> 和 <code>SqlSession</code> 接口的 <code>SqlSessionManager</code>。<code>DefaultSqlSessionFactory</code> 每次调用 <code>openSession()</code> 都会创建新的 <code>SqlSession</code>，而 <code>SqlSessionManager</code> 使用 <code>ThreadLocal</code> 为每个线程管理会话。这样，无需借助外部依赖注入框架，也能在多线程环境中方便地管理 <code>SqlSession</code> 的生命周期。</p>
 
@@ -190,14 +191,14 @@ manager.startManagedSession(connection);</source>
 
   <h5>使用 SqlSessionManager</h5>
   <p>启动受管理的会话后，<code>commit()</code>、<code>rollback()</code>、<code>close()</code> 以及数据访问方法（如 <code>selectOne</code>、<code>selectList</code>、<code>insert</code>、<code>update</code>、<code>delete</code>）都会操作该线程的会话。使用完毕后，必须调用 <code>close()</code> 清理线程局部状态。在 Tomcat 或 Jetty 等复用线程的 Web 服务器中，如果没有调用 <code>close()</code>，SQL 会话可能继续留在该线程上，影响其他 HTTP 请求，导致不可预期的事务行为或连接泄漏。</p>
-  <source>try {
-    manager.startManagedSession();
+  <source>manager.startManagedSession();
+try {
     // 使用会话
     manager.commit();
 } finally {
     manager.close();
 }</source>
-  <p>如果尚未启动受管理的会话，调用 <code>SqlSessionManager</code> 的数据访问方法（<code>selectOne</code>、<code>selectList</code>、<code>selectMap</code>、<code>selectCursor</code>、<code>select</code>、<code>insert</code>、<code>update</code>、<code>delete</code>）时，会自动打开一个短期会话，执行该方法后立即关闭。方法正常返回时，自动打开的会话会提交；方法抛出异常时则会回滚。会话生命周期方法（<code>commit()</code>、<code>rollback()</code>、<code>close()</code>、<code>clearCache()</code>、<code>flushStatements()</code>、<code>getConnection()</code>）不会自动打开会话；如果尚未启动受管理的会话，这些方法会抛出 <code>SqlSessionException</code>。</p>
+  <p>如果尚未启动受管理的会话，调用 <code>SqlSessionManager</code> 的数据访问方法（<code>selectOne</code>、<code>selectList</code>、<code>selectMap</code>、<code>selectCursor</code>、<code>select</code>、<code>insert</code>、<code>update</code>、<code>delete</code>）时，会自动打开一个短期会话，执行该方法后立即关闭。方法正常返回时，管理器会调用 <code>commit()</code>；方法抛出异常时则会调用 <code>rollback()</code>。这些调用是否控制数据库事务，取决于配置的事务管理器。由于会话在返回的 <code>Cursor</code> 开始迭代前就已关闭，调用 <code>selectCursor</code> 时应使用受管理的会话或显式打开的会话。会话生命周期方法（<code>commit()</code>、<code>rollback()</code>、<code>close()</code>、<code>clearCache()</code>、<code>flushStatements()</code>、<code>getConnection()</code>）不会自动打开会话；如果尚未启动受管理的会话，这些方法会抛出 <code>SqlSessionException</code>。</p>
 
   <h5>与 DefaultSqlSessionFactory 的区别</h5>
   <table>

@@ -45,6 +45,7 @@
       <item name="Java API" href="java-api.html" collapse="true">
         <item name="ディレクトリ構造" href="java-api.html#directoryStructure" />
         <item name="SqlSessions" href="java-api.html#sqlSessions" />
+        <item name="SqlSessionManager" href="java-api.html#sqlSessionManager" />
       </item>
       <item name="ステートメントビルダー" href="statement-builders.html" collapse="true">
         <item name="SelectBuilder" href="statement-builders.html#SelectBuilder" />

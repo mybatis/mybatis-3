@@ -145,6 +145,7 @@ SqlSessionFactory factory = builder.build(configuration);</source>
 
   <p>Ahora tienes un SqlSessionFactory, que puede utilizarse para crear interfaces SqlSession.</p>
 
+  <a name="sqlSessionManager"/>
   <h4>SqlSessionManager</h4>
   <p>Desde la versión 3.4.0, MyBatis ofrece <code>SqlSessionManager</code>, que implementa tanto <code>SqlSessionFactory</code> como <code>SqlSession</code>. A diferencia de <code>DefaultSqlSessionFactory</code>, que crea una nueva <code>SqlSession</code> con cada llamada a <code>openSession()</code>, <code>SqlSessionManager</code> utiliza un <code>ThreadLocal</code> para gestionar las sesiones de cada hilo. Esto permite gestionar el ciclo de vida de <code>SqlSession</code> en entornos multihilo sin un framework externo de inyección de dependencias.</p>
 
@@ -189,14 +190,15 @@ manager.startManagedSession(connection);</source>
 
   <h5>Uso de SqlSessionManager</h5>
   <p>Cuando hay una sesión gestionada, <code>commit()</code>, <code>rollback()</code>, <code>close()</code> y los métodos de acceso a datos (<code>selectOne</code>, <code>selectList</code>, <code>insert</code>, <code>update</code>, <code>delete</code>, etc.) operan sobre la sesión asociada al hilo. Al terminar, se debe llamar a <code>close()</code> para limpiar el estado del hilo. Si no se hace en un servidor web que reutiliza hilos, como Tomcat o Jetty, la sesión puede permanecer asociada al hilo y afectar a otra petición HTTP, provocando un comportamiento transaccional imprevisible o fugas de conexiones.</p>
-  <source>try {
-    manager.startManagedSession();
+  <source>manager.startManagedSession();
+try {
     // utilizar la sesión
     manager.commit();
 } finally {
     manager.close();
 }</source>
-  <p>Si no se ha iniciado una sesión gestionada, al llamar a un método de acceso a datos (<code>selectOne</code>, <code>selectList</code>, <code>selectMap</code>, <code>selectCursor</code>, <code>select</code>, <code>insert</code>, <code>update</code>, <code>delete</code>) de <code>SqlSessionManager</code>, se abre automáticamente una sesión de corta duración, se ejecuta ese método y se cierra la sesión. La sesión abierta automáticamente se confirma si el método termina con normalidad y se revierte si lanza una excepción. Los métodos del ciclo de vida de la sesión (<code>commit()</code>, <code>rollback()</code>, <code>close()</code>, <code>clearCache()</code>, <code>flushStatements()</code>, <code>getConnection()</code>) no abren una sesión automáticamente; lanzan <code>SqlSessionException</code> si no se ha iniciado una sesión gestionada.</p>
+  <p>Si no se ha iniciado una sesión gestionada, al llamar a un método de acceso a datos (<code>selectOne</code>, <code>selectList</code>, <code>selectMap</code>, <code>selectCursor</code>, <code>select</code>, <code>insert</code>, <code>update</code>, <code>delete</code>) de <code>SqlSessionManager</code>, se abre automáticamente una sesión de corta duración, se ejecuta ese método y se cierra la sesión. La sesión abierta automáticamente llama a <code>commit()</code> si el método termina con normalidad y a <code>rollback()</code> si lanza una excepción. Que estas llamadas confirmen o reviertan efectivamente una transacción de la base de datos depende del gestor de transacciones configurado. Los métodos del ciclo de vida de la sesión (<code>commit()</code>, <code>rollback()</code>, <code>close()</code>, <code>clearCache()</code>, <code>flushStatements()</code>, <code>getConnection()</code>) no abren una sesión automáticamente; lanzan <code>SqlSessionException</code> si no se ha iniciado una sesión gestionada.</p>
+  <p>En particular, sin una sesión gestionada, <code>selectCursor()</code> devuelve un cursor que se cierra inmediatamente al cerrarse la sesión automática. Para recorrer sus resultados, inicie una sesión gestionada antes de llamar a <code>selectCursor()</code>.</p>
 
   <h5>Diferencias con DefaultSqlSessionFactory</h5>
   <table>

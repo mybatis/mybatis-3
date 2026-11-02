@@ -186,6 +186,7 @@ SqlSessionFactory factory = builder.build(configuration);</source>
   <p>이제 SqlSessionFactory를 만들었다.
   SqlSession인스턴스를 만들기 위해 사용해보자.</p>
 
+  <a name="sqlSessionManager"/>
   <h4>SqlSessionManager</h4>
   <p>MyBatis 3.4.0부터 <code>SqlSessionFactory</code>와 <code>SqlSession</code> 인터페이스를 모두 구현하는 <code>SqlSessionManager</code>를 사용할 수 있다. <code>openSession()</code>을 호출할 때마다 새 <code>SqlSession</code>을 생성하는 <code>DefaultSqlSessionFactory</code>와 달리, <code>SqlSessionManager</code>는 <code>ThreadLocal</code>을 사용해 스레드별로 세션을 관리한다. 이를 통해 외부 의존성 주입 프레임워크 없이도 멀티스레드 환경에서 <code>SqlSession</code>의 생명주기를 관리할 수 있다.</p>
 
@@ -230,14 +231,16 @@ manager.startManagedSession(connection);</source>
 
   <h5>SqlSessionManager 사용</h5>
   <p>관리 세션을 시작한 상태에서는 <code>commit()</code>, <code>rollback()</code>, <code>close()</code> 또는 데이터 접근 메서드(<code>selectOne</code>, <code>selectList</code>, <code>insert</code>, <code>update</code>, <code>delete</code> 등)를 호출하면 해당 스레드의 세션에서 실행된다. 사용을 마치면 반드시 <code>close()</code>를 호출해 스레드 로컬 상태를 정리해야 한다. Tomcat이나 Jetty처럼 스레드를 재사용하는 웹 서버에서 이를 빠뜨리면 SQL 세션이 스레드에 남아 다른 HTTP 요청에서도 사용될 수 있으며, 예기치 않은 트랜잭션 동작이나 커넥션 누수가 발생할 수 있다.</p>
-  <source>try {
-    manager.startManagedSession();
+  <source>manager.startManagedSession();
+try {
     // 세션 사용
     manager.commit();
 } finally {
     manager.close();
 }</source>
-  <p>관리 세션을 시작하지 않은 상태에서 <code>SqlSessionManager</code>의 데이터 접근 메서드(<code>selectOne</code>, <code>selectList</code>, <code>selectMap</code>, <code>selectCursor</code>, <code>select</code>, <code>insert</code>, <code>update</code>, <code>delete</code>)를 호출하면 짧게 사용할 세션을 자동으로 열고 해당 메서드를 실행한 뒤 즉시 닫는다. 메서드가 정상적으로 반환하면 자동으로 연 세션을 커밋하고, 예외가 발생하면 롤백한다. 세션 생명주기 메서드(<code>commit()</code>, <code>rollback()</code>, <code>close()</code>, <code>clearCache()</code>, <code>flushStatements()</code>, <code>getConnection()</code>)는 세션을 자동으로 열지 않는다. 관리 세션이 시작되지 않았다면 <code>SqlSessionException</code>을 던진다.</p>
+  <p>관리 세션을 시작하지 않은 상태에서 <code>SqlSessionManager</code>의 데이터 접근 메서드(<code>selectOne</code>, <code>selectList</code>, <code>selectMap</code>, <code>selectCursor</code>, <code>select</code>, <code>insert</code>, <code>update</code>, <code>delete</code>)를 호출하면 짧게 사용할 세션을 자동으로 열고 해당 메서드를 실행한 뒤 즉시 닫는다. 단, <code>selectCursor()</code>가 반환한 커서는 세션이 닫힐 때 함께 닫히므로 이 방식으로는 사용할 수 없다. 커서를 사용하려면 관리 세션을 시작하고 커서를 모두 읽을 때까지 세션을 유지해야 한다.</p>
+  <p>자동으로 연 세션의 메서드가 정상적으로 반환하면 <code>commit()</code>을 호출하고, 예외가 발생하면 <code>rollback()</code>을 호출한다. 관리 세션에서 직접 호출하는 경우를 포함해 실제 DB 트랜잭션의 커밋·롤백 여부는 세션 상태와 설정된 트랜잭션 관리자의 동작에 따라 달라진다. 예를 들어 <code>MANAGED</code> 트랜잭션 관리자는 DB 커밋과 롤백을 직접 수행하지 않는다.</p>
+  <p>세션 생명주기 메서드(<code>commit()</code>, <code>rollback()</code>, <code>close()</code>, <code>clearCache()</code>, <code>flushStatements()</code>, <code>getConnection()</code>)는 세션을 자동으로 열지 않는다. 관리 세션이 시작되지 않았다면 <code>SqlSessionException</code>을 던진다.</p>
 
   <h5>DefaultSqlSessionFactory와의 차이</h5>
   <table>
