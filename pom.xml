@@ -103,6 +103,9 @@
 
     <!-- TODO: Review test failures with 'testcontainers' after 3.6.0 upgrade -->
     <surefire.plugin>3.5.6</surefire.plugin>
+
+    <!-- Keep modernizer report-only as with parent 48; this branch stays on Java 8 APIs -->
+    <modernizer.failOnViolations>false</modernizer.failOnViolations>
   </properties>
 
   <dependencies>
