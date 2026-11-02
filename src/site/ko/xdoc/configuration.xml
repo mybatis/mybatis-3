@@ -327,7 +327,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 safeResultHandlerEnabled
               </td>
               <td>
-                중첩 결과 매핑에서 사용자 정의 ResultHandler 사용을 제한하는 안전성 검사를 설정한다.
+                중첩 결과 매핑에서 사용자 정의 ResultHandler 사용을 제한하는 안전성 검사를 설정한다. 구문의 resultOrdered가 true이면 검사가 활성화되어 있어도 사용할 수 있다.
                 false로 설정하면 검사를 건너뛰고 사용할 수 있다.
               </td>
               <td>
@@ -1904,7 +1904,7 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
   <property name="Oracle" value="oracle" />
 </databaseIdProvider>]]></source>
 
-    <p>프로퍼티가 제공되면 DB_VENDOR databaseIdProvider는 리턴된 데이터베이스 제품명에서 찾은 첫번째 프로퍼티값이나 일치하는 프로퍼티가 없다면 "null" 을 찾을 것이다.
+    <p>프로퍼티가 제공되면 DB_VENDOR databaseIdProvider는 리턴된 데이터베이스 제품명에서 찾은 첫번째 프로퍼티값을 반환하고, 일치하는 프로퍼티가 없다면 null을 반환한다.
     이 경우 <code>getDatabaseProductName()</code>가 "Oracle (DataDirect)"를 리턴한다면 databaseId는 "oracle"로 설정될 것이다. </p>
 
     <p><code>org.apache.ibatis.mapping.DatabaseIdProvider</code> 인터페이스를 구현해서 자신만의 DatabaseIdProvider를 빌드하고 mybatis-config.xml파일에 등록할 수 있다:

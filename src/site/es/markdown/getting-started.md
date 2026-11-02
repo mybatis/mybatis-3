@@ -72,7 +72,7 @@ configuration.addMapper(BlogMapper.class);
 SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 ```
 
-Puedes observar que en este caso la configuración está añadiendo una clase mapper. Las clases mapper son clases Java que contienen anotaciones de mapeo SQL que permiten evitar el uso de XML. Sin embargo el XML sigue siendo necesario en ocasiones, debido a ciertas limitaciones de las anotaciones Java y la complejidad que pueden alcanzar los mapeos (ej. mapeos anidados de Joins). Por esto, MyBatis siempre busca si existe un fichero XML asociado a la clase mapper (en este caso, se buscará un fichero con nombre BlogMapper.xml cuyo nombre deriva del classpath y nombre de BlogMapper.class). Hablaremos más sobre esto más adelante.
+Puedes observar que en este caso la configuración está añadiendo una clase mapper. Las clases mapper son clases Java que contienen anotaciones de mapeo SQL que permiten evitar el uso de XML. Las anotaciones también permiten definir mapeos anidados de joins, aunque para algunos mapeos complejos puede resultar más práctico usar XML. Al registrar un mapper, MyBatis busca si existe un fichero XML asociado a esa clase (en este caso, BlogMapper.xml, según el classpath y el nombre de BlogMapper.class). Hablaremos más sobre esto más adelante.
 
 ## Cómo obtener un SqlSession a partir del SqlSessionFactory
 

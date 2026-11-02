@@ -78,7 +78,7 @@ SqlSessionFactory sqlSessionFactory =
   new SqlSessionFactoryBuilder().build(configuration);
 ```
 
-Notice in this case the configuration is adding a mapper class. Mapper classes are Java classes that contain SQL Mapping Annotations that avoid the need for XML mapping. However, due to some limitations of Java Annotations and the complexity of some MyBatis mappings, XML mapping is still required for the most advanced mappings (e.g. Nested Join Mapping). For this reason, MyBatis will automatically look for and load a peer XML file if it exists (in this case, BlogMapper.xml would be loaded based on the classpath and name of BlogMapper.class). More on this later.
+Notice in this case the configuration is adding a mapper interface. Mapper interfaces can contain SQL mapping annotations, so an XML mapper is not always needed. MyBatis will also automatically look for and load a peer XML file if it exists (in this case, BlogMapper.xml would be loaded based on the classpath and name of BlogMapper.class). This lets you use annotations and XML mappings together. More on this later.
 
 ### Acquiring a SqlSession from SqlSessionFactory
 

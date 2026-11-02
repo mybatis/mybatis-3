@@ -78,7 +78,7 @@ SqlSessionFactory sqlSessionFactory =
   new SqlSessionFactoryBuilder().build(configuration);
 ```
 
-請注意，在此情況下，設定中加入了一個映射器類別（Mapper class）。映射器類別是包含 SQL 映射註解的 Java 類別，可避免對 XML 映射的需求。然而，由於 Java 註解的某些限制以及某些 MyBatis 映射的複雜性，最進階的映射（例如：巢狀外部聯結映射 Nested Join Mapping）仍需要 XML 映射。因此，如果存在同儕 XML 檔案，MyBatis 會自動尋找並載入它（在此範例中，將根據 BlogMapper.class 的類別路徑與名稱載入 BlogMapper.xml）。稍後會有更多相關說明。
+請注意，在此情況下，設定中加入了一個映射器類別（Mapper class）。映射器類別是包含 SQL 映射註解的 Java 類別，可避免對 XML 映射的需求。註解也支援部分巢狀結果映射；對於某些複雜映射，使用 XML 映射檔可能更方便。因此，如果存在同儕 XML 檔案，MyBatis 會自動尋找並載入它（在此範例中，將根據 BlogMapper.class 的類別路徑與名稱載入 BlogMapper.xml）。稍後會有更多相關說明。
 
 ### 從 SqlSessionFactory 取得 SqlSession
 

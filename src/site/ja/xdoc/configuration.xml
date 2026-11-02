@@ -362,8 +362,8 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 safeResultHandlerEnabled
               </td>
               <td>
-                ネストされたステートメントに対して ResultHandler の使用を許可するかどうかを設定します。
-                許可する場合は、 false を設定します。
+                ネストされた結果マッピングを含むステートメントでカスタム ResultHandler を使用する場合の安全性チェックを設定します。true の場合は使用できませんが、resultOrdered が true のステートメントは例外です。
+                チェックを無効にする場合は false を設定します。
               </td>
               <td>
                 true | false
@@ -2069,7 +2069,7 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
 </databaseIdProvider>]]></source>
 
     <p>
-      プロパティが指定された場合、VendorDatabaseIdProvider は <code>DatabaseMetaData#getDatabaseProductName()</code> から返された製品名に name 属性で指定された文字列が含まれているかどうかチェックし、含まれている場合は value 属性で指定されている文字列を「現在の databaseId」として返します。指定された name が一つも含まれていない場合は "null" を返します。
+      プロパティが指定された場合、VendorDatabaseIdProvider は <code>DatabaseMetaData#getDatabaseProductName()</code> から返された製品名に name 属性で指定された文字列が含まれているかどうかチェックし、含まれている場合は value 属性で指定されている文字列を「現在の databaseId」として返します。指定された name が一つも含まれていない場合は null を返します。
       上記の例で、<code>getDatabaseProductName()</code> が "Oracle (DataDirect)" という文字列を返す場合、現在の databaseId は "oracle" となります。
     </p>
 

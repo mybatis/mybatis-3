@@ -13,7 +13,7 @@ MyBatis はカスタム SQL、ストアドプロシージャ、高度なマッ�
 
 このドキュメントの中で誤りや特定の機能に関する記述が抜けていることに気づいたら、詳しく調べてドキュメントを更新して頂けると助かります。
 
-このマニュアルのソースは Markdown 形式で、[プロジェクトの GitHub リポジトリ](https://github.com/mybatis/mybatis-3/tree/master/src/site)で配布されています。
+このマニュアルのソースは Markdown 形式と XDoc 形式で、[プロジェクトの GitHub リポジトリ](https://github.com/mybatis/mybatis-3/tree/master/src/site)で配布されています。
 リポジトリをフォークして内容を編集したらプルリクエストを送信してください。
 
 このドキュメントを読む必要のある人、つまりあなたこそが最高の著者なのです！

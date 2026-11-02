@@ -187,8 +187,7 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td><code>databaseId</code></td>
               <td>Si hay un DatabaseIdProvider configurado. MyBatis cargará todos los statements sin el atributo <code>databaseId</code>
-              o aquellos con un <code>databaseId</code> que coincide con el actual. Si se encuentra un statement con y sin
-              <code>databaseId</code> el último se descartará.
+              o aquellos con un <code>databaseId</code> que coincide con el actual. Si hay dos versiones del mismo statement, una con un <code>databaseId</code> coincidente y otra sin él, se descartará la versión sin <code>databaseId</code>.
               </td>
             </tr>
             <tr>
@@ -267,7 +266,7 @@ ps.setInt(1,id);]]></source>
                 <strike><code>parameterMap</code></strike>
               </td>
               <td>
-                <strike>Método deprecado de referirse a un parameterMap externo. Usa mapeos inline y el atributo paramterType.</strike>
+                <strike>Método deprecado de referirse a un parameterMap externo. Usa mapeos inline y el atributo parameterType.</strike>
               </td>
             </tr>
             <tr>
@@ -303,8 +302,7 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td><code>databaseId</code></td>
               <td>Si hay un DatabaseIdProvider configurado. MyBatis cargará todos los statements sin el atributo <code>databaseId</code>
-              o aquellos con un <code>databaseId</code> que coincide con el actual. Si se encuentra un statement con y sin
-              <code>databaseId</code> el último se descartará.
+              o aquellos con un <code>databaseId</code> que coincide con el actual. Si hay dos versiones del mismo statement, una con un <code>databaseId</code> coincidente y otra sin él, se descartará la versión sin <code>databaseId</code>.
               </td>
             </tr>
           </tbody>
@@ -524,10 +522,10 @@ Por ejemplo, si la columna id de la tabla Author del ejemplo siguiente fuera aut
 
         <source><![CDATA[#{department, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=departmentResultMap}]]></source>
 
-        <p>MyBatis también soporta tipos de datos avanzados como los structs, pero en este caso debes indicar in el statement el jdbcTypeName en la declaración del parámetro de tipo OUT.
+        <p>MyBatis también soporta tipos de datos avanzados como los structs, pero en este caso debes indicar en el statement el jdbcTypeName en la declaración del parámetro de tipo OUT.
         </p>
 
-        <source><![CDATA[#{middleInitial, mode=OUT, jdbcType=STRUCT, jdbcTypeName=MY_TYPE, resultMap=departmentResultMap}]]></source>
+        <source><![CDATA[#{middleInitial, mode=OUT, jdbcType=STRUCT, jdbcTypeName=MY_TYPE}]]></source>
 
         <p>A pesar de estas potentes opciones, la mayoría de las veces simplemente debes especificar el nombre de la propiedad y MyBatis adivinará lo demás. A lo sumo, deberás especificar los jdbcTypes para las columnas que admiten nulos.
         </p>
@@ -889,7 +887,7 @@ public class User {
             </tr>
             <tr>
               <td><code>jdbcType</code></td>
-              <td>Un tipo JDBC de los tipos soportados que se muestran a continuación. El tipo JDBC solo se requiere para columnas que admiten nulos en insert, update o delete. Esto es un requerimiento de JDBC no de MyBatis. Incluso si usas JDBC directamente debes especificar el tipo – pero solo para los valores que pueden ser nulos.
+              <td>El tipo JDBC de la columna de resultado. Indícalo cuando MyBatis lo necesite, junto con el tipo Java, para elegir un TypeHandler para este mapeo.
               </td>
             </tr>
             <tr>
@@ -1027,7 +1025,7 @@ public class User {
             </tr>
             <tr>
               <td><code>jdbcType</code></td>
-              <td>Un tipo JDBC de los tipos soportados que se muestran a continuación. El tipo JDBC solo se requiere para columnas que admiten nulos en insert, update o delete. Esto es un requerimiento de JDBC no de MyBatis. Incluso si usas JDBC directamente debes especificar el tipo – pero solo para los valores que pueden ser nulos.
+              <td>El tipo JDBC de la columna de resultado. Indícalo cuando MyBatis lo necesite, junto con el tipo Java, para elegir un TypeHandler para este mapeo.
               </td>
             </tr>
             <tr>
@@ -1216,7 +1214,7 @@ When using this functionality, it is preferable for the entire mapping hierarchy
             </tr>
             <tr>
               <td><code>jdbcType</code></td>
-              <td>Un tipo JDBC de los tipos soportados que se muestran a continuación. El tipo JDBC solo se requiere para columnas que admiten nulos en insert, update o delete. Esto es un requerimiento de JDBC no de MyBatis. Incluso si usas JDBC directamente debes especificar el tipo – pero solo para los valores que pueden ser nulos.
+              <td>El tipo JDBC de la columna de resultado. Indícalo cuando MyBatis lo necesite, junto con el tipo Java, para elegir un TypeHandler para este mapeo.
               </td>
             </tr>
             <tr>
@@ -1679,7 +1677,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         <p>Se debe proporcionar un nombre a cada resultset informando el atributo
         <code>resultSets</code> del mapped statement con una lista de nombres separados por comas.</p>
 
-        <source><![CDATA[<select id="selectBlog" resultSets="blogs,posts" resultMap="blogResult">
+        <source><![CDATA[<select id="selectBlog" resultSets="blogs,posts" resultMap="blogResult" statementType="CALLABLE">
   {call getBlogsAndPosts(#{id,jdbcType=INTEGER,mode=IN})}
 </select>]]></source>
 

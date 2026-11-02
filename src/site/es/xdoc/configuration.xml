@@ -331,7 +331,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 safeResultHandlerEnabled
               </td>
               <td>
-                Controla la comprobación de seguridad para usar un ResultHandler personalizado con mapeos de resultados anidados.
+                Cuando es true, impide usar un ResultHandler personalizado con mapeos de resultados anidados, salvo si resultOrdered es true.
                 Establecer false permite omitir esta comprobación.
               </td>
               <td>
@@ -1960,7 +1960,7 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
 
     <p>
       Cuando se añaden propiedades, el databaseIdProvider DB_VENDOR devuelve el primer valor que corresponde a la primera clave
-      encontrada en el nombre devuelto por <code>DatabaseMetaData#getDatabaseProductName()</code> o "null" si no se encuentra ninguna.
+      encontrada en el nombre devuelto por <code>DatabaseMetaData#getDatabaseProductName()</code> o null si no se encuentra ninguna.
       En este caso, si <code>getDatabaseProductName()</code> devuelve "Oracle (DataDirect)" el databaseId se informará con "oracle".
     </p>
 

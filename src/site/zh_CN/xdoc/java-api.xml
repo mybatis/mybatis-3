@@ -90,14 +90,18 @@ SqlSessionFactory build(Configuration config)</source>
   <environment id="development">
     <transactionManager type="JDBC">
         ...
+    </transactionManager>
     <dataSource type="POOLED">
         ...
+    </dataSource>
   </environment>
   <environment id="production">
     <transactionManager type="MANAGED">
         ...
+    </transactionManager>
     <dataSource type="JNDI">
         ...
+    </dataSource>
   </environment>
 </environments>]]></source>
   <p>如果你调用了带 environment 参数的 build 方法，那么 MyBatis 将使用该环境对应的配置。当然，如果你指定了一个无效的环境，会收到错误。如果你调用了不带 environment 参数的 build 方法，那么就会使用默认的环境配置（在上面的示例中，通过 default="development" 指定了默认环境）。</p>

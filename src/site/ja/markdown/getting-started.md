@@ -80,7 +80,7 @@ SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(confi
 ```
 
 今回は、Configuration のインスタンスに Mapper クラスを追加していることに気づいたでしょうか。<br />
-Mapper クラスには、XML を使わずに SQL マッピングを定義するためのアノテーションが含まれています。 ただし、Java アノテーションの制約と MyBatis のマッピング機能の複雑さのため、高度なマッピングを定義する際に XML 形式の Mapper が必要となる場合があります（ネストされた結合クエリの結果をマッピングする場合など）。<br />
+Mapper クラスには、XML を使わずに SQL マッピングを定義するためのアノテーションが含まれています。 ネストされた結合クエリの結果もアノテーションでマッピングできますが、複雑なマッピングでは XML 形式の Mapper のほうが読みやすい場合があります。<br />
 このため、MyBatis は対になる XML ファイルを探して自動的に読み込むようになっています（この例では、BlogMapper.class のクラスパスと名前を元に BlogMapper.xml という XML ファイルが読み込まれます）。 この動作については、後ほど詳しく説明します。
 
 ## SqlSessionFactory から SqlSession を取得する

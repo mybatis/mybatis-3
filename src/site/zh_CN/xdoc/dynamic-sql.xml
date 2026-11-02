@@ -161,7 +161,7 @@ AND title like 'someTitle']]></source>
 </select>]]></source>
         <p><em>foreach</em> 元素的功能非常强大，它允许你指定一个集合，声明可以在元素体内使用的集合项（item）和索引（index）变量。它也允许你指定开头与结尾的字符串以及集合项迭代之间的分隔符。这个元素也不会错误地添加多余的分隔符，看它多智能！</p>
         <p><span class="label important">提示</span> 你可以将任何可迭代对象（如 List、Set 等）、Map 对象或者数组对象作为集合参数传递给 <em>foreach</em>。当使用可迭代对象或者数组时，index 是当前迭代的序号，item 的值是本次迭代获取到的元素。当使用 Map 对象（或者 Map.Entry 对象的集合）时，index 是键，item 是值。</p>
-        <p>至此，我们已经完成了与 XML 配置及映射文件相关的讨论。下一章将详细探讨 Java API，以便你能充分利用已经创建的映射配置。</p>
+        <p>以上介绍了 XML 映射文件中常用的动态 SQL 元素。本章后面还会介绍注解中的动态 SQL 和可插拔脚本语言；Java API 则在后续章节讨论。</p>
       </subsection>
   <subsection name="script">
   <p>要在带注解的映射器接口类中使用动态 SQL，可以使用 <em>script</em> 元素。比如:</p>

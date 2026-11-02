@@ -589,7 +589,7 @@ ps.setInt(1,id);]]></source>
           MyBatis ではより高度な struct のようなデータ型もサポートされていますが、OUT パラメーターを登録するときに型名を指定する必要があります。
         </p>
 
-        <source><![CDATA[#{middleInitial, mode=OUT, jdbcType=STRUCT, jdbcTypeName=MY_TYPE, resultMap=departmentResultMap}]]></source>
+        <source><![CDATA[#{middleInitial, mode=OUT, jdbcType=STRUCT, jdbcTypeName=MY_TYPE}]]></source>
 
         <p>
           このように多くの強力なオプションがあるわけですが、ほとんどの場合、単純にプロパティ名を指定すれば、後は MyBatis がよきに計らってくれるはずです。
@@ -992,10 +992,7 @@ public class User {
             <tr>
               <td>jdbcType</td>
               <td>
-                サポートされている JDBC データ型（この後のテーブルにリストがあります）を指定します。
-                JDBC データ型の指定が必須となるのは、insert, update, delete の各ステートメントで null が許可されている列を指定した場合だけです。
-                これは JDBC の仕様で MyBatis の仕様ではありません。
-                ですから、直接 JDBC を使ったコードを書く場合でも null が許可されている列に対しては、やはりデータ型を指定する必要があります。
+                結果列の JDBC データ型を指定します。MyBatis がこのマッピングに用いる TypeHandler を Java 型と合わせて選択する際に必要な場合があります。
               </td>
             </tr>
             <tr>
@@ -1150,10 +1147,7 @@ public class User {
             <tr>
               <td>jdbcType</td>
               <td>
-                サポートされている JDBC データ型（この後のテーブルにリストがあります）を指定します。
-                JDBC データ型の指定が必須となるのは、insert, update, delete の各ステートメントで null が許可されている列を指定した場合だけです。
-                これは JDBC の仕様で MyBatis の仕様ではありません。
-                ですから、直接 JDBC を使ったコードを書く場合でも null が許可されている列に対しては、やはりデータ型を指定する必要があります。
+                結果列の JDBC データ型を指定します。MyBatis がこのマッピングに用いる TypeHandler を Java 型と合わせて選択する際に必要な場合があります。
               </td>
             </tr>
             <tr>
@@ -1368,10 +1362,7 @@ User{username=Peter, roles=[Users, Maintainers, Approvers]}
             <tr>
               <td>jdbcType</td>
               <td>
-                サポートされている JDBC データ型（この後のテーブルにリストがあります）を指定します。
-                JDBC データ型の指定が必須となるのは、insert, update, delete の各ステートメントで null が許可されている列を指定した場合だけです。
-                これは JDBC の仕様で MyBatis の仕様ではありません。
-                ですから、直接 JDBC を使ったコードを書く場合でも null が許可されている列に対しては、やはりデータ型を指定する必要があります。
+                結果列の JDBC データ型を指定します。MyBatis がこのマッピングに用いる TypeHandler を Java 型と合わせて選択する際に必要な場合があります。
               </td>
             </tr>
             <tr>
@@ -1865,7 +1856,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 
        <p>ストアドプロシージャを実行する select 要素の <code>resultSets</code> 属性で、それぞれの ResultSet に名前を付けておく必要があります（カンマ区切り）。ここでは、それぞれ blogs, posts としています。</p>
 
-        <source><![CDATA[<select id="selectBlog" resultSets="blogs,posts" resultMap="blogResult">
+        <source><![CDATA[<select id="selectBlog" resultSets="blogs,posts" resultMap="blogResult" statementType="CALLABLE">
   {call getBlogsAndPosts(#{id,jdbcType=INTEGER,mode=IN})}
 </select>]]></source>
 

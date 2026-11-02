@@ -605,7 +605,7 @@ ps.setInt(1,id);]]></source>
           参数时，你必须显式设置类型的名称。比如（再次提示，在实际中要像这样不能换行）：
         </p>
 
-        <source><![CDATA[#{middleInitial, mode=OUT, jdbcType=STRUCT, jdbcTypeName=MY_TYPE, resultMap=departmentResultMap}]]></source>
+        <source><![CDATA[#{middleInitial, mode=OUT, jdbcType=STRUCT, jdbcTypeName=MY_TYPE}]]></source>
 
         <p>
           尽管上面这些选项很强大，但大多时候，你只须简单指定属性名，顶多要为可能为空的列指定
@@ -1020,10 +1020,7 @@ public class User {
             <tr>
               <td><code>jdbcType</code></td>
               <td>
-                JDBC 类型，所支持的 JDBC 类型参见这个表格之后的“支持的 JDBC 类型”。
-                只需要在可能执行插入、更新和删除的且允许空值的列上指定 JDBC 类型。这是
-                JDBC 的要求而非 MyBatis 的要求。如果你直接面向 JDBC
-                编程，你需要对可以为空值的列指定这个类型。
+                结果列的 JDBC 类型。当 MyBatis 需要结合 Java 类型为此映射选择类型处理器（TypeHandler）时，请指定该值。
               </td>
             </tr>
             <tr>
@@ -1186,10 +1183,7 @@ public class User {
             <tr>
               <td><code>jdbcType</code></td>
               <td>
-                JDBC 类型，所支持的 JDBC 类型参见这个表格之前的“支持的 JDBC 类型”。
-                只需要在可能执行插入、更新和删除的且允许空值的列上指定 JDBC 类型。这是
-                JDBC 的要求而非 MyBatis 的要求。如果你直接面向 JDBC
-                编程，你需要对可能存在空值的列指定这个类型。
+                结果列的 JDBC 类型。当 MyBatis 需要结合 Java 类型为此映射选择类型处理器（TypeHandler）时，请指定该值。
               </td>
             </tr>
             <tr>
@@ -1404,10 +1398,7 @@ User{username=Peter, roles=[Users, Maintainers, Approvers]}
             <tr>
               <td><code>jdbcType</code></td>
               <td>
-                JDBC 类型，所支持的 JDBC 类型参见这个表格之前的“支持的 JDBC 类型”。
-                只需要在可能执行插入、更新和删除的且允许空值的列上指定 JDBC 类型。这是
-                JDBC 的要求而非 MyBatis 的要求。如果你直接面向
-                JDBC 编程，你需要对可能存在空值的列指定这个类型。
+                结果列的 JDBC 类型。当 MyBatis 需要结合 Java 类型为此映射选择类型处理器（TypeHandler）时，请指定该值。
               </td>
             </tr>
             <tr>
@@ -1928,7 +1919,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 
         <p>在映射语句中，必须通过 <code>resultSets</code> 属性为每个结果集指定一个名字，多个名字使用逗号隔开。</p>
 
-        <source><![CDATA[<select id="selectBlog" resultSets="blogs,posts" resultMap="blogResult">
+        <source><![CDATA[<select id="selectBlog" resultSets="blogs,posts" resultMap="blogResult" statementType="CALLABLE">
   {call getBlogsAndPosts(#{id,jdbcType=INTEGER,mode=IN})}
 </select>]]></source>
 
@@ -2168,7 +2159,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         </p>
 
         <ul>
-          <li>映射语句文件中的所有 select 语句的结果将会被缓存。</li>
+          <li>启用 <code>cacheEnabled</code> 且语句的 <code>useCache</code> 为 true 时，映射语句文件中的普通 select 查询可以使用二级缓存；使用自定义 ResultHandler 的查询不会写入缓存，游标查询则完全绕过缓存。</li>
           <li>映射语句文件中的所有 insert、update 和 delete 语句会刷新缓存。</li>
           <li>缓存会使用最近最少使用算法（LRU, Least Recently Used）算法来清除不需要的缓存。</li>
           <li>缓存不会定时进行刷新（也就是说，没有刷新间隔）。</li>

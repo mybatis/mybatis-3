@@ -17,7 +17,7 @@ MyBatis 是一款頂級的持久層框架，支援自訂 SQL、預存程序以�
 
 如果您發現本文件有任何不足之處，或缺少某個功能的說明文件，最佳的做法就是親自深入了解該功能，然後自己動手撰寫文件！
 
-本手冊的原始碼為 Markdown 格式，可於[專案的 Git 存放庫](https://github.com/mybatis/mybatis-3/tree/master/src/site)取得。Fork 該存放庫、進行更新並送出 Pull Request 吧。
+本手冊的 Markdown 與 XDoc 格式原始碼可於[專案的 Git 存放庫](https://github.com/mybatis/mybatis-3/tree/master/src/site)取得。Fork 該存放庫、更新文件並送出 Pull Request 吧。
 
 您就是這份文件最好的作者，更多像您一樣的開發者都需要閱讀它！
 

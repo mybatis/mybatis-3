@@ -78,14 +78,18 @@ SqlSessionFactory build(Configuration config)
   <environment id="development">
     <transactionManager type="JDBC">
         ...
+    </transactionManager>
     <dataSource type="POOLED">
         ...
+    </dataSource>
   </environment>
   <environment id="production">
     <transactionManager type="MANAGED">
         ...
+    </transactionManager>
     <dataSource type="JNDI">
         ...
+    </dataSource>
   </environment>
 </environments>
 ```

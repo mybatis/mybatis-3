@@ -175,7 +175,7 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td><code>databaseId</code></td>
               <td>설정된 databaseIdProvider가 있는 경우 마이바티스는 <code>databaseId</code> 속성이 없는 모든 구문을 로드하거나 일치하는 <code>databaseId</code>와 함께 로드될 것이다.
-              같은 구문에서 <code>databaseId</code>가 있거나 없는 경우 모두 있다면 뒤에 나온 것이 무시된다.
+              같은 구문에 현재 데이터베이스와 일치하는 <code>databaseId</code>가 지정된 버전과 지정되지 않은 버전이 모두 있다면, <code>databaseId</code>가 없는 버전을 무시한다.
               </td>
             </tr>
             <tr>
@@ -293,7 +293,7 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td><code>databaseId</code></td>
               <td>설정된 databaseIdProvider가 있는 경우 마이바티스는 <code>databaseId</code> 속성이 없는 모든 구문을 로드하거나 일치하는 <code>databaseId</code>와 함께 로드될 것이다.
-              같은 구문에서 <code>databaseId</code>가 있거나 없는 경우 모두 있다면 뒤에 나온 것이 무시된다.
+              같은 구문에 현재 데이터베이스와 일치하는 <code>databaseId</code>가 지정된 버전과 지정되지 않은 버전이 모두 있다면, <code>databaseId</code>가 없는 버전을 무시한다.
               </td>
             </tr>
           </tbody>
@@ -513,7 +513,7 @@ ps.setInt(1,id);]]></source>
         <p>마이바티스는 structs와 같은 향상된 데이터 타입을 지원하지만 파라미터를 등록할 때 타입명을 구문에 전달해야 한다.
     예를들면,</p>
 
-        <source><![CDATA[#{middleInitial, mode=OUT, jdbcType=STRUCT, jdbcTypeName=MY_TYPE, resultMap=departmentResultMap}]]></source>
+        <source><![CDATA[#{middleInitial, mode=OUT, jdbcType=STRUCT, jdbcTypeName=MY_TYPE}]]></source>
 
         <p>이런 강력한 옵션들에도 불구하고 대부분은 프로퍼티명만 명시하거나 null 가능한 칼럼을 위해 jdbcType 정도만 명시할 것이다.</p>
 
@@ -882,10 +882,7 @@ public class User {
             </tr>
             <tr>
               <td><code>jdbcType</code></td>
-              <td>지원되는 타입 목록에서 설명하는 JDBC 타입.
-        JDBC타입은 insert, update 또는 delete 하는 null 입력이 가능한 칼럼에서만 필요하다.
-        JDBC의 요구사항이지 마이바티스의 요구사항이 아니다.
-        JDBC로 직접 코딩을 하다보면 null이 가능한 값에 이 타입을 지정할 필요가 있을 것이다.</td>
+              <td>결과 칼럼의 JDBC 타입을 지정한다. 마이바티스가 이 매핑에 사용할 TypeHandler를 선택할 때 Java 타입과 함께 필요할 수 있다.</td>
             </tr>
             <tr>
               <td><code>typeHandler</code></td>
@@ -1028,10 +1025,7 @@ public class User {
             </tr>
             <tr>
               <td><code>jdbcType</code></td>
-              <td>지원되는 타입 목록에서 설명하는 JDBC 타입.
-        JDBC타입은 insert, update 또는 delete 하는 null 입력이 가능한 칼럼에서만 필요하다.
-        JDBC의 요구사항이지 마이바티스의 요구사항이 아니다.
-        JDBC로 직접 코딩을 하다보면 null 이 가능한 값에 이 타입을 지정할 필요가 있을 것이다.</td>
+              <td>결과 칼럼의 JDBC 타입을 지정한다. 마이바티스가 이 매핑에 사용할 TypeHandler를 선택할 때 Java 타입과 함께 필요할 수 있다.</td>
             </tr>
             <tr>
               <td><code>typeHandler</code></td>
@@ -1227,10 +1221,7 @@ When using this functionality, it is preferable for the entire mapping hierarchy
             </tr>
             <tr>
               <td><code>jdbcType</code></td>
-              <td>지원되는 타입 목록에서 설명하는 JDBC 타입.
-        JDBC타입은 insert, update 또는 delete 하는 null 입력이 가능한 칼럼에서만 필요하다.
-        JDBC의 요구사항이지 마이바티스의 요구사항이 아니다.
-        JDBC로 직접 코딩을 하다보면 null이 가능한 값에 이 타입을 지정할 필요가 있을 것이다.</td>
+              <td>결과 칼럼의 JDBC 타입을 지정한다. 마이바티스가 이 매핑에 사용할 TypeHandler를 선택할 때 Java 타입과 함께 필요할 수 있다.</td>
             </tr>
             <tr>
               <td><code>typeHandler</code></td>
@@ -1517,7 +1508,7 @@ Its value <code>CURSOR</code> indicates that the value of the column <code>autho
               <td><code>foreignColumn</code></td>
               <td>
                 Identifies the name of the columns that contains the foreign keys which values will be matched against the
-                values of the columns specified in the <code>column</code> attibute of the parent type.
+                values of the columns specified in the <code>column</code> attribute of the parent type.
               </td>
             </tr>
             <tr>
@@ -1711,7 +1702,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         <p>A name must be given to each result set by adding a
         <code>resultSets</code> attribute to the mapped statement with a list of names separated by commas.</p>
 
-        <source><![CDATA[<select id="selectBlog" resultSets="blogs,posts" resultMap="blogResult">
+        <source><![CDATA[<select id="selectBlog" resultSets="blogs,posts" resultMap="blogResult" statementType="CALLABLE">
   {call getBlogsAndPosts(#{id,jdbcType=INTEGER,mode=IN})}
 </select>]]></source>
 

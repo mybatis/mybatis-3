@@ -72,7 +72,7 @@ configuration.addMapper(BlogMapper.class);
 SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 ```
 
-On remarque dans ce cas l'ajout d'une classe mapper. Il est possible de configurer MyBatis à l'aide d'annotations. Cependant, en raison de certaines limitations des annotations face aux cas les plus complexes de mapping avec MyBatis, XML est toujours requis (e.g. Nested Join Mapping). Pour cette raison, MyBatis cherchera toujours la présence d'un fichier XML (dans le cas présent, BlogMapper.xml serait chargé en se basant sur le classpath et le nom de BlogMapper.class). Le sujet sera approfondi plus tard.
+On remarque dans ce cas l'ajout d'une classe mapper. Il est possible de configurer MyBatis à l'aide d'annotations, y compris pour mapper les résultats de jointures imbriquées. Pour certains mappings complexes, XML peut néanmoins être plus facile à lire. Lorsqu'un mapper est enregistré, MyBatis cherche aussi un fichier XML associé (dans le cas présent, BlogMapper.xml, à partir du classpath et du nom de BlogMapper.class). Le sujet sera approfondi plus tard.
 
 ## Acquérir une SqlSession à partir d'une SqlSessionFactory
 

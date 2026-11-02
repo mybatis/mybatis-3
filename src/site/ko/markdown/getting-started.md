@@ -72,7 +72,7 @@ configuration.addMapper(BlogMapper.class);
 SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 ```
 
-이 설정에서 추가로 해야 할 일은 Mapper클래스를 추가하는 것이다. Mapper클래스는 SQL 매핑 애노테이션을 가진 자바 클래스이다. 어쨌든 자바 애노테이션의 몇가지 제약과 몇가지 설정방법의 복잡함에도 불구하고 XML 매핑은 세부적인 매핑을 위해 언제든 필요하다. 좀더 세부적인 내용은 조금 뒤 다시 보도록 하자.
+이 설정에서 추가로 해야 할 일은 Mapper클래스를 추가하는 것이다. Mapper클래스는 SQL 매핑 애노테이션을 가진 자바 클래스이다. 애노테이션으로 중첩 조인 결과도 매핑할 수 있지만, 복잡한 매핑은 XML로 작성하는 편이 읽기 쉬울 수 있다. 좀 더 세부적인 내용은 조금 뒤 다시 보도록 하자.
 
 ## SqlSessionFactory 에서 SqlSession 만들기
 

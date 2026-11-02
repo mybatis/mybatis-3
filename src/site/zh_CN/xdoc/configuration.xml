@@ -338,7 +338,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 safeRowBoundsEnabled
               </td>
               <td>
-                是否允许在嵌套语句中使用分页（RowBounds）。如果允许使用则设置为 false。
+                设置为 true 时，禁止在嵌套结果映射中使用非默认的 RowBounds；设置为 false 可跳过此检查。
               </td>
               <td>
                 true | false
@@ -352,7 +352,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 safeResultHandlerEnabled
               </td>
               <td>
-                是否允许在嵌套语句中使用结果处理器（ResultHandler）。如果允许使用则设置为 false。
+                设置为 true 时，禁止在未设置 resultOrdered=true 的嵌套结果映射中使用自定义 ResultHandler；设置为 false 可跳过此检查。
               </td>
               <td>
                 true | false

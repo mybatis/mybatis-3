@@ -190,7 +190,7 @@ MyBatis 提供了一個簡單的解決方案，在 90% 的情況下都能正常�
 
 <span class="label important">注意</span> 您可以將任何 Iterable 物件（例如 List、Set 等），以及任何 Map 或陣列物件傳遞給 foreach 作為 collection 參數。使用 Iterable 或陣列時，index 為目前反覆運算的次數，而 item 值為本次反覆運算中擷取的元素。使用 Map（或 Map.Entry 物件的集合）時，index 為索引鍵物件，item 則為數值物件。
 
-至此結束了關於 XML 設定檔與 XML 映射檔的討論。下一節將詳細討論 Java API，以便您充分發揮所建立映射的最大效益。
+以上介紹了 XML 映射檔中常用的動態 SQL 元素。後續小節還會介紹註解中的動態 SQL 與可插拔指令碼語言；Java API 則在後續章節討論。
 
 ### script
 
