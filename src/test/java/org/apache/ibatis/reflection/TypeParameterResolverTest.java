@@ -77,9 +77,8 @@ class TypeParameterResolverTest {
   void shouldInferResultTypeThroughNestedGenericMapperInheritance() {
     Configuration configuration = new Configuration();
     configuration.addMapper(StringListMapper.class);
-    assertEquals(String.class,
-        configuration.getMappedStatement(StringListMapper.class.getName() + ".select").getResultMaps().get(0)
-            .getType());
+    String statementId = StringListMapper.class.getName() + ".select";
+    assertEquals(String.class, configuration.getMappedStatement(statementId).getResultMaps().get(0).getType());
   }
 
   interface NestedTypeMapper<T> {
