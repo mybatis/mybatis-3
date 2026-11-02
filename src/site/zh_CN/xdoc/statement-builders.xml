@@ -238,7 +238,7 @@ public String updatePersonSql() {
               <td>
                 <code>OR()</code>
               </td>
-              <td>使用 <code>OR</code> 来分隔当前的 <code>WHERE</code> 子句条件。
+              <td>使用 <code>OR</code> 来分隔最近使用的 <code>WHERE</code> 或 <code>HAVING</code> 子句条件。
         可以被多次调用，但在一行中多次调用会生成错误的 <code>SQL</code>。
               </td>
             </tr>
@@ -246,7 +246,7 @@ public String updatePersonSql() {
               <td>
                 <code>AND()</code>
               </td>
-              <td>使用 <code>AND</code> 来分隔当前的 <code>WHERE</code>子句条件。
+              <td>使用 <code>AND</code> 来分隔最近使用的 <code>WHERE</code> 或 <code>HAVING</code> 子句条件。
         可以被多次调用，但在一行中多次调用会生成错误的 <code>SQL</code>。由于 <code>WHERE</code> 和 <code>HAVING</code>都会自动使用 <code>AND</code> 拼接, 因此这个方法并不常用，只是为了完整性才被定义出来。
               </td>
             </tr>
@@ -505,6 +505,27 @@ public String selectPersonsWithFetchFirstSql() {
 }
 ]]></source>
 
+        <p>从版本 3.5.15 开始，<code>applyIf(boolean, Consumer&lt;SQL&gt;)</code> 和 <code>applyIf(BooleanSupplier, Consumer&lt;SQL&gt;)</code> 仅在条件为真时添加 SQL 子句。<code>applyForEach(Iterable&lt;E&gt;, ForEachConsumer&lt;SQL, E&gt;)</code> 会对每个元素调用消费函数，并传入 SQL 构建器、当前元素及从零开始的索引。这些方法均返回构建器，以便链式调用。</p>
+
+        <source><![CDATA[
+public String selectPersonsSql(boolean activeOnly) {
+  return new SQL()
+    .SELECT("ID", "NAME")
+    .FROM("PERSON")
+    .applyIf(activeOnly, sql -> sql.WHERE("ACTIVE = 1"))
+    .toString();
+}
+
+public String insertPersonsSql(List<Person> persons) {
+  return new SQL()
+    .INSERT_INTO("PERSON")
+    .INTO_COLUMNS("ID", "NAME")
+    .applyForEach(persons, (sql, person, index) ->
+      sql.INTO_VALUES("#{persons[" + index + "].id}", "#{persons[" + index + "].name}").ADD_ROW())
+    .toString();
+}
+]]></source>
+
       </subsection>
 
       <subsection name="SqlBuilder 和 SelectBuilder (已经废弃)">
@@ -528,14 +549,14 @@ public String selectPersonsWithFetchFirstSql() {
             /
             <code>RESET()</code>
           </td>
-          <td>这些方法清空 SelectBuilder 类的 ThreadLocal 状态，并准备好构建一个新的语句。开始新的语句时，<code>BEGIN()</code> 是最名副其实的（可读性最好的）。但如果由于一些原因（比如程序逻辑在某些条件下需要一个完全不同的语句），在执行过程中要重置语句构建状态，就很适合使用 <code>RESET()</code>。
+          <td>这些方法重置导入的 SelectBuilder 或 SqlBuilder 类的 ThreadLocal 状态，以便构建新的语句。两个类各自维护独立的状态。开始新的语句时使用 <code>BEGIN()</code> 更易读；如果在构建过程中需要舍弃当前语句（例如条件要求构建完全不同的语句），则可使用 <code>RESET()</code>。
           </td>
         </tr>
         <tr>
           <td>
             <code>SQL()</code>
           </td>
-          <td>该方法返回生成的 <code>SQL()</code> 并重置 <code>SelectBuilder</code> 状态（等价于调用了 <code>BEGIN()</code> 或 <code>RESET()</code>）。因此，该方法只能被调用一次！
+          <td>该方法返回生成的 SQL，并重置导入的构建器类的状态。每条语句调用一次；再次调用前需要构建下一条语句。
           </td>
         </tr>
         </tbody>

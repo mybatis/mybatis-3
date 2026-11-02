@@ -14,7 +14,7 @@ Please use [the mailing list](https://groups.google.com/group/mybatis-user) inst
 
 ## Improving documentation
 
-- Documentations are placed under [src/site](https://github.com/mybatis/mybatis-3/tree/master/src/site) directory in [the xdoc format](https://maven.apache.org/doxia/references/xdoc-format.html), so it is basically the same as creating a patch to contribute documentation changes. Please see the [Contributing code](CONTRIBUTING.md#contributing-code) section.
+- Reference guides are under [src/site](https://github.com/mybatis/mybatis-3/tree/master/src/site) in Markdown (`markdown` directories) or [XDoc](https://maven.apache.org/doxia/references/xdoc-format.html) (`xdoc` directories), including translated guides. Submit documentation changes through the same pull request process described in [Contributing code](CONTRIBUTING.md#contributing-code).
 
 ## Contributing code
 

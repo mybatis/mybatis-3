@@ -1992,7 +1992,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         </p>
       </subsection>
 
-      <subsection name="自動マッピング">
+      <subsection name="自動マッピング" id="auto-mapping">
 
         <p>
           前章では、シンプルなケースでは MyBatis の自動マッピングが利用できるということと、複雑なケースではあなた自身で Result Map を記述する必要があるということを説明しました。

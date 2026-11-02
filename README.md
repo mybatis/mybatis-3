@@ -24,26 +24,8 @@ See [here](CONTRIBUTING.md)
 Tests
 -----
 
-Mybatis-3 code runs more expressive testing depending on jdk usage and platform.
+Run the default test suite with `./mvnw test`. By default, the Maven configuration excludes tests tagged `TestcontainersTests` or `RequireIllegalAccess`.
 
-By default, we set ```<excludedGroups>TestcontainersTests,RequireIllegalAccess</excludedGroups>``` which will exclude a subset of tests with @Tag('TestcontainersTests') and @Tag('RequireIllegalAccess').
+The [Java CI workflow](.github/workflows/ci.yaml) defines the tested operating systems and JDK versions. It activates the `testContainers` profile on Linux, which includes `TestcontainersTests` while continuing to exclude `RequireIllegalAccess`.
 
-When we run on ci platform, we further make adjustments as needed.  See [here](.github/workflows/ci.yaml) for details.
-
-As of 12/28/2024, using combined system + jdk will result in given number of tests ran.  This will change as tests are added or removed over time.
-
-without adjusting settings (ie use as is, platform does not matter)
-
-- any OS + jdk 21 = 1899 tests
-- any OS + jdk 25 = 1899 tests
-
-our adjustments for GH actions where platform does matter
-
-- windows + jdk 21 = 1899 tests
-- windows + jdk 25 = 1899 tests
-
-- linux + jdk 21 = 1934 tests
-- linux + jdk 25 = 1934 tests
-
-- mac + jdk 21 = 1899 tests
-- mac + jdk 25 = 1899 tests
+To include the container-backed tests locally, run `./mvnw test -PtestContainers` with a working container runtime.

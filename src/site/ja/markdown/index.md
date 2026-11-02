@@ -17,3 +17,17 @@ MyBatis はカスタム SQL、ストアドプロシージャ、高度なマッ�
 リポジトリをフォークして内容を編集したらプルリクエストを送信してください。
 
 このドキュメントを読む必要のある人、つまりあなたこそが最高の著者なのです！
+
+### 翻訳
+
+MyBatis のドキュメントは、次の言語でもお読みいただけます。
+
+<ul class="i18n">
+          <li class="en"><a href="../index.html">English</a></li>
+          <li class="es"><a href="../es/index.html">Español</a></li>
+<!--      <li class="fr"><a href="../fr/index.html">Français</a></li> -->
+          <li class="ja"><a href="../ja/index.html">日本語</a></li>
+          <li class="ko"><a href="../ko/index.html">한국어</a></li>
+          <li class="zh"><a href="../zh_CN/index.html">简体中文</a></li>
+          <li class="zh_tw"><a href="../zh_TW/index.html">繁體中文</a></li>
+</ul>

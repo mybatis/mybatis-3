@@ -228,13 +228,13 @@ public String updatePersonSql() {
     <td>
       <code>OR()</code>
     </td>
-    <td>Parte las condiciones actuales de la WHERE con un OR. Puede llamarse más de una vez, pero llamarlas más de una vez en la misma línea puede producir sentencias incorrectas.</td>
+    <td>Parte las condiciones de la cláusula WHERE o HAVING utilizada más recientemente con un OR. Puede llamarse más de una vez, pero llamarlo varias veces seguidas puede producir sentencias incorrectas.</td>
   </tr>
   <tr>
     <td>
       <code>AND()</code>
     </td>
-    <td>Parte las condiciones actuales de la WHERE con un AND. Puede llamarse más de una vez, pero llamarlas más de una vez en la misma línea puede producir sentencias incorrectas.  Dado que WHERE y HAVING concatenan automáticamente el AND, es muy infrecuente que sea necesario invocar a este método y se incluye realmente por completitud.</td>
+    <td>Parte las condiciones de la cláusula WHERE o HAVING utilizada más recientemente con un AND. Puede llamarse más de una vez, pero llamarlo varias veces seguidas puede producir sentencias incorrectas. Dado que WHERE y HAVING concatenan automáticamente con AND, rara vez es necesario invocar este método.</td>
   </tr>
   <tr>
     <td>
@@ -491,6 +491,27 @@ public String selectPersonsWithFetchFirstSql() {
 }
 ]]></source>
 
+        <p>Desde la versión 3.5.15, <code>applyIf(boolean, Consumer&lt;SQL&gt;)</code> y <code>applyIf(BooleanSupplier, Consumer&lt;SQL&gt;)</code> añaden cláusulas SQL solo cuando se cumple la condición. <code>applyForEach(Iterable&lt;E&gt;, ForEachConsumer&lt;SQL, E&gt;)</code> invoca el consumidor por cada elemento, pasándole el constructor SQL, el elemento y su índice, que comienza en cero. Estos métodos devuelven el constructor para encadenar llamadas.</p>
+
+        <source><![CDATA[
+public String selectPersonsSql(boolean activeOnly) {
+  return new SQL()
+    .SELECT("ID", "NAME")
+    .FROM("PERSON")
+    .applyIf(activeOnly, sql -> sql.WHERE("ACTIVE = 1"))
+    .toString();
+}
+
+public String insertPersonsSql(List<Person> persons) {
+  return new SQL()
+    .INSERT_INTO("PERSON")
+    .INTO_COLUMNS("ID", "NAME")
+    .applyForEach(persons, (sql, person, index) ->
+      sql.INTO_VALUES("#{persons[" + index + "].id}", "#{persons[" + index + "].name}").ADD_ROW())
+    .toString();
+}
+]]></source>
+
       </subsection>
 
       <subsection name="SqlBuilder y SelectBuilder (DEPRECADAS)">
@@ -515,13 +536,13 @@ public String selectPersonsWithFetchFirstSql() {
     <td>
       <code>BEGIN()</code> / <code>RESET()</code>
     </td>
-    <td>Estos métodos limpian estado guardad en el ThreadLocal de la clase SelectBuilder, y la preparan para construir una nueva sentencia. BEGIN() se lee mejor cuando se está creando una sentencia. RESET() se lee mejor cuando se está borrando lo hecho anteriormente en medio de una ejecución (quizá porque la lógica necesita una sentencia completamente distinta según las condiciones).</td>
+    <td>Estos métodos reinician el estado ThreadLocal de la clase importada, SelectBuilder o SqlBuilder; cada clase mantiene su propio estado. BEGIN() se lee mejor al comenzar una sentencia. RESET() se lee mejor cuando se descarta una sentencia durante su construcción (por ejemplo, si la lógica requiere una sentencia distinta).</td>
   </tr>
   <tr>
     <td>
       <code>SQL()</code>
     </td>
-    <td>Devuelve la SQL generada y restablece el estado del SelectBuilder (como si se hubiera llamado a un BEGIN() o a un RESET()). Por tanto este método solo se puede llamar una vez!</td>
+    <td>Devuelve el SQL generado y reinicia el estado de la clase importada. Llama a SQL() una vez por sentencia; construye otra sentencia antes de volver a llamarlo.</td>
   </tr>
         </tbody>
         </table>

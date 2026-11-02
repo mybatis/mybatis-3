@@ -240,14 +240,14 @@ public String updatePersonSql() {
               <td>
                 <code>OR()</code>
               </td>
-              <td>現在の WHERE 条件を OR で分割します。複数回呼ぶことも出来ますが、連続して呼び出すと不正な SQL が生成される場合があります。
+              <td>最後に使用した WHERE または HAVING の条件を OR で分割します。複数回呼ぶこともできますが、連続して呼び出すと不正な SQL が生成される場合があります。
               </td>
             </tr>
             <tr>
               <td>
                 <code>AND()</code>
               </td>
-              <td>現在の WHERE 条件を AND で分割します。複数回呼ぶこともできますが、連続して呼び出すと不正な SQL が生成される可能性があります。<code>WHERE</code> と <code>HAVING</code> はどちらも自動的に <code>AND</code> を挟んで引数を連結するので、このメソッドを使うことはまずないと思います。あくまでも API の整合性のために用意されていると考えてください。
+              <td>最後に使用した WHERE または HAVING の条件を AND で分割します。複数回呼ぶこともできますが、連続して呼び出すと不正な SQL が生成される可能性があります。<code>WHERE</code> と <code>HAVING</code> はどちらも自動的に <code>AND</code> を挟んで引数を連結するので、このメソッドを使うことは通常ありません。
               </td>
             </tr>
             <tr>
@@ -510,9 +510,30 @@ public String selectPersonsWithFetchFirstSql() {
 }
 ]]></source>
 
+        <p>バージョン 3.5.15 以降では、<code>applyIf(boolean, Consumer&lt;SQL&gt;)</code> と <code>applyIf(BooleanSupplier, Consumer&lt;SQL&gt;)</code> を使用すると、条件が真の場合にだけ SQL 句を追加できます。<code>applyForEach(Iterable&lt;E&gt;, ForEachConsumer&lt;SQL, E&gt;)</code> は各要素についてコンシューマーを呼び出し、SQL ビルダー、要素、0 から始まるインデックスを渡します。これらのメソッドはビルダーを返すため、呼び出しを連結できます。</p>
+
+        <source><![CDATA[
+public String selectPersonsSql(boolean activeOnly) {
+  return new SQL()
+    .SELECT("ID", "NAME")
+    .FROM("PERSON")
+    .applyIf(activeOnly, sql -> sql.WHERE("ACTIVE = 1"))
+    .toString();
+}
+
+public String insertPersonsSql(List<Person> persons) {
+  return new SQL()
+    .INSERT_INTO("PERSON")
+    .INTO_COLUMNS("ID", "NAME")
+    .applyForEach(persons, (sql, person, index) ->
+      sql.INTO_VALUES("#{persons[" + index + "].id}", "#{persons[" + index + "].name}").ADD_ROW())
+    .toString();
+}
+]]></source>
+
       </subsection>
 
-      <subsection name="SqlBuilder および SelectBuilder （非推奨）">
+      <subsection name="SqlBuilder および SelectBuilder （非推奨）" id="deprecated-builders">
         <p>
           当初は ThreadLocal 変数を使って Java 言語の制限を補うアプローチを採用していましたが、最近はビルダーパターンや匿名内部クラスを使っているフレームワークが主流となってきていることもあり、このアプローチを使っている SelectBuilder, SqlBuilder クラスは非推奨（deprecated）扱いとなりました。
         </p>
@@ -533,14 +554,14 @@ public String selectPersonsWithFetchFirstSql() {
             /
             <code>RESET()</code>
           </td>
-          <td>SelectBuilder クラスの ThreadLocal の状態をクリアし、新たなステートメント構築に備えます。新しいステートメントを開始するときは BEGIN() を使い、実行中にステートメントをクリアする場合（条件次第で全く別のステートメントが必要となるようなケース）は RESET() を使うようにすると読みやすいコードになります。
+          <td>インポートした SelectBuilder または SqlBuilder クラスの ThreadLocal の状態をクリアし、新たなステートメント構築に備えます。各クラスは独立した状態を保持します。新しいステートメントを開始するときは BEGIN() を使い、構築中のステートメントを破棄する場合（条件次第で全く別のステートメントが必要となるようなケース）は RESET() を使うようにすると読みやすいコードになります。
           </td>
         </tr>
         <tr>
           <td>
             <code>SQL()</code>
           </td>
-          <td>生成された SQL を返すと同時に、<code>SelectBuilder</code> の状態をリセットします（<code>BEGIN()</code> や <code>RESET()</code> の呼び出しと同じ効果を持ちます）。従って、このメソッドは一度しか呼び出すことができません。
+          <td>生成された SQL を返すと同時に、インポートしたビルダークラスの状態をリセットします。ステートメントごとに一度呼び出し、再度呼び出す前に次のステートメントを構築してください。
           </td>
         </tr>
         </tbody>
