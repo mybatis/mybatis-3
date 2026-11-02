@@ -132,7 +132,7 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td><code>parameterType</code></td>
               <td>El nombre completamente cualificado de la clase o el alias del parámetro que se pasará al statement.
-              Este atributo es opcional porque MyBatis puede calcular el TypeHandler a utlizar a partir del parametro actual usado en la invocación al statement.
+              Este atributo es opcional porque MyBatis puede calcular el TypeHandler a utilizar a partir del parametro actual usado en la invocación al statement.
               Por defecto: no informado.</td>
             </tr>
             <tr>
@@ -215,7 +215,8 @@ ps.setInt(1,id);]]></source>
         </table>
       </subsection>
 
-      <subsection name="insert, update and delete" id="insert_update_and_delete">
+      <subsection name="insert, update and delete">
+        <a name="insert_update_and_delete"/>
         <p>Los insert, update y delete statements son muy similares en su implementación:</p>
 
         <source><![CDATA[<insert
@@ -258,7 +259,7 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td><code>parameterType</code></td>
               <td>El nombre completamente cualificado de la clase o el alias del parámetro que se pasará al statement.
-              Este atributo es opcional porque MyBatis puede calcular el TypeHandler a utlizar a partir del parametro actual usado en la invocación al statement.
+              Este atributo es opcional porque MyBatis puede calcular el TypeHandler a utilizar a partir del parametro actual usado en la invocación al statement.
               Por defecto: no informado.</td>
             </tr>
             <tr>
@@ -518,7 +519,7 @@ Por ejemplo, si la columna id de la tabla Author del ejemplo siguiente fuera aut
 
         <source><![CDATA[#{height,javaType=double,jdbcType=NUMERIC,numericScale=2}]]></source>
 
-        <p>Finalmente, el atributo mode te permite especificar parámetros IN, OUT o INOUT. Si un parámetro es OUT o INOUT, el valor actual de las propiedades del objeto pasado como parámetro será modificado. Si el mode=OUT (o INOUT) y el jdbcType=CURSOR (ej. Oracle REFCURSOR), debes especificar un resultMap para mapear el RestultSet al tipo del parámetro. Ten en cuenta que el atributo javaType es opcional en este caso, dado que se establecerá automáticamente al valor ResultSet en caso de no haberse especificado si el jdbcType es CURSOR.
+        <p>Finalmente, el atributo mode te permite especificar parámetros IN, OUT o INOUT. Si un parámetro es OUT o INOUT, el valor actual de las propiedades del objeto pasado como parámetro será modificado. Si el mode=OUT (o INOUT) y el jdbcType=CURSOR (ej. Oracle REFCURSOR), debes especificar un resultMap para mapear el ResultSet al tipo del parámetro. Ten en cuenta que el atributo javaType es opcional en este caso, dado que se establecerá automáticamente al valor ResultSet en caso de no haberse especificado si el jdbcType es CURSOR.
         </p>
 
         <source><![CDATA[#{department, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=departmentResultMap}]]></source>
@@ -589,7 +590,7 @@ User userOfEmail = userMapper.findByColumn("email", "noone@nowhere.com");
 
       <subsection name="Result Maps">
         <p>
-          El elemento resultMap es el elemento más importante y potente de MyBatis. Te permite eliminar el 90% del código que requiere el JDBC para obtener datos de ResultSets, y en algunos casos incluso te permite hacer cosas que no están siquiera soportadas en JDBC. En realidad, escribir un código equivalente para realizar algo similar a un mapeo para un statement complejo podría requerir cientos de líneas de código. El diseño de los ResultMaps es tal, que los statemets simples no requieren un ResultMap explícito, y los statements más complejos requieren sólo la información imprescindible para describir relaciones.
+          El elemento resultMap es el elemento más importante y potente de MyBatis. Te permite eliminar el 90% del código que requiere el JDBC para obtener datos de ResultSets, y en algunos casos incluso te permite hacer cosas que no están siquiera soportadas en JDBC. En realidad, escribir un código equivalente para realizar algo similar a un mapeo para un statement complejo podría requerir cientos de líneas de código. El diseño de los ResultMaps es tal, que los statements simples no requieren un ResultMap explícito, y los statements más complejos requieren sólo la información imprescindible para describir relaciones.
         </p>
 
         <p>Ya has visto algunos ejemplos de un statement sencillo que no requiere un ResultMap explícito. Por ejemplo:
@@ -1887,9 +1888,9 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         </p>
 
         <ul>
-          <li>Todos los resultados de las sentencias select en el mapped statement se cachearán.</li>
+          <li>Si <code>cacheEnabled</code> es true, los resultados de las sentencias select del fichero de mapeo pueden almacenarse en la caché de segundo nivel cuando <code>useCache</code> es true y no se utiliza un ResultHandler personalizado. Las consultas con Cursor no utilizan esta caché.</li>
           <li>Todas las sentencias insert, update y delete del mapped statement vaciarán la caché.</li>
-          <li>La caché usarán un algoritmo de reemplazo tipo Least Recently Used (LRU).</li>
+          <li>La caché usará un algoritmo de reemplazo tipo Least Recently Used (LRU).</li>
           <li>La caché no se vaciará por tiempo (ej. no Flush Interval).</li>
           <li>La caché guardará 1024 referencias a listas u objetos (según lo que devuelva el statement).</li>
           <li>La caché puede tratarse como una cache de tipo lectura/escritura, lo cual significa que los objetos obtenidos no se comparten y pueden modificarse con seguridad por el llamante sin interferir en otras potenciales modificaciones realizadas por otros llamantes o hilos.</li>
@@ -1943,7 +1944,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 
         <p>
           <span class="label important">NOTA</span> La caché de segundo nivel es transaccional. Esto significa que solo es actualizada cuando
-          una sessión acaba con commit o cuando acaba con rollback pero no se ha ejecutado ninguna sentencia insert/delete/update
+          una sesión acaba con commit o cuando acaba con rollback pero no se ha ejecutado ninguna sentencia insert/delete/update
           con el parámetro flushCache=true.
         </p>
 

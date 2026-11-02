@@ -202,7 +202,8 @@ ps.setInt(1,id);]]></source>
         </table>
       </subsection>
 
-      <subsection name="insert, update and delete" id="insert_update_and_delete">
+      <subsection name="insert, update and delete">
+        <a name="insert_update_and_delete"/>
         <p>데이터를 변경하는 구문인 insert, update, delete는 매우 간단하다.</p>
 
         <source><![CDATA[<insert
@@ -1931,7 +1932,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         <p>하나의 간단한 구문에 다음과 같은 순서로 영향을 준다.</p>
 
         <ul>
-          <li>매핑 구문 파일내 select 구문의 모든 결과가 캐시 될 것이다.</li>
+          <li><code>cacheEnabled</code>가 true이고 구문의 <code>useCache</code>가 true이며 사용자 정의 ResultHandler를 사용하지 않으면, 매핑 파일의 select 구문 결과를 2차 캐시에 저장할 수 있다. Cursor 조회는 이 캐시를 사용하지 않는다.</li>
           <li>매핑 구문 파일내 insert, update 그리고 delete 구문은 캐시를 지울(flush) 것이다.</li>
           <li>캐시는 Least Recently Used (LRU) 알고리즘을 사용할 것이다.</li>
           <li>캐시는 스케줄링 기반으로 시간순서대로 지워지지는 않는다. (예를들면. no Flush Interval)</li>

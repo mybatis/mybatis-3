@@ -479,7 +479,7 @@ public String insertPersonsSql() {
 }
 ]]></source>
 
-        <p>从版本 3.5.2 开始，你可以像下面这样构建限制返回结果数的 SELECT 语句,：</p>
+        <p>从版本 3.5.2 开始，你可以像下面这样构建限制返回结果数的 SELECT 语句：</p>
 
         <source><![CDATA[
 public String selectPersonsWithOffsetLimitSql() {

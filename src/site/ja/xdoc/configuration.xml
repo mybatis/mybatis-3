@@ -307,7 +307,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 ドライバがデータベースからの応答を待ち続ける秒数（タイムアウト）を設定します。
               </td>
               <td>
-                正の整数（単位：秒）
+                0 以上の整数（単位：秒）
               </td>
               <td>
                 なし (null)
@@ -322,7 +322,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 このパラメータ値はクエリ毎の設定で上書きできます。
               </td>
               <td>
-                正の整数
+                0 以上の整数
               </td>
               <td>
                 なし (null)
@@ -392,7 +392,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               </td>
               <td>
                 MyBatis は循環参照の解決やネストされたクエリのスピード向上のためにローカルキャッシュを使用します。
-                デフォルト（SESSION）では同一セッション内の全てのクエリ結果がキャッシュされます。localCacheScope に STATEMENT を設定した場合、ローカルキャッシュはステートメントごとに適用されます。言い換えると、同一 SqlSession に対する複数の呼び出しでデータが共有されることはありません。
+                デフォルト（SESSION）では同一セッション内の通常のクエリ結果がキャッシュされます。Cursor を使うクエリやカスタム ResultHandler を渡すクエリはローカルキャッシュに保存されません。localCacheScope に STATEMENT を設定した場合、ローカルキャッシュはステートメントごとに適用されます。言い換えると、同一 SqlSession に対する複数の呼び出しでデータが共有されることはありません。
               </td>
               <td>
                 SESSION | STATEMENT
@@ -1483,7 +1483,7 @@ public class Author {
 
         <source><![CDATA[// ExampleTypeHandler.java
 @MappedJdbcTypes(JdbcType.VARCHAR)
-public class StringTypeHandler extends BaseTypeHandler<String> {
+public class ExampleTypeHandler extends BaseTypeHandler<String> {
 
   @Override
   public void setNonNullParameter(PreparedStatement ps, int i, String parameter, JdbcType jdbcType) throws SQLException {
@@ -1689,7 +1689,7 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
         <p>
           ObjectFactory のインターフェイスは非常にシンプルです。
           ２つある create メソッドのうち１つはデフォルトコンストラクタを扱うもので、もうひとつは引数を取るコンストラクタを扱います。<br />
-          もう１つのメソッド setProperties は ObjectFactory を設定するために使うことができます。
+          isCollection メソッドはコレクション型かどうかを判定します。setProperties メソッドは ObjectFactory を設定するために使います。
           設定ファイルの objectFactory 要素のボディで定義されているプロパティは、ObjectFactory が初期化された後に setProperties メソッドの引数として渡されます。
         </p>
 

@@ -60,7 +60,7 @@ The configuration XML file contains settings for the core of the MyBatis system,
 
 Place `org/mybatis/example/db.properties` on the classpath and define `driver`, `url`, `username`, and `password` there for your database.
 
-While there is a lot more to the XML configuration file, the above example points out the most critical parts. Notice the XML header, required to validate the XML document. The body of the environment element contains the environment configuration for transaction management and connection pooling. The mappers element contains a list of mappers – the XML files and/or annotated Java interface classes that contain the SQL code and mapping definitions.
+While there is a lot more to the XML configuration file, the above example points out the most critical parts. Notice the optional XML declaration and the DOCTYPE declaration, which identifies the DTD used to validate the XML document. The body of the environment element contains the environment configuration for transaction management and connection pooling. The mappers element contains a list of mappers – the XML files and/or annotated Java interface classes that contain the SQL code and mapping definitions.
 
 ### Building SqlSessionFactory without XML
 
@@ -189,7 +189,7 @@ Once created, the SqlSessionFactory should exist for the duration of your applic
 
 #### SqlSession
 
-Each thread should have its own instance of SqlSession. Instances of SqlSession are not to be shared and are not thread safe. Therefore the best scope is request or method scope. Never keep references to a SqlSession instance in a static field or even an instance field of a class. Never keep references to a SqlSession in any sort of managed scope, such as HttpSession of the Servlet framework. If you're using a web framework of any sort, consider the SqlSession to follow a similar scope to that of an HTTP request. In other words, upon receiving an HTTP request, you can open a SqlSession, then upon returning the response, you can close it. Closing the session is very important. You should always ensure that it's closed within a finally block. The following is the standard pattern for ensuring that SqlSessions are closed:
+Each thread should have its own instance of SqlSession. Instances of SqlSession are not to be shared and are not thread safe. Therefore the best scope is request or method scope. Never keep references to a SqlSession instance in a static field or even an instance field of a class. Never keep references to a SqlSession in any sort of managed scope, such as HttpSession of the Servlet framework. If you're using a web framework of any sort, consider the SqlSession to follow a similar scope to that of an HTTP request. In other words, upon receiving an HTTP request, you can open a SqlSession, then upon returning the response, you can close it. Closing the session is very important. Use try-with-resources to ensure that it is closed. The following is the standard pattern for ensuring that SqlSessions are closed:
 
 ```java
 try (SqlSession session = sqlSessionFactory.openSession()) {

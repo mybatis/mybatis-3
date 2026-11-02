@@ -26,11 +26,13 @@
   </properties>
 
   <body>
-  <section name="Java API" id="javaApi">
+  <section name="Java API">
+    <p><a id="javaApi"></a></p>
   <p>既然你已经知道如何配置 MyBatis 以及如何创建映射，是时候来尝点甜头了。MyBatis 的 Java API 就是这个甜头。稍后你将看到，和 JDBC 相比，MyBatis
   大幅简化你的代码并力图保持其简洁、容易理解和维护。为了使得 SQL 映射更加优秀，MyBatis 3 引入了许多重要的改进。</p>
 
-  <subsection name="目录结构" id="directoryStructure">
+  <subsection name="目录结构">
+    <p><a id="directoryStructure"></a></p>
   <p>在我们深入 Java API 之前，理解关于目录结构的最佳实践是很重要的。MyBatis 非常灵活，你可以随意安排你的文件。但和其它框架一样，目录结构有一种最佳实践。
   </p>
   <p>
@@ -66,7 +68,8 @@
 <p>本章接下来的示例将假定你遵循这种目录结构。</p>
   </subsection>
 
-  <subsection name="SqlSession" id="sqlSessions">
+  <subsection name="SqlSession">
+    <p><a id="sqlSessions"></a></p>
   <p>使用 MyBatis 的主要 Java 接口就是 SqlSession。你可以通过这个接口来执行命令，获取映射器实例和管理事务。在介绍 SqlSession 接口之前，我们先来了解如何获取一个 SqlSession 实例。SqlSessions 是由 SqlSessionFactory 实例创建的。SqlSessionFactory 对象包含创建 SqlSession 实例的各种方法。而 SqlSessionFactory 本身是由 SqlSessionFactoryBuilder 创建的，它可以从 XML、注解或 Java 配置代码来创建 SqlSessionFactory。</p>
   <p>
   <span class="label important">提示</span> 当 Mybatis 与一些依赖注入框架（如 Spring 或者 Guice）搭配使用时，SqlSession 将被依赖注入框架创建并注入，所以你不需要使用 SqlSessionFactoryBuilder 或者 SqlSessionFactory，可以直接阅读 SqlSession 这一节。请参考 Mybatis-Spring 或者 Mybatis-Guice 手册以了解更多信息。</p>
@@ -261,8 +264,8 @@ void rollback(boolean force)</source>
   <p><span class="label important">提示</span> MyBatis-Spring 和 MyBatis-Guice 提供了声明式事务处理，所以如果你在使用 Mybatis 的同时使用了 Spring 或者 Guice，请参考它们的手册以获取更多的内容。</p>
 
 <h5>本地缓存</h5>
-  <p>Mybatis 使用到了两种缓存：本地缓存（local cache）和二级缓存（second level cache）。</p>
-  <p>每当一个新 session 被创建，MyBatis 就会创建一个与之相关联的本地缓存。任何在 session 执行过的查询结果都会被保存在本地缓存中，所以，当再次执行参数相同的相同查询时，就不需要实际查询数据库了。本地缓存将会在做出修改、事务提交或回滚，以及关闭 session 时清空。</p>
+  <p>MyBatis 使用两种缓存：本地缓存（local cache）和二级缓存（second level cache）。配置了命名空间缓存、启用 <code>cacheEnabled</code> 和语句的 <code>useCache</code>，且未使用自定义 ResultHandler 时，普通查询才能使用二级缓存。</p>
+  <p>每当一个新 session 被创建，MyBatis 就会创建一个与之相关联的本地缓存。在默认的 SESSION 作用域下，未使用自定义 ResultHandler 的非游标查询可以复用相同语句与参数的缓存结果，而无需再次查询数据库。使用自定义 ResultHandler 的查询不会读取本地缓存，游标查询则完全绕过本地缓存。本地缓存将在执行更新、事务提交或回滚，以及关闭 session 时清空。</p>
   <p>默认情况下，本地缓存数据的生命周期等同于整个 session 的周期。由于缓存会被用来解决循环引用问题和加快重复嵌套查询的速度，所以无法将其完全禁用。但是你可以通过设置 localCacheScope=STATEMENT 来只在语句执行时使用缓存。</p>
   <p>注意，如果 localCacheScope 被设置为 SESSION，对于某个对象，MyBatis 将返回在本地缓存中唯一对象的引用。对返回的对象（例如 list）做出的任何修改将会影响本地缓存的内容，进而将会影响到在本次 session 中从缓存返回的值。因此，不要对 MyBatis 所返回的对象作出更改，以防后患。</p>
   <p>你可以随时调用以下方法来清空本地缓存：</p>
@@ -330,13 +333,13 @@ void rollback(boolean force)</source>
         <td><code>@Property</code></td>
         <td>N/A</td>
         <td><code>&lt;property&gt;</code></td>
-        <td>指定参数值或占位符（placeholder）（该占位符能被 <code>mybatis-config.xml</code> 内的配置属性替换）。属性：<code>name</code>、<code>value</code>。（仅在 MyBatis 3.4.2 以上可用）</td>
+     <td>指定属性值，其中可以包含由 <code>mybatis-config.xml</code> 中定义的配置属性替换的占位符。属性：<code>name</code>、<code>value</code>。（从 MyBatis 3.4.2 开始可用）</td>
       </tr>
       <tr>
         <td><code>@CacheNamespaceRef</code></td>
         <td><code>类</code></td>
-        <td><code>&lt;cacheRef&gt;</code></td>
-        <td>引用另外一个命名空间的缓存以供使用。注意，即使共享相同的全限定类名，在 XML 映射文件中声明的缓存仍被识别为一个独立的命名空间。属性：<code>value</code>、<code>name</code>。如果你使用了这个注解，你应设置 <code>value</code> 或者 <code>name</code> 属性的其中一个。<code>value</code> 属性用于指定能够表示该命名空间的 Java 类型（命名空间名就是该 Java 类型的全限定类名），<code>name</code> 属性（这个属性仅在 MyBatis 3.4.2 以上可用）则直接指定了命名空间的名字。</td>
+        <td><code>&lt;cache-ref&gt;</code></td>
+        <td>引用另一个命名空间的缓存。带注解的映射器不会自动使用与其命名空间相同的 XML 映射文件中声明的缓存；如需引用该缓存，请使用此注解。属性：<code>value</code>、<code>name</code>，必须指定其中一个。<code>value</code> 指定映射器类，其全限定类名就是命名空间；<code>name</code>（从 MyBatis 3.4.2 开始可用）直接指定命名空间名称。</td>
       </tr>
       <tr>
         <td><code>@ConstructorArgs</code></td>

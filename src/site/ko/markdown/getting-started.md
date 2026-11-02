@@ -57,7 +57,7 @@ XML설정파일에서 지정하는 마이바티스의 핵심이 되는 설정은
 
 `org/mybatis/example/db.properties`를 클래스패스에 두고 사용할 데이터베이스의 `driver`, `url`, `username`, `password`를 정의하세요.
 
-좀 더 많은 XML 설정방법이 있지만 위 예제에서는 가장 핵심적인 부분만을 보여주고 있다. XML 가장 위부분에서는 XML 문서의 유효성체크를 위해 필요하다. environment엘리먼트는 트랜잭션 관리와 커넥션 풀링을 위한 환경적인 설정을 나타낸다. mappers엘리먼트는 SQL 코드와 매핑 정의를 가지는 XML 파일인 mapper 의 목록을 지정한다.
+좀 더 많은 XML 설정 방법이 있지만 위 예제에서는 가장 핵심적인 부분만 보여준다. XML 선언은 선택 사항이고, DOCTYPE 선언은 XML 문서 검증에 사용할 DTD를 지정한다. environment 엘리먼트는 트랜잭션 관리와 커넥션 풀링을 위한 환경 설정을 나타낸다. mappers 엘리먼트는 SQL 코드와 매핑 정의를 담은 XML 파일 또는 애노테이션이 붙은 자바 인터페이스의 목록을 지정한다.
 
 ## XML 을 사용하지 않고 SqlSessionFactory 빌드하기
 
@@ -181,7 +181,7 @@ public interface BlogMapper {
 
 #### SqlSession
 
-각각의 쓰레드는 자체적으로 SqlSession인스턴스를 가져야 한다. SqlSession인스턴스는 공유되지 않고 쓰레드에 안전하지도 않다. 그러므로 가장 좋은 스코프는 요청 또는 메소드 스코프이다. SqlSession 을 static 필드나 클래스의 인스턴스 필드로 지정해서는 안된다. 그리고 서블릿 프레임워크의 HttpSession 과 같은 관리 스코프에 둬서도 안된다. 어떠한 종류의 웹 프레임워크를 사용한다면 HTTP 요청과 유사한 스코프에 두는 것으로 고려해야 한다. 달리 말해서 HTTP 요청을 받을때마다 만들고 응답을 리턴할때마다 SqlSession 을 닫을 수 있다. SqlSession 을 닫는 것은 중요하다. 언제나 finally 블록에서 닫아야만 한다. 다음은 SqlSession을 닫는 것을 확인하는 표준적인 형태다.
+각각의 쓰레드는 자체적으로 SqlSession인스턴스를 가져야 한다. SqlSession인스턴스는 공유되지 않고 쓰레드에 안전하지도 않다. 그러므로 가장 좋은 스코프는 요청 또는 메소드 스코프이다. SqlSession 을 static 필드나 클래스의 인스턴스 필드로 지정해서는 안된다. 그리고 서블릿 프레임워크의 HttpSession 과 같은 관리 스코프에 둬서도 안된다. 어떠한 종류의 웹 프레임워크를 사용한다면 HTTP 요청과 유사한 스코프에 두는 것으로 고려해야 한다. 달리 말해서 HTTP 요청을 받을때마다 만들고 응답을 리턴할때마다 SqlSession 을 닫을 수 있다. SqlSession 을 닫는 것은 중요하다. 확실히 닫히도록 try-with-resources를 사용한다. 다음은 SqlSession을 닫는 것을 확인하는 표준적인 형태다.
 
 ```java
 try (SqlSession session = sqlSessionFactory.openSession()) {

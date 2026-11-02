@@ -27,7 +27,7 @@ Many environments ship Commons Logging as a part of the application server class
 </configuration>
 ```
 
-Valid values are SLF4J, LOG4J, LOG4J2, JDK_LOGGING, COMMONS_LOGGING, STDOUT_LOGGING, NO_LOGGING or a full qualified class name that implements `org.apache.ibatis.logging.Log` and gets an string as a constructor parameter.
+Valid values are SLF4J, LOG4J, LOG4J2, JDK_LOGGING, COMMONS_LOGGING, STDOUT_LOGGING, NO_LOGGING or a fully qualified class name that implements `org.apache.ibatis.logging.Log` and takes a String as a constructor parameter.
 
 You can also select the implementation by calling one of the following methods:
 
@@ -51,7 +51,7 @@ The specifics of SLF4J, Apache Commons Logging, Apache Log4J and the JDK Logging
 
 ### Logging Configuration
 
-To see MyBatis logging statements you may enable logging on a package, a mapper fully qualified class name, a namespace o a fully qualified statement name.
+To see MyBatis logging statements you may enable logging on a package, a mapper's fully qualified class name, a namespace or a fully qualified statement name.
 
 Again, how you do this is dependent on the logging implementation in use. We'll show how to do it with SLF4J(Logback). Configuring the logging services is simply a matter of including one or more extra configuration files (e.g. `logback.xml`) and sometimes a new JAR file. The following example configuration will configure full logging services using SLF4J(Logback) as a provider. There are 2 steps.
 
@@ -154,7 +154,7 @@ In that case you can enable logging for the whole XML file by adding a logger fo
 </logger>
 ```
 
-Or for an specific statement:
+Or for a specific statement:
 
 ```xml
 <logger name="org.mybatis.example.BlogMapper.selectBlog">

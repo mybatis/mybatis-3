@@ -21,7 +21,6 @@ Mapper XML 映射檔只有少數幾個頂級元素（按照它們應當定義的
 
 接下來的小節將依序詳細介紹這些元素，首先從陳述式本身開始。
 
-<a id="select"></a>
 ### select
 
 select 陳述式是您在 MyBatis 中最常用的元素之一。將資料存入資料庫中，直到將其查詢出來之前價值都不大，因此大多數應用程式查詢資料的頻率遠高於修改資料。對於每一次 insert、update 或 delete，通常都會有許多次 select。這是 MyBatis 的核心原則之一，也是在查詢與結果映射上投入如此多關注與努力的原因。對於簡單的情況，select 元素非常直觀。例如：
@@ -225,7 +224,6 @@ select 元素具備更多屬性，允許您微調每個陳述式的行為細節�
 </select>
 ```
 
-<a id="sql"></a>
 ### sql
 
 此元素可用於定義可重複使用的 SQL 程式碼片段，並將其包含在其他陳述式中。它可以在靜態載入階段進行參數化。不同的 include 實例可以傳入不同的屬性值。例如：
@@ -633,7 +631,6 @@ MyBatis 誕生時秉持著一個理念：資料庫並不總是如您所想或所
 | `STRUCT`   | `JAVA_OBJECT` | `DISTINCT` | `REF` | `DATALINK` | `ROWID` |
 | `LONGNVARCHAR` | `SQLXML` | `DATETIMEOFFSET` | `TIME_WITH_TIMEZONE` | `TIMESTAMP_WITH_TIMEZONE` | |
 
-<a id="constructor"></a>
 #### constructor
 
 雖然屬性（properties）適用於大多數資料傳輸物件（DTO）類別，並可能涵蓋大部分的領域模型，但在某些情況下，您可能希望使用不可變類別（immutable classes）。通常包含鮮少或從不變更的參照或查閱資料的表格非常適合不可變類別。建構函式注入允許您在類別實例化時設定值，而無需公開 public 方法。MyBatis 也支援 private 屬性與 private JavaBean 屬性來達成此目的，但有些人更偏好建構函式注入。*constructor* 元素實現了這項功能。
@@ -771,7 +768,6 @@ User{username=Peter, roles=[Users, Maintainers, Approvers]}
 值得注意的是，混合映射的支援有限，即屬性映射與巢狀建構函式映射混合使用很可能會失敗。
 當使用此功能時，建議整個映射階層都使用不可變的建構函式映射。
 
-<a id="association"></a>
 #### association
 
 ```xml
@@ -1026,7 +1022,6 @@ SELECT * FROM AUTHOR WHERE ID = #{id}
 
 您在上面已經看到了如何處理「擁有一個」形式的關聯。但是「擁有多個」（has many）呢？這就是下一節的主題。
 
-<a id="collection"></a>
 #### collection
 
 ```xml
@@ -1444,7 +1439,6 @@ public interface InitializingObject {
 
 既然那是預設值，您顯然永遠不應該明確地以這種方式設定陳述式。相反地，只有在您想變更預設行為時，才設定 flushCache 與 useCache 屬性。例如，在某些情況下，您可能希望將特定 select 陳述式的結果排除在快取之外，或者您可能希望 select 陳述式清除快取。類似地，您可能有一些 update 陳述式在執行時不需要清除快取。
 
-<a id="cache-ref"></a>
 #### cache-ref
 
 回想上一節，只有特定命名空間的快取才會被相同命名空間內的陳述式使用或清除。有時您可能希望在命名空間之間共享相同的快取設定與實例。在這種情況下，您可以使用 cache-ref 元素來參照另一個快取。

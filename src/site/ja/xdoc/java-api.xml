@@ -29,10 +29,12 @@
   that matches the current one. If found with and without the <code>databaseId</code> the latter will be discarded.<br/><br/>
 
   <body>
-  <section name="Java API" id="javaApi">
+  <section name="Java API">
+    <a name="javaApi"/>
   <p>前章までで、設定方法と SQL マップの書き方は学びました。MyBatis Java API は、今までの努力が実を結ぶところです。この章を読めば、JDBC と比べると、MyBatis によってコードが大幅に単純化され、クリーンで理解しやすくメンテナンスも容易な状態を保つことができるということが分かると思います。</p>
 
-  <subsection name="ディレクトリ構造" id="directoryStructure">
+  <subsection name="ディレクトリ構造">
+    <a name="directoryStructure"/>
   <p>Java API の説明に入る前に、ディレクトリ構造に関するベストプラクティスを理解しておくことが重要です。MyBatis は柔軟で、基本的にファイルは好きな場所に配置することができますが、多くのフレームワークと同様に推奨される構成があります。</p>
   <p>典型的なアプリケーションのディレクトリ構造を見てみましょう。</p>
   <pre>/my_application
@@ -65,7 +67,8 @@
   <p>尚、この章のサンプルでは、上記のディレクトリ構造を前提にしています。</p>
   </subsection>
 
-  <subsection name="SqlSessions" id="sqlSessions">
+  <subsection name="SqlSessions">
+    <a name="sqlSessions"/>
   <p>MyBatis の最も良く使う Java インターフェイスは SqlSession です。コマンドの実行、Mapper の取得、トランザクション管理はこのインターフェイスを通して行うことができます。SqlSession については、後で詳しく説明しますが、その前に SqlSession のインスタンスを取得する方法について学ばなくてはなりません。SqlSession は SqlSessionFactory のインスタンスによって作成されます。SqlSessionFactory には、様々な方法で SqlSession を作成するメソッドが含まれています。SqlSessionFactory 自身は SqlSessionFactoryBuilder によって作られますが、作成される SqlSessionFactory は XML、アノテーション、ハードコードされた Java コンフィグレーションのいずれかの方法で設定することができます。</p>
   <p><span class="label important">NOTE</span> MyBatis を Spring や Guice といった依存性注入（DI = Dependency Injection）フレームワークと組み合わせて使う場合、SqlSession は DI フレームワークによって作成・注入されます。SqlSessionFactoryBuilder や SqlSessionFactory を使う必要はありませんので、SqlSession の章まで飛ばして構いません。DIフレームワークとの組み合わせについては MyBatis-Spring および MyBatis-Guice のマニュアルを参照してください。</p>
   <h4>SqlSessionFactoryBuilder</h4>
@@ -264,7 +267,7 @@ void rollback(boolean force)</source>
 
   <h5>ローカルキャッシュ</h5>
   <p>MyBatis は２種類の内部キャッシュを使用します。</p>
-  <p>新しいセッションが生成される際、同時にローカルキャッシュが作成され、セッションにアタッチされます。このセッション内で実行されるクエリは全てローカルキャッシュに保存され、同一パラメーターで再度呼び出された場合はデータベースに問い合わせずに結果を返します。ローカルキャッシュは update, commit, rollback, close が実行されるとクリアされるようになっています。</p>
+  <p>新しいセッションが生成される際、同時にローカルキャッシュが作成され、セッションにアタッチされます。通常のクエリはローカルキャッシュに保存され、同一パラメーターで再度呼び出された場合はデータベースに問い合わせずに結果を返します。Cursor を使うクエリやカスタム ResultHandler を渡すクエリはローカルキャッシュを使用しません。ローカルキャッシュは update, commit, rollback, close が実行されるとクリアされるようになっています。</p>
   <p>デフォルトでは、ローカルキャッシュはセッションが破棄されるまで保持されます。ローカルキャッシュは ResultMap の循環参照の解決やネストされたクエリの効率化にも使用されているため、完全に無効化することはできませんが、localCacheScope に STATEMENT を設定することで保持期間をステートメント単位に変更することができます。</p>
   <p>localCacheScope に SESSION が設定されている場合、MyBatis は同一オブジェクトへの参照を返すという点に注意してください。返されたオブジェクトやリストなどに変更を加えた場合、ローカルキャッシュの内容が変更されることになるので、セッションが有効な間に同じクエリを発行すると意図しない結果が戻ることになります。同一セッション内で同じクエリを繰り返し発行するようなケースでは、結果として返されたオブジェクトを変更しないほうが無難です。</p>
   <p>また、次のメソッドを呼び出すことにより任意のタイミングでローカルキャッシュをクリアすることも可能です。</p>
@@ -297,7 +300,7 @@ void rollback(boolean force)</source>
   Map<Integer, Author> selectAuthorsAsMap();
   // insert("insertAuthor", author)
   int insertAuthor(Author author);
-  // updateAuthor("updateAuthor", author)
+  // update("updateAuthor", author)
   int updateAuthor(Author author);
   // delete("deleteAuthor",5)
   int deleteAuthor(int id);

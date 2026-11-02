@@ -241,7 +241,8 @@ ps.setInt(1,id);]]></source>
         </table>
       </subsection>
 
-      <subsection name="insert, update and delete" id="insert_update_and_delete">
+      <subsection name="insert, update and delete">
+        <a name="insert_update_and_delete"/>
         <p>
           データを変更するステートメントである insert, update, delete は、非常によく似た実装となっています。
         </p>
@@ -1101,7 +1102,7 @@ public class User {
         <source><![CDATA[<constructor>
    <idArg column="id" javaType="int"/>
    <arg column="username" javaType="String"/>
-   <arg column="arg" javaType="_int"/>
+   <arg column="age" javaType="_int"/>
 </constructor>]]></source>
 
         <p>
@@ -1992,7 +1993,8 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         </p>
       </subsection>
 
-      <subsection name="自動マッピング" id="auto-mapping">
+      <subsection name="自動マッピング">
+        <a name="auto-mapping"/>
 
         <p>
           前章では、シンプルなケースでは MyBatis の自動マッピングが利用できるということと、複雑なケースではあなた自身で Result Map を記述する必要があるということを説明しました。
@@ -2100,7 +2102,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         </p>
 
         <ul>
-          <li>この SQL マップファイルに含まれる select ステートメントの結果は全てキャッシュされます。</li>
+          <li><code>cacheEnabled</code> が true で、ステートメントの <code>useCache</code> も true の場合、カスタム ResultHandler を使用しない select ステートメントの結果は２次キャッシュに保存されます。Cursor を使うクエリはこのキャッシュを使用しません。</li>
           <li>この SQL マップファイルに含まれる insert, update, delete ステートメントを実行するとキャッシュがフラッシュされます。</li>
           <li>このキャッシュは LRU アルゴリズムに基づいて置き換えられます。</li>
           <li>このキャッシュは経過時間によってフラッシュされることはありません（つまり Flush Interval は設定されていないということです）。</li>

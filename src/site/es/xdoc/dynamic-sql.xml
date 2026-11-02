@@ -36,7 +36,7 @@
     <li>trim (where, set)</li>
     <li>foreach</li>
   </ul>
-  <subsection name="if" id="if">
+  <subsection name="if">
   <p>La tarea más frecuente en SQL dinámico es incluir un trozo de la clausula where condicionalmente. Por ejemplo:</p>
   <source><![CDATA[<select id="findActiveBlogWithTitleLike"
      resultType="Blog">
@@ -59,7 +59,8 @@
   </if>
 </select>]]></source>
   </subsection>
-  <subsection name="choose, when, otherwise" id="chooseWhenOtherwise">
+  <subsection name="choose, when, otherwise">
+    <a name="chooseWhenOtherwise"/>
   <p>En ocasiones no queremos usar una condición sino elegir una de entre varias opciones. De forma similar al switch  de Java, MyBatis ofrece el elemento choose.</p>
   <p>Usemos el ejemplo anterior, pero ahora vamos a buscar solamente por título si se ha proporcionado un título y por autor si se ha proporcionado un autor. Si  no se proporciona ninguno devolvemos una lista de Blogs destacados (quizá una lista seleccionada por los administradores en lugar de una gran lista de blogs sin sentido).</p>
   <source><![CDATA[<select id="findActiveBlogLike"
@@ -78,7 +79,8 @@
   </choose>
 </select>]]></source>
   </subsection>
-  <subsection name="trim, where, set" id="trimWhereSet">
+  <subsection name="trim, where, set">
+    <a name="trimWhereSet"/>
   <p>En los ejemplos anteriores se ha sorteado intencionadamente un notorio problema del SQL dinámico. Imagina lo que sucedería si volvemos a nuestro ejemplo del “if”, pero esta vez, hacemos que “ACTIVE = 1” sea también una condición dinámica.</p>
   <source><![CDATA[<select id="findActiveBlogLike"
      resultType="Blog">
@@ -183,7 +185,7 @@ AND title like 'someTitle']]></source>
 </select>]]></source>
   </subsection>
   <subsection name="Soporte de multiples vendedores de base de datos">
-  <p>Si se ha configurado un databaseIdProvider la variable "_databaseId" estará disponible en el código dinámico, de esta forma puedes constrir distintas sntencias dependiendo del fabricante de la base de datos. Mira el siguiente ejemplo:</p>
+  <p>Si se ha configurado un databaseIdProvider la variable "_databaseId" estará disponible en el código dinámico, de esta forma puedes construir distintas sentencias dependiendo del fabricante de la base de datos. Mira el siguiente ejemplo:</p>
   <source><![CDATA[<insert id="insert">
   <selectKey keyProperty="id" resultType="int" order="BEFORE">
     <if test="_databaseId == 'oracle'">

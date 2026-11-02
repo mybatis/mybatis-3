@@ -74,7 +74,7 @@
       </ul>
       <p>下一部分将从语句本身开始来描述每个元素的细节。</p>
 
-      <subsection name="select" id="select">
+      <subsection name="select">
         <p>查询语句是 MyBatis 中最常用的元素之一——光能把数据存到数据库中价值并不大，还要能重新取出来才有用，多数应用也都是查询比修改要频繁。
         MyBatis 的基本原则之一是：在每个插入、更新或删除操作之间，通常会执行多个查询操作。因此，MyBatis
         在查询和结果映射做了相当多的改进。一个简单查询的 select 元素是非常简单的。比如：
@@ -241,7 +241,8 @@ ps.setInt(1,id);]]></source>
         </table>
       </subsection>
 
-      <subsection name="insert, update 和 delete" id="insert_update_and_delete">
+      <subsection name="insert, update 和 delete">
+        <p><a id="insert_update_and_delete"></a></p>
         <p>
           数据变更语句 insert，update 和 delete 的实现非常接近：
         </p>
@@ -522,7 +523,8 @@ ps.setInt(1,id);]]></source>
 </select>]]></source>
       </subsection>
 
-      <subsection name="参数" id="Parameters">
+      <subsection name="参数">
+        <p><a id="Parameters"></a></p>
         <p>
           之前见到的所有语句都使用了简单的参数形式。但实际上，参数是 MyBatis
           非常强大的元素。对于大多数简单的使用场景，你都不需要使用复杂的参数，比如：
@@ -670,7 +672,8 @@ User userOfEmail = userMapper.findByColumn("email", "noone@nowhere.com");
         </p>
       </subsection>
 
-      <subsection name="结果映射" id="Result_Maps">
+      <subsection name="结果映射">
+        <p><a id="Result_Maps"></a></p>
         <p>
       <code>resultMap</code> 元素是 MyBatis 中最重要最强大的元素。它可以让你从 90%
           的 JDBC <code>ResultSets</code> 数据提取代码中解放出来，并在一些情形下允许你进行一些
@@ -1223,11 +1226,11 @@ public class User {
           </tbody>
         </table>
 
-<h5>Nested Results for association or collection</h5>
+<h5>关联或集合的嵌套结果</h5>
 
-<p>While the following sections describe how to use <code>association</code> and <code>collection</code> for both Nested selects and Nested results, Since 3.6.0 we can now inject both using <code>constructor</code> mapping.</p>
+<p>以下小节将介绍如何使用 <code>association</code> 和 <code>collection</code> 实现嵌套查询与嵌套结果。从 3.6.0 开始，也可以通过 <code>constructor</code> 映射注入关联和集合。</p>
 
-<p>Considering the following:</p>
+<p>考虑以下类：</p>
 
 <source><![CDATA[public class User {
    //...
@@ -1244,7 +1247,7 @@ public class UserRole {
 }
 ]]></source>
 
-<p>We can map <code>UserRole</code> as a nested result, MyBatis will wait until the row has been fully &#x2018;completed&#x2019; before creating the object, this means that by the time the <code>User</code> gets created, <code>userRoles</code> will be complete and cannot be modified anymore.</p>
+<p>我们可以将 <code>UserRole</code> 映射为嵌套结果。MyBatis 会等到结果行处理完成后才创建对象。因此，在创建 <code>User</code> 时，<code>userRoles</code> 已经完整，之后也不能再修改。</p>
 
 <source><![CDATA[<resultMap id="userResultMap" type="User">
   <constructor>
@@ -1255,7 +1258,7 @@ public class UserRole {
 </resultMap>
 ]]></source>
 
-<p>To achieve fully immutable objects in this example, we can also use constructor injection for <code>UserRole</code></p>
+<p>为了让本例中的对象完全不可变，也可以对 <code>UserRole</code> 使用构造方法注入。</p>
 
 <source><![CDATA[<resultMap id="userRoleResultMap" type="UserRole">
   <constructor>
@@ -1265,7 +1268,7 @@ public class UserRole {
 </resultMap>
 ]]></source>
 
-<p>MyBatis needs to be explicitly told that the results have been ordered in such a way, that when a new main row is retrieved from the result set, no previous row results will be retrieved again. This can be set on the statement with the <code>resultOrdered</code> attribute:</p>
+<p>必须明确告诉 MyBatis：结果集已经按主结果行排序，取得新的主结果行后，之前主结果行的数据不会再次出现。可以通过语句的 <code>resultOrdered</code> 属性进行设置：</p>
 
 <source><![CDATA[<select id="getAllUsers" resultMap="userResultMap" resultOrdered="true">
     select
@@ -1280,7 +1283,7 @@ public class UserRole {
 </select>
 ]]></source>
 
-<p>Note that <code>order by</code> is specified to order the results correctly. We can imagine the output to look something like:</p>
+<p>请注意，示例中的 <code>order by</code> 用于确保结果顺序正确。输出结果大致如下：</p>
 
 <table class="table table-striped">
 <thead>
@@ -1328,17 +1331,17 @@ public class UserRole {
 <td>Approvers</td></tr></tbody>
 </table>
 
-<p>After this query is run, we would have the following results:</p>
+<p>执行查询后将得到以下结果：</p>
 
 <source><![CDATA[User{username=John, roles=[Admins, Users]}
 User{username=Jack, roles=[]}
 User{username=Peter, roles=[Users, Maintainers, Approvers]}
 ]]></source>
 
-<p>If the 5th row here would have somehow appeared below the first row (via some <code>ORDER BY</code>), MyBatis would not be able to fully construct the <code>John</code> user correctly using constructor collection mapping.</p>
+<p>如果这里的第 5 行由于某种 <code>ORDER BY</code> 排序而紧接着出现在第 1 行之后，MyBatis 就无法通过构造方法集合映射正确、完整地构建 <code>John</code> 用户。</p>
 
-<p>It is important to note that mixed mappings have limited support, i.e. property mappings combined with nested constructor mappings are likely to fail.
-When using this functionality, it is preferable for the entire mapping hierarchy to use immutable constructor mappings.</p>
+<p>请注意，混合映射的支持有限：将属性映射与嵌套的构造方法映射结合使用可能会失败。
+使用此功能时，最好在整个映射层级中都采用不可变对象的构造方法映射。</p>
 
 
         <h4>关联</h4>
@@ -1676,10 +1679,10 @@ When using this functionality, it is preferable for the entire mapping hierarchy
 </resultMap>]]></source>
 
 
-<h4>Nested Cursor for Association</h4>
+<h4>关联中的嵌套游标</h4>
 
-<p>Some databases can return <code>java.sql.ResultSet</code> as a column value.<br />
-Here is the statement and result map.</p>
+<p>某些数据库可以将 <code>java.sql.ResultSet</code> 作为列值返回。<br />
+下面是相应的语句和结果映射。</p>
 
 <source><![CDATA[<resultMap id="blogResult" type="Blog">
   <id property="id" column="id" />
@@ -1696,8 +1699,8 @@ Here is the statement and result map.</p>
   ) author from blog b
 </select>]]></source>
 
-<p>Compared to the examples in the previous section, the key difference is the <code>jdbcType</code> attribute in the <code>&lt;association&gt;</code> element.<br />
-Its value <code>CURSOR</code> indicates that the value of the column <code>author</code> is nested cursor.</p>
+<p>与上一节中的示例相比，主要区别在于 <code>&lt;association&gt;</code> 元素的 <code>jdbcType</code> 属性。<br />
+值 <code>CURSOR</code> 表示 <code>author</code> 列的值是嵌套游标。</p>
 
 
         <h4>关联的多结果集（ResultSet）</h4>
@@ -1891,10 +1894,10 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
 </resultMap>]]></source>
 
 
-<h4>Nested Cursor for Collection</h4>
+<h4>集合中的嵌套游标</h4>
 
-<p>It might be obvious, but nested cursor can return multiple rows.<br />
-Just like <code>&lt;association&gt;</code>, you just need to specify <code>jdbcType="CURSOR"</code> in the <code>&lt;collection&gt;</code> element.</p>
+<p>嵌套游标可以返回多行。<br />
+与 <code>&lt;association&gt;</code> 一样，只需在 <code>&lt;collection&gt;</code> 元素中指定 <code>jdbcType="CURSOR"</code>。</p>
 
 <source><![CDATA[<resultMap id="blogResult" type="Blog">
   <id property="id" column="id" />
@@ -2050,7 +2053,8 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 
       </subsection>
 
-      <subsection name="自动映射" id="Auto-mapping">
+      <subsection name="自动映射">
+        <p><a id="Auto-mapping"></a></p>
 
         <p>
            正如你在前面一节看到的，在简单的场景下，MyBatis
@@ -2145,7 +2149,8 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 
       </subsection>
 
-      <subsection name="缓存" id="cache">
+      <subsection name="缓存">
+        <p><a id="cache"></a></p>
         <p>
           MyBatis 内置了一个强大的事务性查询缓存机制，它可以非常方便地配置和定制。
           为了使它更加强大而且易于配置，我们对 MyBatis 3 中的缓存实现进行了许多改进。

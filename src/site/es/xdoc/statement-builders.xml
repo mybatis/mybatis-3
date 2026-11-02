@@ -30,7 +30,7 @@
   <subsection name="El Problema">
   <p>Una de las cosas más tediosas que un programador Java puede llegar a tener que hacer es incluir código SQL en código Java. Normalmente esto se hace cuando es necesario generar dinámicamente el SQL – de otra forma podrías externalizar el código en un fichero o un procedimiento almacenado. Como ya has visto, MyBatis tiene una respuesta potente a la generación dinámica de SQL mediante las capacidades del mapeo XML. Sin embargo, en ocasiones se hace necesario construir una sentencia SQL dentro del código Java. En este caso, MyBatis tiene una funcionalidad más para ayudarte en ello, antes de que comiences con el típico lío de signos de suma, comillas, líneas nuevas, problemas de formato y condicionales anidados para tratar con las comas extra y las conjunciones AND… Realmente, generar código dinámico en java, puede ser una verdadera pesadilla. Por ejemplo:</p>
 <source><![CDATA[
-String sql = "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME, "
+String sql = "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME, " +
 "P.LAST_NAME,P.CREATED_ON, P.UPDATED_ON " +
 "FROM PERSON P, ACCOUNT A " +
 "INNER JOIN DEPARTMENT D on D.ID = P.DEPARTMENT_ID " +

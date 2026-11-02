@@ -79,7 +79,7 @@ The select element has more attributes that allow you to configure the details o
 | `fetchSize`     | This is a driver hint that will attempt to cause the driver to return results in batches of rows numbering in size equal to this setting. Default is `unset` (driver dependent).                                                                                                                                                                    |
 | `statementType` | Any one of `STATEMENT`, `PREPARED` or `CALLABLE`. This causes MyBatis to use `Statement`, `PreparedStatement` or `CallableStatement` respectively. Default: `PREPARED`.                                                                                                                                                                             |
 | `resultSetType` | Any one of `FORWARD_ONLY`&#124;`SCROLL_SENSITIVE`&#124;`SCROLL_INSENSITIVE`&#124;`DEFAULT`. If omitted, the configured `defaultResultSetType` is used. `DEFAULT` uses the JDBC driver's default.                                                                                                                                                    |
-| `databaseId`    | In case there is a configured databaseIdProvider, MyBatis will load all statements with no `databaseId` attribute or with a `databaseId` that matches the current one. If case the same statement if found with and without the `databaseId` the latter will be discarded.                                                                          |
+| `databaseId`    | In case there is a configured databaseIdProvider, MyBatis will load all statements with no `databaseId` attribute or with a `databaseId` that matches the current one. If the same statement is found both with a matching `databaseId` and without one, the version without `databaseId` is discarded.                                                                          |
 | `resultOrdered` | This is only applicable for nested result select statements: If this is true, it is assumed that nested results are contained or grouped together such that when a new main result row is returned, no references to a previous result row will occur anymore. This allows nested results to be filled much more memory friendly. Default: `false`. |
 | `resultSets`    | This is only applicable for multiple result sets. It lists the result sets that will be returned by the statement and gives a name to each one. Names are separated by commas.                                                                                                                                                                      |
 | `affectData`    | Set this to true when writing a INSERT, UPDATE or DELETE statement that returns data so that the transaction is controlled properly. Also see [Transaction Control Method](./java-api.html#Transaction_Control_Methods). Default: `false` (since 3.5.12)                                                                                            |
@@ -126,7 +126,7 @@ The data modification statements insert, update and delete are very similar in t
 | `useGeneratedKeys` | (insert and update only) This tells MyBatis to use the JDBC `getGeneratedKeys` method to retrieve keys generated internally by the database (e.g. auto increment fields in RDBMS like MySQL or SQL Server). Default: `false`.                                                                             |
 | `keyProperty`      | (insert and update only) Identifies a property into which MyBatis will set the key value returned by `getGeneratedKeys`, or by a `selectKey` child element of the insert statement. Default: `unset`. Can be a comma separated list of property names if multiple generated columns are expected.         |
 | `keyColumn`        | (insert and update only) Sets the name of the column in the table with a generated key. This is only required in certain databases (like PostgreSQL) when the key column is not the first column in the table. Can be a comma separated list of columns names if multiple generated columns are expected. |
-| `databaseId`       | In case there is a configured databaseIdProvider, MyBatis will load all statements with no `databaseId` attribute or with a `databaseId` that matches the current one. If case the same statement if found with and without the `databaseId` the latter will be discarded.                                |
+| `databaseId`       | In case there is a configured databaseIdProvider, MyBatis will load all statements with no `databaseId` attribute or with a `databaseId` that matches the current one. If the same statement is found both with a matching `databaseId` and without one, the version without `databaseId` is discarded.                                |
 [Insert, Update and Delete Attributes]
 
 
@@ -324,7 +324,7 @@ Finally, the mode attribute allows you to specify `IN`, `OUT` or `INOUT` paramet
 MyBatis also supports more advanced data types such as structs, but you must tell the statement the type name when registering the out parameter. For example (again, don't break lines like this in practice):
 
 ```
-#{middleInitial, mode=OUT, jdbcType=STRUCT, jdbcTypeName=MY_TYPE, resultMap=departmentResultMap}
+#{middleInitial, mode=OUT, jdbcType=STRUCT, jdbcTypeName=MY_TYPE}
 ```
 
 Despite all of these powerful options, most of the time you'll simply specify the property name, and MyBatis will figure out the rest. At most, you'll specify the `jdbcType` for nullable columns.
@@ -607,7 +607,7 @@ Each has a number of attributes:
 | `property`    | The field or property to map the column result to. If a matching JavaBeans property exists for the given name, then that will be used. Otherwise, MyBatis will look for a field of the given name. In both cases you can use complex property navigation using the usual dot notation. For example, you can map to something simple like: `username`, or to something more complicated like: `address.street.number`. |
 | `column`      | The column name from the database, or the aliased column label. This is the same string that would normally be passed to `resultSet.getString(columnName)`.                                                                                                                                                                                                                                                           |
 | `javaType`    | A fully qualified Java class name, or a type alias (see the table above for the list of built-in type aliases). MyBatis can usually figure out the type if you're mapping to a JavaBean. However, if you are mapping to a HashMap, then you should specify the javaType explicitly to ensure the desired behaviour.                                                                                                   |
-| `jdbcType`    | The JDBC Type from the list of supported types that follows this table. The JDBC type is only required for nullable columns upon insert, update or delete. This is a JDBC requirement, not a MyBatis one. So even if you were coding JDBC directly, you'd need to specify this type – but only for nullable values.                                                                                                   |
+| `jdbcType`    | The JDBC type of the result column. Specify it when MyBatis needs it, together with the Java type, to choose a TypeHandler for the mapping.                                                                                                   |
 | `typeHandler` | We discussed default type handlers previously in this documentation. Using this property you can override the default type handler on a mapping-by-mapping basis. The value is either a fully qualified class name of a TypeHandler implementation, or a type alias.                                                                                                                                                  |
 [Id and Result Attributes]
 
@@ -670,7 +670,7 @@ The rest of the attributes and rules are the same as for the regular id and resu
 |---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `column`      | The column name from the database, or the aliased column label. This is the same string that would normally be passed to `resultSet.getString(columnName)`.                                                                                                                                                                                                                                                                                                                                                                                                   |
 | `javaType`    | A fully qualified Java class name, or a type alias (see the table above for the list of built-in type aliases). MyBatis can usually figure out the type if you're mapping to a JavaBean. However, if you are mapping to a HashMap, then you should specify the javaType explicitly to ensure the desired behaviour.                                                                                                                                                                                                                                           |
-| `jdbcType`    | The JDBC Type from the list of supported types that follows this table. The JDBC type is only required for nullable columns upon insert, update or delete. This is a JDBC requirement, not an MyBatis one. So even if you were coding JDBC directly, you'd need to specify this type – but only for nullable values.                                                                                                                                                                                                                                          |
+| `jdbcType`    | The JDBC type of the result column. Specify it when MyBatis needs it, together with the Java type, to choose a TypeHandler for the mapping.                                                                                                                                                                                                                                          |
 | `typeHandler` | We discussed default type handlers previously in this documentation. Using this property you can override the default type handler on a mapping-by-mapping basis. The value is either a fully qualified class name of a `TypeHandler` implementation, or a type alias.                                                                                                                                                                                                                                                                                        |
 | `select`      | The ID of another mapped statement that will load the complex type required by this property mapping. The values retrieved from columns specified in the column attribute will be passed to the target select statement as parameters. See the Association element for more.                                                                                                                                                                                                                                                                                  |
 | `resultMap`   | This is the ID of a ResultMap that can map the nested results of this argument into an appropriate object graph. This is an alternative to using a call to another select statement. It allows you to join multiple tables together into a single `ResultSet`. Such a `ResultSet` will contain duplicated, repeating groups of data that needs to be decomposed and mapped properly to a nested object graph. To facilitate this, MyBatis lets you "chain" result maps together, to deal with the nested results. See the Association element below for more. |
@@ -783,7 +783,7 @@ First, let's examine the properties of the element. As you'll see, it differs fr
 |---------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `property`    | The field or property to map the column result to. If a matching JavaBeans property exists for the given name, then that will be used. Otherwise, MyBatis will look for a field of the given name. In both cases you can use complex property navigation using the usual dot notation. For example, you can map to something simple like: `username`, or to something more complicated like: `address.street.number`. |
 | `javaType`    | A fully qualified Java class name, or a type alias (see the table above for the list of built- in type aliases). MyBatis can usually figure out the type if you're mapping to a JavaBean. However, if you are mapping to a `HashMap`, then you should specify the javaType explicitly to ensure the desired behaviour.                                                                                                |
-| `jdbcType`    | The JDBC Type from the list of supported types that follows this table. The JDBC type is only required for nullable columns upon insert, update or delete. This is a JDBC requirement, not an MyBatis one. So even if you were coding JDBC directly, you'd need to specify this type – but only for nullable values.                                                                                                  |
+| `jdbcType`    | The JDBC type of the result column. Specify it when MyBatis needs it, together with the Java type, to choose a TypeHandler for the mapping.                                                                                                  |
 | `typeHandler` | We discussed default type handlers previously in this documentation. Using this property you can override the default type handler on a mapping-by-mapping basis. The value is either a fully qualified class name of a TypeHandler implementation, or a type alias.                                                                                                                                                  |
 
 #### Nested Select for Association
@@ -831,7 +831,7 @@ And so, there is another way.
 |-----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `resultMap`     | This is the ID of a ResultMap that can map the nested results of this association into an appropriate object graph. This is an alternative to using a call to another select statement. It allows you to join multiple tables together into a single ResultSet. Such a ResultSet will contain duplicated, repeating groups of data that needs to be decomposed and mapped properly to a nested object graph. To facilitate this, MyBatis lets you "chain" result maps together, to deal with the nested results. An example will be far easier to follow, and one follows this table. |
 | `columnPrefix`  | When joining multiple tables, you would have to use column alias to avoid duplicated column names in the ResultSet. Specifying columnPrefix allows you to map such columns to an external resultMap. Please see the example explained later in this section.                                                                                                                                                                                                                                                                                                                          |
-| `notNullColumn` | By default a child object is created only if at least one of the columns mapped to the child's properties is non null. With this attribute you can change this behaviour by specifiying which columns must have a value so MyBatis will create a child object only if any of those columns is not null. Multiple column names can be specified using a comma as a separator. Default value: unset.                                                                                                                                                                                    |
+| `notNullColumn` | By default a child object is created only if at least one of the columns mapped to the child's properties is non null. With this attribute you can change this behaviour by specifying which columns must have a value so MyBatis will create a child object only if any of those columns is not null. Multiple column names can be specified using a comma as a separator. Default value: unset.                                                                                                                                                                                    |
 | `autoMapping`   | If present, MyBatis will enable or disable automapping when mapping the result to this property. This attribute overrides the global autoMappingBehavior. Note that it has no effect on an external resultMap, so it is pointless to use it with `select` or `resultMap` attribute. Default value: unset.                                                                                                                                                                                                                                                                             |
 
 You've already seen a very complicated example of nested associations above. The following is a far simpler example to demonstrate how this works. Instead of executing a separate statement, we'll join the Blog and Author tables together, like so:
@@ -971,7 +971,7 @@ Its value `CURSOR` indicates that the value of the column `author` is nested cur
 | Attribute       | Description                                                                                                                                                                                       |
 |-----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `column`        | When using multiple resultset this attribute specifies the columns (separated by commas) that will be correlated with the `foreignColumn` to identify the parent and the child of a relationship. |
-| `foreignColumn` | Identifies the name of the columns that contains the foreign keys which values will be matched against the values of the columns specified in the `column` attibute of the parent type.           |
+| `foreignColumn` | Identifies the name of the columns that contains the foreign keys which values will be matched against the values of the columns specified in the `column` attribute of the parent type.           |
 | `resultSet`     | Identifies the name of the result set where this complex type will be loaded from.                                                                                                                |
 
 
@@ -1155,7 +1155,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}
 A name must be given to each result set by adding a `resultSets` attribute to the mapped statement with a list of names separated by commas.
 
 ```xml
-<select id="selectBlog" resultSets="blogs,posts" resultMap="blogResult">
+<select id="selectBlog" resultSets="blogs,posts" resultMap="blogResult" statementType="CALLABLE">
   {call getBlogsAndPosts(#{id,jdbcType=INTEGER,mode=IN})}
 </select>
 ```
@@ -1261,9 +1261,9 @@ As you have already seen in the previous sections, in simple cases MyBatis can a
 
 When auto-mapping results MyBatis will get the column name and look for a property with the same name ignoring case. That means that if a column named *ID* and property named *id* are found, MyBatis will set the *id* property with the *ID* column value.
 
-Usually database columns are named using uppercase letters and underscores between words and java properties often follow the camelcase naming covention. To enable the auto-mapping between them set the setting `mapUnderscoreToCamelCase` to true.
+Usually database columns are named using uppercase letters and underscores between words and Java properties often follow the camelCase naming convention. To enable the auto-mapping between them set the setting `mapUnderscoreToCamelCase` to true.
 
-Auto-mapping works even when there is an specific result map. When this happens, for each result map, all columns that are present in the ResultSet that have not a manual mapping will be auto-mapped, then manual mappings will be processed. In the following sample *id* and *userName* columns will be auto-mapped and *hashed_password* column will be mapped.
+Auto-mapping works even when there is a specific result map. When this happens, for each result map, all columns that are present in the ResultSet that have not a manual mapping will be auto-mapped, then manual mappings will be processed. In the following sample *id* and *userName* columns will be auto-mapped and *hashed_password* column will be mapped.
 
 ```xml
 <select id="selectUsers" resultMap="userResultMap">
@@ -1313,7 +1313,7 @@ The default value is `PARTIAL`, and it is so for a reason. When `FULL` is used a
 
 With this result map both *Blog* and *Author* will be auto-mapped. But note that *Author* has an *id* property and there is a column named *id* in the ResultSet so Author's id will be filled with Blog's id, and that is not what you were expecting. So use the `FULL` option with caution.
 
-Regardless of the auto-mapping level configured you can enable or disable the automapping for an specific ResultMap by adding the attribute `autoMapping` to it:
+Regardless of the auto-mapping level configured you can enable or disable the automapping for a specific ResultMap by adding the attribute `autoMapping` to it:
 
 ```xml
 <resultMap id="userResultMap" type="User" autoMapping="false">
@@ -1333,7 +1333,7 @@ By default, just local session caching is enabled that is used solely to cache d
 
 Literally that's it. The effect of this one simple statement is as follows:
 
-- All results from select statements in the mapped statement file will be cached.
+- When `cacheEnabled` is true, select results in the mapped statement file are eligible for second-level caching if the statement's `useCache` is true and no custom `ResultHandler` is used. Cursor queries bypass this cache.
 - All insert, update and delete statements in the mapped statement file will flush the cache.
 - The cache will use a Least Recently Used (LRU) algorithm for eviction.
 - The cache will not flush on any sort of time based schedule (i.e. no Flush Interval).
@@ -1379,7 +1379,7 @@ In addition to customizing the cache in these ways, you can also completely over
 <cache type="com.domain.something.MyCustomCache"/>
 ```
 
-This example demonstrates how to use a custom cache implementation. The class specified in the type attribute must implement the org.apache.ibatis.cache.Cache interface and provide a constructor that gets an String id as an argument. This interface is one of the more complex in the MyBatis framework, but simple given what it does.
+This example demonstrates how to use a custom cache implementation. The class specified in the type attribute must implement the org.apache.ibatis.cache.Cache interface and provide a constructor that gets a String ID as an argument. This interface is one of the more complex in the MyBatis framework, but simple given what it does.
 
 ```java
 public interface Cache {
@@ -1402,7 +1402,7 @@ To configure your cache, simply add public JavaBeans properties to your Cache im
 
 You can use JavaBeans properties of all simple types, MyBatis will do the conversion. And you can specify a placeholder(e.g. `${cache.file}`) to replace value defined at [configuration properties](configuration.html#properties).
 
-Since 3.4.2, the MyBatis has been supported to call an initialization method after it's set all properties. If you want to use this feature, please implements the `org.apache.ibatis.builder.InitializingObject` interface on your custom cache class.
+Since 3.4.2, MyBatis can call an initialization method after setting all properties. To use this feature, implement the `org.apache.ibatis.builder.InitializingObject` interface in your custom cache class.
 
 ```java
 public interface InitializingObject {

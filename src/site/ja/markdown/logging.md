@@ -15,7 +15,7 @@ MyBatis は、内部の Log Factory を通してログ情報を出力します�
 
 実際に使用されるのは、MyBatis 内部の Log Factory が検出した実装になります。MyBatis の Log Factory は上に挙げた順番でロギング実装を検索し、最初に見つけた実装を使用します。上記の実装が検出できなかった場合、ログは出力されません。
 
-アプリケーションサーバーでは、出荷時のクラスパスに Commons Logging が含まれていることがよくあります（Tomcat や WebSphere は良い例でしょう）。重要なのは、このような環境では MyBatis は Commons Logging を使用するということです。これはつまり、独自の Commons Logging 実装を使う WebSphere のような環境では、あなたが追加した Log4J の設定は無視されるということを意味しています。この現象が厄介なのは、MyBatis が Log4J の設定を無視しているように見えるということです（実は、このような環境では MyBatis が Commons Loggin を使用するため、Log4J の設定が無視されているのです）。クラスパスに Commons Logging を含む環境で動作するアプリケーションでも、mybatis-config.xml に設定を追加することで別のロギング実装を使用することができます。
+アプリケーションサーバーでは、出荷時のクラスパスに Commons Logging が含まれていることがよくあります（Tomcat や WebSphere は良い例でしょう）。重要なのは、このような環境では MyBatis は Commons Logging を使用するということです。これはつまり、独自の Commons Logging 実装を使う WebSphere のような環境では、あなたが追加した Log4J の設定は無視されるということを意味しています。この現象が厄介なのは、MyBatis が Log4J の設定を無視しているように見えるということです（実は、このような環境では MyBatis が Commons Logging を使用するため、Log4J の設定が無視されているのです）。クラスパスに Commons Logging を含む環境で動作するアプリケーションでも、mybatis-config.xml に設定を追加することで別のロギング実装を使用することができます。
 
 ```xml
 <configuration>

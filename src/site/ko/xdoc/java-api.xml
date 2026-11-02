@@ -27,7 +27,8 @@
   </properties>
 
   <body>
-  <section name="자바 API" id="javaApi">
+  <section name="자바 API">
+    <a name="javaApi"/>
   <p>이제 마이바티스를 설정하는 방법과 매핑을 만드는 방법을 알게 되었다.
   이미 충분히 잘 사용할 준비가 된 셈이다.
   마이바티스 자바 API 는 당신의 노력에 대한 보상을 얻게 할 것이다.
@@ -35,7 +36,8 @@
   이해하기 쉬워서 유지보수도 편하게 해준다.
   마이바티스 3은 SQL Map을 사용하는 많은 수의 개선 내용을 소개했다.</p>
 
-  <subsection name="디렉터리 구조" id="directoryStructure">
+  <subsection name="디렉터리 구조">
+    <a name="directoryStructure"/>
   <p>자바 API 를 살펴보기 전에 디렉터리 구조에 대해 전반적으로 이해하는 것이 중요하다.
   마이바티스는 매우 유연하고 파일을 사용해서 어떤 것도 할 수 있다.
   하지만 프레임워크이기 때문에 선호하는 방법이 있다.</p>
@@ -71,7 +73,8 @@
   <p>이 섹션의 나머지 예제는 디렉터리 구조가 이렇게 되어 있다고 가정하고 설명한다.</p>
   </subsection>
 
-  <subsection name="SqlSessions" id="sqlSessions">
+  <subsection name="SqlSessions">
+    <a name="sqlSessions"/>
   <p>마이바티스를 사용하기 위한 기본적인 자바 인터페이스는 SqlSession이다.
   이 인터페이스를 통해 명령어를 실행하고 매퍼를 얻으며 트랜잭션을 관리 할 수 있다.
   우리는 SqlSession에 대해서 좀더 얘기해볼 것이지만 먼저 SqlSession의 인스턴스를 만드는 방법을 배워보자.
@@ -332,10 +335,12 @@ void rollback(boolean force)</source>
   <p><span class="label important">참고</span> MyBatis-Spring 과 MyBatis-Guice는 선언적인 트랜잭션 관리기법을 제공한다.
   그래서 스프링이나 쥬스와 함께 마이바티스를 사용한다면 해당되는 메뉴얼을 꼭 참고하길 바란다. </p>
 
-  <h5>세션 레벨의 캐시를 지우기</h5>
+  <h5>로컬 캐시</h5>
+  <p>마이바티스는 로컬 캐시와 2차 캐시를 사용한다. 새 SqlSession이 열리면 로컬 캐시가 만들어진다. 일반 조회 결과는 로컬 캐시에 저장되어 같은 세션에서 동일한 쿼리와 파라미터로 다시 조회할 때 재사용된다. Cursor 조회와 사용자 정의 ResultHandler를 전달한 조회는 로컬 캐시를 사용하지 않는다. 로컬 캐시는 update, commit, rollback 또는 close 시 비워진다.</p>
+  <p>로컬 캐시는 순환 참조를 해결하고 반복된 중첩 조회를 빠르게 하기 위해 필요하므로 완전히 끌 수 없다. 기본값인 localCacheScope=SESSION에서는 세션 전체에서 사용하며, STATEMENT로 설정하면 구문 실행 중에만 사용한다.</p>
+  <p>SESSION 범위에서는 캐시된 객체와 같은 참조가 반환되므로 반환된 객체나 목록을 수정하면 캐시 내용에도 영향을 준다. 따라서 반환된 객체를 수정하지 않는 편이 좋다.</p>
+  <p>필요하면 다음 메소드로 로컬 캐시를 비울 수 있다.</p>
   <source>void clearCache()</source>
-  <p>SqlSession인스턴스는 update, commit, rollback 또는 close 할때마다 지워지는 로컬 캐시를 가진다.
-  명시적으로 지우고 싶다면 위의 clearCache() 메소드를 호출하면 된다.</p>
 
   <h5>SqlSession 을 반드시 닫도록 한다.</h5>
   <source>void close()</source>
@@ -365,12 +370,12 @@ void rollback(boolean force)</source>
   // (List<Author>) selectList("selectAuthors")
   List<Author> selectAuthors();
 
-  // (Map<Integer,Author>) selectMap("selectAuthors", "id")
+  // (Map<Integer,Author>) selectMap("selectAuthorsAsMap", "id")
   @MapKey("id")
-  List<Author> selectAuthorsAsMap();
+  Map<Integer, Author> selectAuthorsAsMap();
   // insert("insertAuthor", author)
   int insertAuthor(Author author);
-  // updateAuthor("updateAuthor", author)
+  // update("updateAuthor", author)
   int updateAuthor(Author author);
   // delete("deleteAuthor",5)
   int deleteAuthor(int id);

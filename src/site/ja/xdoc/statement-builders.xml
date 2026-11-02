@@ -34,7 +34,7 @@
         <source><![CDATA[
 
 // THE PROBLEM
-String sql = "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME, "
+String sql = "SELECT P.ID, P.USERNAME, P.PASSWORD, P.FULL_NAME, " +
 "P.LAST_NAME,P.CREATED_ON, P.UPDATED_ON " +
 "FROM PERSON P, ACCOUNT A " +
 "INNER JOIN DEPARTMENT D on D.ID = P.DEPARTMENT_ID " +
@@ -533,7 +533,8 @@ public String insertPersonsSql(List<Person> persons) {
 
       </subsection>
 
-      <subsection name="SqlBuilder および SelectBuilder （非推奨）" id="deprecated-builders">
+      <subsection name="SqlBuilder および SelectBuilder （非推奨）">
+        <a name="deprecated-builders"/>
         <p>
           当初は ThreadLocal 変数を使って Java 言語の制限を補うアプローチを採用していましたが、最近はビルダーパターンや匿名内部クラスを使っているフレームワークが主流となってきていることもあり、このアプローチを使っている SelectBuilder, SqlBuilder クラスは非推奨（deprecated）扱いとなりました。
         </p>

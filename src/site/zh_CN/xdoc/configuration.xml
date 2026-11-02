@@ -57,7 +57,8 @@
           </ul>
         </li>
       </ul>
-      <subsection name="属性（properties）" id="properties">
+      <subsection name="属性（properties）">
+        <p><a id="properties"></a></p>
         <p>这些属性可以在外部进行配置，并可以进行动态替换。你既可以在典型的 Java 属性文件中配置这些属性，也可以在 properties 元素的子元素中设置。例如：</p>
         <source><![CDATA[<properties resource="org/mybatis/example/config.properties">
   <property name="username" value="dev_user"/>
@@ -132,7 +133,8 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
 </dataSource>]]></source>
 
       </subsection>
-      <subsection name="设置（settings）" id="settings">
+      <subsection name="设置（settings）">
+        <p><a id="settings"></a></p>
         <p>这是 MyBatis 中极为重要的调整设置，它们会改变 MyBatis 的运行时行为。
         下表描述了设置中各项设置的含义、默认值等。</p>
 
@@ -297,7 +299,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 设置超时时间，它决定数据库驱动等待数据库响应的秒数。
               </td>
               <td>
-                任意正整数
+                大于或等于 0 的整数
               </td>
               <td>
                 未设置 (null)
@@ -311,7 +313,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 为驱动的结果集获取数量（fetchSize）设置一个建议值。此参数只可以在查询设置中被覆盖。
               </td>
               <td>
-                任意正整数
+                大于或等于 0 的整数
               </td>
               <td>
                 未设置 (null)
@@ -380,8 +382,8 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               </td>
               <td>
                 MyBatis 利用本地缓存机制（Local Cache）防止循环引用和加速重复的嵌套查询。
-                默认值为 SESSION，会缓存一个会话中执行的所有查询。
-                若设置值为 STATEMENT，本地缓存将仅用于执行语句，对相同 SqlSession 的不同查询将不会进行缓存。
+                默认值为 SESSION，此时未使用自定义 ResultHandler 的非游标查询可以在整个会话中复用缓存结果；使用自定义 ResultHandler 的查询不会读取缓存，游标查询则完全绕过缓存。
+                若设置值为 STATEMENT，本地缓存将仅用于执行语句，同一 SqlSession 的不同调用之间不会共享缓存数据。
               </td>
               <td>
                 SESSION | STATEMENT
@@ -628,7 +630,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 ignoreParameterMetaData
               </td>
               <td>
-                Skips retrieving parameter meta data when resolving type handler. (Since 3.6.1)
+                解析类型处理器时，跳过获取参数元数据的步骤。（从 3.6.1 开始）
               </td>
               <td>
                 true | false
@@ -672,7 +674,8 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
 </settings>]]></source>
 
       </subsection>
-      <subsection name="类型别名（typeAliases）" id="typeAliases">
+      <subsection name="类型别名（typeAliases）">
+        <p><a id="typeAliases"></a></p>
         <p>类型别名可为 Java 类型设置一个缩写名字。
         它仅用于 XML 配置，意在降低冗余的全限定类名书写。例如：</p>
         <source><![CDATA[<typeAliases>
@@ -1012,7 +1015,8 @@ public class Author {
           </tbody>
         </table>
       </subsection>
-      <subsection name="类型处理器（typeHandlers）" id="typeHandlers">
+      <subsection name="类型处理器（typeHandlers）">
+        <p><a id="typeHandlers"></a></p>
         <p>MyBatis 在设置预处理语句（PreparedStatement）中的参数或从结果集中取出一个值时，
           都会用类型处理器将获取到的值以合适的方式转换成 Java 类型。下表描述了一些默认的类型处理器。</p>
         <p>
@@ -1627,7 +1631,8 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
         <p>注意，这里的 select 语句必须指定 <code>resultMap</code> 而不是 <code>resultType</code>。</p>
       </subsection>
 
-      <subsection name="对象工厂（objectFactory）" id="objectFactory">
+      <subsection name="对象工厂（objectFactory）">
+        <p><a id="objectFactory"></a></p>
         <p>每次 MyBatis 创建结果对象的新实例时，它都会使用一个对象工厂（ObjectFactory）实例来完成实例化工作。
           默认的对象工厂需要做的仅仅是实例化目标类，要么通过默认无参构造方法，要么通过存在的参数映射来调用带有参数的构造方法。
           如果想覆盖对象工厂的默认行为，可以通过创建自己的对象工厂来实现。比如：</p>
@@ -1659,11 +1664,12 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
   <property name="someProperty" value="100"/>
 </objectFactory>]]></source>
         <p>ObjectFactory 接口很简单，它包含两个创建实例用的方法，一个是处理默认无参构造方法的，另外一个是处理带参数的构造方法的。
-          另外，setProperties 方法可以被用来配置 ObjectFactory，在初始化你的 ObjectFactory 实例后，
+          setProperties 方法用于配置 ObjectFactory，isCollection 方法用于判断类型是否为集合。在初始化你的 ObjectFactory 实例后，
           objectFactory 元素体中定义的属性会被传递给 setProperties 方法。</p>
 
       </subsection>
-      <subsection name="插件（plugins）" id="plugins">
+      <subsection name="插件（plugins）">
+        <p><a id="plugins"></a></p>
         <p>
           MyBatis 允许你在映射语句执行过程中的某一点进行拦截调用。插件可以拦截以下接口中声明的方法：
         </p>
@@ -1729,7 +1735,8 @@ public class ExamplePlugin implements Interceptor {
         </p>
         <p>除了用插件来修改 MyBatis 核心行为以外，还可以通过完全覆盖配置类来达到目的。只需继承配置类后覆盖其中的某个方法，再把它传递到 SqlSessionFactoryBuilder.build(myConfig) 方法即可。再次重申，这可能会极大影响 MyBatis 的行为，务请慎之又慎。</p>
       </subsection>
-      <subsection name="环境配置（environments）" id="environments">
+      <subsection name="环境配置（environments）">
+        <p><a id="environments"></a></p>
         <p>
           MyBatis 可以配置成适应多种环境，这种机制有助于将 SQL 映射应用于多种数据库之中，
           现实情况下有多种理由需要这么做。例如，开发、测试和生产环境需要有不同的配置；或者想在具有相同 Schema
@@ -1959,7 +1966,8 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
 
       </subsection>
 
-      <subsection name="数据库厂商标识（databaseIdProvider）" id="databaseIdProvider">
+      <subsection name="数据库厂商标识（databaseIdProvider）">
+        <p><a id="databaseIdProvider"></a></p>
         <p>
           MyBatis 可以根据不同的数据库厂商执行不同的语句，这种多厂商的支持是基于映射语句中的 <code>databaseId</code> 属性。
           MyBatis 会加载带有匹配当前数据库 <code>databaseId</code> 属性和所有不带 <code>databaseId</code> 属性的语句。
@@ -1983,7 +1991,7 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
 
         <p>
           在提供了属性别名时，databaseIdProvider 的 DB_VENDOR 实现会将 databaseId
-          设置为数据库产品名与属性中的名称第一个相匹配的值，如果没有匹配的属性，将会设置为 “null”。
+          设置为数据库产品名与属性中的名称第一个相匹配的值，如果没有匹配的属性，将会设置为 null。
           在这个例子中，如果 <code>getDatabaseProductName()</code>
           返回“Oracle (DataDirect)”，databaseId 将被设置为“oracle”。
         </p>
@@ -2002,7 +2010,8 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
 
       </subsection>
 
-      <subsection name="映射器（mappers）" id="mappers">
+      <subsection name="映射器（mappers）">
+        <p><a id="mappers"></a></p>
         <p>
           既然 MyBatis 的行为已经由上述元素配置完了，我们现在就要来定义 SQL 映射语句了。
           但首先，我们需要告诉 MyBatis 到哪里去找到这些语句。

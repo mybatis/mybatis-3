@@ -410,9 +410,9 @@ void rollback(boolean force)
 <a id="local-cache"></a>
 ##### 本地快取 (Local Cache)
 
-MyBatis 使用兩種快取：本地快取與二級快取。
+MyBatis 使用兩種快取：本地快取與二級快取。設定了命名空間快取、啟用 `cacheEnabled` 與陳述式的 `useCache`，且未使用自訂 ResultHandler 時，一般查詢才能使用二級快取。
 
-每次建立新工作階段時，MyBatis 都會建立本地快取並將其附加至該工作階段。在工作階段內執行的任何查詢都將儲存在本地快取中，因此具有相同輸入參數的相同查詢的進一步執行將不會叫用資料庫。本地快取會在 `update`、`commit`、`rollback` 與 `close` 時被清除。
+每次建立新工作階段時，MyBatis 都會建立本地快取並將其附加至該工作階段。在預設的 SESSION 作用域下，未使用自訂 ResultHandler 的非游標查詢可以重複使用相同陳述式與參數的快取結果，而無需再次查詢資料庫。使用自訂 ResultHandler 的查詢不會讀取本地快取，游標查詢則完全略過本地快取。本地快取會在 `update`、`commit`、`rollback` 與 `close` 時被清除。
 
 預設情況下，本地快取資料會用於整個工作階段期間。需要此快取來解析循環參照並加速重複的巢狀查詢，因此它永遠無法完全停用，但您可以透過設定 `localCacheScope=STATEMENT`，將本地快取設定為僅在陳述式執行期間使用。
 
@@ -507,8 +507,8 @@ public interface AuthorMapper {
 | 註解 | 目標 | XML 等效項 | 說明 |
 |---|---|---|---|
 | `@CacheNamespace` | `Class` | `<cache>` | 為給定的命名空間（即類別）設定快取。屬性：`implementation`、`eviction`、`flushInterval`、`size`、`readWrite`、`blocking`、`properties`。 |
-| `@Property` | N/A | `<property>` | 指定屬性值或佔位符（可由在 `mybatis-config.xml` 中定義的設定屬性所替換）。屬性：`name`、`value`。（自 MyBatis 3.4.2+ 起可用） |
-| `@CacheNamespaceRef` | `Class` | `<cacheRef>` | 參照另一個命名空間的快取以供使用。請注意，在 XML 映射檔中宣告的快取被視為單獨的命名空間，即使它們共享相同的完整類別名稱（FQCN）。屬性：`value` 與 `name`。如果您使用此註解，應指定 `value` 或 `name` 屬性之一。對於 `value` 屬性，請指定表示命名空間的 Java 型別（命名空間名稱成為指定 Java 型別的 FQCN）；對於 `name` 屬性（此屬性自 3.4.2 起可用），請指定表示命名空間的名稱。 |
+| `@Property` | N/A | `<property>` | 指定屬性值，其中可以包含由 `mybatis-config.xml` 中定義的設定屬性取代的佔位符。屬性：`name`、`value`。（自 MyBatis 3.4.2 起可用） |
+| `@CacheNamespaceRef` | `Class` | `<cache-ref>` | 參照另一個命名空間的快取。帶有註解的映射器不會自動使用在同一命名空間的 XML 映射檔中宣告的快取；若要參照該快取，請使用此註解。屬性：`value` 與 `name`，必須指定其中之一。`value` 指定映射器類別，其完整類別名稱即為命名空間；`name`（自 3.4.2 起可用）直接指定命名空間名稱。 |
 | `@ConstructorArgs` | `Method` | `<constructor>` | 收集一組結果以傳遞給結果物件的建構函式。屬性：`value`，它是一個 `Arg` 陣列。 |
 | `@Arg` | N/A | <ul><li>`<arg>`</li><li>`<idArg>`</li></ul> | 作為 ConstructorArgs 集合一部分的單一建構函式引數。屬性：`id`、`column`、`javaType`、`jdbcType`、`typeHandler`、`select`、`resultMap`、`name`、`columnPrefix`。id 屬性是一個布林值，用於識別用於比較的屬性，類似於 `<idArg>` XML 元素。自 3.5.4 起，它可以用作可重複註解。 |
 | `@TypeDiscriminator` | `Method` | `<discriminator>` | 一組可用於決定要執行之結果映射的值案例。屬性：`column`、`javaType`、`jdbcType`、`typeHandler`、`cases`。cases 屬性是一個 `Case` 陣列。 |

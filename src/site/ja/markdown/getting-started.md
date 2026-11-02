@@ -61,9 +61,9 @@ XML 形式の設定ファイルの詳細については後ほど改めて説明�
 `org/mybatis/example/db.properties` をクラスパスに配置し、データベースに合わせて `driver`、`url`、`username`、`password` を定義してください。
 
 XML 形式の設定ファイルについて説明すべきことは他にもたくさんありますが、最も重要な設定は上記のサンプルに含まれています。<br />
-まず、XML ドキュメントのバリデーションを行うために必要となる XML ヘッダがあります。<br />
+まず、省略可能な XML 宣言と、XML 文書の検証に使用する DTD を指定する DOCTYPE 宣言があります。<br />
 environment 要素には、トランザクション管理やコネクションプーリングといった環境依存の設定が含まれています。<br />
-mappers 要素には Mapper のリストが含まれています。Mapper とは、SQL 文とマッピングの定義を含む XML ファイルです。
+mappers 要素には Mapper のリストが含まれています。Mapper は、SQL 文とマッピングの定義を含む XML ファイルやアノテーション付き Java インターフェイスです。
 
 ## XML を使わずに SqlSessionFactory を生成する
 
@@ -162,7 +162,7 @@ Blog blog = mapper.selectBlog(101);
 
 ---
 
-BloggerMapper のような Mapper クラスなら、実は XML を使う必要はありません。 代わりに、Java アノテーションを使って下記のように Mapped Statement を記述することができます。
+BlogMapper のような Mapper クラスなら、実は XML を使う必要はありません。 代わりに、Java アノテーションを使って下記のように Mapped Statement を記述することができます。
 
 ```java
 package org.mybatis.example;
@@ -198,7 +198,7 @@ Dependency Injection フレームワークを使うと、スレッドセーフ�
 
 #### SqlSession
 
-各スレッドは、独立した SqlSession のインスタンスを使うべきです。 SqlSession のインスタンスは共有されることを前提としていないため、スレッドセーフではありません。 当然、最適なスコープはメソッドスコープになります。 SqlSession のインスタンスへの参照を static なフィールドや、インスタンスフィールドにも格納してはいけません。 Servlet フレームワークの HttpSession のようなマネージドスコープに SqlSession への参照を保持するのもダメです。 もし何らかの Web フレームワークを使っているのであれば、SqlSession のスコープが HTTP リクエストと同調するようにしておくべきです。 つまり、HTTP リクエストを受け取ったら SqlSession をオープンし、レスポンスを返すときにクローズすれば良いのです。 セッションをクローズすることはとても重要です。 間違いがないよう、常に finally ブロックの中でセッションをクローズするようにした方が良いでしょう。 SqlSession を確実にクローズするための一般的なパターンは下記のようなものです。
+各スレッドは、独立した SqlSession のインスタンスを使うべきです。 SqlSession のインスタンスは共有されることを前提としていないため、スレッドセーフではありません。 当然、最適なスコープはメソッドスコープになります。 SqlSession のインスタンスへの参照を static なフィールドや、インスタンスフィールドにも格納してはいけません。 Servlet フレームワークの HttpSession のようなマネージドスコープに SqlSession への参照を保持するのもダメです。 もし何らかの Web フレームワークを使っているのであれば、SqlSession のスコープが HTTP リクエストと同調するようにしておくべきです。 つまり、HTTP リクエストを受け取ったら SqlSession をオープンし、レスポンスを返すときにクローズすれば良いのです。 セッションをクローズすることはとても重要です。 確実にクローズするため、try-with-resources を使用してください。 SqlSession を確実にクローズするための一般的なパターンは下記のようなものです。
 
 ```java
 try (SqlSession session = sqlSessionFactory.openSession()) {

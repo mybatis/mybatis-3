@@ -52,7 +52,7 @@ What if we wanted to optionally search by title and author? First, I’d change 
 
 Sometimes we don’t want all of the conditionals to apply, instead we want to choose only one case among many options. Similar to a switch statement in Java, MyBatis offers a choose element.
 
-Let’s use the example above, but now let’s search only on title if one is provided, then only by author if one is provided. If neither is provided, let’s only return featured blogs (perhaps a strategically list selected by administrators, instead of returning a huge meaningless list of random blogs).
+Let’s use the example above, but now let’s search only on title if one is provided, then only by author if one is provided. If neither is provided, let’s only return featured blogs (perhaps a list selected by administrators, instead of returning a huge meaningless list of random blogs).
 
 ```xml
 <select id="findActiveBlogLike"
@@ -190,8 +190,6 @@ The *foreach* element is very powerful, and allows you to specify a collection, 
 
 <span class="label important">NOTE</span> You can pass any Iterable object (for example List, Set, etc.), as well as any Map or Array object to foreach as collection parameter. When using an Iterable or Array, index will be the number of current iteration and value item will be the element retrieved in this iteration. When using a Map (or Collection of Map.Entry objects), index will be the key object and item will be the value object.
 
-This wraps up the discussion regarding the XML configuration file and XML mapping files. The next section will discuss the Java API in detail, so that you can get the most out of the mappings that you’ve created.
-
 ### script
 
 For using dynamic SQL in annotated mapper class, *script* element can be used. For example:
@@ -265,7 +263,7 @@ Once you have your custom language driver you can set it to be the default by co
 </typeAliases>
 ```
 
-Instead of changing the default, you can specify the language for an specific statement by adding the `lang` attribute as follows:
+Instead of changing the default, you can specify the language for a specific statement by adding the `lang` attribute as follows:
 
 ```xml
 <select id="selectBlog" lang="myLanguage">
@@ -286,3 +284,5 @@ public interface Mapper {
 <span class="label important">NOTE</span> You can use Apache Velocity as your dynamic language. Have a look at the MyBatis-Velocity project for the details.
 
 All the xml tags you have seen in the previous sections are provided by the default MyBatis language that is provided by the driver `org.apache.ibatis.scripting.xmltags.XMLLanguageDriver` which is aliased as `xml`.
+
+The next section discusses the Java API in detail, so that you can get the most out of the mappings that you’ve created.

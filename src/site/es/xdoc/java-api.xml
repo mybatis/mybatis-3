@@ -26,10 +26,12 @@
   </properties>
 
   <body>
-  <section name="Java API" id="javaApi">
+  <section name="Java API">
+    <a name="javaApi"/>
   <p>Ahora que ya conoces cómo configurar MyBatis y crear mapeos estás listo para lo mejor. El API Java es donde obtendrás los mejores frutos de tus esfuerzos. Como verás, comparado con JDBC, MyBatis simplifica enormemente tu código y lo mantiene limpio, de fácil comprensión y mantenimiento. MyBatis 3 incorpora muchas mejoras significativas para hacer que el trabajo con SQL Maps sea aun mejor.</p>
 
-  <subsection name="Directory Structure" id="directoryStructure">
+  <subsection name="Directory Structure">
+    <a name="directoryStructure"/>
   <p>Antes de zambullirnos en el propio API Java , es importante comprender las mejores prácticas relativas a la estructura de directorios. MyBatis es muy flexible, y puedes hacer casi cualquier cosa con tus ficheros. Pero como en cualquier otro framework, hay una forma recomendable.</p>
   <p>Veamos una estructura de directorios típica:</p>
   <pre>/my_application
@@ -62,7 +64,8 @@
   <p>Los ejemplos restantes en esta sección asumen que estás utilizando esta estructura de directorios.</p>
   </subsection>
 
-  <subsection name="SqlSessions" id="sqlSessions">
+  <subsection name="SqlSessions">
+    <a name="sqlSessions"/>
   <p>El interfaz principal para trabajar con MyBatis es el SqlSession. A través de este interfaz puedes ejecutar comandos, obtener mappers y gestionar transacciones. Hablaremos más sobre el propio SqlSession en breve, pero primero veamos cómo obtener una instancia de SqlSession. Las SqlSessions se crean por una instancia de SqlSessionFactory. La SqlSessionFactory contiene métodos para crear instancias de SqlSessions de distintas formas. La SqlSessionFactory en si misma se crea por la SqlSessionFactoryBuilder que puede crear una SqlSessionFactory a partir de XML, anotaciones o un objeto Configuration creado por código.</p>
   <p><span class="label important">NOTE</span> When using MyBatis with a dependency injection framework like Spring or Guice, SqlSessions are created and injected by the DI framework so you don't need to use the SqlSessionFactoryBuilder or SqlSessionFactory and can go directly to the SqlSession section. Please refer to the MyBatis-Spring or MyBatis-Guice manuals for further info.</p>
   <h4>SqlSessionFactoryBuilder</h4>
@@ -259,10 +262,10 @@ void rollback(boolean force)</source>
   <p><span class="label important">NOTA</span> MyBatis-Spring y MyBatis-Guice proporcionan gestión de transacción declarativa. Por tanto si estás usando MyBatis con Spring o Guice consulta sus manuales específicos.</p>
 
   <h5>Local Cache</h5>
-  <p>MyBatis utliza dos cachés: la caché local y la caché de segundo nivel.</p>
-  <p>Cada vez que se crea una sesión MyBatis crea una cache local y la asocia a dicha sesión. Cualquier query que se ejecute en la sesión será cacheada de forma que si en el futuro se vuelve a lanzar la misma query con los mismos parámetros de entrada los datos se obtendrán de la caché y no se accederá a la base de datos. La caché local se vacía cuando se ejecuta cupdate, commit, rollback y close.</p>
-  <p>Por defecto la cache local se utiliza durante toda la duración de la sesión. Esta cache es necesaria para resolver dependencias circulares y para acelerar consultas anidadas repetidas asi que no puede desactivarse, pero puede configurarse para que se utilize sólo durante la duración de la ejecución de una sentencia infomando el parámetro de configuración localCacheScope=STATEMENT.</p>
-  <p>Cuando localCacheScope está informado a SESSION (valor por defecto) MyBatis devuelve referencias a objetos objetos almacenados en la caché. Cualquier modificación de un objeto (listas etc.) influye en el contenido de la caché y en los valores que serán retornados posteriormente durante la existencia de la sessión. Por lo tanto, como mejor práctica, evita modificaciones sobre los objetos devueltos por MyBatis.</p>
+  <p>MyBatis utiliza dos cachés: la caché local y la caché de segundo nivel.</p>
+  <p>Cada vez que se crea una sesión, MyBatis crea una caché local y la asocia a dicha sesión. Las consultas ordinarias ejecutadas en la sesión se almacenan en esta caché, de forma que si se repite la misma consulta con los mismos parámetros, los datos se obtienen de la caché sin acceder a la base de datos. Las consultas con Cursor o con un ResultHandler personalizado no utilizan la caché local. La caché local se vacía al ejecutar update, commit, rollback o close.</p>
+  <p>Por defecto, la caché local se utiliza durante toda la sesión. Esta caché es necesaria para resolver referencias circulares y acelerar consultas anidadas repetidas, así que no puede desactivarse por completo. Sin embargo, puede configurarse para que se utilice solo durante la ejecución de una sentencia mediante localCacheScope=STATEMENT.</p>
+  <p>Cuando localCacheScope está configurado como SESSION (valor por defecto), MyBatis devuelve referencias a los objetos almacenados en la caché. Cualquier modificación de un objeto o una lista influye en el contenido de la caché y en los valores que se devolverán posteriormente durante la sesión. Por lo tanto, evita modificar los objetos devueltos por MyBatis.</p>
   <p>Puedes borrar el contenido de la caché local en el momento que desees invocando:</p>
   <source>void clearCache()</source>
 
@@ -293,7 +296,7 @@ void rollback(boolean force)</source>
   Map<Integer, Author> selectAuthorsAsMap();
   // insert("insertAuthor", author)
   int insertAuthor(Author author);
-  // updateAuthor("updateAuthor", author)
+  // update("updateAuthor", author)
   int updateAuthor(Author author);
   // delete("deleteAuthor",5)
   int deleteAuthor(int id);

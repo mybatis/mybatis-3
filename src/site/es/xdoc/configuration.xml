@@ -201,7 +201,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               <td>
                 useColumnLabel
               </td>
-              <td>Utiliza la etiqueta de columna (label) en lugar del nombre de conlumna. Algunos drivers se comportan distinto en lo que a esto respecta. Consulta la documentación del driver o prueba ambos modos para descubrir cómo funciona tu driver
+              <td>Utiliza la etiqueta de columna (label) en lugar del nombre de columna. Algunos drivers se comportan distinto en lo que a esto respecta. Consulta la documentación del driver o prueba ambos modos para descubrir cómo funciona tu driver
               </td>
               <td>
                 true | false
@@ -277,7 +277,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               <td>Establece el número de segundos que debe esperar el driver la respuesta de la base de datos.
               </td>
               <td>
-                Cualquier entero positivo
+                Cualquier entero no negativo
               </td>
               <td>
                 Sin valor (null)
@@ -292,7 +292,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 This parameter value can be override by a query setting.
               </td>
               <td>
-                Cualquier entero positivo
+                Cualquier entero no negativo
               </td>
               <td>
                 Sin valor (null)
@@ -316,8 +316,8 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               <td>
                 safeRowBoundsEnabled
               </td>
-              <td>Habilita el uso de RowBounds en statements anidados.
-                If allow, set the false.
+              <td>Controla la comprobación de seguridad para usar RowBounds con mapeos de resultados anidados.
+                Establecer false permite omitir esta comprobación.
               </td>
               <td>
                 true | false
@@ -331,8 +331,8 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 safeResultHandlerEnabled
               </td>
               <td>
-                Habilita el uso de ResultHandler en statements anidados.
-                If allow, set the false.
+                Controla la comprobación de seguridad para usar un ResultHandler personalizado con mapeos de resultados anidados.
+                Establecer false permite omitir esta comprobación.
               </td>
               <td>
                 true | false
@@ -359,9 +359,9 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 localCacheScope
               </td>
               <td>
-                MyBatis usa una cache local para evitar dependencias circulares y acelerar ejecuciones repeticas de queries anidadas.
-                Por defecto (SESSION) todas las queries ejecutadas en una sesión se cachean. Si localCacheScope=STATEMENT
-                la sesión local solo se usará durante la ejecución de un statement, no se comparten datos entre distintas llamadas
+                MyBatis usa una caché local para resolver referencias circulares y acelerar consultas anidadas repetidas.
+                Por defecto (SESSION), los resultados de las consultas ordinarias se almacenan durante toda la sesión. Las consultas con Cursor o con un ResultHandler personalizado no se almacenan en la caché local. Si localCacheScope=STATEMENT,
+                la caché local solo se usará durante la ejecución de una sentencia y no se compartirán datos entre distintas llamadas
                 a SqlSession.
               </td>
               <td>
@@ -376,7 +376,6 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 jdbcTypeForNull
               </td>
               <td>
-                Permite especificar el tipo JDBC que
                 Especifica el tipo JDBC para valores nulos cuando no se ha especificado un tipo concreto para el parámetro.
                 Algunos drivers requieren que se indique el tipo JDBC de la columna pero otros permite valores genéricos como NULL, VARCHAR or OTHER.
               </td>
@@ -435,7 +434,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               </td>
               <td>
                 Permite especificar si se invocarán a los setters y a los métodos put de los mapas si el valor obtenido es null.
-                Te en cuenta que si se activa las propiedades que puedan ser informadas con nulos no pueden ser de tipos primitivos.
+                Ten en cuenta que, si se activa, las propiedades que puedan recibir valores nulos no pueden ser de tipos primitivos.
               </td>
               <td>
                 true | false
@@ -479,7 +478,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 logImpl
               </td>
               <td>
-                Permite especificar qué implementación de logging utilizar. Si no está informado la impelmentación se descubrirá automaticamente.
+                Permite especificar qué implementación de logging utilizar. Si no se especifica, la implementación se detectará automáticamente.
               </td>
               <td>
                 SLF4J | LOG4J(deprecated since 3.5.9) | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING
@@ -1432,7 +1431,7 @@ public class Author {
           </tbody>
         </table>
         <p>
-        Es posible sobrescribir los TypeHanders o crear TypeHanders personalizados para tratar tipos no soportados o no estándares.
+        Es posible sobrescribir los TypeHandlers o crear TypeHandlers personalizados para tratar tipos no soportados o no estándares.
         Para ello, debes implementar la interfaz <code>org.apache.ibatis.type.TypeHandler</code> o extender
         la clase de ayuda <code>org.apache.ibatis.type.BaseTypeHandler</code> y opcionalmente mapear el TypeHandler a un tipo JDBC.
         Por ejemplo:
@@ -1486,7 +1485,7 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
         <p>El tipo JDBC asociado se puede especificar de dos maneras:</p>
         <ul>
           <li>
-           Añadiendo un atributo <code>jdbcType</code> al lemento typeHandler (por ejemplo: <code>jdbcType="VARCHAR"</code>).
+           Añadiendo un atributo <code>jdbcType</code> al elemento typeHandler (por ejemplo: <code>jdbcType="VARCHAR"</code>).
           </li>
           <li>Añadiendo una anotación <code>@MappedJdbcTypes</code> a tu clase TypeHandler especificando la lista de tipos JDBC a la que asociarlo.
           Esta anotación será ignorada si se ha especificado también un atributo <code>jdbcType</code>.
@@ -1653,7 +1652,7 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
 <objectFactory type="org.mybatis.example.ExampleObjectFactory">
   <property name="someProperty" value="100"/>
 </objectFactory>]]></source>
-        <p>La interfaz ObjectFactory es muy sencilla. Contiene solo dos métodos de creación, uno para el constructor por defecto y otro para el constructor parametrizado. Adicionalmente el método setProperties sirve para configurar el ObjectFactory. Las propiedades definidas en el cuerpo del elemento objectFactory se pasan al método setProperties después de que el ObjectFactory haya sido inicializado.
+        <p>La interfaz ObjectFactory es muy sencilla. Contiene dos métodos de creación, uno para el constructor por defecto y otro para el constructor parametrizado. El método isCollection identifica los tipos de colección. Adicionalmente, el método setProperties sirve para configurar el ObjectFactory. Las propiedades definidas en el cuerpo del elemento objectFactory se pasan al método setProperties después de que el ObjectFactory haya sido inicializado.
         </p>
 
       </subsection>
@@ -1934,7 +1933,7 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
 
       <subsection name="databaseIdProvider">
         <p>
-          MyBatis puede ejeutar sentencias distintas en función del fabricante (vendor) de tu base de datos.
+          MyBatis puede ejecutar sentencias distintas en función del fabricante (vendor) de tu base de datos.
           El soporte de múltiples bases de datos se basa en el atributo de <code>databaseId</code> de los mapped statements.
           MyBatis cargará todos los statements que no tengan atributo <code>databaseId</code> attribute o aquellos
           cuyo <code>databaseId</code> coincida con el valor en curso. Si se encuentra un statement con y sin atributo
@@ -1950,7 +1949,7 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
       La implementación DB_VENDOR del databaseIdProvider establece como databaseId el String devuelto por
       <code>DatabaseMetaData#getDatabaseProductName()</code>.
       Como normalmente este string es demasiado largo, y además, distintas versiones del mismo producto devuelven valores
-      similares, puedes traducirlo a un valor más corto añadiendo propiedades de la siguente forma:
+      similares, puedes traducirlo a un valor más corto añadiendo propiedades de la siguiente forma:
     </p>
 
         <source><![CDATA[<databaseIdProvider type="DB_VENDOR">

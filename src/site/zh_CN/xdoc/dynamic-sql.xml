@@ -38,7 +38,7 @@
         <li>trim (where, set)</li>
         <li>foreach</li>
       </ul>
-      <subsection name="if" id="if">
+      <subsection name="if">
         <p>使用动态 SQL 最常见情景是根据条件包含 where 子句的一部分。比如：</p>
         <source><![CDATA[<select id="findActiveBlogWithTitleLike"
      resultType="Blog">
@@ -61,7 +61,8 @@
   </if>
 </select>]]></source>
       </subsection>
-      <subsection name="choose、when、otherwise" id="chooseWhenOtherwise">
+      <subsection name="choose、when、otherwise">
+        <p><a id="chooseWhenOtherwise"></a></p>
         <p>有时候，我们不想使用所有的条件，而只是想从多个条件中选择一个使用。针对这种情况，MyBatis 提供了 choose 元素，它有点像 Java 中的 switch 语句。</p>
         <p>还是上面的例子，但是策略变为：传入了 “title” 就按 “title” 查找，传入了 “author” 就按 “author” 查找的情形。若两者都没有传入，就返回标记为 featured 的 BLOG（这可能是管理员认为，与其返回大量的无意义随机 Blog，还不如返回一些由管理员精选的 Blog）。</p>
         <source><![CDATA[<select id="findActiveBlogLike"
@@ -80,7 +81,8 @@
   </choose>
 </select>]]></source>
       </subsection>
-      <subsection name="trim、where、set" id="trimWhereSet">
+      <subsection name="trim、where、set">
+        <p><a id="trimWhereSet"></a></p>
 <p>前面几个例子已经方便地解决了一个臭名昭著的动态 SQL 问题。现在回到之前的 “if” 示例，这次我们将 “state = ‘ACTIVE’” 设置成动态条件，看看会发生什么。</p>
         <source><![CDATA[<select id="findActiveBlogLike"
      resultType="Blog">
@@ -200,9 +202,9 @@ AND title like 'someTitle']]></source>
 </insert>
 ]]></source>
       </subsection>
-      <subsection name="动态 SQL 中的插入脚本语言">
-        <p>MyBatis 从 3.2 版本开始支持插入脚本语言，这允许你插入一种语言驱动，并基于这种语言来编写动态 SQL 查询语句。</p>
-        <p>可以通过实现以下接口来插入一种语言：</p>
+      <subsection name="动态 SQL 中的可插拔脚本语言">
+        <p>MyBatis 从 3.2 版本开始支持可插拔脚本语言。你可以接入一种语言驱动，并使用该语言编写动态 SQL 查询语句。</p>
+        <p>实现以下接口即可接入一种语言：</p>
         <source><![CDATA[public interface LanguageDriver {
   ParameterHandler createParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql);
   SqlSource createSqlSource(Configuration configuration, XNode script, Class<?> parameterType);
