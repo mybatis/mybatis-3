@@ -21,6 +21,7 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 
 /**
  * @author Clinton Begin
@@ -53,10 +54,17 @@ public class BlobByteObjectArrayTypeHandler extends BaseTypeHandler<Byte[]> {
   }
 
   private Byte[] getBytes(Blob blob) throws SQLException {
-    Byte[] returnValue = null;
-    if (blob != null) {
-      returnValue = ByteArrayUtils.convertToObjectArray(blob.getBytes(1, (int) blob.length()));
+    if (blob == null) {
+      return null;
     }
-    return returnValue;
+    try {
+      return ByteArrayUtils.convertToObjectArray(blob.getBytes(1, (int) blob.length()));
+    } finally {
+      try {
+        blob.free();
+      } catch (SQLFeatureNotSupportedException | UnsupportedOperationException ignored) {
+        // Ignored for drivers that don't support free()
+      }
+    }
   }
 }

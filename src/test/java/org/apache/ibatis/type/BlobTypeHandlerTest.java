@@ -17,11 +17,15 @@ package org.apache.ibatis.type;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.InputStream;
 import java.sql.Blob;
+import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -48,6 +52,7 @@ class BlobTypeHandlerTest extends BaseTypeHandlerTest {
     when(blob.length()).thenReturn(3L);
     when(blob.getBytes(1, 3)).thenReturn(new byte[] { 1, 2, 3 });
     assertArrayEquals(new byte[] { 1, 2, 3 }, TYPE_HANDLER.getResult(rs, "column"));
+    verify(blob).free();
   }
 
   @Override
@@ -87,6 +92,24 @@ class BlobTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultNullFromCallableStatement() throws Exception {
     when(cs.getBlob(1)).thenReturn(null);
     assertNull(TYPE_HANDLER.getResult(cs, 1));
+  }
+
+  @Test
+  void shouldIgnoreSQLFeatureNotSupportedExceptionOnFree() throws Exception {
+    when(rs.getBlob("column")).thenReturn(blob);
+    when(blob.length()).thenReturn(3L);
+    when(blob.getBytes(1, 3)).thenReturn(new byte[] { 1, 2, 3 });
+    doThrow(new SQLFeatureNotSupportedException()).when(blob).free();
+    assertArrayEquals(new byte[] { 1, 2, 3 }, TYPE_HANDLER.getResult(rs, "column"));
+  }
+
+  @Test
+  void shouldPropagateSQLExceptionOnFree() throws Exception {
+    when(rs.getBlob("column")).thenReturn(blob);
+    when(blob.length()).thenReturn(3L);
+    when(blob.getBytes(1, 3)).thenReturn(new byte[] { 1, 2, 3 });
+    doThrow(new SQLException("connection lost")).when(blob).free();
+    assertThrows(SQLException.class, () -> TYPE_HANDLER.getResult(rs, "column"));
   }
 
 }
