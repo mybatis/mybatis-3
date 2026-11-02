@@ -40,6 +40,7 @@ XML 形式の設定ファイルの詳細については後ほど改めて説明�
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+  <properties resource="org/mybatis/example/db.properties"/>
   <environments default="development">
     <environment id="development">
       <transactionManager type="JDBC"/>
@@ -56,6 +57,8 @@ XML 形式の設定ファイルの詳細については後ほど改めて説明�
   </mappers>
 </configuration>
 ```
+
+`org/mybatis/example/db.properties` をクラスパスに配置し、データベースに合わせて `driver`、`url`、`username`、`password` を定義してください。
 
 XML 形式の設定ファイルについて説明すべきことは他にもたくさんありますが、最も重要な設定は上記のサンプルに含まれています。<br />
 まず、XML ドキュメントのバリデーションを行うために必要となる XML ヘッダがあります。<br />
@@ -118,7 +121,7 @@ SqlSession や Mapper クラスによって何が行われているのか、そ�
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.mybatis.example.BlogMapper">
-  <select id="selectBlog" resultType="Blog">
+  <select id="selectBlog" resultType="org.mybatis.example.Blog">
     select * from Blog where id = #{id}
   </select>
 </mapper>

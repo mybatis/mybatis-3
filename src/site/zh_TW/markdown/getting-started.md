@@ -40,6 +40,7 @@ XML 設定檔包含 MyBatis 系統核心的設定，包括取得資料庫 Connec
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+  <properties resource="org/mybatis/example/db.properties"/>
   <environments default="development">
     <environment id="development">
       <transactionManager type="JDBC"/>
@@ -56,6 +57,8 @@ XML 設定檔包含 MyBatis 系統核心的設定，包括取得資料庫 Connec
   </mappers>
 </configuration>
 ```
+
+請將 `org/mybatis/example/db.properties` 放在 classpath 中，並在其中為資料庫設定 `driver`、`url`、`username` 和 `password`。
 
 雖然 XML 設定檔還有許多內容，但上述範例指出了最關鍵的部分。請注意 XML 標頭，它是驗證 XML 文件所必需的。environment 元素的內容包含交易管理與連線池的環境設定。mappers 元素包含映射器清單——即包含 SQL 程式碼與映射定義的 XML 檔案及/或帶有註解的 Java 介面類別。
 
@@ -113,7 +116,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.mybatis.example.BlogMapper">
-  <select id="selectBlog" resultType="Blog">
+  <select id="selectBlog" resultType="org.mybatis.example.Blog">
     select * from Blog where id = #{id}
   </select>
 </mapper>

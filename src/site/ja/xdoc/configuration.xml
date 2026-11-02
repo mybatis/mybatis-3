@@ -671,8 +671,8 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
   <setting name="callSettersOnNulls" value="false"/>
   <setting name="returnInstanceForEmptyRow" value="false"/>
   <setting name="logPrefix" value="exampleLogPreFix_"/>
-  <setting name="logImpl" value="SLF4J | LOG4J | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING"/>
-  <setting name="proxyFactory" value="CGLIB | JAVASSIST"/>
+  <setting name="logImpl" value="JDK_LOGGING"/>
+  <setting name="proxyFactory" value="JAVASSIST"/>
   <setting name="vfsImpl" value="org.mybatis.example.YourselfVfsImpl"/>
   <setting name="useActualParamName" value="true"/>
   <setting name="configurationFactory" value="org.mybatis.example.ConfigurationFactory"/>
@@ -1086,7 +1086,7 @@ public class Author {
                 Byte, byte
               </td>
               <td>
-                NUMERIC または BYTE 互換の型
+                NUMERIC または TINYINT 互換の型
               </td>
             </tr>
             <tr>
@@ -1163,7 +1163,7 @@ public class Author {
                 String
               </td>
               <td>
-                CHAR, VARCHAR
+                CHAR, VARCHAR, LONGVARCHAR
               </td>
             </tr>
             <tr>
@@ -1185,7 +1185,7 @@ public class Author {
                 String
               </td>
               <td>
-                CLOB, LONGVARCHAR
+                CLOB
               </td>
             </tr>
             <tr>
@@ -1196,7 +1196,7 @@ public class Author {
                 String
               </td>
               <td>
-                NVARCHAR, NCHAR
+                NVARCHAR, NCHAR, LONGNVARCHAR
               </td>
             </tr>
             <tr>
@@ -1515,7 +1515,7 @@ public class StringTypeHandler extends BaseTypeHandler<String> {
 
         <p>
           上記のようにして登録された TypeHandler は、String 型のプロパティと VARCHAR 型の引数または結果のマッピング時に使用されるデフォルトのタイプハンドラーよりも優先的に使用されます。
-          MyBatis はデータベースメタデータを参照してタイプを判断している訳ではないので、正しいタイプハンドラーが使用されるよう、パラメーター設定時にフィールドが VARCHAR 型であることを明示する必要があります。MyBatis は実際にステートメントが実行されるまで、データ型のチェックなどは行いません。
+          <code>ignoreParameterMetaData</code> が <code>false</code>（デフォルト）の場合、パラメーターの JDBC 型が明示されていなければ、MyBatis は JDBC のパラメーターメタデータを参照してタイプハンドラーを選択できます。ドライバーがメタデータを提供しない場合は、パラメーターマッピングに <code>jdbcType="VARCHAR"</code> を指定してください。結果マッピングではタイプハンドラー選択時に JDBC 型が分からないため、必要に応じて明示します（後述）。
         </p>
 
         <p>
@@ -1697,14 +1697,14 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
       <subsection name="plugins">
         <p>
           MyBatis が Mapped Statement を実行する際、いくつかのタイミングで処理をインターセプトすることができます。
-          デフォルトでは、プラグインを使って下記のメソッド呼び出しをインターセプトすることができるようになっています。
+          プラグインを使って下記のインターフェースで宣言されたメソッド呼び出しをインターセプトできます。
         </p>
         <ul>
           <li>
             Executor
-            (update, query, flushStatements, commit, rollback,
-            getTransaction, close,
-            isClosed)
+            (update, query, queryCursor, flushStatements, commit, rollback,
+            createCacheKey, isCached, clearLocalCache, deferLoad,
+            getTransaction, close, isClosed, setExecutorWrapper)
           </li>
           <li>
             ParameterHandler
@@ -1712,11 +1712,12 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
           </li>
           <li>
             ResultSetHandler
-            (handleResultSets, handleOutputParameters)
+            (handleResultSets, handleCursorResultSets, handleOutputParameters)
           </li>
           <li>
             StatementHandler
-            (prepare, parameterize, batch, update, query)
+            (prepare, parameterize, batch, update, query, queryCursor,
+            getBoundSql, getParameterHandler)
           </li>
         </ul>
         <p>
@@ -1850,9 +1851,9 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
         <ul>
           <li>
             JDBC - JDBC トランザクションマネージャーは、単純に JDBC のコミットとロールバックの機能を直接利用します。
-            この場合、トランザクションのスコープはデータソースから取得した接続に依存します。一部のドライバーとの互換性を保つため、デフォルトでは接続をクローズする前にオートコミットを有効化するようになっていますが、この処理は他のドライバにとっては不要なだけでなく負荷の高い操作となる可能性があります。バージョン 3.5.10 以降では skipSetAutoCommitOnClose に false を設定することでオートコミットの有効化処理をスキップできるようになっています。
+            この場合、トランザクションのスコープはデータソースから取得した接続に依存します。一部のドライバーとの互換性を保つため、デフォルトでは接続をクローズする前にオートコミットを有効化するようになっていますが、この処理は他のドライバにとっては不要なだけでなく負荷の高い操作となる可能性があります。バージョン 3.5.10 以降では skipSetAutoCommitOnClose に true を設定することでオートコミットの有効化処理をスキップできるようになっています。
             <source><![CDATA[<transactionManager type="JDBC">
-  <property name="skipSetAutoCommitOnClose" value="false"/>
+  <property name="skipSetAutoCommitOnClose" value="true"/>
 </transactionManager>]]></source>
           </li>
           <li>
@@ -1923,6 +1924,8 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
           </li>
           <li>password - データベース接続時のパスワード
           </li>
+          <li>autoCommit – 新しい接続のオートコミットを設定します。省略した場合はドライバーのデフォルト値が使用されます。
+          </li>
           <li>defaultTransactionIsolationLevel – デフォルトのトランザクション分離レベル
           </li>
           <li>defaultNetworkTimeout – 任意の要求に対するデータベースからの応答待機期限のデフォルト値（ミリ秒）。詳細は <code>java.sql.Connection#setNetworkTimeout()</code> の javadoc 参照。
@@ -1954,7 +1957,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
           </li>
           <li>poolMaximumIdleConnections – 同時にプールされるアイドル接続数の最大値です。
           </li>
-          <li>poolMaximumCheckoutTime – プールされた接続が足りなくなった場合、使用中の接続でこの時間を経過しても戻されていない接続があれば強制的に切断されます。
+          <li>poolMaximumCheckoutTime – プールされた接続が足りなくなった場合、使用中の接続でこの時間を経過しても戻されていない接続があれば、その接続は回収されて別の要求に再割り当てされます。
             デフォルト: 20000ms （20秒）
           </li>
           <li>poolTimeToWait – 接続の取得に長時間を要した場合にログを出力し、接続の再取得を試みる機会を与えるための低レベルの設定です（プールが誤って設定された場合、無限に待機状態となってしまうのを防ぐため）。

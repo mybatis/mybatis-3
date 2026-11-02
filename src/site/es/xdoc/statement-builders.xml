@@ -201,6 +201,12 @@ public String updatePersonSql() {
         <li>
           <code>RIGHT_OUTER_JOIN(String...)</code>
         </li>
+        <li>
+          <code>OUTER_JOIN(String)</code>
+        </li>
+        <li>
+          <code>OUTER_JOIN(String...)</code>
+        </li>
       </ul>
     </td>
     <td>Añade una nueva clausula JOIN del tipo apropiado, dependiendo al método que se haya llamado. El parámetro puede incluir un join estándar que consiste en las columnas y las condiciones sobre las que hacer la join.</td>

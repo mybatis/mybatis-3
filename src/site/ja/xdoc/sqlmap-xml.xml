@@ -130,7 +130,6 @@ ps.setInt(1,id);]]></source>
   parameterType="int"
   parameterMap="deprecated"
   resultType="hashmap"
-  resultMap="personResultMap"
   flushCache="false"
   useCache="true"
   timeout="10"
@@ -213,7 +212,7 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td><code>resultSetType</code></td>
               <td>
-                <code>FORWARD_ONLY</code>, <code>SCROLL_SENSITIVE</code>, <code>SCROLL_INSENSITIVE</code>, <code>DEFAULT</code>(未指定と同じ) のいずれかを指定します。デフォルトは未指定（ドライバー依存）です。
+                <code>FORWARD_ONLY</code>, <code>SCROLL_SENSITIVE</code>, <code>SCROLL_INSENSITIVE</code>, <code>DEFAULT</code> のいずれかを指定します。未指定の場合は設定済みの <code>defaultResultSetType</code> が適用され、<code>DEFAULT</code> を指定すると JDBC ドライバーのデフォルトが使用されます。
               </td>
             </tr>
             <tr>
@@ -439,7 +438,7 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td>resultType</td>
               <td>
-                結果の型を指定します。ほとんどの場合、MyBatis は自動的に型を推測することができますが、念のため設定しておいても害はありません。文字列も含めて、任意の単純型を指定することができます。複数の列が自動生成対象となっている場合、対応するプロパティを持つクラスあるいは Map を指定することができます。
+                結果の型を指定します。MyBatis は <code>selectKey</code> の結果型を自動的には推測しないため、明示的な指定が必要です。文字列も含めて、任意の単純型を指定することができます。複数の列が自動生成対象となっている場合、対応するプロパティを持つクラスあるいは Map を指定することができます。
               </td>
             </tr>
             <tr>
@@ -522,7 +521,7 @@ ps.setInt(1,id);]]></source>
           例：
         </p>
 
-        <source><![CDATA[<select id="selectUsers" resultType="User">
+        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="User">
   select id, username, password
   from users
   where id = #{id}
@@ -635,7 +634,7 @@ User findByEmail(@Param("email") String email);
 
           <source><![CDATA[
 @Select("select * from user where ${column} = #{value}")
-User findByColumn(@Param("column") String column, @Param("value") String value);
+User findByColumn(@Param("column") String column, @Param("value") Object value);
 ]]></source>
           <code>${column}</code> は指定した文字列(カラム名)が直接代入され、<code>#{value}</code> はバインド変数として扱われるため、
           以下のように使用することができます。
@@ -757,7 +756,7 @@ public class User {
         <source><![CDATA[<resultMap id="userResultMap" type="User">
   <id property="id" column="user_id" />
   <result property="username" column="user_name"/>
-  <result property="password" column="hashed_password"/>
+  <result property="hashedPassword" column="hashed_password"/>
 </resultMap>]]></source>
 
         <p>
@@ -1056,6 +1055,22 @@ public class User {
             <td>CURSOR</td>
             <td>ARRAY</td>
           </tr>
+          <tr>
+            <td>STRUCT</td>
+            <td>JAVA_OBJECT</td>
+            <td>DISTINCT</td>
+            <td>REF</td>
+            <td>DATALINK</td>
+            <td>ROWID</td>
+          </tr>
+          <tr>
+            <td>LONGNVARCHAR</td>
+            <td>SQLXML</td>
+            <td>DATETIMEOFFSET</td>
+            <td>TIME_WITH_TIMEZONE</td>
+            <td>TIMESTAMP_WITH_TIMEZONE</td>
+            <td></td>
+          </tr>
         </table>
 
         <h4>constructor</h4>
@@ -1229,7 +1244,7 @@ public class UserRole {
       r.role as role_role
     from user u
       left join user_role ur on u.id = ur.user_id
-      inner join role r on r.id = ur.role_id
+      left join role r on r.id = ur.role_id
     order by u.id, r.id
 </select>
 ]]></source>
@@ -1624,7 +1639,7 @@ User{username=Peter, roles=[Users, Maintainers, Approvers]}
 </resultMap>
 
 <select id="selectBlog" resultMap="blogResult">
-  select b.id, b.name, cursor(
+  select b.id, b.title, cursor(
     select a.id, a.username from author a where b.author_id = a.id
   ) author from blog b
 </select>]]></source>
@@ -1831,7 +1846,7 @@ SELECT * FROM AUTHOR WHERE ID = #{id}]]></source>
 </resultMap>
 
 <select id="selectBlog" resultMap="blogResult">
-  select b.id, b.name, cursor(
+  select b.id, b.title, cursor(
     select p.id, p.subject, p.body from post p where p.blog_id = b.id
   ) posts from blog b
 </select>]]></source>
@@ -1953,17 +1968,17 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
   <result property="model" column="model"/>
   <result property="color" column="color"/>
   <discriminator javaType="int" column="vehicle_type">
-    <case value="1" resultType="carResult">
+    <case value="1" resultType="Car">
       <result property="doorCount" column="door_count" />
     </case>
-    <case value="2" resultType="truckResult">
+    <case value="2" resultType="Truck">
       <result property="boxSize" column="box_size" />
       <result property="extendedCab" column="extended_cab" />
     </case>
-    <case value="3" resultType="vanResult">
+    <case value="3" resultType="Van">
       <result property="powerSlidingDoor" column="power_sliding_door" />
     </case>
-    <case value="4" resultType="suvResult">
+    <case value="4" resultType="SUV">
       <result property="allWheelDrive" column="all_wheel_drive" />
     </case>
   </discriminator>
@@ -2010,7 +2025,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 </select>]]></source>
 
         <source><![CDATA[<resultMap id="userResultMap" type="User">
-  <result property="password" column="hashed_password"/>
+  <result property="hashedPassword" column="hashed_password"/>
 </resultMap>]]></source>
 
         <p>
@@ -2062,7 +2077,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         </p>
 
         <source><![CDATA[<resultMap id="userResultMap" type="User" autoMapping="false">
-  <result property="password" column="hashed_password"/>
+  <result property="hashedPassword" column="hashed_password"/>
 </resultMap>]]></source>
 
       </subsection>

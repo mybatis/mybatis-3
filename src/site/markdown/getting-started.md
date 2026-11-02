@@ -40,6 +40,7 @@ The configuration XML file contains settings for the core of the MyBatis system,
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+  <properties resource="org/mybatis/example/db.properties"/>
   <environments default="development">
     <environment id="development">
       <transactionManager type="JDBC"/>
@@ -56,6 +57,8 @@ The configuration XML file contains settings for the core of the MyBatis system,
   </mappers>
 </configuration>
 ```
+
+Place `org/mybatis/example/db.properties` on the classpath and define `driver`, `url`, `username`, and `password` there for your database.
 
 While there is a lot more to the XML configuration file, the above example points out the most critical parts. Notice the XML header, required to validate the XML document. The body of the environment element contains the environment configuration for transaction management and connection pooling. The mappers element contains a list of mappers – the XML files and/or annotated Java interface classes that contain the SQL code and mapping definitions.
 
@@ -113,7 +116,7 @@ In either of the examples above, the statements could have been defined by eithe
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.mybatis.example.BlogMapper">
-  <select id="selectBlog" resultType="Blog">
+  <select id="selectBlog" resultType="org.mybatis.example.Blog">
     select * from Blog where id = #{id}
   </select>
 </mapper>

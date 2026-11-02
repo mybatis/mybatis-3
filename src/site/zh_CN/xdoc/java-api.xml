@@ -71,13 +71,17 @@
   <p>
   <span class="label important">提示</span> 当 Mybatis 与一些依赖注入框架（如 Spring 或者 Guice）搭配使用时，SqlSession 将被依赖注入框架创建并注入，所以你不需要使用 SqlSessionFactoryBuilder 或者 SqlSessionFactory，可以直接阅读 SqlSession 这一节。请参考 Mybatis-Spring 或者 Mybatis-Guice 手册以了解更多信息。</p>
   <h4>SqlSessionFactoryBuilder</h4>
-  <p>SqlSessionFactoryBuilder 有五个 build() 方法，每一种都允许你从不同的资源中创建一个 SqlSessionFactory 实例。</p>
+  <p>SqlSessionFactoryBuilder 有九个 build() 重载方法：四个接收 InputStream，四个接收 Reader，一个接收 Configuration。</p>
   <source>SqlSessionFactory build(InputStream inputStream)
 SqlSessionFactory build(InputStream inputStream, String environment)
 SqlSessionFactory build(InputStream inputStream, Properties properties)
 SqlSessionFactory build(InputStream inputStream, String env, Properties props)
+SqlSessionFactory build(Reader reader)
+SqlSessionFactory build(Reader reader, String environment)
+SqlSessionFactory build(Reader reader, Properties properties)
+SqlSessionFactory build(Reader reader, String env, Properties props)
 SqlSessionFactory build(Configuration config)</source>
-  <p>第一种方法是最常用的，它接受一个指向 XML 文件（也就是之前讨论的 mybatis-config.xml 文件）的 InputStream 实例。可选的参数是 environment 和 properties。environment 决定加载哪种环境，包括数据源和事务管理器。比如：</p>
+  <p>前八个方法从 InputStream 或 Reader 读取 XML 文件，例如之前讨论的 mybatis-config.xml。可选的参数是 environment 和 properties。environment 决定加载哪种环境，包括数据源和事务管理器。比如：</p>
 
   <source><![CDATA[<environments default="development">
   <environment id="development">
@@ -107,7 +111,7 @@ SqlSessionFactory build(Configuration config)</source>
   <p>因此，通过方法参数传递的属性的优先级最高，resource 或 url 指定的属性优先级中等，在 properties 元素体中指定的属性优先级最低。
   </p>
 <hr/>
-  <p>总结一下，前四个方法很大程度上是相同的，但提供了不同的覆盖选项，允许你可选地指定 environment 和/或 properties。以下给出一个从 mybatis-config.xml 文件创建 SqlSessionFactory 的示例：</p>
+  <p>总结一下，前八个方法的区别在于输入类型，以及是否指定 environment 和/或 properties。以下给出一个从 mybatis-config.xml 文件创建 SqlSessionFactory 的示例：</p>
 
   <source>String <strong>resource</strong> = "org/mybatis/builder/mybatis-config.xml";
 InputStream <strong>inputStream</strong> = Resources.getResourceAsStream(resource);
@@ -147,7 +151,7 @@ SqlSessionFactory factory = builder.build(configuration);</source>
   <p>现在你就获得一个可以用来创建 SqlSession 实例的 SqlSessionFactory 了。</p>
 
   <h4>SqlSessionFactory</h4>
-  <p>SqlSessionFactory 有六个方法创建 SqlSession 实例。通常来说，当你选择其中一个方法时，你需要考虑以下几点：</p>
+  <p>SqlSessionFactory 有八个方法创建 SqlSession 实例。通常来说，当你选择其中一个方法时，你需要考虑以下几点：</p>
   <ul>
     <li><strong>事务处理</strong>：你希望在 session 作用域中使用事务作用域，还是使用自动提交（auto-commit）？（对很多数据库和/或 JDBC 驱动来说，等同于关闭事务支持）</li>
     <li><strong>数据库连接</strong>：你希望 MyBatis 帮你从已配置的数据源获取连接，还是使用自己提供的连接？</li>
@@ -165,10 +169,10 @@ SqlSession openSession(ExecutorType execType, Connection connection)
 Configuration getConfiguration();</source>
   <p>默认的 openSession() 方法没有参数，它会创建具备如下特性的 SqlSession：</p>
   <ul>
-    <li>事务作用域<u>将会</u>开启（也就是不自动提交）。</li>
-    <li>将由当前环境配置的 DataSource 实例中获取 Connection 对象。</li>
+    <li>MyBatis 会请求关闭自动提交；实际的事务控制由所配置的事务管理器决定。</li>
+    <li>需要时才从当前环境配置的 DataSource 实例中获取 Connection 对象。</li>
     <li>事务隔离级别将会使用驱动或数据源的默认设置。</li>
-    <li>预处理语句不会被复用，也不会批量处理更新。</li>
+    <li>是否复用预处理语句或批量处理更新取决于 <code>defaultExecutorType</code>。其默认值 <code>SIMPLE</code> 不执行这两项操作。</li>
   </ul>
   <p>相信你已经能从方法签名中知道这些方法的区别。向 <code>autoCommit</code> 可选参数传递 <code>true</code> 值即可开启自动提交功能。若要使用自己的 <code>Connection</code> 实例，传递一个 <code>Connection</code> 实例给 <code>connection</code> 参数即可。注意，我们没有提供同时设置 <code>Connection</code> 和 <code>autoCommit</code> 的方法，这是因为 MyBatis 会依据传入的 Connection 来决定是否启用 autoCommit。对于事务隔离级别，MyBatis 使用了一个 Java 枚举包装器来表示，称为 <code>TransactionIsolationLevel</code>，事务隔离级别支持 JDBC 的五个隔离级别（<code>NONE</code>、<code>READ_UNCOMMITTED</code>、<code>READ_COMMITTED</code>、<code>REPEATABLE_READ</code> 和 <code>SERIALIZABLE</code>），并且与预期的行为一致。</p>
   <p>你可能对 <code>ExecutorType</code> 参数感到陌生。这个枚举类型定义了三个值:
@@ -212,13 +216,14 @@ int delete(String statement, Object parameter)]]></source>
 int insert(String statement)
 int update(String statement)
 int delete(String statement)]]></source>
-  <p>最后，还有 select 方法的三个高级版本，它们允许你限制返回行数的范围，或是提供自定义结果处理逻辑，通常在数据集非常庞大的情形下使用。
+  <p>最后，还有 select 方法的六个高级版本，它们允许你限制返回行数的范围，或是提供自定义结果处理逻辑，通常在数据集非常庞大的情形下使用。
   </p>
   <source><![CDATA[<E> List<E> selectList (String statement, Object parameter, RowBounds rowBounds)
 <T> Cursor<T> selectCursor(String statement, Object parameter, RowBounds rowBounds)
 <K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowbounds)
-void select (String statement, Object parameter, ResultHandler<T> handler)
-void select (String statement, Object parameter, RowBounds rowBounds, ResultHandler<T> handler)]]></source>
+void select(String statement, ResultHandler handler)
+void select(String statement, Object parameter, ResultHandler handler)
+void select(String statement, Object parameter, RowBounds rowBounds, ResultHandler handler)]]></source>
   <p>RowBounds 参数会告诉 MyBatis 略过指定数量的记录，并限制返回结果的数量。RowBounds 类的 offset 和 limit 值只有在构造函数时才能传入，其它时候是不能修改的。</p>
 
   <source>int offset = 100;
@@ -246,7 +251,7 @@ public interface ResultHandler<T> {
 
   <h5 id="transaction-control-methods">事务控制方法</h5>
   <p>
-    有四个方法用来控制事务作用域。当然，如果你已经设置了自动提交或你使用了外部事务管理器，这些方法就没什么作用了。然而，如果你正在使用由 Connection 实例控制的 JDBC 事务管理器，那么这四个方法就会派上用场：
+    有四个方法用来控制事务作用域。在自动提交模式或使用外部事务管理器时，这些方法不会执行 JDBC 提交或回滚，但仍会清空本地缓存，并执行或丢弃待处理的批量语句。使用 JDBC 事务管理器时，这四个方法还会控制数据库事务：
   </p>
   <source>void commit()
 void commit(boolean force)
@@ -265,8 +270,7 @@ void rollback(boolean force)</source>
   <h5>确保 SqlSession 被关闭</h5>
   <source>void close()</source>
   <p>对于你打开的任何 session，你都要保证它们被妥善关闭，这很重要。保证妥善关闭的最佳代码模式是这样的：</p>
-  <source>SqlSession session = sqlSessionFactory.openSession();
-try (SqlSession session = sqlSessionFactory.openSession()) {
+  <source>try (SqlSession session = sqlSessionFactory.openSession()) {
     // 假设下面三行代码是你的业务逻辑
     session.insert(...);
     session.update(...);
@@ -299,7 +303,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
   <p>此外，返回类型必须匹配期望的结果类型，返回单个值时，返回类型应该是返回值的类，返回多个值时，则为数组或集合类，另外也可以是游标（Cursor）。所有常用的类型都是支持的，包括：原始类型、Map、POJO 和 JavaBean。</p>
   <p><span class="label important">提示</span> 映射器接口不需要去实现任何接口或继承自任何类。只要方法签名可以被用来唯一识别对应的映射语句就可以了。</p>
   <p><span class="label important">提示</span> 映射器接口可以继承自其他接口。在使用 XML 来绑定映射器接口时，保证语句处于合适的命名空间中即可。唯一的限制是，不能在两个具有继承关系的接口中拥有相同的方法签名（这是潜在的危险做法，不可取）。</p>
-  <p>你可以传递多个参数给一个映射器方法。在多个参数的情况下，默认它们将会以 param 加上它们在参数列表中的位置来命名，比如：#{param1}、#{param2}等。如果你想（在有多个参数时）自定义参数的名称，那么你可以在参数上使用 @Param("paramName") 注解。</p>
+  <p>你可以传递多个参数给一个映射器方法。在多个参数的情况下，默认它们将会以 param 加上它们在参数列表中的位置来命名，比如：#{param1}、#{param2}等。你也可以用 @Param("paramName") 注解为参数命名，即使方法只有一个参数。</p>
   <p>你也可以给方法传递一个 RowBounds 实例来限制查询结果。</p>
 
 <h5>映射器注解</h5>
@@ -349,7 +353,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
 <li><code>&lt;idArg&gt;</code></li>
 </ul>
         </td>
-        <td>ConstructorArgs 集合的一部分，代表一个构造方法参数。属性：<code>id</code>、<code>column</code>、<code>javaType</code>、<code>jdbcType</code>、<code>typeHandler</code>、<code>select</code>、<code>resultMap</code>。id 属性和 XML 元素 <code>&lt;idArg&gt;</code> 相似，它是一个布尔值，表示该属性是否用于唯一标识和比较对象。从版本 3.5.4 开始，该注解变为可重复注解。</td>
+        <td>ConstructorArgs 集合的一部分，代表一个构造方法参数。属性：<code>id</code>、<code>column</code>、<code>javaType</code>、<code>jdbcType</code>、<code>typeHandler</code>、<code>select</code>、<code>resultMap</code>、<code>name</code>、<code>columnPrefix</code>。id 属性和 XML 元素 <code>&lt;idArg&gt;</code> 相似，它是一个布尔值，表示该属性是否用于唯一标识和比较对象。从版本 3.5.4 开始，该注解变为可重复注解。</td>
       </tr>
       <tr>
         <td><code>@TypeDiscriminator</code></td>
@@ -361,7 +365,13 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>@Case</code></td>
         <td>N/A</td>
         <td><code>&lt;case&gt;</code></td>
-        <td>表示某个值的一个取值以及该取值对应的映射。属性：<code>value</code>、<code>type</code>、<code>results</code>。results 属性是一个 <code>Results</code> 的数组，因此这个注解实际上和 <code>ResultMap</code> 很相似，由下面的 <code>Results</code> 注解指定。</td>
+        <td>表示某个值的一个取值以及该取值对应的映射。属性：<code>value</code>、<code>type</code>、<code>results</code>、<code>constructArgs</code>。<code>results</code> 是 <code>Result</code> 注解数组，<code>constructArgs</code> 是 <code>Arg</code> 注解数组。</td>
+      </tr>
+      <tr>
+        <td><code>@NamedResultMap</code></td>
+        <td><code>类</code></td>
+        <td><code>&lt;resultMap&gt;</code></td>
+        <td>在类型（通常是 Mapper 接口）上定义可由多条语句复用的结果映射。<code>id</code> 和 <code>javaType</code> 是必填属性；<code>constructorArguments</code>（Arg 数组）、<code>propertyMappings</code>（Result 数组）和 <code>typeDiscriminator</code> 是可选属性。至少要指定一种映射。</td>
       </tr>
       <tr>
         <td><code>@Results</code></td>
@@ -378,7 +388,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
 <li><code>&lt;id&gt;</code></li>
 </ul>
         </td>
-        <td>在列和属性或字段之间的单个结果映射。属性：<code>id</code>、<code>column</code>、<code>javaType</code>、<code>jdbcType</code>、<code>typeHandler</code>、<code>one</code>、<code>many</code>。id 属性和 XML 元素 <code>&lt;id&gt;</code> 相似，它是一个布尔值，表示该属性是否用于唯一标识和比较对象。one 属性是一个关联，和 <code>&lt;association&gt;</code> 类似，而 many 属性则是集合关联，和 <code>&lt;collection&gt;</code> 类似。这样命名是为了避免产生名称冲突。</td>
+        <td>在列和属性或字段之间的单个结果映射。属性：<code>id</code>、<code>column</code>、<code>property</code>、<code>javaType</code>、<code>jdbcType</code>、<code>typeHandler</code>、<code>one</code>、<code>many</code>。id 属性和 XML 元素 <code>&lt;id&gt;</code> 相似，它是一个布尔值，表示该属性是否用于唯一标识和比较对象。one 属性是一个关联，和 <code>&lt;association&gt;</code> 类似，而 many 属性则是集合关联，和 <code>&lt;collection&gt;</code> 类似。这样命名是为了避免产生名称冲突。</td>
       </tr>
       <tr>
         <td><code>@One</code></td>
@@ -387,9 +397,9 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td>复杂类型的单个属性映射。属性：
         <code>select</code>，指定可加载合适类型实例的映射语句（也就是映射器方法）全限定名；
         <code>fetchType</code>，指定在该映射中覆盖全局配置参数 <code>lazyLoadingEnabled</code>；
-        <code>resultMap</code>（3.5.5以上可用）, 结果集的完全限定名，该结果映射到查询结果中的集合对象；
+        <code>resultMap</code>（3.5.5以上可用）, 结果映射的完全限定名，用于将查询结果映射到对象；
         <code>columnPrefix</code>（3.5.5以上可用），在嵌套的结果集中对所查询的列进行分组的列前缀。
-        <span class="label important">提示</span> 注解 API 不支持联合映射。这是由于 Java 注解不允许产生循环引用。</td>
+        </td>
       </tr>
       <tr>
         <td><code>@Many</code></td>
@@ -398,9 +408,9 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td>复杂类型的集合属性映射。属性：
         <code>select</code>，指定可加载合适类型实例集合的映射语句（也就是映射器方法）全限定名；
         <code>fetchType</code>，指定在该映射中覆盖全局配置参数 <code>lazyLoadingEnabled</code> ；
-        <code>resultMap</code>（3.5.5以上可用），结果集的完全限定名，该结果映射到查询结果中的集合对象；
+        <code>resultMap</code>（3.5.5以上可用），结果映射的完全限定名，用于将查询结果映射到集合对象；
         <code>columnPrefix</code>（3.5.5以上可用），在嵌套的结果集中对所查询的列进行分组的列前缀。
-        <span class="label important">提示</span> 注解 API 不支持联合映射。这是由于 Java 注解不允许产生循环引用。</td>
+        </td>
       </tr>
       <tr>
         <td><code>@MapKey</code></td>
@@ -437,7 +447,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
 </ul>
         </td>
         <td>
-        每个注解分别代表将会被执行的 SQL 语句。它们用字符串数组（或单个字符串）作为参数。如果传递的是字符串数组，字符串数组会被连接成单个完整的字符串，每个字符串之间加入一个空格。这有效地避免了用 Java 代码构建 SQL 语句时产生的“丢失空格”问题。当然，你也可以提前手动连接好字符串。属性：<code>value</code>，指定用来组成单个 SQL 语句的字符串数组。
+        每个注解分别代表将会被执行的 SQL 语句。它们用字符串数组（或单个字符串）作为参数。如果传递的是字符串数组，字符串数组会被连接成单个完整的字符串，每个字符串之间加入一个空格。这有效地避免了用 Java 代码构建 SQL 语句时产生的“丢失空格”问题。当然，你也可以提前手动连接好字符串。属性：<code>value</code>，指定用来组成单个 SQL 语句的字符串数组。<code>@Select</code> 还有 <code>affectData</code>，用于将修改数据的 SELECT 标记为需要事务控制。
         <code>databaseId</code>（3.5.5以上可用）, 如果有一个配置好的 <code>DatabaseIdProvider</code>,
         MyBatis 会加载不带 <code>databaseId</code> 属性和带有匹配当前数据库 <code>databaseId</code> 属性的所有语句。如果同时存在带 <code>databaseId</code> 和不带 <code>databaseId</code> 属性的相同语句，则后者会被舍弃。
         </td>
@@ -462,7 +472,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         </td>
         <td>
         允许构建动态 SQL。这些备选的 SQL 注解允许你指定返回 SQL 语句的类和方法，以供运行时执行。（从 MyBatis 3.4.6 开始，可以使用 <code>CharSequence</code> 代替 <code>String</code> 来作为返回类型）。当执行映射语句时，MyBatis 会实例化注解指定的类，并调用注解指定的方法。你可以通过 <code>ProviderContext</code> 传递映射方法接收到的参数、"Mapper interface type" 和 "Mapper method"（仅在 MyBatis 3.4.5 以上支持）作为参数。（MyBatis 3.4 以上支持传入多个参数）
-        属性：<code>value</code>、<code>type</code>、<code>method</code>、<code>databaseId</code>。
+        属性：<code>value</code>、<code>type</code>、<code>method</code>、<code>databaseId</code>。<code>@SelectProvider</code> 还有 <code>affectData</code>，用于将修改数据的 SELECT 标记为需要事务控制。
         <code>value</code> and <code>type</code> 属性用于指定类名
         (<code>type</code> 属性是 <code>value</code> 的别名, 你必须指定任意一个。
         但是你如果在全局配置中指定 <code>defaultSqlProviderType</code> ，两个属性都可以忽略)。
@@ -475,14 +485,14 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>@Param</code></td>
         <td><code>参数</code></td>
         <td>N/A</td>
-        <td>如果你的映射方法接受多个参数，就可以使用这个注解自定义每个参数的名字。否则在默认情况下，除 <code>RowBounds</code> 以外的参数会以 "param" 加参数位置被命名。例如 <code>#{param1}</code>, <code>#{param2}</code>。如果使用了 <code>@Param("person")</code>，参数就会被命名为 <code>#{person}</code>。</td>
+        <td>如果你的映射方法接受多个参数，就可以使用这个注解自定义每个参数的名字。否则在默认情况下，除 <code>RowBounds</code> 以外的参数会以 "param" 加参数位置被命名。例如 <code>#{param1}</code>, <code>#{param2}</code>。如果使用了 <code>@Param("person")</code>，即使只有一个参数，也可以使用 <code>#{person}</code> 引用它。</td>
       </tr>
       <tr>
         <td><code>@SelectKey</code></td>
         <td><code>方法</code></td>
         <td><code>&lt;selectKey&gt;</code></td>
         <td>
-        这个注解的功能与 <code>&lt;selectKey&gt;</code> 标签完全一致。该注解只能在 <code>@Insert</code> 或 <code>@InsertProvider</code> 或 <code>@Update</code> 或 <code>@UpdateProvider</code> 标注的方法上使用，否则将会被忽略。如果标注了 <code>@SelectKey</code> 注解，MyBatis 将会忽略掉由 <code>@Options</code> 注解所设置的生成主键或设置（configuration）属性。属性：<code>statement</code> 以字符串数组形式指定将会被执行的 SQL 语句，<code>keyProperty</code> 指定作为参数传入的对象对应属性的名称，该属性将会更新成新的值，<code>before</code> 可以指定为 <code>true</code> 或 <code>false</code> 以指明 SQL 语句应被在插入语句的之前还是之后执行。<code>resultType</code> 则指定 <code>keyProperty</code> 的 Java 类型。<code>statementType</code> 则用于选择语句类型，可以选择 <code>STATEMENT</code>、<code>PREPARED</code> 或 <code>CALLABLE</code> 之一，它们分别对应于 <code>Statement</code>、<code>PreparedStatement</code> 和 <code>CallableStatement</code>。默认值是 <code>PREPARED</code>。
+        这个注解的功能与 <code>&lt;selectKey&gt;</code> 标签完全一致。该注解只能在 <code>@Insert</code> 或 <code>@InsertProvider</code> 或 <code>@Update</code> 或 <code>@UpdateProvider</code> 标注的方法上使用，否则将会被忽略。如果标注了 <code>@SelectKey</code> 注解，MyBatis 将会忽略掉由 <code>@Options</code> 注解所设置的生成主键或设置（configuration）属性。属性：<code>statement</code> 以字符串数组形式指定将会被执行的 SQL 语句，<code>keyProperty</code> 指定作为参数传入的对象对应属性的名称，该属性将会更新成新的值，<code>keyColumn</code> 指定提供键值的列名（多个列名用逗号分隔），<code>before</code> 可以指定为 <code>true</code> 或 <code>false</code> 以指明 SQL 语句应被在插入或更新语句的之前还是之后执行。<code>resultType</code> 则指定 <code>keyProperty</code> 的 Java 类型。<code>statementType</code> 则用于选择语句类型，可以选择 <code>STATEMENT</code>、<code>PREPARED</code> 或 <code>CALLABLE</code> 之一，它们分别对应于 <code>Statement</code>、<code>PreparedStatement</code> 和 <code>CallableStatement</code>。默认值是 <code>PREPARED</code>。
         <code>databaseId</code>（3.5.5以上可用）, 如果有一个配置好的 <code>DatabaseIdProvider</code>,
         MyBatis 会加载不带 <code>databaseId</code> 属性和带有匹配当前数据库 <code>databaseId</code> 属性的所有语句。如果同时存在带 <code>databaseId</code> 和不带 <code>databaseId</code> 属性的相同语句，则后者会被舍弃。
         </td>
@@ -492,6 +502,12 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
         <td><code>方法</code></td>
         <td>N/A</td>
         <td>这个注解为 <code>@Select</code> 或者 <code>@SelectProvider</code> 注解指定 XML 映射中 <code>&lt;resultMap&gt;</code> 元素的 id。这使得注解的 select 可以复用已在 XML 中定义的 ResultMap。如果标注的 select 注解中存在 <code>@Results</code> 或者 <code>@ConstructorArgs</code> 注解，这两个注解将被此注解覆盖。</td>
+      </tr>
+      <tr>
+        <td><code>@ResultOrdered</code></td>
+        <td><code>方法</code></td>
+        <td><code>&lt;select&gt;</code> 的 resultOrdered 属性</td>
+        <td>表示结果集已排序。构造函数中含有集合的对象需要此注解。布尔属性 <code>value</code> 默认为 <code>true</code>。</td>
       </tr>
       <tr>
         <td><code>@ResultType</code></td>

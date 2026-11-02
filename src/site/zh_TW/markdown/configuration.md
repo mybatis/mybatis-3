@@ -137,6 +137,7 @@ SqlSessionFactory factory =
 | defaultSqlProviderType             | 指定持有 Provider 方法的 SQL Provider 類別（自 3.5.6 起）。當 SQL Provider 註解（例如 `@SelectProvider`）省略 `type`（或 `value`）屬性時，將套用此類別。                                                                                                                                                                                                                                                        | 型別別名或完整類別名稱                                                                                                                     | 未設定                                                |
 | nullableOnForEach                  | 指定 `foreach` 標籤上 'nullable' 屬性的預設值。（自 3.5.9 起）                                                                                                                                                                                                                                                                                                                                                   | true &#124; false                                                                                                                          | false                                                 |
 | argNameBasedConstructorAutoMapping | 套用建構函式自動映射時，使用引數名稱搜尋要映射的欄位，而非依賴欄位順序。（自 3.5.10 起）                                                                                                                                                                                                                                                                                                                         | true &#124; false                                                                                                                          | false                                                 |
+| ignoreParameterMetaData | 解析型別處理器時略過參數中繼資料的取得。（自 3.6.1 起） | true &#124; false | false |
 
 以下是 settings 元素完整設定的範例：
 
@@ -163,8 +164,8 @@ SqlSessionFactory factory =
   <setting name="callSettersOnNulls" value="false"/>
   <setting name="returnInstanceForEmptyRow" value="false"/>
   <setting name="logPrefix" value="exampleLogPreFix_"/>
-  <setting name="logImpl" value="SLF4J | LOG4J | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING"/>
-  <setting name="proxyFactory" value="CGLIB | JAVASSIST"/>
+  <setting name="logImpl" value="JDK_LOGGING"/>
+  <setting name="proxyFactory" value="JAVASSIST"/>
   <setting name="vfsImpl" value="org.mybatis.example.YourselfVfsImpl"/>
   <setting name="useActualParamName" value="true"/>
   <setting name="configurationFactory" value="org.mybatis.example.ConfigurationFactory"/>
@@ -258,17 +259,17 @@ MyBatis 針對常見的 Java 型別提供了許多內建的型別別名。它們
 | 型別處理器 | Java 型別 | JDBC 型別 |
 |------------------------------|---------------------------------|----------------------------------------------------------------------------------------|
 | `BooleanTypeHandler`         | `java.lang.Boolean`, `boolean`  | 任何相容的 `BOOLEAN`                                                                   |
-| `ByteTypeHandler`            | `java.lang.Byte`, `byte`        | 任何相容的 `NUMERIC` 或 `BYTE`                                                         |
+| `ByteTypeHandler`            | `java.lang.Byte`, `byte`        | 任何相容的 `NUMERIC` 或 `TINYINT`                                                      |
 | `ShortTypeHandler`           | `java.lang.Short`, `short`      | 任何相容的 `NUMERIC` 或 `SMALLINT`                                                     |
 | `IntegerTypeHandler`         | `java.lang.Integer`, `int`      | 任何相容的 `NUMERIC` 或 `INTEGER`                                                      |
 | `LongTypeHandler`            | `java.lang.Long`, `long`        | 任何相容的 `NUMERIC` 或 `BIGINT`                                                       |
 | `FloatTypeHandler`           | `java.lang.Float`, `float`      | 任何相容的 `NUMERIC` 或 `FLOAT`                                                        |
 | `DoubleTypeHandler`          | `java.lang.Double`, `double`    | 任何相容的 `NUMERIC` 或 `DOUBLE`                                                       |
 | `BigDecimalTypeHandler`      | `java.math.BigDecimal`          | 任何相容的 `NUMERIC` 或 `DECIMAL`                                                      |
-| `StringTypeHandler`          | `java.lang.String`              | `CHAR`, `VARCHAR`                                                                      |
+| `StringTypeHandler`          | `java.lang.String`              | `CHAR`, `VARCHAR`, `LONGVARCHAR`                                                       |
 | `ClobReaderTypeHandler`      | `java.io.Reader`                | -                                                                                      |
-| `ClobTypeHandler`            | `java.lang.String`              | `CLOB`, `LONGVARCHAR`                                                                  |
-| `NStringTypeHandler`         | `java.lang.String`              | `NVARCHAR`, `NCHAR`                                                                    |
+| `ClobTypeHandler`            | `java.lang.String`              | `CLOB`                                                                                 |
+| `NStringTypeHandler`         | `java.lang.String`              | `NVARCHAR`, `NCHAR`, `LONGNVARCHAR`                                                     |
 | `NClobTypeHandler`           | `java.lang.String`              | `NCLOB`                                                                                |
 | `BlobInputStreamTypeHandler` | `java.io.InputStream`           | -                                                                                      |
 | `ByteArrayTypeHandler`       | `byte[]`                        | 任何相容的位元組串流型別                                                               |
@@ -334,7 +335,7 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
 </typeHandlers>
 ```
 
-使用這樣的 TypeHandler 將會覆寫 Java String 屬性以及 VARCHAR 參數與結果的現有型別處理器。請注意，MyBatis 不會反思檢查資料庫中繼資料來判斷型別，因此您必須在參數與結果映射中明確指定該欄位為 VARCHAR，以便掛接正確的型別處理器。這是因為 MyBatis 在陳述式實際執行之前並不知曉資料型別。
+使用這樣的 TypeHandler 將會覆寫 Java String 屬性以及 VARCHAR 參數與結果的現有型別處理器。`ignoreParameterMetaData` 為 `false`（預設值）時，若參數映射未指定 JDBC 型別，MyBatis 可以使用 JDBC 參數中繼資料，依 JDBC 型別選擇 TypeHandler。若驅動程式未提供這項中繼資料，請在參數映射中明確指定 `jdbcType="VARCHAR"`。選擇結果映射的 TypeHandler 時，JDBC 型別仍是未知的，因此必要時也應明確指定，詳見下文。
 
 MyBatis 會藉由反思檢查其泛型型別來得知您希望此 TypeHandler 處理的 Java 型別，但您可以透過兩種方式覆寫此行為：
 
@@ -483,12 +484,12 @@ ObjectFactory 介面非常單純。它包含兩個 create 方法，一個用於�
 
 ### plugins
 
-MyBatis 允許您在已映射陳述式執行的特定切入點攔截呼叫。預設情況下，MyBatis 允許外掛模組攔截以下類別的方法呼叫：
+MyBatis 允許您在已映射陳述式執行的特定切入點攔截呼叫。外掛模組可以攔截下列介面中宣告的方法：
 
-- Executor (update, query, flushStatements, commit, rollback, getTransaction, close, isClosed)
+- Executor (update, query, queryCursor, flushStatements, commit, rollback, createCacheKey, isCached, clearLocalCache, deferLoad, getTransaction, close, isClosed, setExecutorWrapper)
 - ParameterHandler (getParameterObject, setParameters)
-- ResultSetHandler (handleResultSets, handleOutputParameters)
-- StatementHandler (prepare, parameterize, batch, update, query)
+- ResultSetHandler (handleResultSets, handleCursorResultSets, handleOutputParameters)
+- StatementHandler (prepare, parameterize, batch, update, query, queryCursor, getBoundSql, getParameterHandler)
 
 透過檢視各方法的完整簽名以及隨每個 MyBatis 版本提供的原始碼，可以了解這些類別方法的詳細資訊。假設您要做的不僅僅是監控呼叫，您應當深入了解所覆寫方法的行為。若您嘗試修改或覆寫特定方法的行為，很有可能會破壞 MyBatis 的核心運作。這些是低階類別與方法，因此請謹慎使用外掛模組。
 
@@ -645,6 +646,7 @@ dataSource 元素使用標準的 JDBC DataSource 介面設定 JDBC Connection �
 - `url` – 這是您資料庫實例的 JDBC URL。
 - `username` – 用於登入的資料庫使用者名稱。
 - `password` - 用於登入的資料庫密碼。
+- `autoCommit` – 設定新連線的自動提交模式。未設定時保留驅動程式的預設值。
 - `defaultTransactionIsolationLevel` – 連線的預設交易隔離層級。
 - `defaultNetworkTimeout` – 等待資料庫操作完成的預設網路逾時值（毫秒）。詳情請參閱 `java.sql.Connection#setNetworkTimeout()` 的 API 文件。
 

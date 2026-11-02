@@ -40,7 +40,7 @@ org.apache.ibatis.logging.LogFactory.useCommonsLogging();
 org.apache.ibatis.logging.LogFactory.useStdOutLogging();
 ```
 
-如果您選擇呼叫這些方法之一，應在呼叫任何其他 MyBatis 方法之前進行。此外，只有在該實作於執行時期類別路徑中可用時，這些方法才會切換到所請求的日誌實作。例如，如果您嘗試選擇 Log4J2 日誌，而 Log4J2 在執行時期不可用，則 MyBatis 將忽略使用 Log4J2 的請求，並使用其正常的演算法來尋找日誌實作。
+如果您選擇呼叫這些方法之一，應在呼叫任何其他 MyBatis 方法之前進行。所請求的日誌實作必須在執行時期類別路徑中可用。例如，若選擇 Log4J2，但執行時期缺少該實作，MyBatis 會擲出 `LogException`。只有在未明確選擇日誌實作而初始化 MyBatis 日誌時，才會自動搜尋其他實作。
 
 SLF4J、Apache Commons Logging、Apache Log4J 和 JDK Logging API 的具體細節超出了本文件的範圍。但是，下面的範例設定應該可以幫助您入門。如果您想了解有關這些框架的更多資訊，可以從下列位置取得更多資訊：
 
@@ -164,7 +164,7 @@ public interface BlogMapper {
 
 是的，正如您可能已經注意到的，為 Mapper 介面或為 XML Mapper 檔案設定日誌記錄沒有任何差別。
 
-<span class="label important">NOTE</span> 如果您使用的是 SLF4J 或 Log4j 2，MyBatis 將使用標記 `MYBATIS` 來呼叫它。
+<span class="label important">NOTE</span> 使用 Log4j 2 時，MyBatis 會使用 `MYBATIS` 標記。使用 SLF4J 時，只有日誌記錄器支援 location-aware API 才會使用該標記；備援的 SLF4J 日誌記錄器不使用標記。
 
 `logback.xml` 檔案中的其餘設定用於設定 appender，這超出了本文件的範圍。但是，您可以在 [Logback](https://logback.qos.ch/) 網站上找到更多資訊。或者，您可以直接進行實驗，看看不同的設定選項會產生什麼效果。
 

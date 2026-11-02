@@ -119,7 +119,7 @@ AND title like 'someTitle']]></source>
   </where>
 </select>]]></source>
   <p>El elemento where sabe que debe insertar la “WHERE” solo si los tags internos devuelven algún contenido. Más aun, si el contenido comienza con “AND” o “OR”, sabe cómo eliminarlo.</p>
-  <p>Si el elemento where no se comporta exactamente como te gustaría, lo puedes personalizar definiendo tu propio elemento trim. Por ejemplo, el trim equivalente al elemento where es:</p>
+  <p>Si el elemento where no se comporta exactamente como te gustaría, lo puedes personalizar definiendo tu propio elemento trim. Por ejemplo, este trim cubre el caso habitual de condiciones que comienzan con «AND » u «OR »; el elemento where también elimina estos prefijos cuando van seguidos de una tabulación o un salto de línea:</p>
   <source><![CDATA[<trim prefix="WHERE" prefixOverrides="AND |OR ">
   ...
 </trim>]]></source>
@@ -208,12 +208,12 @@ AND title like 'someTitle']]></source>
   SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType);
 }]]></source>
     <p>Una vez tienes tu driver de lenguaje puedes puede hacer que sea el de uso por defecto estableciéndolo en el fichero mybatis-config.xml:</p>
-  <source><![CDATA[<typeAliases>
-  <typeAlias type="org.sample.MyLanguageDriver" alias="myLanguage"/>
-</typeAliases>
-<settings>
+  <source><![CDATA[<settings>
   <setting name="defaultScriptingLanguage" value="myLanguage"/>
 </settings>
+<typeAliases>
+  <typeAlias type="org.sample.MyLanguageDriver" alias="myLanguage"/>
+</typeAliases>
 ]]></source>
     <p>En lugar de cambiar el valor por defecto, puedes indicar el lenguaje para un statement específico
     añadiendo el atributo <code>lang</code> de la siguiente forma:

@@ -212,12 +212,12 @@ AND title like 'someTitle']]></source>
   SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType);
 }]]></source>
     <p>作成した言語ドライバーをデフォルトとして使用する場合は、mybatis-config.xml に次のような設定を追加します（typeAlias の使用は必須ではありません）。</p>
-    <source><![CDATA[<typeAliases>
-  <typeAlias type="org.sample.MyLanguageDriver" alias="myLanguage"/>
-</typeAliases>
-<settings>
+    <source><![CDATA[<settings>
   <setting name="defaultScriptingLanguage" value="myLanguage"/>
 </settings>
+<typeAliases>
+  <typeAlias type="org.sample.MyLanguageDriver" alias="myLanguage"/>
+</typeAliases>
 ]]></source>
     <p><code>lang</code> 属性を指定することで、特定のステートメントの言語ドライバーのみを変更することもできます。</p>
     <source><![CDATA[<select id="selectBlog" lang="myLanguage">

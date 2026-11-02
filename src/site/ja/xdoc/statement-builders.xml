@@ -211,6 +211,12 @@ public String updatePersonSql() {
                   <li>
                     <code>RIGHT_OUTER_JOIN(String...)</code>
                   </li>
+                  <li>
+                    <code>OUTER_JOIN(String)</code>
+                  </li>
+                  <li>
+                    <code>OUTER_JOIN(String...)</code>
+                  </li>
                 </ul>
               </td>
               <td>呼び出されたメソッドに応じて、新しい JOIN 句を追加します。引数には結合対象のテーブルと結合条件の文字列を指定します。

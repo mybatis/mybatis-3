@@ -40,7 +40,7 @@ org.apache.ibatis.logging.LogFactory.useCommonsLogging();
 org.apache.ibatis.logging.LogFactory.useStdOutLogging();
 ```
 
-如果你决定要调用以上某个方法，请在调用其它 MyBatis 方法之前调用它。另外，仅当运行时类路径中存在该日志工具时，调用与该日志工具对应的方法才会生效，否则 MyBatis 一概忽略。如你环境中并不存在 Log4J2，你却调用了相应的方法，MyBatis 就会忽略这一调用，转而以默认的查找顺序查找日志工具。
+如果你决定调用以上某个方法，请在调用其它 MyBatis 方法之前调用它。请求的日志实现必须在运行时类路径中可用。例如，如果选择 Log4J2 但运行时缺少该实现，MyBatis 会抛出 `LogException`。只有在未显式选择日志实现而初始化 MyBatis 日志时，才会自动查找其它实现。
 
 关于 SLF4J、Apache Commons Logging、Apache Log4J 和 JDK Logging 的 API 介绍不在本文档介绍范围内。不过，下面的例子可以作为一个快速入门。关于这些日志框架的更多信息，可以参考以下链接：
 
@@ -164,7 +164,7 @@ public interface BlogMapper {
 
 你应该注意到了，为映射器接口和 XML 文件添加日志功能的语句毫无差别。
 
-<span class="label important">注意</span> 如果你使用的是 SLF4J 或 Log4j 2，MyBatis 将以 `MYBATIS` 这个值进行调用。
+<span class="label important">注意</span> 使用 Log4j 2 时，MyBatis 会使用 `MYBATIS` 标记。使用 SLF4J 时，仅当日志记录器支持 location-aware API 才会使用该标记；回退的 SLF4J 日志记录器不会使用标记。
 
 配置文件 `log4j.properties` 的余下内容是针对日志输出源的，这一内容已经超出本文档范围。关于 Logback 的更多内容，可以参考[Logback](https://logback.qos.ch/) 的网站。不过，你也可以简单地做做实验，看看不同的配置会产生怎样的效果。
 

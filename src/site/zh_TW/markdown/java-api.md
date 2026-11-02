@@ -57,17 +57,21 @@ author: Clinton Begin
 <a id="sqlsessionfactorybuilder"></a>
 #### SqlSessionFactoryBuilder
 
-SqlSessionFactoryBuilder 具有五個 build() 方法，每個方法都允許您從不同的來源建構 SqlSessionFactory。
+SqlSessionFactoryBuilder 有九個 build() 多載方法：四個接受 InputStream、四個接受 Reader，另一個接受 Configuration。
 
 ```java
 SqlSessionFactory build(InputStream inputStream)
 SqlSessionFactory build(InputStream inputStream, String environment)
 SqlSessionFactory build(InputStream inputStream, Properties properties)
 SqlSessionFactory build(InputStream inputStream, String env, Properties props)
+SqlSessionFactory build(Reader reader)
+SqlSessionFactory build(Reader reader, String environment)
+SqlSessionFactory build(Reader reader, Properties properties)
+SqlSessionFactory build(Reader reader, String env, Properties props)
 SqlSessionFactory build(Configuration config)
 ```
 
-前四個方法是最常用的，因為它們接受參照 XML 文件的 InputStream 實例，更具體地說是前面討論過的 mybatis-config.xml 檔案。選填參數為 environment 與 properties。Environment 決定要載入哪個環境，包含資料來源（DataSource）與交易管理員（TransactionManager）。例如：
+前八個方法從 InputStream 或 Reader 讀取 XML 文件，例如前面討論過的 mybatis-config.xml 檔案。選填參數為 environment 與 properties。Environment 決定要載入哪個環境，包含資料來源（DataSource）與交易管理員（TransactionManager）。例如：
 
 ```xml
 <environments default="development">
@@ -104,7 +108,7 @@ SqlSessionFactory build(Configuration config)
 
 ------
 
-總結來說，前四個方法大致相同，但透過多載允許您選擇性地指定環境與／或屬性。以下是從 mybatis-config.xml 檔案建構 SqlSessionFactory 的範例：
+總結來說，前八個方法的差別在於輸入型別，以及是否指定 environment 與／或 properties。以下是從 mybatis-config.xml 檔案建構 SqlSessionFactory 的範例：
 
 ```java
 String resource = "org/mybatis/builder/mybatis-config.xml";
@@ -235,7 +239,7 @@ try {
 }
 ```
 
-若尚未啟動任何受控工作階段，透過內部代理呼叫資料存取方法（如 `selectOne`、`selectList`、`insert`、`update`、`delete`）將自動開啟一個短暫的工作階段，執行該單一方法、明確提交（commit）該暫時工作階段，並在 `finally` 區塊中立即將其關閉；而直接呼叫工作階段生命週期與交易控制方法（如 `commit()`、`rollback()`、`close()`）在未啟動受控工作階段時則會拋出 `SqlSessionException`。
+若尚未啟動受控工作階段，呼叫 `SqlSessionManager` 的資料存取方法（`selectOne`、`selectList`、`selectMap`、`selectCursor`、`select`、`insert`、`update`、`delete`）會自動開啟短暫的工作階段，執行該方法後立即關閉。方法正常結束時，管理器會呼叫 `commit()`；方法擲出例外時則呼叫 `rollback()`。這些呼叫是否實際控制資料庫交易，取決於設定的交易管理員。由於回傳的 `Cursor` 尚未供呼叫端迭代，工作階段就已關閉，因此使用 `selectCursor` 時應先啟動受控工作階段，或自行透過 `openSession()` 開啟工作階段。生命週期方法（`commit()`、`rollback()`、`close()`、`clearCache()`、`flushStatements()`、`getConnection()`）不會自動開啟工作階段；若尚未啟動受控工作階段，這些方法會擲出 `SqlSessionException`。
 
 <a id="difference-from-defaultsqlsessionfactory"></a>
 ##### 與 DefaultSqlSessionFactory 的差異 (Difference from DefaultSqlSessionFactory)
@@ -274,10 +278,10 @@ Configuration getConfiguration();
 
 不帶參數的預設 openSession() 方法將建立具有以下特性的 SqlSession：
 
-- <u>將會</u>啟動交易範圍（即非自動提交）。
-- 將從使用中環境所設定的 DataSource 實例獲取 `Connection` 物件。
+- MyBatis 會要求停用自動提交；實際的交易控制取決於設定的交易管理員。
+- 需要時才從使用中環境所設定的 DataSource 實例取得 `Connection` 物件。
 - 交易隔離層級將採用驅動程式或資料來源所使用的預設值。
-- 不會重複使用 PreparedStatement，也不會批次執行更新。
+- 是否重複使用 PreparedStatement 或批次執行更新，取決於設定的 `defaultExecutorType`。其預設值 `SIMPLE` 不執行這兩項操作。
 
 大多數方法都相當不言自明。若要啟用自動提交，請將 `true` 傳遞給選填的 `autoCommit` 參數。若要提供您自己的連線，請將 `Connection` 實例傳遞給 `connection` 參數。請注意，沒有同時設定 `Connection` 和 `autoCommit` 的多載方法，因為 MyBatis 將使用提供的連線物件目前所採用的任何設定。MyBatis 為交易隔離層級使用了一個名為 `TransactionIsolationLevel` 的 Java 列舉包裝函式，但它們的運作方式正如預期，並具備 JDBC 支援的 5 個層級（`NONE`、`READ_UNCOMMITTED`、`READ_COMMITTED`、`REPEATABLE_READ`、`SERIALIZABLE`）。
 
@@ -337,14 +341,15 @@ try (Cursor<MyEntity> entities = session.selectCursor(statement, param)) {
 }
 ```
 
-最後，還有五個進階版本的 `select` 方法，允許您限制回傳的資料列範圍，或提供自訂的結果處理邏輯，通常用於非常龐大的資料集。
+最後，還有六個進階版本的 `select` 方法，允許您限制回傳的資料列範圍，或提供自訂的結果處理邏輯，通常用於非常龐大的資料集。
 
 ```java
 <E> List<E> selectList (String statement, Object parameter, RowBounds rowBounds)
 <T> Cursor<T> selectCursor(String statement, Object parameter, RowBounds rowBounds)
 <K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowbounds)
-void select (String statement, Object parameter, ResultHandler<T> handler)
-void select (String statement, Object parameter, RowBounds rowBounds, ResultHandler<T> handler)
+void select(String statement, ResultHandler handler)
+void select(String statement, Object parameter, ResultHandler handler)
+void select(String statement, Object parameter, RowBounds rowBounds, ResultHandler handler)
 ```
 
 `RowBounds` 參數會使 MyBatis 跳過指定數量的記錄，並將回傳的結果數量限制為特定數目。`RowBounds` 類別具有同時接受 `offset` 與 `limit` 的建構函式，除此之外是不可變的。
@@ -389,7 +394,7 @@ List<BatchResult> flushStatements()
 <a id="transaction-control-methods"></a>
 ##### 交易控制方法 (Transaction Control Methods)
 
-有四個方法可用於控制交易的範圍。當然，如果您選擇使用自動認可，或者使用外部交易管理員，這些方法將沒有任何效果。但是，如果您使用由 `Connection` 實例管理的 JDBC 交易管理員，那麼以下四個方法將會派上用場：
+有四個方法可用於控制交易的範圍。在自動提交模式或使用外部交易管理員時，這些方法不會執行 JDBC 提交或回滾，但仍會清除本地快取，並執行或捨棄待處理的批次陳述式。使用 JDBC 交易管理員時，以下四個方法也會控制資料庫交易：
 
 ```java
 void commit()
@@ -486,7 +491,7 @@ public interface AuthorMapper {
 
 <span class="label important">NOTE</span> Mapper 介面可以繼承其他介面。當使用 XML 繫結至 `Mapper` 介面時，請確保您在適當的命名空間中宣告了陳述式。此外，唯一的限制是您不能在階層架構中的兩個介面中宣告相同的方法簽章（無論如何這都是個壞主意）。
 
-您可以將多個參數傳遞給 mapper 方法。如果您這樣做，預設情況下它們將以文字 "param" 加上其在參數清單中的位置來命名，例如：`#{param1}`、`#{param2}` 等。如果您希望變更參數的名稱（僅限多個參數），您可以在參數上使用 `@Param("paramName")` 註解。
+您可以將多個參數傳遞給 mapper 方法。如果您這樣做，預設情況下它們將以文字 "param" 加上其在參數清單中的位置來命名，例如：`#{param1}`、`#{param2}` 等。您也可以使用 `@Param("paramName")` 註解為參數指定名稱，即使方法只有一個參數也可以。
 
 您也可以將 `RowBounds` 實例傳遞給方法以限制查詢結果。
 
@@ -505,22 +510,22 @@ public interface AuthorMapper {
 | `@Property` | N/A | `<property>` | 指定屬性值或佔位符（可由在 `mybatis-config.xml` 中定義的設定屬性所替換）。屬性：`name`、`value`。（自 MyBatis 3.4.2+ 起可用） |
 | `@CacheNamespaceRef` | `Class` | `<cacheRef>` | 參照另一個命名空間的快取以供使用。請注意，在 XML 映射檔中宣告的快取被視為單獨的命名空間，即使它們共享相同的完整類別名稱（FQCN）。屬性：`value` 與 `name`。如果您使用此註解，應指定 `value` 或 `name` 屬性之一。對於 `value` 屬性，請指定表示命名空間的 Java 型別（命名空間名稱成為指定 Java 型別的 FQCN）；對於 `name` 屬性（此屬性自 3.4.2 起可用），請指定表示命名空間的名稱。 |
 | `@ConstructorArgs` | `Method` | `<constructor>` | 收集一組結果以傳遞給結果物件的建構函式。屬性：`value`，它是一個 `Arg` 陣列。 |
-| `@Arg` | N/A | <ul><li>`<arg>`</li><li>`<idArg>`</li></ul> | 作為 ConstructorArgs 集合一部分的單一建構函式引數。屬性：`id`、`column`、`javaType`、`jdbcType`、`typeHandler`、`select`、`resultMap`。id 屬性是一個布林值，用於識別用於比較的屬性，類似於 `<idArg>` XML 元素。自 3.5.4 起，它可以用作可重複註解。 |
+| `@Arg` | N/A | <ul><li>`<arg>`</li><li>`<idArg>`</li></ul> | 作為 ConstructorArgs 集合一部分的單一建構函式引數。屬性：`id`、`column`、`javaType`、`jdbcType`、`typeHandler`、`select`、`resultMap`、`name`、`columnPrefix`。id 屬性是一個布林值，用於識別用於比較的屬性，類似於 `<idArg>` XML 元素。自 3.5.4 起，它可以用作可重複註解。 |
 | `@TypeDiscriminator` | `Method` | `<discriminator>` | 一組可用於決定要執行之結果映射的值案例。屬性：`column`、`javaType`、`jdbcType`、`typeHandler`、`cases`。cases 屬性是一個 `Case` 陣列。 |
-| `@Case` | N/A | `<case>` | 單一值案例及其對應的映射。屬性：`value`、`type`、`results`。results 屬性是一個 Results 陣列，因此此 `Case` 註解類似於實際的 `ResultMap`，由下方的 `Results` 註解所指定。 |
-| `@NamedResultMap` | `Type` | `<resultMap>` | 此註解用於建立不直接綁定至 select 陳述式且可供多個陳述式重複使用的結果映射。這類似於在 XML 中建立 `<resultMap>`。該註解應附加至型別（通常是 mapper 介面）。該註解可以接受 `@Arg` 陣列、與／或 `@Result` 陣列、與／或 `@TypeDiscriminator`。任何數量的 `@NamedResultMap` 註解都可以附加至型別。 |
+| `@Case` | N/A | `<case>` | 單一值案例及其對應的映射。屬性：`value`、`type`、`results`、`constructArgs`。`results` 是 `Result` 註解陣列，`constructArgs` 是 `Arg` 註解陣列。 |
+| `@NamedResultMap` | `Type` | `<resultMap>` | 此註解用於建立不直接綁定至 select 陳述式且可供多個陳述式重複使用的結果映射。這類似於在 XML 中建立 `<resultMap>`。該註解應附加至型別（通常是 mapper 介面）。必要屬性為 `id` 與 `javaType`。選填屬性為 `constructorArguments`（`@Arg` 陣列）、`propertyMappings`（`@Result` 陣列）與 `typeDiscriminator`（`@TypeDiscriminator`）；至少需指定一種映射。任何數量的 `@NamedResultMap` 註解都可以附加至型別。 |
 | `@Results` | `Method` | `<resultMap>` | 結果映射清單，包含特定結果欄位如何映射至屬性或欄位的詳細資料。屬性：`value`、`id`。value 屬性是 `Result` 註解的陣列。id 屬性是結果映射的名稱。 |
 | `@Result` | N/A | <ul><li>`<result>`</li><li>`<id>`</li></ul> | 欄位與屬性或欄位之間的單一結果映射。屬性：`id`、`column`、`property`、`javaType`、`jdbcType`、`typeHandler`、`one`、`many`。id 屬性是一個布林值，表示該屬性應用於比較（類似於 XML 映射中的 `<id>`）。one 屬性用於單一關聯，類似於 `<association>`；many 屬性用於集合，類似於 `<collection>`。它們之所以這樣命名是為了避免類別命名衝突。自 3.5.4 起，它可以用作可重複註解。 |
-| `@One` | N/A | `<association>` | 映射至複雜型別的單一屬性值。屬性：`select`，即可以載入適當型別實例的映射陳述式（即 mapper 方法）的完整限定名稱。`fetchType`，覆寫此映射的全域設定參數 `lazyLoadingEnabled`。`resultMap`（自 3.5.5 起可用），即從查詢結果映射至單一容器物件的結果映射的完整限定名稱。`columnPrefix`（自 3.5.5 起可用），即在巢狀結果映射中用於分組查詢欄位的欄位前置詞。<span class="label important">NOTE</span> 您會注意到註解 API 不支援聯結映射。這是因為 Java 註解不允許循環參照的限制所致。 |
-| `@Many` | N/A | `<collection>` | 映射至複雜型別的集合屬性。屬性：`select`，即可以載入適當型別實例集合的映射陳述式（即 mapper 方法）的完整限定名稱。`fetchType`，覆寫此映射的全域設定參數 `lazyLoadingEnabled`。`resultMap`（自 3.5.5 起可用），即從查詢結果映射至集合物件的結果映射的完整限定名稱。`columnPrefix`（自 3.5.5 起可用），即在巢狀結果映射中用於分組查詢欄位的欄位前置詞。<span class="label important">NOTE</span> 您會注意到註解 API 不支援聯結映射。這是因為 Java 註解不允許循環參照的限制所致。 |
+| `@One` | N/A | `<association>` | 映射至複雜型別的單一屬性值。屬性：`select`，即可以載入適當型別實例的映射陳述式（即 mapper 方法）的完整限定名稱。`fetchType`，覆寫此映射的全域設定參數 `lazyLoadingEnabled`。`resultMap`（自 3.5.5 起可用），即從查詢結果映射至單一容器物件的結果映射的完整限定名稱。`columnPrefix`（自 3.5.5 起可用），即在巢狀結果映射中用於分組查詢欄位的欄位前置詞。 |
+| `@Many` | N/A | `<collection>` | 映射至複雜型別的集合屬性。屬性：`select`，即可以載入適當型別實例集合的映射陳述式（即 mapper 方法）的完整限定名稱。`fetchType`，覆寫此映射的全域設定參數 `lazyLoadingEnabled`。`resultMap`（自 3.5.5 起可用），即從查詢結果映射至集合物件的結果映射的完整限定名稱。`columnPrefix`（自 3.5.5 起可用），即在巢狀結果映射中用於分組查詢欄位的欄位前置詞。 |
 | `@MapKey` | `Method` | | 用於回傳型別為 Map 的方法上。它用於根據結果物件的某個屬性，將結果物件清單轉換為 Map。屬性：`value`，用作 map 鍵的屬性。 |
 | `@Options` | `Method` | 映射陳述式的屬性 | 此註解提供了對通常作為屬性存在於映射陳述式上的廣泛切換開關與設定選項的存取。與其使每個陳述式註解複雜化，`Options` 註解提供了一致且清晰的方式來存取這些選項。屬性：`useCache=true`、`flushCache=FlushCachePolicy.DEFAULT`、`resultSetType=DEFAULT`、`statementType=PREPARED`、`fetchSize=-1`、`timeout=-1`、`useGeneratedKeys=false`、`keyProperty=""`、`keyColumn=""`、`resultSets=""` 與 `databaseId=""`。請務必理解，在 Java 註解中無法將 `null` 指定為值。因此，一旦啟用 `Options` 註解，您的陳述式就會受限於所有的預設值。請留意預設值為何，以避免非預期的行為。`databaseId`（自 3.5.5 起可用），若已設定 `DatabaseIdProvider`，MyBatis 將使用沒有 `databaseId` 屬性或其 `databaseId` 與目前資料庫相符的 `Options`。若同時找到帶有與不帶有 `databaseId` 的設定，後者將被捨棄。<br/><br/>請注意，`keyColumn` 僅在某些特定資料庫（如 Oracle 與 PostgreSQL）中才需要。有關這些屬性中允許值的更多資訊，請參見上方關於 insert 陳述式中 `keyColumn` 與 `keyProperty` 的討論。 |
-| <ul><li>`@Insert`</li><li>`@Update`</li><li>`@Delete`</li><li>`@Select`</li></ul> | `Method` | <ul><li>`<insert>`</li><li>`<update>`</li><li>`<delete>`</li><li>`<select>`</li></ul> | 這些註解中的每一個都代表要執行的實際 SQL。它們各自接受一個字串陣列（或單一字串即可）。如果傳遞的是字串陣列，它們會以單一空格連接在一起進行分隔。這有助於避免在 Java 程式碼中建構 SQL 時出現「遺漏空格」的問題。但是，如果您願意，也可以自行串接為單一字串。屬性：`value`，構成單一 SQL 陳述式的字串陣列。`databaseId`（自 3.5.5 起可用），若已設定 `DatabaseIdProvider`，MyBatis 將使用沒有 `databaseId` 屬性或其 `databaseId` 與目前資料庫相符的陳述式。若同時找到帶有與不帶有 `databaseId` 的陳述式，後者將被捨棄。 |
-| <ul><li>`@InsertProvider`</li><li>`@UpdateProvider`</li><li>`@DeleteProvider`</li><li>`@SelectProvider`</li></ul> | `Method` | <ul><li>`<insert>`</li><li>`<update>`</li><li>`<delete>`</li><li>`<select>`</li></ul> | 允許建立動態 SQL。這些替代的 SQL 註解允許您指定在執行時期回傳要執行之 SQL 的類別與方法名稱（自 3.4.6 起，您可以指定 `CharSequence` 代替 `String` 作為方法回傳型別）。在執行映射陳述式時，MyBatis 將實例化該類別並執行該方法（由提供者指定）。您可以透過 `ProviderContext`（自 MyBatis 3.4.5 或更高版本起可用）將傳遞給 mapper 方法的引數、「Mapper 介面型別」、「Mapper 方法」與「資料庫 ID」作為方法引數傳遞。（在 MyBatis 3.4 或更高版本中，允許傳入多個參數）。屬性：`value`、`type`、`method` 與 `databaseId`。`value` 與 `type` 屬性為類別（`type` 屬性是 `value` 的別名，您必須指定其中之一。但當指定全域設定的 `defaultSqlProviderType` 時，這兩個屬性都可以省略）。`method` 是該類別上的方法名稱（自 3.5.1 起，您可以省略 `method` 屬性，MyBatis 將透過 `ProviderMethodResolver` 介面解析目標方法。若未解析出，MyBatis 將使用名為 `provideSql` 的保留後備方法）。`databaseId`（自 3.5.5 起可用），若已設定 `DatabaseIdProvider`，MyBatis 將使用沒有 `databaseId` 屬性或其 `databaseId` 與目前資料庫相符的提供者方法。若同時找到帶有與不帶有 `databaseId` 的提供者方法，後者將被捨棄。<span class="label important">NOTE</span> 接續本節的是關於該類別的討論，該類別有助於以更簡潔、更易讀的方式建構動態 SQL。 |
-| `@Param` | `Parameter` | N/A | 若您的 mapper 方法接受多個參數，此註解可套用於 mapper 方法參數以指定其各自的名稱。否則，多個參數將根據其位置以 "param" 為前置詞進行命名（不包含任何 `RowBounds` 參數）。例如，`#{param1}`、`#{param2}` 等為預設值。使用 `@Param("person")`，參數將命名為 `#{person}`。 |
-| `@SelectKey` | `Method` | `<selectKey>` | 此註解為以 `@Insert`、`@InsertProvider`、`@Update` 或 `@UpdateProvider` 註解的方法重現了 `<selectKey>` 的功能。對於其他方法它將被忽略。如果您指定了 `@SelectKey` 註解，則 MyBatis 將忽略透過 `@Options` 註解或設定屬性所設定的任何產生鍵屬性。屬性：`statement` 為要執行的 SQL 陳述式字串陣列，`keyProperty` 為將以新值更新的參數物件屬性，`before` 必須為 `true` 或 `false` 以表示 SQL 陳述式應在 insert 之前還是之後執行，`resultType` 為 `keyProperty` 的 Java 型別，`statementType` 為陳述式的型別（`STATEMENT`、`PREPARED` 或 `CALLABLE` 之一，分別映射至 `Statement`、`PreparedStatement` 與 `CallableStatement`，預設值為 `PREPARED`）。`databaseId`（自 3.5.5 起可用），若已設定 `DatabaseIdProvider`，MyBatis 將使用沒有 `databaseId` 屬性或其 `databaseId` 與目前資料庫相符的陳述式。若同時找到帶有與不帶有 `databaseId` 的陳述式，後者將被捨棄。 |
+| <ul><li>`@Insert`</li><li>`@Update`</li><li>`@Delete`</li><li>`@Select`</li></ul> | `Method` | <ul><li>`<insert>`</li><li>`<update>`</li><li>`<delete>`</li><li>`<select>`</li></ul> | 這些註解中的每一個都代表要執行的實際 SQL。它們各自接受一個字串陣列（或單一字串即可）。如果傳遞的是字串陣列，它們會以單一空格連接在一起進行分隔。這有助於避免在 Java 程式碼中建構 SQL 時出現「遺漏空格」的問題。但是，如果您願意，也可以自行串接為單一字串。屬性：`value`，構成單一 SQL 陳述式的字串陣列。`@Select` 另有 `affectData`，用於標記會變更資料的 SELECT 以進行交易控制。`databaseId`（自 3.5.5 起可用），若已設定 `DatabaseIdProvider`，MyBatis 將使用沒有 `databaseId` 屬性或其 `databaseId` 與目前資料庫相符的陳述式。若同時找到帶有與不帶有 `databaseId` 的陳述式，後者將被捨棄。 |
+| <ul><li>`@InsertProvider`</li><li>`@UpdateProvider`</li><li>`@DeleteProvider`</li><li>`@SelectProvider`</li></ul> | `Method` | <ul><li>`<insert>`</li><li>`<update>`</li><li>`<delete>`</li><li>`<select>`</li></ul> | 允許建立動態 SQL。這些替代的 SQL 註解允許您指定在執行時期回傳要執行之 SQL 的類別與方法名稱（自 3.4.6 起，您可以指定 `CharSequence` 代替 `String` 作為方法回傳型別）。在執行映射陳述式時，MyBatis 將實例化該類別並執行該方法（由提供者指定）。您可以透過 `ProviderContext`（自 MyBatis 3.4.5 或更高版本起可用）將傳遞給 mapper 方法的引數、「Mapper 介面型別」、「Mapper 方法」與「資料庫 ID」作為方法引數傳遞。（在 MyBatis 3.4 或更高版本中，允許傳入多個參數）。屬性：`value`、`type`、`method` 與 `databaseId`。`@SelectProvider` 另有 `affectData`，用於標記會變更資料的 SELECT 以進行交易控制。`value` 與 `type` 屬性為類別（`type` 屬性是 `value` 的別名，您必須指定其中之一。但當指定全域設定的 `defaultSqlProviderType` 時，這兩個屬性都可以省略）。`method` 是該類別上的方法名稱（自 3.5.1 起，您可以省略 `method` 屬性，MyBatis 將透過 `ProviderMethodResolver` 介面解析目標方法。若未解析出，MyBatis 將使用名為 `provideSql` 的保留後備方法）。`databaseId`（自 3.5.5 起可用），若已設定 `DatabaseIdProvider`，MyBatis 將使用沒有 `databaseId` 屬性或其 `databaseId` 與目前資料庫相符的提供者方法。若同時找到帶有與不帶有 `databaseId` 的提供者方法，後者將被捨棄。<span class="label important">NOTE</span> 接續本節的是關於該類別的討論，該類別有助於以更簡潔、更易讀的方式建構動態 SQL。 |
+| `@Param` | `Parameter` | N/A | 若您的 mapper 方法接受多個參數，此註解可套用於 mapper 方法參數以指定其各自的名稱。否則，多個參數將根據其位置以 "param" 為前置詞進行命名（不包含任何 `RowBounds` 參數）。例如，`#{param1}`、`#{param2}` 等為預設值。使用 `@Param("person")`，參數將命名為 `#{person}`，即使它是唯一的參數也一樣。 |
+| `@SelectKey` | `Method` | `<selectKey>` | 此註解為以 `@Insert`、`@InsertProvider`、`@Update` 或 `@UpdateProvider` 註解的方法重現了 `<selectKey>` 的功能。對於其他方法它將被忽略。如果您指定了 `@SelectKey` 註解，則 MyBatis 將忽略透過 `@Options` 註解或設定屬性所設定的任何產生鍵屬性。屬性：`statement` 為要執行的 SQL 陳述式字串陣列，`keyProperty` 為將以新值更新的參數物件屬性，`keyColumn` 為提供鍵值的欄位名稱（多個欄位以逗號分隔），`before` 必須為 `true` 或 `false` 以表示 SQL 陳述式應在 insert 或 update 之前還是之後執行，`resultType` 為 `keyProperty` 的 Java 型別，`statementType` 為陳述式的型別（`STATEMENT`、`PREPARED` 或 `CALLABLE` 之一，分別映射至 `Statement`、`PreparedStatement` 與 `CallableStatement`，預設值為 `PREPARED`）。`databaseId`（自 3.5.5 起可用），若已設定 `DatabaseIdProvider`，MyBatis 將使用沒有 `databaseId` 屬性或其 `databaseId` 與目前資料庫相符的陳述式。若同時找到帶有與不帶有 `databaseId` 的陳述式，後者將被捨棄。 |
 | `@ResultMap` | `Method` | N/A | 此註解用於向 `@Select` 或 `@SelectProvider` 註解提供 XML 映射器中 `<resultMap>` 元素的 id，或 `@NamedResultMap` 或 `@Results` 的 id。這允許帶有註解的 select 重複使用在 XML 中定義的 resultMap。如果在帶有註解的 select 上同時指定了此註解與 `@Results` 或 `@ConstructorArgs` 註解，則此註解將覆寫它們。 |
-| `@ResultOrdered` | `Method` | select XML 的 "resultOrdered" 屬性 | 此註解用於表示結果集已知為有序的。當建構在其建構函式中包含集合的物件時需要此註解。 |
+| `@ResultOrdered` | `Method` | select XML 的 "resultOrdered" 屬性 | 此註解用於表示結果集已知為有序的。當建構在其建構函式中包含集合的物件時需要此註解。布林屬性 `value` 的預設值為 `true`。 |
 | `@ResultType` | `Method` | N/A | 此註解在使用結果處理器時使用。在這種情況下，回傳型別為 void，因此 MyBatis 必須有某種方法來決定為每列建構之物件的型別。如果有 XML 結果映射，請使用 @ResultMap 註解。如果在 XML 的 `<select>` 元素上指定了結果型別，則不需要其他註解。在其他情況下，請使用此註解。例如，如果帶有 @Select 註解的方法將使用結果處理器，則回傳型別必須為 void，且需要此註解（或 @ResultMap）。除非方法回傳型別為 void，否則將忽略此註解。 |
 | `@Flush` | `Method` | N/A | 若使用此註解，可以透過在 Mapper 介面定義的方法呼叫 `SqlSession#flushStatements()`。（MyBatis 3.3 或更高版本） |
 

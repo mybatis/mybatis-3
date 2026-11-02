@@ -58,7 +58,6 @@ The select element has more attributes that allow you to configure the details o
   parameterType="int"
   parameterMap="deprecated"
   resultType="hashmap"
-  resultMap="personResultMap"
   flushCache="false"
   useCache="true"
   timeout="10"
@@ -79,7 +78,7 @@ The select element has more attributes that allow you to configure the details o
 | `timeout`       | This sets the number of seconds the driver will wait for the database to return from a request, before throwing an exception. Default is `unset` (driver dependent).                                                                                                                                                                                |
 | `fetchSize`     | This is a driver hint that will attempt to cause the driver to return results in batches of rows numbering in size equal to this setting. Default is `unset` (driver dependent).                                                                                                                                                                    |
 | `statementType` | Any one of `STATEMENT`, `PREPARED` or `CALLABLE`. This causes MyBatis to use `Statement`, `PreparedStatement` or `CallableStatement` respectively. Default: `PREPARED`.                                                                                                                                                                             |
-| `resultSetType` | Any one of `FORWARD_ONLY`&#124;`SCROLL_SENSITIVE`&#124;`SCROLL_INSENSITIVE`&#124;`DEFAULT`(same as unset). Default is `unset` (driver dependent).                                                                                                                                                                                                   |
+| `resultSetType` | Any one of `FORWARD_ONLY`&#124;`SCROLL_SENSITIVE`&#124;`SCROLL_INSENSITIVE`&#124;`DEFAULT`. If omitted, the configured `defaultResultSetType` is used. `DEFAULT` uses the JDBC driver's default.                                                                                                                                                    |
 | `databaseId`    | In case there is a configured databaseIdProvider, MyBatis will load all statements with no `databaseId` attribute or with a `databaseId` that matches the current one. If case the same statement if found with and without the `databaseId` the latter will be discarded.                                                                          |
 | `resultOrdered` | This is only applicable for nested result select statements: If this is true, it is assumed that nested results are contained or grouped together such that when a new main result row is returned, no references to a previous result row will occur anymore. This allows nested results to be filled much more memory friendly. Default: `false`. |
 | `resultSets`    | This is only applicable for multiple result sets. It lists the result sets that will be returned by the statement and gives a name to each one. Names are separated by commas.                                                                                                                                                                      |
@@ -208,7 +207,7 @@ The selectKey element is described as follows:
 |-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `keyProperty`   | The target property where the result of the `selectKey` statement should be set. Can be a comma separated list of property names if multiple generated columns are expected.                                                                                                                                                                                   |
 | `keyColumn`     | The column name(s) in the returned result set that match the properties. Can be a comma separated list of column names if multiple generated columns are expected.                                                                                                                                                                                             |
-| `resultType`    | The type of the result. MyBatis can usually figure this out, but it doesn't hurt to add it to be sure. MyBatis allows any simple type to be used as the key, including Strings. If you are expecting multiple generated columns, then you can use an Object that contains the expected properties, or a Map.                                                   |
+| `resultType`    | The type of the result. Specify this type because MyBatis does not infer it for `selectKey`. MyBatis allows any simple type to be used as the key, including Strings. If you are expecting multiple generated columns, then you can use an Object that contains the expected properties, or a Map.                                                     |
 | `order`         | This can be set to `BEFORE` or `AFTER`. If set to `BEFORE`, then it will select the key first, set the `keyProperty` and then execute the insert statement. If set to `AFTER`, it runs the insert statement and then the `selectKey` statement – which is common with databases like Oracle that may have embedded sequence calls inside of insert statements. |
 | `statementType` | Same as above, MyBatis supports `STATEMENT`, `PREPARED` and `CALLABLE` statement types that map to `Statement`, `PreparedStatement` and `CallableStatement` respectively.                                                                                                                                                                                      |
 [selectKey Attributes]
@@ -272,7 +271,7 @@ Property value can be also used in include refid attribute or property values in
 In all of the past statements, you've seen examples of simple parameters. Parameters are very powerful elements in MyBatis. For simple situations, probably 90% of the cases, there's not much to them, for example:
 
 ```xml
-<select id="selectUsers" resultType="User">
+<select id="selectUsers" parameterType="int" resultType="User">
   select id, username, password
   from users
   where id = #{id}
@@ -365,7 +364,7 @@ you can just write:
 
 ```java
 @Select("select * from user where ${column} = #{value}")
-User findByColumn(@Param("column") String column, @Param("value") String value);
+User findByColumn(@Param("column") String column, @Param("value") Object value);
 ```
 
 in which the `${column}` will be substituted directly and the `#{value}` will be "prepared". Thus you can just do the same work by:
@@ -469,7 +468,7 @@ The great thing about `ResultMap`s is that you've already learned a lot about th
 <resultMap id="userResultMap" type="User">
   <id property="id" column="user_id" />
   <result property="username" column="user_name"/>
-  <result property="password" column="hashed_password"/>
+  <result property="hashedPassword" column="hashed_password"/>
 </resultMap>
 ```
 
@@ -622,6 +621,8 @@ For future reference, MyBatis supports the following JDBC Types via the included
 | `SMALLINT` | `DOUBLE`  | `LONGVARCHAR` | `VARBINARY`     | `CLOB`    | `NCHAR`     |
 | `INTEGER`  | `NUMERIC` | `DATE`        | `LONGVARBINARY` | `BOOLEAN` | `NCLOB`     |
 | `BIGINT`   | `DECIMAL` | `TIME`        | `NULL`          | `CURSOR`  | `ARRAY`     |
+| `STRUCT`   | `JAVA_OBJECT` | `DISTINCT` | `REF` | `DATALINK` | `ROWID` |
+| `LONGNVARCHAR` | `SQLXML` | `DATETIMEOFFSET` | `TIME_WITH_TIMEZONE` | `TIMESTAMP_WITH_TIMEZONE` | |
 
 
 #### constructor
@@ -731,7 +732,7 @@ MyBatis needs to be explicitly told that the results have been ordered in such a
       r.role as role_role
     from user u
       left join user_role ur on u.id = ur.user_id
-      inner join role r on r.id = ur.role_id
+      left join role r on r.id = ur.role_id
     order by u.id, r.id
 </select>
 ```
@@ -955,7 +956,7 @@ Here is the statement and result map.
 </resultMap>
 
 <select id="selectBlog" resultMap="blogResult">
-  select b.id, b.name, cursor(
+  select b.id, b.title, cursor(
     select a.id, a.username from author a where b.author_id = a.id
   ) author from blog b
 </select>
@@ -1135,7 +1136,7 @@ Just like `<association>`, you just need to specify `jdbcType="CURSOR"` in the `
 </resultMap>
 
 <select id="selectBlog" resultMap="blogResult">
-  select b.id, b.name, cursor(
+  select b.id, b.title, cursor(
     select p.id, p.subject, p.body from post p where p.blog_id = b.id
   ) posts from blog b
 </select>
@@ -1235,17 +1236,17 @@ Once again though, some may find this external definition of maps somewhat tedio
   <result property="model" column="model"/>
   <result property="color" column="color"/>
   <discriminator javaType="int" column="vehicle_type">
-    <case value="1" resultType="carResult">
+    <case value="1" resultType="Car">
       <result property="doorCount" column="door_count" />
     </case>
-    <case value="2" resultType="truckResult">
+    <case value="2" resultType="Truck">
       <result property="boxSize" column="box_size" />
       <result property="extendedCab" column="extended_cab" />
     </case>
-    <case value="3" resultType="vanResult">
+    <case value="3" resultType="Van">
       <result property="powerSlidingDoor" column="power_sliding_door" />
     </case>
-    <case value="4" resultType="suvResult">
+    <case value="4" resultType="SUV">
       <result property="allWheelDrive" column="all_wheel_drive" />
     </case>
   </discriminator>
@@ -1277,7 +1278,7 @@ Auto-mapping works even when there is an specific result map. When this happens,
 
 ```xml
 <resultMap id="userResultMap" type="User">
-  <result property="password" column="hashed_password"/>
+  <result property="hashedPassword" column="hashed_password"/>
 </resultMap>
 ```
 
@@ -1316,7 +1317,7 @@ Regardless of the auto-mapping level configured you can enable or disable the au
 
 ```xml
 <resultMap id="userResultMap" type="User" autoMapping="false">
-  <result property="password" column="hashed_password"/>
+  <result property="hashedPassword" column="hashed_password"/>
 </resultMap>
 ```
 

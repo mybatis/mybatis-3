@@ -37,6 +37,7 @@ El fichero de configuración XML contiene la configuración del _core_ de MyBati
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+  <properties resource="org/mybatis/example/db.properties"/>
   <environments default="development">
     <environment id="development">
       <transactionManager type="JDBC"/>
@@ -53,6 +54,8 @@ El fichero de configuración XML contiene la configuración del _core_ de MyBati
   </mappers>
 </configuration>
 ```
+
+Coloca `org/mybatis/example/db.properties` en el classpath y define allí `driver`, `url`, `username` y `password` para tu base de datos.
 
 Aunque hay mucha más información sobre el fichero de configuración XML, el ejemplo anterior contiene las partes más importantes. Observa que hay una cabecera XML, requerida para validar el fichero XML. El cuerpo del elemento environment contiene la configuración de la gestión de transacciones correspondiente al entorno. El elemento mappers contiene la lista de mappers – Los ficheros XML que contienen las sentencias SQL y las definiciones de mapeo.
 
@@ -106,7 +109,7 @@ En cualquiera de los ejemplos a continuación podrían haberse usado indistintam
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.mybatis.example.BlogMapper">
-  <select id="selectBlog" resultType="Blog">
+  <select id="selectBlog" resultType="org.mybatis.example.Blog">
     select * from Blog where id = #{id}
   </select>
 </mapper>

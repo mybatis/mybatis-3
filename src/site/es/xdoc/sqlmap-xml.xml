@@ -109,7 +109,6 @@ ps.setInt(1,id);]]></source>
   parameterType="int"
   parameterMap="deprecated"
   resultType="hashmap"
-  resultMap="personResultMap"
   flushCache="false"
   useCache="true"
   timeout="10"
@@ -182,7 +181,7 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td><code>resultSetType</code></td>
-              <td>Puede valer FORWARD_ONLY|SCROLL_SENSITIVE|SCROLL_INSENSITIVE|DEFAULT(same as unset).  Por defecto: no informado (depende del driver de base de datos).
+              <td>Puede valer FORWARD_ONLY|SCROLL_SENSITIVE|SCROLL_INSENSITIVE|DEFAULT. Si no se indica, se utiliza el valor configurado de <code>defaultResultSetType</code>; DEFAULT utiliza el valor predeterminado del controlador JDBC.
               </td>
             </tr>
             <tr>
@@ -401,7 +400,7 @@ Por ejemplo, si la columna id de la tabla Author del ejemplo siguiente fuera aut
             </tr>
             <tr>
               <td><code>resultType</code></td>
-              <td>El tipo de retorno. MyBatis puede adivinarlo pero no está de más añadirlo para asegurarse. MyBatis permite usar cualquier tipo simple, incluyendo Strings.
+              <td>El tipo de retorno. Es necesario especificarlo porque MyBatis no infiere el tipo de resultado de <code>selectKey</code>. MyBatis permite usar cualquier tipo simple, incluyendo Strings.
               </td>
             </tr>
             <tr>
@@ -475,7 +474,7 @@ Por ejemplo, si la columna id de la tabla Author del ejemplo siguiente fuera aut
         <p>En todos los statements anteriores se han mostrado ejemplos de parámetros simples. Los parámetros son elementos muy potentes en MyBatis. En los casos simples, probablemente el 90% de los casos, no hay mucho que decir sobre ellos, por ejemplo:
         </p>
 
-        <source><![CDATA[<select id="selectUsers" resultType="User">
+        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="User">
   select id, username, password
   from users
   where id = #{id}
@@ -568,7 +567,7 @@ User findByEmail(@Param("email") String email);
           you can just write:
           <source><![CDATA[
 @Select("select * from user where ${column} = #{value}")
-User findByColumn(@Param("column") String column, @Param("value") String value);
+User findByColumn(@Param("column") String column, @Param("value") Object value);
 ]]></source>
           in which the <code>${column}</code> will be substituted directly and the <code>#{value}</code> will be "prepared".
           Thus you can just do the same work by:
@@ -678,7 +677,7 @@ public class User {
         <source><![CDATA[<resultMap id="userResultMap" type="User">
   <id property="id" column="user_id" />
   <result property="username" column="user_name"/>
-  <result property="password" column="hashed_password"/>
+  <result property="hashedPassword" column="hashed_password"/>
 </resultMap>]]></source>
 
         <p>
@@ -945,6 +944,22 @@ public class User {
             <td><code>CURSOR</code></td>
             <td><code>ARRAY</code></td>
           </tr>
+          <tr>
+            <td><code>STRUCT</code></td>
+            <td><code>JAVA_OBJECT</code></td>
+            <td><code>DISTINCT</code></td>
+            <td><code>REF</code></td>
+            <td><code>DATALINK</code></td>
+            <td><code>ROWID</code></td>
+          </tr>
+          <tr>
+            <td><code>LONGNVARCHAR</code></td>
+            <td><code>SQLXML</code></td>
+            <td><code>DATETIMEOFFSET</code></td>
+            <td><code>TIME_WITH_TIMEZONE</code></td>
+            <td><code>TIMESTAMP_WITH_TIMEZONE</code></td>
+            <td></td>
+          </tr>
         </table>
 
         <h4>constructor</h4>
@@ -1090,7 +1105,7 @@ public class UserRole {
       r.role as role_role
     from user u
       left join user_role ur on u.id = ur.user_id
-      inner join role r on r.id = ur.role_id
+      left join role r on r.id = ur.role_id
     order by u.id, r.id
 </select>
 ]]></source>
@@ -1444,7 +1459,7 @@ Here is the statement and result map.</p>
 </resultMap>
 
 <select id="selectBlog" resultMap="blogResult">
-  select b.id, b.name, cursor(
+  select b.id, b.title, cursor(
     select a.id, a.username from author a where b.author_id = a.id
   ) author from blog b
 </select>]]></source>
@@ -1643,7 +1658,7 @@ Just like <code>&lt;association&gt;</code>, you just need to specify <code>jdbcT
 </resultMap>
 
 <select id="selectBlog" resultMap="blogResult">
-  select b.id, b.name, cursor(
+  select b.id, b.title, cursor(
     select p.id, p.subject, p.body from post p where p.blog_id = b.id
   ) posts from blog b
 </select>]]></source>
@@ -1742,17 +1757,17 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
   <result property="model" column="model"/>
   <result property="color" column="color"/>
   <discriminator javaType="int" column="vehicle_type">
-    <case value="1" resultType="carResult">
+    <case value="1" resultType="Car">
       <result property="doorCount" column="door_count" />
     </case>
-    <case value="2" resultType="truckResult">
+    <case value="2" resultType="Truck">
       <result property="boxSize" column="box_size" />
       <result property="extendedCab" column="extended_cab" />
     </case>
-    <case value="3" resultType="vanResult">
+    <case value="3" resultType="Van">
       <result property="powerSlidingDoor" column="power_sliding_door" />
     </case>
-    <case value="4" resultType="suvResult">
+    <case value="4" resultType="SUV">
       <result property="allWheelDrive" column="all_wheel_drive" />
     </case>
   </discriminator>
@@ -1798,7 +1813,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 </select>]]></source>
 
         <source><![CDATA[<resultMap id="userResultMap" type="User">
-  <result property="password" column="hashed_password"/>
+  <result property="hashedPassword" column="hashed_password"/>
 </resultMap>]]></source>
 
         <p>
@@ -1852,7 +1867,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         </p>
 
         <source><![CDATA[<resultMap id="userResultMap" type="User" autoMapping="false">
-  <result property="password" column="hashed_password"/>
+  <result property="hashedPassword" column="hashed_password"/>
 </resultMap>]]></source>
 
 

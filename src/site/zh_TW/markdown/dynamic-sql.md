@@ -132,7 +132,7 @@ MyBatis 提供了一個簡單的解決方案，在 90% 的情況下都能正常�
 
 *where* 元素知道只有在內含標籤回傳任何內容時，才插入 "WHERE"。此外，如果該內容以 "AND" 或 "OR" 開頭，它知道將其去除。
 
-如果 *where* 元素的行為不完全符合您的預期，您可以透過定義自己的 trim 元素來自訂它。例如，與 *where* 元素等效的 trim 設定為：
+如果 *where* 元素的行為不完全符合您的預期，您可以透過定義自己的 trim 元素來自訂它。例如，以下 trim 設定可處理以 `AND ` 或 `OR ` 開頭的常見情況；*where* 元素還會移除後面接定位字元或換行符號的這些前綴：
 
 ```xml
 <trim prefix="WHERE" prefixOverrides="AND |OR ">
@@ -257,12 +257,12 @@ public interface LanguageDriver {
 擁有了自訂語言驅動程式之後，您可以透過在 mybatis-config.xml 檔案中進行設定將其設為預設：
 
 ```xml
-<typeAliases>
-  <typeAlias type="org.sample.MyLanguageDriver" alias="myLanguage"/>
-</typeAliases>
 <settings>
   <setting name="defaultScriptingLanguage" value="myLanguage"/>
 </settings>
+<typeAliases>
+  <typeAlias type="org.sample.MyLanguageDriver" alias="myLanguage"/>
+</typeAliases>
 ```
 
 除了變更預設值之外，您還可以透過新增 `lang` 屬性為特定陳述式指定語言，如下所示：

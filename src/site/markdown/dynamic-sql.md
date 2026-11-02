@@ -132,7 +132,7 @@ MyBatis has a simple answer that will likely work in 90% of the cases. And in ca
 
 The *where* element knows to only insert "WHERE" if there is any content returned by the containing tags. Furthermore, if that content begins with "AND" or "OR", it knows to strip it off.
 
-If the *where* element does not behave exactly as you like, you can customize it by defining your own trim element. For example, the trim equivalent to the *where* element is:
+If the *where* element does not behave exactly as you like, you can customize it by defining your own trim element. For example, this trim handles the common case of conditions beginning with `AND ` or `OR `; the *where* element also removes these prefixes when followed by a tab or line break:
 
 ```xml
 <trim prefix="WHERE" prefixOverrides="AND |OR ">
@@ -257,12 +257,12 @@ public interface LanguageDriver {
 Once you have your custom language driver you can set it to be the default by configuring it in the mybatis-config.xml file:
 
 ```xml
-<typeAliases>
-  <typeAlias type="org.sample.MyLanguageDriver" alias="myLanguage"/>
-</typeAliases>
 <settings>
   <setting name="defaultScriptingLanguage" value="myLanguage"/>
 </settings>
+<typeAliases>
+  <typeAlias type="org.sample.MyLanguageDriver" alias="myLanguage"/>
+</typeAliases>
 ```
 
 Instead of changing the default, you can specify the language for an specific statement by adding the `lang` attribute as follows:

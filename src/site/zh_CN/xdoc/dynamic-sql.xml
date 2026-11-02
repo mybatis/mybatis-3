@@ -122,7 +122,7 @@ AND title like 'someTitle']]></source>
   </where>
 </select>]]></source>
         <p><em>where</em> 元素只会在子元素返回任何内容的情况下才插入 “WHERE” 子句。而且，若子句的开头为 “AND” 或 “OR”，<em>where</em> 元素也会将它们去除。</p>
-        <p>如果 <em>where</em> 元素与你期望的不太一样，你也可以通过自定义 trim 元素来定制 <em>where</em> 元素的功能。比如，和 <em>where</em> 元素等价的自定义 trim 元素为：</p>
+        <p>如果 <em>where</em> 元素与你期望的不太一样，你也可以通过自定义 trim 元素来定制 <em>where</em> 元素的功能。比如，下面的 trim 可处理以 “AND ” 或 “OR ” 开头的常见情况；<em>where</em> 元素还会移除后面跟着制表符或换行符的这些前缀：</p>
         <source><![CDATA[<trim prefix="WHERE" prefixOverrides="AND |OR ">
   ...
 </trim>]]></source>
@@ -209,12 +209,12 @@ AND title like 'someTitle']]></source>
   SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType);
 }]]></source>
         <p>实现自定义语言驱动后，你就可以在 mybatis-config.xml 文件中将它设置为默认语言：</p>
-        <source><![CDATA[<typeAliases>
-  <typeAlias type="org.sample.MyLanguageDriver" alias="myLanguage"/>
-</typeAliases>
-<settings>
+        <source><![CDATA[<settings>
   <setting name="defaultScriptingLanguage" value="myLanguage"/>
 </settings>
+<typeAliases>
+  <typeAlias type="org.sample.MyLanguageDriver" alias="myLanguage"/>
+</typeAliases>
 ]]></source>
 <p>或者，你也可以使用 <code>lang</code> 属性为特定的语句指定语言：
         </p>

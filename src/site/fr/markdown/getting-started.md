@@ -3,7 +3,7 @@ author: Clinton Begin, Dridi Boukelmoune
 
 # Premiers pas
 
-Chaque application MyBatis tourne autour d'une instance de SqlSessionFactory. Une instance de SqlSessionFactory peut être obtenue à l'aide du SqlSessionFactoryBuilder. SqlSessionFactoryBuilder peut créer une instance de SqlSessionFactoryBuilder à partir d'un fichier XML de configuration, où à partir d'une instance personnalisée de la classe Configuration.
+Chaque application MyBatis tourne autour d'une instance de SqlSessionFactory. Une instance de SqlSessionFactory peut être obtenue à l'aide du SqlSessionFactoryBuilder. SqlSessionFactoryBuilder peut créer une instance de SqlSessionFactory à partir d'un fichier XML de configuration, ou à partir d'une instance personnalisée de la classe Configuration.
 
 ## Créer une SqlSessionFactory à partir d'un fichier XML
 
@@ -23,6 +23,7 @@ Le fichier de configuration XML contient les réglages pour le noyeau de MyBatis
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+  <properties resource="org/mybatis/example/db.properties"/>
   <environments default="development">
     <environment id="development">
       <transactionManager type="JDBC"/>
@@ -39,6 +40,8 @@ Le fichier de configuration XML contient les réglages pour le noyeau de MyBatis
   </mappers>
 </configuration>
 ```
+
+Placez `org/mybatis/example/db.properties` dans le classpath et définissez-y `driver`, `url`, `username` et `password` pour votre base de données.
 
 Le fichier de configuration XML est loin de se limiter à cela, mais l'exemple ci-dessus présente les points les plus critiques. Attention à l'entête XML, nécessaire à la validation du document XML. L'élément environment contient la configuration du gestionnaire de transactions et du pool de connexions. L'élément mappers contient une liste de mappers, des fichiers XML qui contiennent les requêtes SQL et le mapping objet-relationnel.
 
@@ -92,7 +95,7 @@ Dans chacun des exemples ci-dessus, les requêtes auraient pu être définies au
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.mybatis.example.BlogMapper">
-  <select id="selectBlog" resultType="Blog">
+  <select id="selectBlog" resultType="org.mybatis.example.Blog">
     select * from Blog where id = #{id}
   </select>
 </mapper>

@@ -664,8 +664,8 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
   <setting name="callSettersOnNulls" value="false"/>
   <setting name="returnInstanceForEmptyRow" value="false"/>
   <setting name="logPrefix" value="exampleLogPreFix_"/>
-  <setting name="logImpl" value="SLF4J | LOG4J | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING"/>
-  <setting name="proxyFactory" value="CGLIB | JAVASSIST"/>
+  <setting name="logImpl" value="JDK_LOGGING"/>
+  <setting name="proxyFactory" value="JAVASSIST"/>
   <setting name="vfsImpl" value="org.mybatis.example.YourselfVfsImpl"/>
   <setting name="useActualParamName" value="true"/>
   <setting name="configurationFactory" value="org.mybatis.example.ConfigurationFactory"/>
@@ -1053,7 +1053,7 @@ public class Author {
                 <code>java.lang.Byte</code>, <code>byte</code>
               </td>
               <td>
-                数据库兼容的 <code>NUMERIC</code> 或 <code>BYTE</code>
+                数据库兼容的 <code>NUMERIC</code> 或 <code>TINYINT</code>
               </td>
             </tr>
             <tr>
@@ -1130,7 +1130,7 @@ public class Author {
                 <code>java.lang.String</code>
               </td>
               <td>
-                <code>CHAR</code>, <code>VARCHAR</code>
+                <code>CHAR</code>, <code>VARCHAR</code>, <code>LONGVARCHAR</code>
               </td>
             </tr>
             <tr>
@@ -1152,7 +1152,7 @@ public class Author {
                 <code>java.lang.String</code>
               </td>
               <td>
-                <code>CLOB</code>, <code>LONGVARCHAR</code>
+                <code>CLOB</code>
               </td>
             </tr>
             <tr>
@@ -1163,7 +1163,7 @@ public class Author {
                 <code>java.lang.String</code>
               </td>
               <td>
-                <code>NVARCHAR</code>, <code>NCHAR</code>
+                <code>NVARCHAR</code>, <code>NCHAR</code>, <code>LONGNVARCHAR</code>
               </td>
             </tr>
             <tr>
@@ -1485,8 +1485,9 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
         <p>
           使用上述的类型处理器将会覆盖已有的处理 Java String 类型的属性以及
           VARCHAR 类型的参数和结果的类型处理器。
-          要注意 MyBatis 不会通过检测数据库元信息来决定使用哪种类型，所以你必须在参数和结果映射中指明字段是 VARCHAR 类型，
-          以使其能够绑定到正确的类型处理器上。这是因为 MyBatis 直到语句被执行时才清楚数据类型。
+          当 <code>ignoreParameterMetaData</code> 为 <code>false</code>（默认值）时，如果参数映射没有指定 JDBC 类型，
+          MyBatis 可以根据 JDBC 参数元数据中的类型选择类型处理器。如果驱动程序未提供此元数据，请在参数映射中指定
+          <code>jdbcType="VARCHAR"</code>。选择结果映射的类型处理器时，JDBC 类型仍是未知的，因此必要时也应显式指定，详见下文。
         </p>
         <p>
           通过类型处理器的泛型，MyBatis 可以得知该类型处理器处理的 Java 类型，不过这种行为可以通过两种方法改变：
@@ -1664,14 +1665,14 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
       </subsection>
       <subsection name="插件（plugins）" id="plugins">
         <p>
-          MyBatis 允许你在映射语句执行过程中的某一点进行拦截调用。默认情况下，MyBatis 允许使用插件来拦截的方法调用包括：
+          MyBatis 允许你在映射语句执行过程中的某一点进行拦截调用。插件可以拦截以下接口中声明的方法：
         </p>
         <ul>
           <li>
             Executor
-            (update, query, flushStatements, commit, rollback,
-            getTransaction, close,
-            isClosed)
+            (update, query, queryCursor, flushStatements, commit, rollback,
+            createCacheKey, isCached, clearLocalCache, deferLoad,
+            getTransaction, close, isClosed, setExecutorWrapper)
           </li>
           <li>
             ParameterHandler
@@ -1679,11 +1680,12 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
           </li>
           <li>
             ResultSetHandler
-            (handleResultSets, handleOutputParameters)
+            (handleResultSets, handleCursorResultSets, handleOutputParameters)
           </li>
           <li>
             StatementHandler
-            (prepare, parameterize, batch, update, query)
+            (prepare, parameterize, batch, update, query, queryCursor,
+            getBoundSql, getParameterHandler)
           </li>
         </ul>
         <p>这些类中方法的细节可以通过查看每个方法的签名来发现，或者直接查看 MyBatis 发行包中的源代码。
@@ -1862,6 +1864,8 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, propert
           <li><code>username</code> – 登录数据库的用户名。
           </li>
           <li><code>password</code> – 登录数据库的密码。
+          </li>
+          <li><code>autoCommit</code> – 设置新连接的自动提交模式。未设置时保留驱动程序的默认值。
           </li>
           <li><code>defaultTransactionIsolationLevel</code> – 默认的连接事务隔离级别。
           </li>

@@ -646,8 +646,8 @@ A continuación se muestra un ejemplo del elemento settings al completo:
   <setting name="callSettersOnNulls" value="false"/>
   <setting name="returnInstanceForEmptyRow" value="false"/>
   <setting name="logPrefix" value="exampleLogPreFix_"/>
-  <setting name="logImpl" value="SLF4J | LOG4J | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING"/>
-  <setting name="proxyFactory" value="CGLIB | JAVASSIST"/>
+  <setting name="logImpl" value="JDK_LOGGING"/>
+  <setting name="proxyFactory" value="JAVASSIST"/>
   <setting name="vfsImpl" value="org.mybatis.example.YourselfVfsImpl"/>
   <setting name="useActualParamName" value="true"/>
   <setting name="configurationFactory" value="org.mybatis.example.ConfigurationFactory"/>
@@ -1041,7 +1041,7 @@ public class Author {
                 <code>java.lang.Byte</code>, <code>byte</code>
               </td>
               <td>
-                Cualquiera compatible con <code>NUMERIC</code> o <code>BYTE</code>
+                Cualquiera compatible con <code>NUMERIC</code> o <code>TINYINT</code>
               </td>
             </tr>
             <tr>
@@ -1118,7 +1118,7 @@ public class Author {
                 <code>java.lang.String</code>
               </td>
               <td>
-                <code>CHAR</code>, <code>VARCHAR</code>
+                <code>CHAR</code>, <code>VARCHAR</code>, <code>LONGVARCHAR</code>
               </td>
             </tr>
             <tr>
@@ -1140,7 +1140,7 @@ public class Author {
                 <code>java.lang.String</code>
               </td>
               <td>
-                <code>CLOB</code>, <code>LONGVARCHAR</code>
+                <code>CLOB</code>
               </td>
             </tr>
             <tr>
@@ -1151,7 +1151,7 @@ public class Author {
                 <code>java.lang.String</code>
               </td>
               <td>
-                <code>NVARCHAR</code>, <code>NCHAR</code>
+                <code>NVARCHAR</code>, <code>NCHAR</code>, <code>LONGNVARCHAR</code>
               </td>
             </tr>
             <tr>
@@ -1470,7 +1470,7 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
 </typeHandlers>
 ]]></source>
 
-        <p>Al usar este TypeHandler se sobrescribe el TypeHandler existente para los tipos String y los parámetros y resultados VARCHAR. Observa que MyBatis no introspecciona la base de datos para conocer el tipo así que debes especificar que se trata de un VARCHAR en los mapeos de parámetros y resultados para que se use el TypeHandler adecuado. Esto se debe a que MyBatis no conoce nada sobre los tipos de datos hasta que la sentencia ha sido ejecutada.</p>
+        <p>Al usar este TypeHandler se sobrescribe el TypeHandler existente para los tipos String y los parámetros y resultados VARCHAR. Cuando <code>ignoreParameterMetaData</code> es <code>false</code> (el valor por defecto), MyBatis puede consultar los metadatos de parámetros JDBC para elegir un TypeHandler según el tipo JDBC si no se especifica en el mapeo del parámetro. Si el driver no proporciona esos metadatos, especifica <code>jdbcType="VARCHAR"</code> en el mapeo del parámetro. En los mapeos de resultados, el tipo JDBC se desconoce al elegir el TypeHandler, así que debes indicarlo explícitamente cuando sea necesario, como se explica más adelante.</p>
         <p>
           MyBatis conoce el tipo Java que quieres gestionar introspecionando tipo genérico del TypeHandler, pero puedes modificar este comportamiento de dos maneras.
         </p>
@@ -1658,14 +1658,14 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
 
       </subsection>
       <subsection name="plugins">
-        <p>MyBatis permite interceptar las llamadas en ciertos puntos de la ejecución de un mapped statement. Por defecto, MyBatis permite incluir plugins que intercepten las llamadas de:
+        <p>MyBatis permite interceptar las llamadas en ciertos puntos de la ejecución de un mapped statement. Los plugins pueden interceptar los métodos declarados en estas interfaces:
         </p>
         <ul>
           <li>
             Executor
-            (update, query, flushStatements, commit, rollback,
-            getTransaction, close,
-            isClosed)
+            (update, query, queryCursor, flushStatements, commit, rollback,
+            createCacheKey, isCached, clearLocalCache, deferLoad,
+            getTransaction, close, isClosed, setExecutorWrapper)
           </li>
           <li>
             ParameterHandler
@@ -1673,11 +1673,12 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
           </li>
           <li>
             ResultSetHandler
-            (handleResultSets, handleOutputParameters)
+            (handleResultSets, handleCursorResultSets, handleOutputParameters)
           </li>
           <li>
             StatementHandler
-            (prepare, parameterize, batch, update, query)
+            (prepare, parameterize, batch, update, query, queryCursor,
+            getBoundSql, getParameterHandler)
           </li>
         </ul>
         <p>Los detalles de estos métodos se pueden conocer observando sus firmas y el código fuente de los mismos que está disponible en el sitio de MyBatis. Es recomendable que comprendas el funcionamiento del método que estas sobrescribiendo siempre que vayas a hacer algo más complejo que monitorizar llamadas. Ten en cuenta que si modificas el comportamiento de alguno de estos métodos existe la posibilidad de que rompas el funcionamiento de MyBatis. Estas clases son de bajo nivel y por tanto debes usar los plugins con cuidado.
@@ -1831,6 +1832,8 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
           <li><code>username</code> – El usuario de conexión.
           </li>
           <li><code>password</code> – La password de conexión.
+          </li>
+          <li><code>autoCommit</code> – Configura el modo de confirmación automática de las nuevas conexiones. Si se omite, se usa el valor por defecto del driver.
           </li>
           <li><code>defaultTransactionIsolationLevel</code> – El nivel de aislamiento por defecto con el que se crearán las conexiones.
           </li>

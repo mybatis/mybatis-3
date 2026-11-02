@@ -96,7 +96,6 @@ ps.setInt(1,id);]]></source>
   parameterType="int"
   parameterMap="deprecated"
   resultType="hashmap"
-  resultMap="personResultMap"
   flushCache="false"
   useCache="true"
   timeout="10"
@@ -170,8 +169,8 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td><code>resultSetType</code></td>
-              <td>FORWARD_ONLY|SCROLL_SENSITIVE|SCROLL_INSENSITIVE|DEFAULT(same as unset)중 하나를 선택할 수 있다.
-        디폴트는 셋팅하지 않는 것이고 드라이버에 따라 다소 지원되지 않을 수 있다.</td>
+              <td>FORWARD_ONLY|SCROLL_SENSITIVE|SCROLL_INSENSITIVE|DEFAULT 중 하나를 선택할 수 있다.
+        생략하면 설정된 <code>defaultResultSetType</code>을 사용하고, DEFAULT를 지정하면 JDBC 드라이버의 기본값을 사용한다.</td>
             </tr>
             <tr>
               <td><code>databaseId</code></td>
@@ -386,7 +385,7 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td><code>resultType</code></td>
               <td>결과의 타입.
-        마이바티스는 대개 이 타입을 알아낼 수 있지만 확실히 하기 위해 명시해도 문제가 되지는 않는다.
+        마이바티스는 <code>selectKey</code>의 결과 타입을 추론하지 않으므로 명시해야 한다.
         마이바티스는 String을 포함하여 키로 사용될 수 있는 간단한 타입을 허용한다.</td>
             </tr>
             <tr>
@@ -460,7 +459,7 @@ ps.setInt(1,id);]]></source>
     Parameters는 마이바티스에서 매우 중요한 엘리먼트이다.
     대략 90%정도 간단한 경우 이러한 형태로 설정할 것이다.</p>
 
-        <source><![CDATA[<select id="selectUsers" resultType="User">
+        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="User">
   select id, username, password
   from users
   where id = #{id}
@@ -552,7 +551,7 @@ User findByEmail(@Param("email") String email);
           다음과 같이 작성할 수 있다:
           <source><![CDATA[
 @Select("select * from user where ${column} = #{value}")
-User findByColumn(@Param("column") String column, @Param("value") String value);
+User findByColumn(@Param("column") String column, @Param("value") Object value);
 ]]></source>
           여기서 <code>${column}</code>은 지정한 문자열로 직접 대체되고, <code>#{value}</code>는 "prepared" 될 것이므로
           아래와 같이 사용할 수 있다:
@@ -665,7 +664,7 @@ public class User {
         <source><![CDATA[<resultMap id="userResultMap" type="User">
   <id property="id" column="user_id" />
   <result property="username" column="user_name"/>
-  <result property="password" column="hashed_password"/>
+  <result property="hashedPassword" column="hashed_password"/>
 </resultMap>]]></source>
 
         <p>구문에서는 resultMap속성에 이를 지정하여 참조한다.
@@ -941,6 +940,22 @@ public class User {
             <td><code>CURSOR</code></td>
             <td><code>ARRAY</code></td>
           </tr>
+          <tr>
+            <td><code>STRUCT</code></td>
+            <td><code>JAVA_OBJECT</code></td>
+            <td><code>DISTINCT</code></td>
+            <td><code>REF</code></td>
+            <td><code>DATALINK</code></td>
+            <td><code>ROWID</code></td>
+          </tr>
+          <tr>
+            <td><code>LONGNVARCHAR</code></td>
+            <td><code>SQLXML</code></td>
+            <td><code>DATETIMEOFFSET</code></td>
+            <td><code>TIME_WITH_TIMEZONE</code></td>
+            <td><code>TIMESTAMP_WITH_TIMEZONE</code></td>
+            <td></td>
+          </tr>
         </table>
 
         <h4>constructor</h4>
@@ -1099,7 +1114,7 @@ public class UserRole {
       r.role as role_role
     from user u
       left join user_role ur on u.id = ur.user_id
-      inner join role r on r.id = ur.role_id
+      left join role r on r.id = ur.role_id
     order by u.id, r.id
 </select>
 ]]></source>
@@ -1471,7 +1486,7 @@ Here is the statement and result map.</p>
 </resultMap>
 
 <select id="selectBlog" resultMap="blogResult">
-  select b.id, b.name, cursor(
+  select b.id, b.title, cursor(
     select a.id, a.username from author a where b.author_id = a.id
   ) author from blog b
 </select>]]></source>
@@ -1675,7 +1690,7 @@ Just like <code>&lt;association&gt;</code>, you just need to specify <code>jdbcT
 </resultMap>
 
 <select id="selectBlog" resultMap="blogResult">
-  select b.id, b.name, cursor(
+  select b.id, b.title, cursor(
     select p.id, p.subject, p.body from post p where p.blog_id = b.id
   ) posts from blog b
 </select>]]></source>
@@ -1786,17 +1801,17 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
   <result property="model" column="model"/>
   <result property="color" column="color"/>
   <discriminator javaType="int" column="vehicle_type">
-    <case value="1" resultType="carResult">
+    <case value="1" resultType="Car">
       <result property="doorCount" column="door_count" />
     </case>
-    <case value="2" resultType="truckResult">
+    <case value="2" resultType="Truck">
       <result property="boxSize" column="box_size" />
       <result property="extendedCab" column="extended_cab" />
     </case>
-    <case value="3" resultType="vanResult">
+    <case value="3" resultType="Van">
       <result property="powerSlidingDoor" column="power_sliding_door" />
     </case>
-    <case value="4" resultType="suvResult">
+    <case value="4" resultType="SUV">
       <result property="allWheelDrive" column="all_wheel_drive" />
     </case>
   </discriminator>
@@ -1844,7 +1859,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 </select>]]></source>
 
         <source><![CDATA[<resultMap id="userResultMap" type="User">
-  <result property="password" column="hashed_password"/>
+  <result property="hashedPassword" column="hashed_password"/>
 </resultMap>]]></source>
 
         <p>
@@ -1899,7 +1914,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         </p>
 
         <source><![CDATA[<resultMap id="userResultMap" type="User" autoMapping="false">
-  <result property="password" column="hashed_password"/>
+  <result property="hashedPassword" column="hashed_password"/>
 </resultMap>]]></source>
 
       </subsection>

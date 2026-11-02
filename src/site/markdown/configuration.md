@@ -164,8 +164,8 @@ An example of the settings element fully configured is as follows:
   <setting name="callSettersOnNulls" value="false"/>
   <setting name="returnInstanceForEmptyRow" value="false"/>
   <setting name="logPrefix" value="exampleLogPreFix_"/>
-  <setting name="logImpl" value="SLF4J | LOG4J | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING"/>
-  <setting name="proxyFactory" value="CGLIB | JAVASSIST"/>
+  <setting name="logImpl" value="JDK_LOGGING"/>
+  <setting name="proxyFactory" value="JAVASSIST"/>
   <setting name="vfsImpl" value="org.mybatis.example.YourselfVfsImpl"/>
   <setting name="useActualParamName" value="true"/>
   <setting name="configurationFactory" value="org.mybatis.example.ConfigurationFactory"/>
@@ -258,17 +258,17 @@ Whenever MyBatis sets a parameter on a PreparedStatement or retrieves a value fr
 | Type Handler                 | Java Types                      | JDBC Types                                                                             |
 |------------------------------|---------------------------------|----------------------------------------------------------------------------------------|
 | `BooleanTypeHandler`         | `java.lang.Boolean`, `boolean`  | Any compatible `BOOLEAN`                                                               |
-| `ByteTypeHandler`            | `java.lang.Byte`, `byte`        | Any compatible `NUMERIC` or `BYTE`                                                     |
+| `ByteTypeHandler`            | `java.lang.Byte`, `byte`        | Any compatible `NUMERIC` or `TINYINT`                                                  |
 | `ShortTypeHandler`           | `java.lang.Short`, `short`      | Any compatible `NUMERIC` or `SMALLINT`                                                 |
 | `IntegerTypeHandler`         | `java.lang.Integer`, `int`      | Any compatible `NUMERIC` or `INTEGER`                                                  |
 | `LongTypeHandler`            | `java.lang.Long`, `long`        | Any compatible `NUMERIC` or `BIGINT`                                                   |
 | `FloatTypeHandler`           | `java.lang.Float`, `float`      | Any compatible `NUMERIC` or `FLOAT`                                                    |
 | `DoubleTypeHandler`          | `java.lang.Double`, `double`    | Any compatible `NUMERIC` or `DOUBLE`                                                   |
 | `BigDecimalTypeHandler`      | `java.math.BigDecimal`          | Any compatible `NUMERIC` or `DECIMAL`                                                  |
-| `StringTypeHandler`          | `java.lang.String`              | `CHAR`, `VARCHAR`                                                                      |
+| `StringTypeHandler`          | `java.lang.String`              | `CHAR`, `VARCHAR`, `LONGVARCHAR`                                                       |
 | `ClobReaderTypeHandler`      | `java.io.Reader`                | -                                                                                      |
-| `ClobTypeHandler`            | `java.lang.String`              | `CLOB`, `LONGVARCHAR`                                                                  |
-| `NStringTypeHandler`         | `java.lang.String`              | `NVARCHAR`, `NCHAR`                                                                    |
+| `ClobTypeHandler`            | `java.lang.String`              | `CLOB`                                                                                 |
+| `NStringTypeHandler`         | `java.lang.String`              | `NVARCHAR`, `NCHAR`, `LONGNVARCHAR`                                                     |
 | `NClobTypeHandler`           | `java.lang.String`              | `NCLOB`                                                                                |
 | `BlobInputStreamTypeHandler` | `java.io.InputStream`           | -                                                                                      |
 | `ByteArrayTypeHandler`       | `byte[]`                        | Any compatible byte stream type                                                        |
@@ -334,7 +334,7 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
 </typeHandlers>
 ```
 
-Using such a TypeHandler would override the existing type handler for Java String properties and VARCHAR parameters and results. Note that MyBatis does not introspect upon the database metadata to determine the type, so you must specify that it’s a VARCHAR field in the parameter and result mappings to hook in the correct type handler. This is due to the fact that MyBatis is unaware of the data type until the statement is executed.
+Using such a TypeHandler would override the existing type handler for Java String properties and VARCHAR parameters and results. When `ignoreParameterMetaData` is `false` (the default), MyBatis can use JDBC parameter metadata to select a TypeHandler by JDBC type if the parameter mapping does not specify one. If the driver does not provide this metadata, specify `jdbcType="VARCHAR"` in the parameter mapping. For result mappings, the JDBC type is not known when the TypeHandler is selected, so specify it explicitly when needed, as described below.
 
 MyBatis will know the Java type that you want to handle with this TypeHandler by introspecting its generic type, but you can override this behavior by two means:
 
@@ -482,12 +482,12 @@ The ObjectFactory interface is very simple. It contains two create methods, one 
 
 ### plugins
 
-MyBatis allows you to intercept calls to at certain points within the execution of a mapped statement. By default, MyBatis allows plug-ins to intercept method calls of:
+MyBatis allows you to intercept calls at certain points within the execution of a mapped statement. Plug-ins can intercept methods declared on these interfaces:
 
-- Executor (update, query, flushStatements, commit, rollback, getTransaction, close, isClosed)
+- Executor (update, query, queryCursor, flushStatements, commit, rollback, createCacheKey, isCached, clearLocalCache, deferLoad, getTransaction, close, isClosed, setExecutorWrapper)
 - ParameterHandler (getParameterObject, setParameters)
-- ResultSetHandler (handleResultSets, handleOutputParameters)
-- StatementHandler (prepare, parameterize, batch, update, query)
+- ResultSetHandler (handleResultSets, handleCursorResultSets, handleOutputParameters)
+- StatementHandler (prepare, parameterize, batch, update, query, queryCursor, getBoundSql, getParameterHandler)
 
 The details of these classes methods can be discovered by looking at the full method signature of each, and the source code which is available with each MyBatis release. You should understand the behaviour of the method you’re overriding, assuming you’re doing something more than just monitoring calls. If you attempt to modify or override the behaviour of a given method, you’re likely to break the core of MyBatis. These are low level classes and methods, so use plug-ins with caution.
 
@@ -644,6 +644,7 @@ There are three built-in dataSource types (i.e. type="[UNPOOLED|POOLED|JNDI]"):
 - `url` – This is the JDBC URL for your database instance.
 - `username` – The database username to log in with.
 - `password` - The database password to log in with.
+- `autoCommit` – Sets the auto-commit mode of new connections. If not set, the driver's default is used.
 - `defaultTransactionIsolationLevel` – The default transaction isolation level for connections.
 - `defaultNetworkTimeout` – The default network timeout value in milliseconds to wait for the database operation to complete. See the API documentation of `java.sql.Connection#setNetworkTimeout()` for details.
 

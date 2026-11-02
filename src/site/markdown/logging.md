@@ -40,7 +40,7 @@ org.apache.ibatis.logging.LogFactory.useCommonsLogging();
 org.apache.ibatis.logging.LogFactory.useStdOutLogging();
 ```
 
-If you choose to call one of these methods, you should do so before calling any other MyBatis method. Also, these methods will only switch to the requested log implementation if that implementation is available on the runtime classpath. For example, if you try to select Log4J2 logging and Log4J2 is not available at runtime, then MyBatis will ignore the request to use Log4J2 and will use it's normal algorithm for discovering logging implementations.
+If you choose to call one of these methods, you should do so before calling any other MyBatis method. The requested logging implementation must be available on the runtime classpath. For example, if you select Log4J2 logging when Log4J2 is not available, MyBatis throws a `LogException`. Automatic discovery of other logging implementations occurs only when MyBatis initializes its logging without an explicit selection.
 
 The specifics of SLF4J, Apache Commons Logging, Apache Log4J and the JDK Logging API are beyond the scope of this document. However the example configuration below should get you started. If you would like to know more about these frameworks, you can get more information from the following locations:
 
@@ -164,7 +164,7 @@ Or for an specific statement:
 
 Yes, as you may have noticed, there is no difference in configuring logging for mapper interfaces or for XML mapper files.
 
-<span class="label important">NOTE</span> If you are using SLF4J or Log4j 2 MyBatis will call it using the marker `MYBATIS`.
+<span class="label important">NOTE</span> MyBatis uses the `MYBATIS` marker with Log4j 2. It also uses this marker with SLF4J when the logger supports the location-aware API; the fallback SLF4J logger does not use a marker.
 
 The remaining configuration in the `logback.xml` file is used to configure the appenders, which is beyond the scope of this document. However, you can find more information at the [Logback](https://logback.qos.ch/) website. Or, you could simply experiment with it to see what effects the different configuration options have.
 

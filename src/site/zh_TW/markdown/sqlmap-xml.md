@@ -59,7 +59,6 @@ select 元素具備更多屬性，允許您微調每個陳述式的行為細節�
   parameterType="int"
   parameterMap="deprecated"
   resultType="hashmap"
-  resultMap="personResultMap"
   flushCache="false"
   useCache="true"
   timeout="10"
@@ -80,7 +79,7 @@ select 元素具備更多屬性，允許您微調每個陳述式的行為細節�
 | `timeout` | 設定驅動程式在拋出例外之前，等待資料庫回應請求的最大秒數。預設為 `unset`（取決於驅動程式）。 |
 | `fetchSize` | 這是給驅動程式的提示，嘗試讓驅動程式以每次回傳等同於此設定數量的列批次載入資料。預設為 `unset`（取決於驅動程式）。 |
 | `statementType` | 可為 `STATEMENT`、`PREPARED` 或 `CALLABLE` 其中之一。這會使 MyBatis 分別使用 `Statement`、`PreparedStatement` 或 `CallableStatement`。預設值：`PREPARED`。 |
-| `resultSetType` | 可為 `FORWARD_ONLY`&#124;`SCROLL_SENSITIVE`&#124;`SCROLL_INSENSITIVE`&#124;`DEFAULT`（同 unset）其中之一。預設為 `unset`（取決於驅動程式）。 |
+| `resultSetType` | 可為 `FORWARD_ONLY`&#124;`SCROLL_SENSITIVE`&#124;`SCROLL_INSENSITIVE`&#124;`DEFAULT` 其中之一。未指定時使用設定的 `defaultResultSetType`；`DEFAULT` 則使用 JDBC 驅動程式的預設值。 |
 | `databaseId` | 若已設定 databaseIdProvider，MyBatis 將載入所有沒有 `databaseId` 屬性或其 `databaseId` 與目前資料庫相符的陳述式。若同時找到帶有與不帶有 `databaseId` 的相同陳述式，後者將被捨棄。 |
 | `resultOrdered` | 僅適用於巢狀結果 select 陳述式：若設為 `true`，則假定巢狀結果已妥善分組或排序，當回傳新的主結果列時，絕不會再出現對前一結果列的參照。這能讓巢狀結果以更節省記憶體的方式填入。預設值：`false`。 |
 | `resultSets` | 僅適用於多個結果集的情況。它列出此陳述式將回傳的結果集清單，並為每個結果集指定名稱。名稱之間以逗號分隔。 |
@@ -210,7 +209,7 @@ select 元素具備更多屬性，允許您微調每個陳述式的行為細節�
 |---|---|
 | `keyProperty` | `selectKey` 陳述式的結果應設定至的目標屬性。若預期會有多個產生的欄位，可為以逗號分隔的屬性名稱清單。 |
 | `keyColumn` | 回傳結果集中與屬性相符的欄位名稱。若預期會有多個產生的欄位，可為以逗號分隔的欄位名稱清單。 |
-| `resultType` | 結果的型別。MyBatis 通常可以推算出來，但明確指定也無妨。MyBatis 允許將任何簡單型別作為索引鍵，包含字串（String）。若您預期有多個產生的欄位，可以使用包含預期屬性的物件或 Map。 |
+| `resultType` | 結果的型別。`selectKey` 的結果型別無法由 MyBatis 自動推斷，必須明確指定。MyBatis 允許將任何簡單型別作為索引鍵，包含字串（String）。若您預期有多個產生的欄位，可以使用包含預期屬性的物件或 Map。 |
 | `order` | 可設為 `BEFORE` 或 `AFTER`。若設為 `BEFORE`，它將先選取索引鍵，設定 `keyProperty`，然後執行 insert 陳述式。若設為 `AFTER`，它會先執行 insert 陳述式，然後再執行 `selectKey` 陳述式——這在像 Oracle 這樣通常在 insert 陳述式內部嵌入序列呼叫的資料庫中非常普遍。 |
 | `statementType` | 與前面相同，MyBatis 支援 `STATEMENT`、`PREPARED` 與 `CALLABLE` 陳述式型別，分別映射至 `Statement`、`PreparedStatement` 與 `CallableStatement`。 |
 [selectKey Attributes]
@@ -275,7 +274,7 @@ select 元素具備更多屬性，允許您微調每個陳述式的行為細節�
 在前面的所有陳述式中，您都看到了簡單參數的範例。參數是 MyBatis 中非常強大的元素。對於簡單的情況（大概佔 90% 的使用情境），它們並不複雜，例如：
 
 ```xml
-<select id="selectUsers" resultType="User">
+<select id="selectUsers" parameterType="int" resultType="User">
   select id, username, password
   from users
   where id = #{id}
@@ -369,7 +368,7 @@ User findByEmail(@Param("email") String email);
 
 ```java
 @Select("select * from user where ${column} = #{value}")
-User findByColumn(@Param("column") String column, @Param("value") String value);
+User findByColumn(@Param("column") String column, @Param("value") Object value);
 ```
 
 其中 `${column}` 將被直接替換，而 `#{value}` 將被預編譯處理。因此，您可以透過以下方式完成相同的工作：
@@ -474,7 +473,7 @@ public class User {
 <resultMap id="userResultMap" type="User">
   <id property="id" column="user_id" />
   <result property="username" column="user_name"/>
-  <result property="password" column="hashed_password"/>
+  <result property="hashedPassword" column="hashed_password"/>
 </resultMap>
 ```
 
@@ -631,6 +630,8 @@ MyBatis 誕生時秉持著一個理念：資料庫並不總是如您所想或所
 | `SMALLINT` | `DOUBLE`  | `LONGVARCHAR` | `VARBINARY`     | `CLOB`    | `NCHAR`     |
 | `INTEGER`  | `NUMERIC` | `DATE`        | `LONGVARBINARY` | `BOOLEAN` | `NCLOB`     |
 | `BIGINT`   | `DECIMAL` | `TIME`        | `NULL`          | `CURSOR`  | `ARRAY`     |
+| `STRUCT`   | `JAVA_OBJECT` | `DISTINCT` | `REF` | `DATALINK` | `ROWID` |
+| `LONGNVARCHAR` | `SQLXML` | `DATETIMEOFFSET` | `TIME_WITH_TIMEZONE` | `TIMESTAMP_WITH_TIMEZONE` | |
 
 <a id="constructor"></a>
 #### constructor
@@ -741,7 +742,7 @@ public class UserRole {
       r.role as role_role
     from user u
       left join user_role ur on u.id = ur.user_id
-      inner join role r on r.id = ur.role_id
+      left join role r on r.id = ur.role_id
     order by u.id, r.id
 </select>
 ```
@@ -969,7 +970,7 @@ association 的不同之處在於您需要告知 MyBatis 如何載入該關聯�
 </resultMap>
 
 <select id="selectBlog" resultMap="blogResult">
-  select b.id, b.name, cursor(
+  select b.id, b.title, cursor(
     select a.id, a.username from author a where b.author_id = a.id
   ) author from blog b
 </select>
@@ -1151,7 +1152,7 @@ private List<Post> posts;
 </resultMap>
 
 <select id="selectBlog" resultMap="blogResult">
-  select b.id, b.name, cursor(
+  select b.id, b.title, cursor(
     select p.id, p.subject, p.body from post p where p.blog_id = b.id
   ) posts from blog b
 </select>
@@ -1296,7 +1297,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}
 
 ```xml
 <resultMap id="userResultMap" type="User">
-  <result property="password" column="hashed_password"/>
+  <result property="hashedPassword" column="hashed_password"/>
 </resultMap>
 ```
 
@@ -1335,7 +1336,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}
 
 ```xml
 <resultMap id="userResultMap" type="User" autoMapping="false">
-  <result property="password" column="hashed_password"/>
+  <result property="hashedPassword" column="hashed_password"/>
 </resultMap>
 ```
 

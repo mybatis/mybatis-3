@@ -640,8 +640,8 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
   <setting name="callSettersOnNulls" value="false"/>
   <setting name="returnInstanceForEmptyRow" value="false"/>
   <setting name="logPrefix" value="exampleLogPreFix_"/>
-  <setting name="logImpl" value="SLF4J | LOG4J | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING"/>
-  <setting name="proxyFactory" value="CGLIB | JAVASSIST"/>
+  <setting name="logImpl" value="JDK_LOGGING"/>
+  <setting name="proxyFactory" value="JAVASSIST"/>
   <setting name="vfsImpl" value="org.mybatis.example.YourselfVfsImpl"/>
   <setting name="useActualParamName" value="true"/>
   <setting name="configurationFactory" value="org.mybatis.example.ConfigurationFactory"/>
@@ -1030,7 +1030,7 @@ public class Author {
               <td>
                 <code>java.lang.Byte</code>, <code>byte</code>
               </td>
-              <td>어떤 호환가능한 NUMERIC 또는 BYTE</td>
+              <td>호환되는 NUMERIC 또는 TINYINT</td>
             </tr>
             <tr>
               <td>
@@ -1093,7 +1093,7 @@ public class Author {
               <td>
                 <code>java.lang.String</code>
               </td>
-              <td><code>CHAR</code>, <code>VARCHAR</code></td>
+              <td><code>CHAR</code>, <code>VARCHAR</code>, <code>LONGVARCHAR</code></td>
             </tr>
             <tr>
               <td>
@@ -1113,7 +1113,7 @@ public class Author {
               <td>
                 <code>java.lang.String</code>
               </td>
-              <td><code>CLOB</code>, <code>LONGVARCHAR</code></td>
+              <td><code>CLOB</code></td>
             </tr>
             <tr>
               <td>
@@ -1122,7 +1122,7 @@ public class Author {
               <td>
                 <code>java.lang.String</code>
               </td>
-              <td><code>NVARCHAR</code>, <code>NCHAR</code></td>
+              <td><code>NVARCHAR</code>, <code>NCHAR</code>, <code>LONGNVARCHAR</code></td>
             </tr>
             <tr>
               <td>
@@ -1433,10 +1433,10 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
 </typeHandlers>
 ]]></source>
 
-        <p>이러한 TypeHandler를 사용하는 것은 자바 String프로퍼티와 VARCHAR파라미터 및 결과를 위해 이미 존재하는 핸들러를 오버라이드하게 될 것이다.
-        마이바티스는 타입을 판단하기 위해 데이터베이스의 메타데이터를 보지 않는다.
-    그래서 파라미터와 결과에 정확한 타입 핸들러를 매핑해야 한다.
-        마이바티스가 구문이 실행될때까지는 데이터 타입에 대해 모르기 때문이다.</p>
+        <p>이 TypeHandler는 Java String 속성과 VARCHAR 매개변수 및 결과에 기존 핸들러 대신 사용됩니다.
+        <code>ignoreParameterMetaData</code>가 <code>false</code>(기본값)이면, 매개변수 매핑에 JDBC 타입을 지정하지 않았을 때 MyBatis가 JDBC 매개변수 메타데이터를 읽어 타입 핸들러를 선택할 수 있습니다.
+        드라이버가 메타데이터를 제공하지 않으면 매개변수 매핑에 <code>jdbcType="VARCHAR"</code>를 지정하세요.
+        결과 매핑에서는 핸들러 선택 시 JDBC 타입을 알 수 없으므로 필요할 때 명시해야 합니다. 자세한 내용은 아래를 참조하세요.</p>
         <p>마이바티스는 제네릭타입을 체크해서 TypeHandler로 다루고자 하는 자바타입을 알것이다.
     하지만 두 가지 방법으로 이 행위를 재정의할 수 있다:
         </p>
@@ -1610,14 +1610,14 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
 
       </subsection>
       <subsection name="plugins">
-        <p>마이바티스는 매핑 구문을 실행하는 어떤 시점에 호출을 가로챈다.
-    기본적으로 마이바티스는 메소드 호출을 가로채기 위한 플러그인을 허용한다.</p>
+        <p>MyBatis는 매핑 구문을 실행하는 과정에서 특정 메서드 호출을 가로챌 수 있습니다.
+    플러그인은 다음 인터페이스에 선언된 메서드를 가로챌 수 있습니다.</p>
         <ul>
           <li>
             Executor
-            (update, query, flushStatements, commit, rollback,
-            getTransaction, close,
-            isClosed)
+            (update, query, queryCursor, flushStatements, commit, rollback,
+            createCacheKey, isCached, clearLocalCache, deferLoad,
+            getTransaction, close, isClosed, setExecutorWrapper)
           </li>
           <li>
             ParameterHandler
@@ -1625,11 +1625,12 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
           </li>
           <li>
             ResultSetHandler
-            (handleResultSets, handleOutputParameters)
+            (handleResultSets, handleCursorResultSets, handleOutputParameters)
           </li>
           <li>
             StatementHandler
-            (prepare, parameterize, batch, update, query)
+            (prepare, parameterize, batch, update, query, queryCursor,
+            getBoundSql, getParameterHandler)
           </li>
         </ul>
         <p>이 클래스들의 메소드는 각각 메소드 시그니처를 통해 찾을 수 있고 소스코드는 마이바티스 릴리즈 파일에서 찾을 수 있다.
@@ -1787,6 +1788,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
           <li><code>url</code> - 데이터베이스 인스턴스에 대한 JDBC URL</li>
           <li><code>username</code> - 데이터베이스에 로그인 할 때 사용할 사용자명</li>
           <li><code>password</code> - 데이터베이스에 로그인 할 때 사용할 패스워드</li>
+          <li><code>autoCommit</code> - 새 커넥션의 자동 커밋 모드를 설정합니다. 생략하면 드라이버의 기본값을 사용합니다.</li>
           <li><code>defaultTransactionIsolationLevel</code> - 커넥션에 대한 디폴트 트랜잭션 격리 레벨</li>
           <li><code>defaultNetworkTimeout</code> – The default network timeout value in milliseconds to wait for the database operation to complete. See the API documentation of <code>java.sql.Connection#setNetworkTimeout()</code> for details.</li>
 
