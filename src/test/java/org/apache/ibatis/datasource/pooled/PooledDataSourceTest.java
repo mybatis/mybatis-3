@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,10 +18,13 @@ package org.apache.ibatis.datasource.pooled;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -157,5 +160,24 @@ class PooledDataSourceTest {
 
     assertEquals(0, poolState.getActiveConnectionCount());
     assertEquals(0, poolState.getIdleConnectionCount());
+  }
+
+  @Test
+  void shouldConnectWithRequestedCredentials() throws Exception {
+    PooledDataSource pooledDataSource = new PooledDataSource("org.hsqldb.jdbcDriver",
+        "jdbc:hsqldb:mem:pooledcredentials", "sa", "");
+    try (Connection conn = pooledDataSource.getConnection(); Statement stmt = conn.createStatement()) {
+      stmt.execute("CREATE USER ALICE PASSWORD 'secret'");
+    }
+    // an idle connection opened as sa is now in the pool
+    assertEquals(1, pooledDataSource.getPoolState().getIdleConnectionCount());
+
+    try (Connection conn = pooledDataSource.getConnection("ALICE", "secret"); Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("VALUES CURRENT_USER")) {
+      assertTrue(rs.next());
+      assertEquals("ALICE", rs.getString(1));
+    }
+    assertThrows(SQLException.class, () -> pooledDataSource.getConnection("ALICE", "wrong"));
+    pooledDataSource.forceCloseAll();
   }
 }
