@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.Configuration;
@@ -32,6 +33,7 @@ class ParamNameResolverTest {
     void m1(@Param("p") Integer p) {}
     void m2(List<String> p) {}
     void m3(Integer[] p) {}
+    void m4(@Param("m") Map<String, Integer> m) {}
   }
   // @formatter:on
 
@@ -63,5 +65,15 @@ class ParamNameResolverTest {
     assertEquals(Integer.class, resolver.getType("p[0]"));
     assertEquals(Integer[].class, resolver.getType("param1"));
     assertEquals(Integer.class, resolver.getType("param1[0]"));
+  }
+
+  @Test
+  void testGetTypeMap() throws Exception {
+    Class<?> clazz = A.class;
+    Method method = clazz.getDeclaredMethod("m4", Map.class);
+    ParamNameResolver resolver = new ParamNameResolver(new Configuration(), method, clazz);
+    assertEquals(Map.class, ((ParameterizedType) resolver.getType("m")).getRawType());
+    assertEquals(Integer.class, resolver.getType("m[key]"));
+    assertEquals(Integer.class, resolver.getType("param1[key]"));
   }
 }

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -198,7 +198,15 @@ public class ParamNameResolver {
 
     if (propertyTokenizer.getIndex() != null) {
       if (type instanceof ParameterizedType) {
-        Type[] typeArgs = ((ParameterizedType) type).getActualTypeArguments();
+        ParameterizedType parameterizedType = (ParameterizedType) type;
+        Type[] typeArgs = parameterizedType.getActualTypeArguments();
+        if (parameterizedType.getRawType() instanceof Class) {
+          Class<?> rawType = (Class<?>) parameterizedType.getRawType();
+          // Indexed access on a map refers to a value, not a key.
+          if (Map.class.isAssignableFrom(rawType) && typeArgs.length > 1) {
+            return typeArgs[1];
+          }
+        }
         return typeArgs[0];
       } else if (type instanceof Class && ((Class<?>) type).isArray()) {
         return ((Class<?>) type).getComponentType();
