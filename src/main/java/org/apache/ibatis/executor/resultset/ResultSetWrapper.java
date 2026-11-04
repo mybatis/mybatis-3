@@ -107,12 +107,15 @@ public class ResultSetWrapper {
       }
 
       Class<?> javaType = resolveClass(classNames.get(index));
-      if (!(k instanceof Class && ((Class<?>) k).isAssignableFrom(javaType))) {
+      if (k != null && !Object.class.equals(k)
+          && !(k instanceof Class && javaType != null && ((Class<?>) k).isAssignableFrom(javaType))) {
         // Clearly incompatible
         return null;
       }
 
-      handler = typeHandlerRegistry.getTypeHandler(javaType, jdbcType, null);
+      if (javaType != null) {
+        handler = typeHandlerRegistry.getTypeHandler(javaType, jdbcType, null);
+      }
       if (handler == null) {
         handler = typeHandlerRegistry.getTypeHandler(jdbcType);
       }
