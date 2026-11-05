@@ -33,6 +33,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 @TestMethodOrder(MethodOrderer.MethodName.class)
 class CursorSimpleTest {
@@ -169,6 +171,20 @@ class CursorSimpleTest {
       User user = iterator.next();
       Assertions.assertEquals("User2", user.getName());
       Assertions.assertEquals(1, usersCursor.getCurrentIndex());
+
+      Assertions.assertFalse(iterator.hasNext());
+      Assertions.assertThrows(NoSuchElementException.class, iterator::next);
+      Assertions.assertFalse(usersCursor.isOpen());
+      Assertions.assertTrue(usersCursor.isConsumed());
+    }
+  }
+
+  @ParameterizedTest
+  @CsvSource({ "0, 0", "0, -1", "1, -1" })
+  void cursorWithNonPositiveRowBoundLimitIsEmpty(int offset, int limit) {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession();
+        Cursor<User> usersCursor = sqlSession.selectCursor("getAllUsers", null, new RowBounds(offset, limit))) {
+      Iterator<User> iterator = usersCursor.iterator();
 
       Assertions.assertFalse(iterator.hasNext());
       Assertions.assertThrows(NoSuchElementException.class, iterator::next);
