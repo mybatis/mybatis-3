@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,6 +23,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -104,5 +107,29 @@ class MapperTypeParameterTest {
       assertEquals(1, mapper.insert(List.of(person1)));
       assertNotNull(person1.getId());
     }
+  }
+
+  @Test
+  void shouldRegisterAndExecuteMethodsBoundedByMapperTypeVariable() {
+    sqlSessionFactory.getConfiguration().addMapper(BoundedPersonMapper.class);
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      BoundedPersonMapper mapper = sqlSession.getMapper(BoundedPersonMapper.class);
+      Person person = new Person("Bounded");
+      assertEquals(1, mapper.insert(person));
+      assertNotNull(person.getId());
+      assertEquals("Bounded", mapper.selectBounded(person).getName());
+    }
+  }
+
+  interface MethodBoundedMapper<T> {
+    @Insert("insert into person (name) values (#{name})")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    <S extends T> int insert(S entity);
+
+    @Select("select id, name from person where id = #{id}")
+    <S extends T> S selectBounded(S entity);
+  }
+
+  interface BoundedPersonMapper extends MethodBoundedMapper<Person> {
   }
 }

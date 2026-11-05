@@ -47,6 +47,82 @@ import org.junit.jupiter.params.provider.ValueSource;
 class TypeParameterResolverTest {
 
   @Test
+  void shouldResolveMethodVariableBoundInConcreteMapper() throws Exception {
+    Method method = BoundedMapper.class.getMethod("save", Object.class);
+    assertEquals(String.class, TypeParameterResolver.resolveParamTypes(method, ConcreteBoundedMapper.class)[0]);
+    assertEquals(String.class, TypeParameterResolver.resolveReturnType(method, ConcreteBoundedMapper.class));
+  }
+
+  @Test
+  void shouldResolveChainedMethodVariableBounds() throws Exception {
+    Method method = BoundedMapper.class.getMethod("chain", Object.class);
+    assertEquals(String.class, TypeParameterResolver.resolveParamTypes(method, ConcreteBoundedMapper.class)[0]);
+    assertEquals(String.class, TypeParameterResolver.resolveReturnType(method, ConcreteBoundedMapper.class));
+  }
+
+  @Test
+  void shouldResolveParameterizedMethodVariableBound() throws Exception {
+    Method method = BoundedMapper.class.getMethod("list", List.class);
+    ParameterizedType result = (ParameterizedType) TypeParameterResolver.resolveReturnType(method,
+        ConcreteBoundedMapper.class);
+    assertEquals(List.class, result.getRawType());
+    assertEquals(String.class, result.getActualTypeArguments()[0]);
+  }
+
+  @Test
+  void shouldResolveArrayOfBoundedMethodVariable() throws Exception {
+    Method method = BoundedMapper.class.getMethod("array", Object[].class);
+    assertEquals(String[].class, TypeParameterResolver.resolveParamTypes(method, ConcreteBoundedMapper.class)[0]);
+    assertEquals(String[].class, TypeParameterResolver.resolveReturnType(method, ConcreteBoundedMapper.class));
+  }
+
+  @Test
+  void shouldTerminateRecursiveMethodVariableBound() throws Exception {
+    Method method = BoundedMapper.class.getMethod("recursive", Comparable.class);
+    ParameterizedType result = (ParameterizedType) TypeParameterResolver.resolveReturnType(method,
+        ConcreteBoundedMapper.class);
+    assertEquals(Comparable.class, result.getRawType());
+    assertEquals(Object.class, result.getActualTypeArguments()[0]);
+  }
+
+  @Test
+  void shouldTerminateRecursiveWildcardMethodVariableBound() throws Exception {
+    Method method = BoundedMapper.class.getMethod("wildcard", Comparable.class);
+    ParameterizedType result = (ParameterizedType) TypeParameterResolver.resolveReturnType(method,
+        ConcreteBoundedMapper.class);
+    WildcardType argument = (WildcardType) result.getActualTypeArguments()[0];
+    assertEquals(Object.class, argument.getLowerBounds()[0]);
+  }
+
+  @Test
+  void shouldResolveUnboundedMethodVariableToObject() throws Exception {
+    Method method = BoundedMapper.class.getMethod("unbounded", Object.class);
+    assertEquals(Object.class, TypeParameterResolver.resolveParamTypes(method, ConcreteBoundedMapper.class)[0]);
+  }
+
+  interface BoundedMapper<T> {
+    <S extends T> S save(S entity);
+
+    <U extends T, S extends U> S chain(S entity);
+
+    <S extends List<T>> S list(S entities);
+
+    <S extends T> S[] array(S[] entities);
+
+    <S extends Comparable<S>> S recursive(S entity);
+
+    <S extends Comparable<? super S>> S wildcard(S entity);
+
+    <S> S unbounded(S entity);
+  }
+
+  interface IntermediateBoundedMapper<T> extends BoundedMapper<T> {
+  }
+
+  interface ConcreteBoundedMapper extends IntermediateBoundedMapper<String> {
+  }
+
+  @Test
   void returnLv0SimpleClass() throws Exception {
     Class<?> clazz = Level0Mapper.class;
     Method method = clazz.getMethod("simpleSelect");
