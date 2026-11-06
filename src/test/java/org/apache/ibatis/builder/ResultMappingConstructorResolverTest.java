@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ import org.apache.ibatis.mapping.ResultMapping;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.UnknownTypeHandler;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -231,6 +232,17 @@ class ResultMappingConstructorResolverTest {
     assertThat(mappingList.get(2).getTypeHandler().getClass()).isEqualTo(MyTypeHandler.class);
   }
 
+  @Test
+  void resetsUnknownTypeHandlerSubclassAfterAutoType() {
+    ResultMapping mapping = new ResultMapping.Builder(configuration, "type", "type", Object.class)
+        .typeHandler(new MyUnknownTypeHandler(configuration)).build();
+
+    final ResultMappingConstructorResolver resolver = createResolverFor(ResultType.class, TEST_ID, mapping);
+    final List<ResultMapping> mappingList = resolver.resolveWithConstructor();
+
+    assertThat(mappingList.get(0).getTypeHandler()).isNull();
+  }
+
   @Nested
   class MetaInfoTests {
 
@@ -348,5 +360,12 @@ class MyTypeHandler extends BaseTypeHandler<List<?>> {
   @Override
   public List<?> getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
     return List.of();
+  }
+}
+
+class MyUnknownTypeHandler extends UnknownTypeHandler {
+
+  MyUnknownTypeHandler(Configuration configuration) {
+    super(configuration);
   }
 }
