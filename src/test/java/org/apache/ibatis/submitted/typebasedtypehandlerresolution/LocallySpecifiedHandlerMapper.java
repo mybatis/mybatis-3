@@ -67,6 +67,20 @@ public interface LocallySpecifiedHandlerMapper {
       ", #{user.integers,typeHandler=org.apache.ibatis.submitted.typebasedtypehandlerresolution.CsvTypeHandler}", ")" })
   void insertUserWithParam(@Param("user") User user);
 
+  @Insert("""
+      <script>
+      insert into users (id, strvalue, intvalue, datevalue, datevalue2, strings, integers) values (
+        #{user.id},
+        #{user.strvalue,typeHandler=org.apache.ibatis.submitted.typebasedtypehandlerresolution.TypeAwareTypeHandler},
+        #{user.intvalue,typeHandler=org.apache.ibatis.submitted.typebasedtypehandlerresolution.TypeAwareTypeHandler},
+        #{user.datevalue,typeHandler=org.apache.ibatis.submitted.typebasedtypehandlerresolution.TypeAwareTypeHandler},
+        #{user.datevalue2},
+        #{user.strings,typeHandler=org.apache.ibatis.submitted.typebasedtypehandlerresolution.CsvTypeHandler},
+        #{user.integers,typeHandler=org.apache.ibatis.submitted.typebasedtypehandlerresolution.CsvTypeHandler}
+      )
+      </script>""")
+  void insertUserWithParam_Script(@Param("user") User user);
+
   @Insert({ "insert into users (id, strvalue, intvalue, datevalue, datevalue2, strings, integers) values (#{id} ",
       ", #{strvalue,typeHandler=org.apache.ibatis.submitted.typebasedtypehandlerresolution.TypeAwareTypeHandler}",
       ", #{intvalue,typeHandler=org.apache.ibatis.submitted.typebasedtypehandlerresolution.TypeAwareTypeHandler}",
@@ -84,5 +98,4 @@ public interface LocallySpecifiedHandlerMapper {
   void insertXmlWithMapperMethodMultiParam(User user, String foo);
 
   void insertXmlWithMapperMethodWithParam(@Param("user") User user);
-
 }
