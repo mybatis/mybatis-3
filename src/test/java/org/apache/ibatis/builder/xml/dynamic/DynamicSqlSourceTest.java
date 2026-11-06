@@ -264,7 +264,7 @@ class DynamicSqlSourceTest extends BaseDataTest {
         new TrimSqlNode(new Configuration(),
             mixedContents(new IfSqlNode(mixedContents(new TextSqlNode("ID = ? AND ")), "true"),
                 new IfSqlNode(mixedContents(new TextSqlNode("NAME = ?")), "false")),
-            "WHERE", null, null, "AND |OR "));
+            "WHERE", null, null, " AND| OR"));
     BoundSql boundSql = source.getBoundSql(null);
     assertEquals(expected, boundSql.getSql());
   }
@@ -276,7 +276,7 @@ class DynamicSqlSourceTest extends BaseDataTest {
         new TrimSqlNode(new Configuration(),
             mixedContents(new IfSqlNode(mixedContents(new TextSqlNode("ID = ? AND")), "true"),
                 new IfSqlNode(mixedContents(new TextSqlNode("A.COLOR = B.COLOR")), "true")),
-            "WHERE", null, null, "AND |OR "));
+            "WHERE", null, null, " AND| OR"));
     BoundSql boundSql = source.getBoundSql(null);
     assertEquals(expected, boundSql.getSql());
   }
