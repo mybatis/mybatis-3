@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -63,7 +63,7 @@ public class XMLLanguageDriver implements LanguageDriver {
     // issue #3
     if (script.startsWith("<script>")) {
       XPathParser parser = new XPathParser(script, false, configuration.getVariables(), new XMLMapperEntityResolver());
-      return createSqlSource(configuration, parser.evalNode("/script"), parameterType);
+      return createSqlSource(configuration, parser.evalNode("/script"), parameterType, paramNameResolver);
     }
     // issue #127
     script = PropertyParser.parse(script, configuration.getVariables());

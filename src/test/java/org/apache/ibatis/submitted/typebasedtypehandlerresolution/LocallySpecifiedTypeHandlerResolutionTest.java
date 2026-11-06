@@ -128,6 +128,33 @@ class LocallySpecifiedTypeHandlerResolutionTest {
   }
 
   @Test
+  void specifyHandlerInParameterMappingSingleArgWithParam_Script() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      LocallySpecifiedHandlerMapper mapper = sqlSession.getMapper(LocallySpecifiedHandlerMapper.class);
+      {
+        User user = new User();
+        user.setId(21);
+        user.setStrvalue(new FuzzyBean<String>("park"));
+        user.setIntvalue(new FuzzyBean<Integer>(7));
+        user.setDatevalue(LocalDate.of(2020, 5, 10));
+        user.setDatevalue2(LocalDate.of(2020, 5, 8));
+        user.setStrings(Arrays.asList("aa", "bb"));
+        user.setIntegers(Arrays.asList(11, 22));
+        mapper.insertUserWithParam_Script(user);
+      }
+      {
+        User user = mapper.getUser(21);
+        assertEquals("park", user.getStrvalue().getValue());
+        assertEquals(7, user.getIntvalue().getValue());
+        assertEquals(LocalDate.of(2020, 5, 10), user.getDatevalue());
+        assertEquals(LocalDate.of(2020, 5, 8), user.getDatevalue2());
+        assertEquals(Arrays.asList("aa", "bb"), user.getStrings());
+        assertEquals(Arrays.asList(11, 22), user.getIntegers());
+      }
+    }
+  }
+
+  @Test
   void specifyHandlerInParameterMapping_MultiParams() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       LocallySpecifiedHandlerMapper mapper = sqlSession.getMapper(LocallySpecifiedHandlerMapper.class);
