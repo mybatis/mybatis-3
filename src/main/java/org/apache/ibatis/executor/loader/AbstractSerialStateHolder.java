@@ -36,6 +36,17 @@ import org.apache.ibatis.io.SerialFilterChecker;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 
 /**
+ * Serialized form of a lazy-loading proxy that still has unloaded properties.
+ * <p>
+ * The proxy state is written as a nested byte array and read back with a separate {@link ObjectInputStream} in
+ * {@link #readResolve()}. If the outer stream has an {@link ObjectInputFilter} set via
+ * {@link ObjectInputStream#setObjectInputFilter(ObjectInputFilter)}, that filter is applied to the nested stream as
+ * well. An allowlist filter therefore has to accept not only this holder class and {@code byte[]}, but also the classes
+ * read from the nested stream: the target bean and the classes it references, {@code java.util.HashMap},
+ * {@code java.util.Map$Entry[]}, {@link ResultLoaderMap.LoadPair}, the {@link ObjectFactory} implementation,
+ * {@code java.lang.Class[]}, {@code java.lang.Object[]} and the types of any constructor arguments and mapped
+ * parameters.
+ *
  * @author Eduardo Macarron
  * @author Franta Mejta
  */
