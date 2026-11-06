@@ -98,4 +98,5 @@ public interface LocallySpecifiedHandlerMapper {
   void insertXmlWithMapperMethodMultiParam(User user, String foo);
 
   void insertXmlWithMapperMethodWithParam(@Param("user") User user);
+
 }
