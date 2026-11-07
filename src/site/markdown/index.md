@@ -17,7 +17,7 @@ For tips, news, etc., follow these accounts [🦋Bluesky](https://bsky.app/profi
 
 If you find this documentation lacking in any way, or missing documentation for a feature, then the best thing to do is learn about it and then write the documentation yourself!
 
-Sources of this manual are available in Markdown format at [project's Git](https://github.com/mybatis/mybatis-3/tree/master/src/site). Fork the repository, update them and send a pull request.
+Sources of this manual are available in Markdown and XDoc formats at [the project's Git repository](https://github.com/mybatis/mybatis-3/tree/master/src/site). Fork the repository, update the documentation and send a pull request.
 
 You’re the best author of this documentation, people like you have to read it!
 

@@ -132,7 +132,7 @@ MyBatis 提供了一個簡單的解決方案，在 90% 的情況下都能正常�
 
 *where* 元素知道只有在內含標籤回傳任何內容時，才插入 "WHERE"。此外，如果該內容以 "AND" 或 "OR" 開頭，它知道將其去除。
 
-如果 *where* 元素的行為不完全符合您的預期，您可以透過定義自己的 trim 元素來自訂它。例如，與 *where* 元素等效的 trim 設定為：
+如果 *where* 元素的行為不完全符合您的預期，您可以透過定義自己的 trim 元素來自訂它。例如，以下 trim 設定可處理以 `AND ` 或 `OR ` 開頭的常見情況；*where* 元素還會移除後面接定位字元或換行符號的這些前綴：
 
 ```xml
 <trim prefix="WHERE" prefixOverrides="AND |OR ">
@@ -190,7 +190,7 @@ MyBatis 提供了一個簡單的解決方案，在 90% 的情況下都能正常�
 
 <span class="label important">注意</span> 您可以將任何 Iterable 物件（例如 List、Set 等），以及任何 Map 或陣列物件傳遞給 foreach 作為 collection 參數。使用 Iterable 或陣列時，index 為目前反覆運算的次數，而 item 值為本次反覆運算中擷取的元素。使用 Map（或 Map.Entry 物件的集合）時，index 為索引鍵物件，item 則為數值物件。
 
-至此結束了關於 XML 設定檔與 XML 映射檔的討論。下一節將詳細討論 Java API，以便您充分發揮所建立映射的最大效益。
+以上介紹了 XML 映射檔中常用的動態 SQL 元素。後續小節還會介紹註解中的動態 SQL 與可插拔指令碼語言；Java API 則在後續章節討論。
 
 ### script
 
@@ -257,12 +257,12 @@ public interface LanguageDriver {
 擁有了自訂語言驅動程式之後，您可以透過在 mybatis-config.xml 檔案中進行設定將其設為預設：
 
 ```xml
-<typeAliases>
-  <typeAlias type="org.sample.MyLanguageDriver" alias="myLanguage"/>
-</typeAliases>
 <settings>
   <setting name="defaultScriptingLanguage" value="myLanguage"/>
 </settings>
+<typeAliases>
+  <typeAlias type="org.sample.MyLanguageDriver" alias="myLanguage"/>
+</typeAliases>
 ```
 
 除了變更預設值之外，您還可以透過新增 `lang` 屬性為特定陳述式指定語言，如下所示：

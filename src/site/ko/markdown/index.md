@@ -13,7 +13,7 @@ author: Clinton Begin, 이동국(한국어 번역)
 
 이 문서가 일부 내용을 자세히 다루지 않거나 특정 기능에 대해 설명하지 않을 경우 마이바티스를 공부하는 가장 좋은 방법은 사용자 스스로 그 부분에 대한 문서를 작성하는 것이다!
 
-이 문서는 Markdown포맷으로 되어 있으며 [프로젝트 깃허브](https://github.com/mybatis/mybatis-3/tree/master/src/site)에서 볼수 있다. 저장소를 포크하고 수정한 뒤 Pull request요청을 보내면 됩니다.
+이 문서의 원본은 Markdown 및 XDoc 형식으로 되어 있으며 [프로젝트 깃허브](https://github.com/mybatis/mybatis-3/tree/master/src/site)에서 볼 수 있다. 저장소를 포크하고 수정한 뒤 Pull request를 보내면 됩니다.
 
 그러면 이 문서의 가장 멋진 저자가 되고 다른 많은 사람들이 이 문서를 읽을 것이다!
 

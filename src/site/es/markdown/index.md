@@ -13,6 +13,6 @@ MyBatis es un framework de persistencia que soporta SQL, procedimientos almacena
 
 Si ves que hay alguna carencia en esta documentación o que falta alguna característica por documentar, te animamos a que lo investigues y la documentes tu mismo!
 
-Las fuentes de este manual están disponibles en formato Markdown en el [Git del proyecto](https://github.com/mybatis/mybatis-3/tree/master/src/site). Haz un fork, cámbialas y envía un pull request.
+Las fuentes de este manual están disponibles en formatos Markdown y XDoc en el [Git del proyecto](https://github.com/mybatis/mybatis-3/tree/master/src/site). Haz un fork, cámbialas y envía un pull request.
 
 Eres el mejor candidato para documentar porque los lectores de esta documentación son gente como tú!
