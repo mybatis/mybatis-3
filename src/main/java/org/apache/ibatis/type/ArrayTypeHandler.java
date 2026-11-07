@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -90,7 +90,14 @@ public class ArrayTypeHandler extends BaseTypeHandler<Object> {
       Class<?> componentType = parameter.getClass().getComponentType();
       String arrayTypeName = resolveTypeName(componentType);
       Array array = ps.getConnection().createArrayOf(arrayTypeName, (Object[]) parameter);
-      ps.setArray(i, array);
+      try {
+        ps.setArray(i, array);
+      } catch (SQLException | RuntimeException | Error e) {
+        // The array was created here, so it must be freed even when binding it failed, including on Error.
+        freeAfterFailure(array, e);
+        throw e;
+      }
+      // When binding succeeded, keep propagating a cleanup failure as before.
       array.free();
     }
   }
@@ -118,9 +125,31 @@ public class ArrayTypeHandler extends BaseTypeHandler<Object> {
     if (array == null) {
       return null;
     }
-    Object result = array.getArray();
+    Object result;
+    try {
+      result = array.getArray();
+    } catch (SQLException | RuntimeException | Error e) {
+      // The array is owned by this handler here, so it must be freed even on Error.
+      freeAfterFailure(array, e);
+      throw e;
+    }
+    // When the extraction succeeded, keep propagating a cleanup failure as before.
     array.free();
     return result;
+  }
+
+  /**
+   * Frees an array after a failure without hiding that failure; a cleanup failure (of any kind, including an Error) is
+   * reported as suppressed, unless it is the failure that triggered the cleanup.
+   */
+  private static void freeAfterFailure(Array array, Throwable failure) {
+    try {
+      array.free();
+    } catch (SQLException | RuntimeException | Error e) {
+      if (e != failure) {
+        failure.addSuppressed(e);
+      }
+    }
   }
 
 }
