@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -256,7 +256,7 @@ public class ResultMappingConstructorResolver {
 
       final TypeHandler<?> originalTypeHandler = originalMapping.getTypeHandler();
       final TypeHandler<?> typeHandler = originalTypeHandler == null
-          || originalTypeHandler.getClass().isAssignableFrom(UnknownTypeHandler.class) ? null : originalTypeHandler;
+          || originalTypeHandler instanceof UnknownTypeHandler ? null : originalTypeHandler;
 
       // given that we selected a new java type, overwrite the currently
       // selected type handler so it can get retrieved again from the registry
