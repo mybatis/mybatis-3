@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@ import org.apache.ibatis.scripting.xmltags.SetSqlNode;
 import org.apache.ibatis.scripting.xmltags.SqlNode;
 import org.apache.ibatis.scripting.xmltags.StaticTextSqlNode;
 import org.apache.ibatis.scripting.xmltags.TextSqlNode;
+import org.apache.ibatis.scripting.xmltags.TrimSqlNode;
 import org.apache.ibatis.scripting.xmltags.WhereSqlNode;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -252,6 +253,30 @@ class DynamicSqlSourceTest extends BaseDataTest {
         new SetSqlNode(new Configuration(),
             mixedContents(new IfSqlNode(mixedContents(new TextSqlNode("ID = ?")), "false"),
                 new IfSqlNode(mixedContents(new TextSqlNode(", NAME = ?")), "true"))));
+    BoundSql boundSql = source.getBoundSql(null);
+    assertEquals(expected, boundSql.getSql());
+  }
+
+  @Test
+  void shouldTrimSuffixOverrideWithWhitespace() throws Exception {
+    final String expected = "SELECT * FROM BLOG WHERE ID = ?";
+    DynamicSqlSource source = createDynamicSqlSource(new TextSqlNode("SELECT * FROM BLOG"),
+        new TrimSqlNode(new Configuration(),
+            mixedContents(new IfSqlNode(mixedContents(new TextSqlNode("ID = ? AND ")), "true"),
+                new IfSqlNode(mixedContents(new TextSqlNode("NAME = ?")), "false")),
+            "WHERE", null, null, " AND| OR"));
+    BoundSql boundSql = source.getBoundSql(null);
+    assertEquals(expected, boundSql.getSql());
+  }
+
+  @Test
+  void shouldNotTrimEndOfWordMatchingSuffixOverride() throws Exception {
+    final String expected = "SELECT * FROM BLOG WHERE ID = ? AND A.COLOR = B.COLOR";
+    DynamicSqlSource source = createDynamicSqlSource(new TextSqlNode("SELECT * FROM BLOG"),
+        new TrimSqlNode(new Configuration(),
+            mixedContents(new IfSqlNode(mixedContents(new TextSqlNode("ID = ? AND")), "true"),
+                new IfSqlNode(mixedContents(new TextSqlNode("A.COLOR = B.COLOR")), "true")),
+            "WHERE", null, null, " AND| OR"));
     BoundSql boundSql = source.getBoundSql(null);
     assertEquals(expected, boundSql.getSql());
   }

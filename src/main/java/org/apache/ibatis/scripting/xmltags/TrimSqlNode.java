@@ -135,9 +135,8 @@ public class TrimSqlNode implements SqlNode {
       }
       suffixApplied = true;
       if (suffixesToOverride != null) {
-        suffixesToOverride.stream()
-            .filter(toRemove -> trimmedUppercaseSql.endsWith(toRemove) || trimmedUppercaseSql.endsWith(toRemove.trim()))
-            .findFirst().ifPresent(toRemove -> {
+        suffixesToOverride.stream().filter(toRemove -> endsWithOverride(trimmedUppercaseSql, toRemove)).findFirst()
+            .ifPresent(toRemove -> {
               int start = sql.length() - toRemove.trim().length();
               int end = sql.length();
               sql.delete(start, end);
@@ -146,6 +145,22 @@ public class TrimSqlNode implements SqlNode {
       if (suffix != null) {
         sql.append(" ").append(suffix);
       }
+    }
+
+    private boolean endsWithOverride(String trimmedUppercaseSql, String toRemove) {
+      if (trimmedUppercaseSql.endsWith(toRemove)) {
+        return true;
+      }
+      String trimmedToRemove = toRemove.trim();
+      if (!trimmedUppercaseSql.endsWith(trimmedToRemove)) {
+        return false;
+      }
+      if (trimmedToRemove.length() == toRemove.length()) {
+        return true;
+      }
+      // Whitespace is relevant, so do not remove the end of a word (e.g. "OR " in "COLOR")
+      int start = trimmedUppercaseSql.length() - trimmedToRemove.length();
+      return start == 0 || Character.isWhitespace(trimmedUppercaseSql.charAt(start - 1));
     }
 
   }
