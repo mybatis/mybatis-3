@@ -137,7 +137,7 @@ public class DefaultCursor<T> implements Cursor<T> {
     try {
       objectWrapperResultHandler.fetched = false;
       status = CursorStatus.OPEN;
-      if (!rsw.getResultSet().isClosed()) {
+      if (rowBounds.getLimit() > 0 && !rsw.getResultSet().isClosed()) {
         resultSetHandler.handleRowValues(rsw, resultMap, objectWrapperResultHandler, RowBounds.DEFAULT, null);
       }
     } catch (SQLException e) {
