@@ -22,9 +22,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.executor.statement.StatementHandler;
-import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.Configuration;
@@ -37,7 +37,7 @@ import org.apache.ibatis.transaction.Transaction;
  */
 public class ReuseExecutor extends BaseExecutor {
 
-  private final Map<String, Statement> statementMap = new HashMap<>();
+  private final Map<CacheKey, Statement> statementMap = new HashMap<>();
 
   public ReuseExecutor(Configuration configuration, Transaction transaction) {
     super(configuration, transaction);
@@ -47,7 +47,7 @@ public class ReuseExecutor extends BaseExecutor {
   public int doUpdate(MappedStatement ms, Object parameter) throws SQLException {
     Configuration configuration = ms.getConfiguration();
     StatementHandler handler = configuration.newStatementHandler(this, ms, parameter, RowBounds.DEFAULT, null, null);
-    Statement stmt = prepareStatement(handler, ms.getStatementLog());
+    Statement stmt = prepareStatement(handler, ms);
     return handler.update(stmt);
   }
 
@@ -57,7 +57,7 @@ public class ReuseExecutor extends BaseExecutor {
     Configuration configuration = ms.getConfiguration();
     StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, resultHandler,
         boundSql);
-    Statement stmt = prepareStatement(handler, ms.getStatementLog());
+    Statement stmt = prepareStatement(handler, ms);
     return handler.query(stmt, resultHandler);
   }
 
@@ -66,7 +66,7 @@ public class ReuseExecutor extends BaseExecutor {
       throws SQLException {
     Configuration configuration = ms.getConfiguration();
     StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, null, boundSql);
-    Statement stmt = prepareStatement(handler, ms.getStatementLog());
+    Statement stmt = prepareStatement(handler, ms);
     return handler.queryCursor(stmt);
   }
 
@@ -79,37 +79,37 @@ public class ReuseExecutor extends BaseExecutor {
     return List.of();
   }
 
-  private Statement prepareStatement(StatementHandler handler, Log statementLog) throws SQLException {
+  private Statement prepareStatement(StatementHandler handler, MappedStatement ms) throws SQLException {
     Statement stmt;
     BoundSql boundSql = handler.getBoundSql();
-    String sql = boundSql.getSql();
-    if (hasStatementFor(sql)) {
-      stmt = getStatement(sql);
+    CacheKey key = new CacheKey(new Object[] { ms, boundSql.getSql() });
+    if (hasStatementFor(key)) {
+      stmt = getStatement(key);
       applyTransactionTimeout(stmt);
     } else {
-      Connection connection = getConnection(statementLog);
+      Connection connection = getConnection(ms.getStatementLog());
       stmt = handler.prepare(connection, transaction.getTimeout());
-      putStatement(sql, stmt);
+      putStatement(key, stmt);
     }
     handler.parameterize(stmt);
     return stmt;
   }
 
-  private boolean hasStatementFor(String sql) {
+  private boolean hasStatementFor(CacheKey key) {
     try {
-      Statement statement = statementMap.get(sql);
+      Statement statement = statementMap.get(key);
       return statement != null && !statement.getConnection().isClosed();
     } catch (SQLException e) {
       return false;
     }
   }
 
-  private Statement getStatement(String s) {
-    return statementMap.get(s);
+  private Statement getStatement(CacheKey key) {
+    return statementMap.get(key);
   }
 
-  private void putStatement(String sql, Statement stmt) {
-    statementMap.put(sql, stmt);
+  private void putStatement(CacheKey key, Statement stmt) {
+    statementMap.put(key, stmt);
   }
 
 }
