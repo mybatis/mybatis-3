@@ -15,7 +15,7 @@ MyBatis proporciona información de logging mediante el uso interno de una facto
 
 La solución de logging elegida se basa en una introspección en tiempo de ejecución de la propia factoría interna de MyBatis. La factoría usará la primera implementación de logging que encuentre (el orden de búsqueda es el de la lista de más arriba). Si no se encuentra ninguna, el logging se desactivará.
 
-Muchos entornos vienen con Commons Logging incluido como pare del classpath del servidor (por ejemplo Tomcat y WebSphere). Es importante conocer que en esos entorno, MyBatis usará JCL como implementación de logging. En un entorno como WebSphere esto significa que tu configuración de log4j será ignorada dado que WebSphere proporciona su propia implementación de JCL. Esto puede ser muy frustrante porque parece que MyBatis está ignorando tu configuración de logging (en realidad, MyBatis está ignorando tu configuración de log4j porque está usando JCL en dicho entorno). Si tu aplicación se ejecuta en un entorno que lleva JCL incluido pero quieres usar un método distinto de logging puedes añadir un setting a tu fichero mybatis-config.xml:
+Muchos entornos vienen con Commons Logging incluido como parte del classpath del servidor (por ejemplo Tomcat y WebSphere). Es importante conocer que en esos entornos, MyBatis usará JCL como implementación de logging. En un entorno como WebSphere esto significa que tu configuración de log4j será ignorada dado que WebSphere proporciona su propia implementación de JCL. Esto puede ser muy frustrante porque parece que MyBatis está ignorando tu configuración de logging (en realidad, MyBatis está ignorando tu configuración de log4j porque está usando JCL en dicho entorno). Si tu aplicación se ejecuta en un entorno que lleva JCL incluido pero quieres usar un método distinto de logging puedes añadir un setting a tu fichero mybatis-config.xml:
 
 ```xml
 <configuration>
@@ -40,7 +40,7 @@ org.apache.ibatis.logging.LogFactory.useCommonsLogging();
 org.apache.ibatis.logging.LogFactory.useStdOutLogging();
 ```
 
-Si eliges llamar a alguno de estos métodos, deberías hacerlo antes de llamar a ningún otro método de MyBatis. Además, estos métodos solo establecerán la implementación de log indicada si dicha implementación está disponible en el classpath. Por ejemplo, si intentas seleccionar log4j2 y log4j2 no está disponible en el classpath, MyBatis ignorará la petición y usará su algoritmo normal de descubrimiento de implementaciones de logging.
+Si eliges llamar a alguno de estos métodos, deberías hacerlo antes de llamar a ningún otro método de MyBatis. La implementación solicitada debe estar disponible en el classpath en tiempo de ejecución. Por ejemplo, si seleccionas Log4j 2 cuando no está disponible, MyBatis lanza una `LogException`. La detección automática de otras implementaciones solo ocurre cuando MyBatis inicializa el logging sin una selección explícita.
 
 Los temas específicos de JCL, Log4j y el Java Logging API quedan fuera del alcance de este documento. Sin embargo la configuración de ejemplo que se proporciona más abajo te ayudará a comenzar. Si quieres conocer más sobre estos frameworks, puedes obtener más información en las siguientes ubicaciones:
 
@@ -164,7 +164,7 @@ O para un statement específico:
 
 Sí, como ya te habrás dado cuenta, no hay ninguna diferencia entre configurar el logging para un mapper o para un fichero XML.
 
-<span class="label important">NOTA</span> Si usas SLF4J o Log4j 2 MyBatis le llamará usando `MYBATIS` como marker.
+<span class="label important">NOTA</span> MyBatis usa el marker `MYBATIS` con Log4j 2. También lo usa con SLF4J cuando el logger admite la API location-aware; el logger SLF4J de respaldo no usa marker.
 
 El resto de la configuración sirve para configurar los appenders, lo cual queda fuera del ámbito de este documento. Sin embargo, puedes encontrar más información en el site de [Logback](https://logback.qos.ch/). O, puedes simplemente experimentar para ver los efectos que consigues con las distintas opciones de configuración.
 

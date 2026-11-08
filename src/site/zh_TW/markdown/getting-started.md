@@ -40,6 +40,7 @@ XML 設定檔包含 MyBatis 系統核心的設定，包括取得資料庫 Connec
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+  <properties resource="org/mybatis/example/db.properties"/>
   <environments default="development">
     <environment id="development">
       <transactionManager type="JDBC"/>
@@ -57,7 +58,9 @@ XML 設定檔包含 MyBatis 系統核心的設定，包括取得資料庫 Connec
 </configuration>
 ```
 
-雖然 XML 設定檔還有許多內容，但上述範例指出了最關鍵的部分。請注意 XML 標頭，它是驗證 XML 文件所必需的。environment 元素的內容包含交易管理與連線池的環境設定。mappers 元素包含映射器清單——即包含 SQL 程式碼與映射定義的 XML 檔案及/或帶有註解的 Java 介面類別。
+請將 `org/mybatis/example/db.properties` 放在 classpath 中，並在其中為資料庫設定 `driver`、`url`、`username` 和 `password`。
+
+雖然 XML 設定檔還有許多內容，但上述範例指出了最關鍵的部分。請注意，XML 宣告可以省略；DOCTYPE 宣告指定用於驗證 XML 文件的 DTD。environment 元素的內容包含交易管理與連線池的環境設定。mappers 元素包含映射器清單——即包含 SQL 程式碼與映射定義的 XML 檔案及/或帶有註解的 Java 介面類別。
 
 ### 不使用 XML 建構 SqlSessionFactory
 
@@ -75,7 +78,7 @@ SqlSessionFactory sqlSessionFactory =
   new SqlSessionFactoryBuilder().build(configuration);
 ```
 
-請注意，在此情況下，設定中加入了一個映射器類別（Mapper class）。映射器類別是包含 SQL 映射註解的 Java 類別，可避免對 XML 映射的需求。然而，由於 Java 註解的某些限制以及某些 MyBatis 映射的複雜性，最進階的映射（例如：巢狀外部聯結映射 Nested Join Mapping）仍需要 XML 映射。因此，如果存在同儕 XML 檔案，MyBatis 會自動尋找並載入它（在此範例中，將根據 BlogMapper.class 的類別路徑與名稱載入 BlogMapper.xml）。稍後會有更多相關說明。
+請注意，在此情況下，設定中加入了一個映射器類別（Mapper class）。映射器類別是包含 SQL 映射註解的 Java 類別，可避免對 XML 映射的需求。註解也支援部分巢狀結果映射；對於某些複雜映射，使用 XML 映射檔可能更方便。因此，如果存在同儕 XML 檔案，MyBatis 會自動尋找並載入它（在此範例中，將根據 BlogMapper.class 的類別路徑與名稱載入 BlogMapper.xml）。稍後會有更多相關說明。
 
 ### 從 SqlSessionFactory 取得 SqlSession
 
@@ -113,7 +116,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.mybatis.example.BlogMapper">
-  <select id="selectBlog" resultType="Blog">
+  <select id="selectBlog" resultType="org.mybatis.example.Blog">
     select * from Blog where id = #{id}
   </select>
 </mapper>
@@ -186,7 +189,7 @@ public interface BlogMapper {
 
 #### SqlSession
 
-每個執行緒都應該擁有自己的 SqlSession 實例。SqlSession 實例不可共用，且不是執行緒安全的。因此最佳作用域是請求（Request）或方法（Method）作用域。絕對不要將 SqlSession 實例的參照保留在類別的靜態欄位甚至是實例欄位中。絕對不要將 SqlSession 的參照保留在任何形式的受控作用域中，例如 Servlet 框架的 HttpSession。如果您正在使用任何 Web 框架，請將 SqlSession 視為遵循與 HTTP 請求類似的作用域。換句話說，在收到 HTTP 請求時，您可以開啟一個 SqlSession，然後在回傳回應時將其關閉。關閉 session 非常重要。您應該始終確保在 finally 區塊內將其關閉。以下是確保關閉 SqlSession 的標準模式：
+每個執行緒都應該擁有自己的 SqlSession 實例。SqlSession 實例不可共用，且不是執行緒安全的。因此最佳作用域是請求（Request）或方法（Method）作用域。絕對不要將 SqlSession 實例的參照保留在類別的靜態欄位甚至是實例欄位中。絕對不要將 SqlSession 的參照保留在任何形式的受控作用域中，例如 Servlet 框架的 HttpSession。如果您正在使用任何 Web 框架，請將 SqlSession 視為遵循與 HTTP 請求類似的作用域。換句話說，在收到 HTTP 請求時，您可以開啟一個 SqlSession，然後在回傳回應時將其關閉。關閉 session 非常重要。請使用 try-with-resources 確保將其關閉。以下是確保關閉 SqlSession 的標準模式：
 
 ```java
 try (SqlSession session = sqlSessionFactory.openSession()) {

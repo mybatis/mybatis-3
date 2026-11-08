@@ -3,9 +3,23 @@ author: Clinton Begin, Dridi Boukelmoune
 
 # Premiers pas
 
-Chaque application MyBatis tourne autour d'une instance de SqlSessionFactory. Une instance de SqlSessionFactory peut être obtenue à l'aide du SqlSessionFactoryBuilder. SqlSessionFactoryBuilder peut créer une instance de SqlSessionFactoryBuilder à partir d'un fichier XML de configuration, où à partir d'une instance personnalisée de la classe Configuration.
+## Installation
+
+Pour utiliser MyBatis, ajoutez le fichier [mybatis-x.x.x.jar](https://github.com/mybatis/mybatis-3/releases) au classpath.
+
+Si vous utilisez Maven, ajoutez la dépendance suivante à votre pom.xml :
+
+```xml
+<dependency>
+  <groupId>org.mybatis</groupId>
+  <artifactId>mybatis</artifactId>
+  <version>x.x.x</version>
+</dependency>
+```
 
 ## Créer une SqlSessionFactory à partir d'un fichier XML
+
+Chaque application MyBatis tourne autour d'une instance de SqlSessionFactory. Une instance de SqlSessionFactory peut être obtenue à l'aide du SqlSessionFactoryBuilder. SqlSessionFactoryBuilder peut créer une instance de SqlSessionFactory à partir d'un fichier XML de configuration, ou à partir d'une instance personnalisée de la classe Configuration.
 
 Créer une instance de SqlSessionFactory à partir d'un fichier XML est très simple. Il est recommandé d'utiliser un fichier présent dans le classpath, mais on peut utiliser n'importe quelle instance d'InputStream, y compris à partir d'un chemin vers un fichier ou d'une URL de type `file://`. MyBatis contient une classe utilitaire, Resources, qui contient plusieurs méthodes facilitant le chargement de ressources du classpath ou d'ailleurs.
 
@@ -15,7 +29,7 @@ InputStream inputStream = Resources.getResourceAsStream(resource);
 SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 ```
 
-Le fichier de configuration XML contient les réglages pour le noyeau de MyBatis, y compris une DataSource pour obtenir les connections vers la base de données, ainsi qu'un TransactionManager pour contrôler les transactions et déterminer leur périmètre. Le détail complet du fichier de configuration XML est décrit plus tard dans le document, mais voici un exemple simple:
+Le fichier de configuration XML contient les réglages pour le noyau de MyBatis, y compris une DataSource pour obtenir les connexions vers la base de données, ainsi qu'un TransactionManager pour contrôler les transactions et déterminer leur périmètre. Le détail complet du fichier de configuration XML est décrit plus tard dans le document, mais voici un exemple simple:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -23,6 +37,7 @@ Le fichier de configuration XML contient les réglages pour le noyeau de MyBatis
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+  <properties resource="org/mybatis/example/db.properties"/>
   <environments default="development">
     <environment id="development">
       <transactionManager type="JDBC"/>
@@ -40,7 +55,9 @@ Le fichier de configuration XML contient les réglages pour le noyeau de MyBatis
 </configuration>
 ```
 
-Le fichier de configuration XML est loin de se limiter à cela, mais l'exemple ci-dessus présente les points les plus critiques. Attention à l'entête XML, nécessaire à la validation du document XML. L'élément environment contient la configuration du gestionnaire de transactions et du pool de connexions. L'élément mappers contient une liste de mappers, des fichiers XML qui contiennent les requêtes SQL et le mapping objet-relationnel.
+Placez `org/mybatis/example/db.properties` dans le classpath et définissez-y `driver`, `url`, `username` et `password` pour votre base de données.
+
+Le fichier de configuration XML est loin de se limiter à cela, mais l'exemple ci-dessus présente les points les plus critiques. La déclaration XML est facultative ; la déclaration DOCTYPE indique la DTD utilisée pour valider le document XML. L'élément environment contient la configuration du gestionnaire de transactions et du pool de connexions. L'élément mappers contient une liste de mappers : fichiers XML et/ou interfaces Java annotées contenant les requêtes SQL et les définitions de mapping.
 
 ## Créer une SqlSessionFactory sans XML
 
@@ -55,7 +72,7 @@ configuration.addMapper(BlogMapper.class);
 SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 ```
 
-On remarque dans ce cas l'ajout d'une classe mapper. Il est possible de configurer MyBatis à l'aide d'annotations. Cependant, en raison de certaines limitations des annotations faces aux cas les plus complexes de mapping avec MyBatis, XML est toujours requis (e.g. Nested Join Mapping). Pour cette raison, MyBatis cherchera toujours la présence d'un fichier XML (dans le cas présent, BlogMapper.xml serait chargé en se basant sur le classpath et le nom de BlogMapper.class). Le sujet sera approfondi plus tard.
+On remarque dans ce cas l'ajout d'une classe mapper. Il est possible de configurer MyBatis à l'aide d'annotations, y compris pour mapper les résultats de jointures imbriquées. Pour certains mappings complexes, XML peut néanmoins être plus facile à lire. Lorsqu'un mapper est enregistré, MyBatis cherche aussi un fichier XML associé (dans le cas présent, BlogMapper.xml, à partir du classpath et du nom de BlogMapper.class). Le sujet sera approfondi plus tard.
 
 ## Acquérir une SqlSession à partir d'une SqlSessionFactory
 
@@ -67,7 +84,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
 }
 ```
 
-Même si cette approche fonctionne, et qu'elle est bien connue des vétérans de MyBatis, il existe une approche plus propre. En utilisant une interface (e.g. BloggerMapper.class) qui décrit correctement les paramètres et la valeur de retour pour une requête particulière, on peut désormais exécuter du code plus propre et fortement typé et éviter les erreurs classiques de transtypage.
+Même si cette approche fonctionne, et qu'elle est bien connue des vétérans de MyBatis, il existe une approche plus propre. En utilisant une interface (e.g. BlogMapper.class) qui décrit correctement les paramètres et la valeur de retour pour une requête particulière, on peut désormais exécuter du code plus propre et fortement typé et éviter les erreurs classiques de transtypage.
 
 Par exemple:
 
@@ -80,9 +97,9 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
 
 Explorons maintenant ce qui est exécuté ici.
 
-## A la découverte des requêtes SQL mappées
+## À la découverte des requêtes SQL mappées
 
-Arrivé ici vous vous demandé peut-être ce qui est exécuté par la SqlSession ou le Mapper. Le sujet des requêtes SQL mappées est vaste, et il sera prépondérant dans la majorité de cette documentation. Mais pour vous donner une idée de ce qui est exécuté, voici quelques exemples.
+Arrivé ici vous vous demandez peut-être ce qui est exécuté par la SqlSession ou le Mapper. Le sujet des requêtes SQL mappées est vaste, et il sera prépondérant dans la majorité de cette documentation. Mais pour vous donner une idée de ce qui est exécuté, voici quelques exemples.
 
 Dans chacun des exemples ci-dessus, les requêtes auraient pu être définies aussi bien en XML qu'avec des annotations. Jetons d'abord un coup d'œil à l'XML. La totalité des fonctionnalités de MyBatis est accessible avec le DSL basé sur XML qui a fait le succès de MyBatis au travers des années. Si vous avez utilisé MyBatis par le passé, vous serez familier du concept, mais le mapping XML a connu de nombreuses améliorations qui seront mises en lumières. Voici un exemple de mapping XML compatible avec les exemples précédents d'utilisation de SqlSession.
 
@@ -92,7 +109,7 @@ Dans chacun des exemples ci-dessus, les requêtes auraient pu être définies au
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.mybatis.example.BlogMapper">
-  <select id="selectBlog" resultType="Blog">
+  <select id="selectBlog" resultType="org.mybatis.example.Blog">
     select * from Blog where id = #{id}
   </select>
 </mapper>
@@ -119,7 +136,7 @@ La seconde approche a de nombreux avantages. Premièrement, on ne dépend pas d'
 
 Les **Namespaces** étaient optionnels dans les précédentes versions de MyBatis, ce qui n'aidait pas en plus d'être déroutant. Ils sont maintenant obligatoires et ont un but au-delà de la simple isolation des requêtes (noms canoniques).
 
-On constate que les namespaces permettent de faire le lien avec les interfaces, et même si vous ne pensez pas les utiliser aujourd'hui, il est vivement recommandé de suivre ces pratiques. En utilisant déclarant un namespace, et en utilisant l'interface Java correspondante, à long terme MyBatis devient plus simple à utiliser et cela rend votre code plus fiable.
+On constate que les namespaces permettent de faire le lien avec les interfaces, et même si vous ne pensez pas les utiliser aujourd'hui, il est vivement recommandé de suivre ces pratiques. En déclarant un namespace, et en utilisant l'interface Java correspondante, à long terme MyBatis devient plus simple à utiliser et cela rend votre code plus fiable.
 
 **Résolution des noms:** Afin de réduire la quantité de code à produire, MyBatis utilise les règles suivantes de résolution des éléments de configuration nommés, dont les requêtes, result maps, caches etc.
 
@@ -138,7 +155,7 @@ public interface BlogMapper {
 }
 ```
 
-Les annotations génère moins d'overhead pour les requêtes simples, elles sont cependant limitées et plus fouillies pour des requêtes plus complexes. De fait, pour tout ce qui est compliqué, XML est à privilégier.
+Les annotations génèrent moins d'overhead pour les requêtes simples, elles sont cependant limitées et plus fouillies pour des requêtes plus complexes. De fait, pour tout ce qui est compliqué, XML est à privilégier.
 
 Il sera de votre ressort de déterminer quelle approche vous convient le mieux, et quelle importance vous accordez à la cohérence dans la définition de vos requêtes SQL. Ceci-dit, MyBatis ne vous enferme pas dans une approche unique. Il est facile de migrer des annotations vers l'XML et vice versa.
 
@@ -164,7 +181,7 @@ Une fois créée, la SqlSessionFactory devrait exister pendant toute l'exécutio
 
 #### SqlSession
 
-Chaque thread devrait avoir sa propre instance de SqlSession. Les instances de SqlSession n'ont pas été pensées pour être partagée et ne sont pas _thread safe_. De fait, les portées les plus adaptées sont méthode (scope method) ou requête (scope request). Ne conservez jamais de SqlSession dans un champ statique ni même dans un champ d'une classe (NDT sauf si la classe se trouve dans un scope de type request). Ne gardez pas non plus de référence de SqlSession dans un framework gérant ses propres cycles de vie (i.e. managed scope), comme par exemple HttpSession de l'API Servlet. Si vous utilisez un framework WEB, SqlSession devait avoir la même portée qu'une requête HTTP (NDT une requête est généralement ratachée à un unique thread). En d'autres termes, lorsque vous recevez une requête HTTP, vous pouvez ouvrir une SqlSession, et lors de la réponse HTTP, la refermer. Fermer la session est très important. Vous devez vous assurer de toujours fermer la session dans un bloc finally. Le pattern classique à suivre pour assurer la fermeture de la connexion :
+Chaque thread devrait avoir sa propre instance de SqlSession. Les instances de SqlSession n'ont pas été pensées pour être partagées et ne sont pas _thread safe_. De fait, les portées les plus adaptées sont méthode (scope method) ou requête (scope request). Ne conservez jamais de SqlSession dans un champ statique ni même dans un champ d'une classe (NDT sauf si la classe se trouve dans un scope de type request). Ne gardez pas non plus de référence de SqlSession dans un framework gérant ses propres cycles de vie (i.e. managed scope), comme par exemple HttpSession de l'API Servlet. Si vous utilisez un framework WEB, SqlSession devrait avoir la même portée qu'une requête HTTP (NDT une requête est généralement rattachée à un unique thread). En d'autres termes, lorsque vous recevez une requête HTTP, vous pouvez ouvrir une SqlSession, et lors de la réponse HTTP, la refermer. Fermer la session est très important. Utilisez try-with-resources pour vous assurer que la session est bien fermée. Le pattern classique à suivre pour assurer la fermeture de la connexion :
 
 ```java
 try (SqlSession session = sqlSessionFactory.openSession()) {

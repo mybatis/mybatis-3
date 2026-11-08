@@ -37,6 +37,7 @@ XML설정파일에서 지정하는 마이바티스의 핵심이 되는 설정은
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+  <properties resource="org/mybatis/example/db.properties"/>
   <environments default="development">
     <environment id="development">
       <transactionManager type="JDBC"/>
@@ -54,7 +55,9 @@ XML설정파일에서 지정하는 마이바티스의 핵심이 되는 설정은
 </configuration>
 ```
 
-좀 더 많은 XML 설정방법이 있지만 위 예제에서는 가장 핵심적인 부분만을 보여주고 있다. XML 가장 위부분에서는 XML 문서의 유효성체크를 위해 필요하다. environment엘리먼트는 트랜잭션 관리와 커넥션 풀링을 위한 환경적인 설정을 나타낸다. mappers엘리먼트는 SQL 코드와 매핑 정의를 가지는 XML 파일인 mapper 의 목록을 지정한다.
+`org/mybatis/example/db.properties`를 클래스패스에 두고 사용할 데이터베이스의 `driver`, `url`, `username`, `password`를 정의하세요.
+
+좀 더 많은 XML 설정 방법이 있지만 위 예제에서는 가장 핵심적인 부분만 보여준다. XML 선언은 선택 사항이고, DOCTYPE 선언은 XML 문서 검증에 사용할 DTD를 지정한다. environment 엘리먼트는 트랜잭션 관리와 커넥션 풀링을 위한 환경 설정을 나타낸다. mappers 엘리먼트는 SQL 코드와 매핑 정의를 담은 XML 파일 또는 애노테이션이 붙은 자바 인터페이스의 목록을 지정한다.
 
 ## XML 을 사용하지 않고 SqlSessionFactory 빌드하기
 
@@ -69,7 +72,7 @@ configuration.addMapper(BlogMapper.class);
 SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 ```
 
-이 설정에서 추가로 해야 할 일은 Mapper클래스를 추가하는 것이다. Mapper클래스는 SQL 매핑 애노테이션을 가진 자바 클래스이다. 어쨌든 자바 애노테이션의 몇가지 제약과 몇가지 설정방법의 복잡함에도 불구하고 XML 매핑은 세부적인 매핑을 위해 언제든 필요하다. 좀더 세부적인 내용은 조금 뒤 다시 보도록 하자.
+이 설정에서는 매퍼 인터페이스를 등록한다. 매퍼 인터페이스에 SQL 매핑 애노테이션을 정의할 수 있으므로 XML 매퍼가 반드시 필요한 것은 아니다. MyBatis는 같은 클래스패스 경로에 `BlogMapper.xml`이 있으면 자동으로 찾아 로드하므로 애노테이션과 XML 매핑을 함께 사용할 수 있다. 자세한 내용은 뒤에서 설명한다.
 
 ## SqlSessionFactory 에서 SqlSession 만들기
 
@@ -106,7 +109,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.mybatis.example.BlogMapper">
-  <select id="selectBlog" resultType="Blog">
+  <select id="selectBlog" resultType="org.mybatis.example.Blog">
     select * from Blog where id = #{id}
   </select>
 </mapper>
@@ -178,7 +181,7 @@ public interface BlogMapper {
 
 #### SqlSession
 
-각각의 쓰레드는 자체적으로 SqlSession인스턴스를 가져야 한다. SqlSession인스턴스는 공유되지 않고 쓰레드에 안전하지도 않다. 그러므로 가장 좋은 스코프는 요청 또는 메소드 스코프이다. SqlSession 을 static 필드나 클래스의 인스턴스 필드로 지정해서는 안된다. 그리고 서블릿 프레임워크의 HttpSession 과 같은 관리 스코프에 둬서도 안된다. 어떠한 종류의 웹 프레임워크를 사용한다면 HTTP 요청과 유사한 스코프에 두는 것으로 고려해야 한다. 달리 말해서 HTTP 요청을 받을때마다 만들고 응답을 리턴할때마다 SqlSession 을 닫을 수 있다. SqlSession 을 닫는 것은 중요하다. 언제나 finally 블록에서 닫아야만 한다. 다음은 SqlSession을 닫는 것을 확인하는 표준적인 형태다.
+각각의 쓰레드는 자체적으로 SqlSession인스턴스를 가져야 한다. SqlSession인스턴스는 공유되지 않고 쓰레드에 안전하지도 않다. 그러므로 가장 좋은 스코프는 요청 또는 메소드 스코프이다. SqlSession 을 static 필드나 클래스의 인스턴스 필드로 지정해서는 안된다. 그리고 서블릿 프레임워크의 HttpSession 과 같은 관리 스코프에 둬서도 안된다. 어떠한 종류의 웹 프레임워크를 사용한다면 HTTP 요청과 유사한 스코프에 두는 것으로 고려해야 한다. 달리 말해서 HTTP 요청을 받을때마다 만들고 응답을 리턴할때마다 SqlSession 을 닫을 수 있다. SqlSession 을 닫는 것은 중요하다. 확실히 닫히도록 try-with-resources를 사용한다. 다음은 SqlSession을 닫는 것을 확인하는 표준적인 형태다.
 
 ```java
 try (SqlSession session = sqlSessionFactory.openSession()) {

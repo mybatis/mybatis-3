@@ -37,6 +37,7 @@ El fichero de configuración XML contiene la configuración del _core_ de MyBati
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+  <properties resource="org/mybatis/example/db.properties"/>
   <environments default="development">
     <environment id="development">
       <transactionManager type="JDBC"/>
@@ -54,7 +55,9 @@ El fichero de configuración XML contiene la configuración del _core_ de MyBati
 </configuration>
 ```
 
-Aunque hay mucha más información sobre el fichero de configuración XML, el ejemplo anterior contiene las partes más importantes. Observa que hay una cabecera XML, requerida para validar el fichero XML. El cuerpo del elemento environment contiene la configuración de la gestión de transacciones correspondiente al entorno. El elemento mappers contiene la lista de mappers – Los ficheros XML que contienen las sentencias SQL y las definiciones de mapeo.
+Coloca `org/mybatis/example/db.properties` en el classpath y define allí `driver`, `url`, `username` y `password` para tu base de datos.
+
+Aunque hay mucha más información sobre el fichero de configuración XML, el ejemplo anterior contiene las partes más importantes. Observa la declaración XML opcional y la declaración DOCTYPE, que identifica el DTD utilizado para validar el documento XML. El cuerpo del elemento environment contiene la configuración de la gestión de transacciones correspondiente al entorno. El elemento mappers contiene la lista de mappers: ficheros XML y/o interfaces Java anotadas que contienen las sentencias SQL y las definiciones de mapeo.
 
 ## Cómo crear un SqlSessionFactory sin XML
 
@@ -69,7 +72,7 @@ configuration.addMapper(BlogMapper.class);
 SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 ```
 
-Puedes observar que en este caso la configuración está añadiendo una clase mapper. Las clases mapper son clases Java que contienen anotaciones de mapeo SQL que permiten evitar el uso de XML. Sin embargo el XML sigue siendo necesario en ocasiones, debido a ciertas limitaciones de las anotaciones Java y la complejidad que pueden alcanzar los mapeos (ej. mapeos anidados de Joins). Por esto, MyBatis siempre busca si existe un fichero XML asociado a la clase mapper (en este caso, se buscará un fichero con nombre BlogMapper.xml cuyo nombre deriva del classpath y nombre de BlogMapper.class). Hablaremos más sobre esto más adelante.
+Puedes observar que en este caso la configuración está añadiendo una clase mapper. Las clases mapper son clases Java que contienen anotaciones de mapeo SQL que permiten evitar el uso de XML. Las anotaciones también permiten definir mapeos anidados de joins, aunque para algunos mapeos complejos puede resultar más práctico usar XML. Al registrar un mapper, MyBatis busca si existe un fichero XML asociado a esa clase (en este caso, BlogMapper.xml, según el classpath y el nombre de BlogMapper.class). Hablaremos más sobre esto más adelante.
 
 ## Cómo obtener un SqlSession a partir del SqlSessionFactory
 
@@ -106,7 +109,7 @@ En cualquiera de los ejemplos a continuación podrían haberse usado indistintam
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.mybatis.example.BlogMapper">
-  <select id="selectBlog" resultType="Blog">
+  <select id="selectBlog" resultType="org.mybatis.example.Blog">
     select * from Blog where id = #{id}
   </select>
 </mapper>
@@ -164,7 +167,7 @@ Es muy importante entender los distintos ámbitos y ciclos de vida de las clases
 
 <span class="label important">NOTA</span> **Ciclo de vida de los objetos y frameworks de inyección de dependencias**
 
-Los frameworks de inyección de dependencias pueden crear SqlSessions y mappers _thread safe_ (reeentrante) y transaccionales, e inyectarlos directmaente en tus beans de forma que puedes olvidarte de su ciclo de vida. Echa un vistazo a los sub-projectos MyBatis-Spring o MyBatis-Guice para conocer más detalles sobre cómo usar MyBatis con estos frameworks.
+Los frameworks de inyección de dependencias pueden crear SqlSessions y mappers _thread safe_ (reentrante) y transaccionales, e inyectarlos directamente en tus beans de forma que puedes olvidarte de su ciclo de vida. Echa un vistazo a los sub-projectos MyBatis-Spring o MyBatis-Guice para conocer más detalles sobre cómo usar MyBatis con estos frameworks.
 
 ---
 
@@ -178,7 +181,7 @@ Una vez creado, el SqlSessionFactory debería existir durante toda la ejecución
 
 #### SqlSession
 
-Cada thread (hilo de ejecución) debería tener su propia instancia de SqlSession. Las instancias de SqlSession no son thread safe y no deben ser compartidas. Por tanto el ámbito adecuado es el de petición (request) o bien el método. No guardes nunca instancias de SqlSession en un campo estático o incluso en una propiedad de instancia de una clase. Nunca guardes referencias a una SqlSession en ningún tipo de ámbito gestionado como la HttpSession. Si estás usando un framework web considera que el SqlSession debería tener un ámbito similar al HttpRequest. Es decir, cuando recibas una petición http puedes abrir una SqlSession y cerrarla cuando devuelvas la respuesta. Cerrar la SqlSession es muy importante. Deberías asegurarte de que se cierra con un bloque finally. A continuación se muestra el patrón estándar para asegurarse de que las sesiones se cierran correctamente.
+Cada thread (hilo de ejecución) debería tener su propia instancia de SqlSession. Las instancias de SqlSession no son thread safe y no deben ser compartidas. Por tanto el ámbito adecuado es el de petición (request) o bien el método. No guardes nunca instancias de SqlSession en un campo estático o incluso en una propiedad de instancia de una clase. Nunca guardes referencias a una SqlSession en ningún tipo de ámbito gestionado como la HttpSession. Si estás usando un framework web considera que el SqlSession debería tener un ámbito similar al HttpRequest. Es decir, cuando recibas una petición http puedes abrir una SqlSession y cerrarla cuando devuelvas la respuesta. Cerrar la SqlSession es muy importante. Utiliza try-with-resources para asegurarte de que se cierra. A continuación se muestra el patrón estándar para asegurarse de que las sesiones se cierran correctamente.
 
 ```java
 try (SqlSession session = sqlSessionFactory.openSession()) {

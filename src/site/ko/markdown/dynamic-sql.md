@@ -134,7 +134,7 @@ AND title like 'someTitle'
 
 where 엘리먼트는 태그에 의해 컨텐츠가 리턴되면 단순히 “WHERE”만을 추가한다. 게다가 컨텐츠가 “AND”나 “OR”로 시작한다면 그 “AND”나 “OR”를 지워버린다.
 
-만약에 where 엘리먼트가 기대한 것처럼 작동하지 않는다면 trim 엘리먼트를 사용자 정의할 수도 있다. 예를들어 다음은 where 엘리먼트에 대한 trim 기능과 동일하다.
+만약에 where 엘리먼트가 기대한 것처럼 작동하지 않는다면 trim 엘리먼트를 사용자 정의할 수도 있다. 예를 들어 다음 trim은 AND 또는 OR 다음에 공백이 오는 일반적인 경우를 처리한다. where 엘리먼트는 뒤에 탭이나 줄바꿈이 오는 AND와 OR도 제거한다.
 
 ```xml
 <trim prefix="WHERE" prefixOverrides="AND |OR ">

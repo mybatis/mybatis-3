@@ -307,7 +307,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 ドライバがデータベースからの応答を待ち続ける秒数（タイムアウト）を設定します。
               </td>
               <td>
-                正の整数（単位：秒）
+                0 以上の整数（単位：秒）
               </td>
               <td>
                 なし (null)
@@ -322,7 +322,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 このパラメータ値はクエリ毎の設定で上書きできます。
               </td>
               <td>
-                正の整数
+                0 以上の整数
               </td>
               <td>
                 なし (null)
@@ -347,8 +347,8 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 safeRowBoundsEnabled
               </td>
               <td>
-                ネストされたステートメントに対して RowBounds の使用を許可するかどうかを設定します。
-                許可する場合は、 false を設定します。
+                true の場合、ネストされた結果マッピングで RowBounds のオフセットが 0 より大きいか、上限がデフォルト値より小さいと例外が発生します。
+                このチェックを省略する場合は false を設定します。
               </td>
               <td>
                 true | false
@@ -362,8 +362,8 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
                 safeResultHandlerEnabled
               </td>
               <td>
-                ネストされたステートメントに対して ResultHandler の使用を許可するかどうかを設定します。
-                許可する場合は、 false を設定します。
+                ネストされた結果マッピングを含むステートメントでカスタム ResultHandler を使用する場合の安全性チェックを設定します。true の場合は使用できませんが、resultOrdered が true のステートメントは例外です。
+                チェックを無効にする場合は false を設定します。
               </td>
               <td>
                 true | false
@@ -392,7 +392,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
               </td>
               <td>
                 MyBatis は循環参照の解決やネストされたクエリのスピード向上のためにローカルキャッシュを使用します。
-                デフォルト（SESSION）では同一セッション内の全てのクエリ結果がキャッシュされます。localCacheScope に STATEMENT を設定した場合、ローカルキャッシュはステートメントごとに適用されます。言い換えると、同一 SqlSession に対する複数の呼び出しでデータが共有されることはありません。
+                デフォルト（SESSION）では同一セッション内の通常のクエリ結果がキャッシュされます。カスタム ResultHandler を渡すクエリはローカルキャッシュを読み込まず、Cursor を使うクエリはローカルキャッシュを使用しません。localCacheScope に STATEMENT を設定した場合、ローカルキャッシュはステートメントごとに適用されます。言い換えると、同一 SqlSession に対する複数の呼び出しでデータが共有されることはありません。
               </td>
               <td>
                 SESSION | STATEMENT
@@ -671,8 +671,8 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader, environ
   <setting name="callSettersOnNulls" value="false"/>
   <setting name="returnInstanceForEmptyRow" value="false"/>
   <setting name="logPrefix" value="exampleLogPreFix_"/>
-  <setting name="logImpl" value="SLF4J | LOG4J | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING"/>
-  <setting name="proxyFactory" value="CGLIB | JAVASSIST"/>
+  <setting name="logImpl" value="JDK_LOGGING"/>
+  <setting name="proxyFactory" value="JAVASSIST"/>
   <setting name="vfsImpl" value="org.mybatis.example.YourselfVfsImpl"/>
   <setting name="useActualParamName" value="true"/>
   <setting name="configurationFactory" value="org.mybatis.example.ConfigurationFactory"/>
@@ -1086,7 +1086,7 @@ public class Author {
                 Byte, byte
               </td>
               <td>
-                NUMERIC または BYTE 互換の型
+                NUMERIC または TINYINT 互換の型
               </td>
             </tr>
             <tr>
@@ -1163,7 +1163,7 @@ public class Author {
                 String
               </td>
               <td>
-                CHAR, VARCHAR
+                CHAR, VARCHAR, LONGVARCHAR
               </td>
             </tr>
             <tr>
@@ -1185,7 +1185,7 @@ public class Author {
                 String
               </td>
               <td>
-                CLOB, LONGVARCHAR
+                CLOB
               </td>
             </tr>
             <tr>
@@ -1196,7 +1196,7 @@ public class Author {
                 String
               </td>
               <td>
-                NVARCHAR, NCHAR
+                NVARCHAR, NCHAR, LONGNVARCHAR
               </td>
             </tr>
             <tr>
@@ -1483,7 +1483,7 @@ public class Author {
 
         <source><![CDATA[// ExampleTypeHandler.java
 @MappedJdbcTypes(JdbcType.VARCHAR)
-public class StringTypeHandler extends BaseTypeHandler<String> {
+public class ExampleTypeHandler extends BaseTypeHandler<String> {
 
   @Override
   public void setNonNullParameter(PreparedStatement ps, int i, String parameter, JdbcType jdbcType) throws SQLException {
@@ -1515,7 +1515,7 @@ public class StringTypeHandler extends BaseTypeHandler<String> {
 
         <p>
           上記のようにして登録された TypeHandler は、String 型のプロパティと VARCHAR 型の引数または結果のマッピング時に使用されるデフォルトのタイプハンドラーよりも優先的に使用されます。
-          MyBatis はデータベースメタデータを参照してタイプを判断している訳ではないので、正しいタイプハンドラーが使用されるよう、パラメーター設定時にフィールドが VARCHAR 型であることを明示する必要があります。MyBatis は実際にステートメントが実行されるまで、データ型のチェックなどは行いません。
+          <code>ignoreParameterMetaData</code> が <code>false</code>（デフォルト）の場合、パラメーターの JDBC 型が明示されていなければ、MyBatis は JDBC のパラメーターメタデータを参照してタイプハンドラーを選択できます。ドライバーがメタデータを提供しない場合は、パラメーターマッピングに <code>jdbcType="VARCHAR"</code> を指定してください。結果マッピングで <code>typeHandler</code> と <code>jdbcType</code> のどちらも指定していない場合は、結果セットのメタデータを使ってタイプハンドラーを選択できます（後述）。
         </p>
 
         <p>
@@ -1528,18 +1528,18 @@ public class StringTypeHandler extends BaseTypeHandler<String> {
           </li>
         </ul>
 
-        <p>typeHandler 要素に jdbcType 属性を追加することで適用対象の JDBC タイプを指定することもできます（例：jdbcType=VARCHAR）。jdbcType 属性が指定されている場合、<code>@MappedJdbcTypes</code> の指定は無視されます。
-        </p>
         <p>適用対象の JDBC タイプを指定する方法は二つあります。</p>
         <ul>
-          <li>typeHandler 要素に jdbcType 属性を追加する（例：jdbcType=VARCHAR）。</li>
-          <li>TypeHandler の実装クラスに <code>@MappedJdbcTypes</code> を付加し、JDBC タイプのリストを指定します。jdbcType 属性が指定されている場合、このアノテーションは無視されます。</li>
+          <li>同じ typeHandler 要素に <code>javaType</code> と <code>jdbcType</code> の両方を指定します（例：<code>javaType="String" jdbcType="VARCHAR"</code>）。<code>javaType</code> を省略すると XML の <code>jdbcType</code> 属性は無視され、<code>@MappedJdbcTypes</code> があればその指定が使用されます。</li>
+          <li>TypeHandler の実装クラスに <code>@MappedJdbcTypes</code> を付加し、JDBC タイプのリストを指定します。同じ要素に <code>javaType</code> と <code>jdbcType</code> の両方を指定した場合、このアノテーションは無視されます。</li>
         </ul>
 
         <p>
-          <code>ResultMap</code>　でプロパティの指定に <code>typeHandler</code> と <code>jdbcType</code> が明示的に指定されていない場合、パース時点で <code>javaType</code> はプロパティの型から推測可能ですが <code>jdbcType</code> は未知となります。 MyBatis は javaType=[推測された型] と jdbcType=null にマップされた TypeHandler を探します。
-          TypeHandler を jdbcType=null にマップするためには <code>@MappedJdbcTypes</code> の <code>includeNullJdbcType</code> 属性に <code>true</code> を指定します。<br />
-          MyBatis 3.4.0 以降は javaType に対してマップされている TypeHandler が１つの場合は登録時の jdbcType に関わらずこの TypeHandler が使われるようになりました。
+          <code>ResultMap</code> の結果マッピングに <code>typeHandler</code> を明示すると、そのハンドラーが使用されます。
+          <code>typeHandler</code> を指定せずに <code>jdbcType</code> を指定した場合は、マッピングの解析時に Java 型と指定された JDBC 型からハンドラーを解決します。
+          どちらも指定していない場合は、結果を読み込む際に Java 型と結果セットのメタデータから取得した実際の列の JDBC 型を使ってハンドラーを選択します。
+          そのため、<code>@MappedJdbcTypes</code> で登録したハンドラーは、<code>includeNullJdbcType=true</code> を指定しなくても一致する結果列に使用できます。
+          <code>includeNullJdbcType=true</code> はハンドラーを <code>jdbcType=null</code> にも登録する設定であり、<code>ResultMap</code> で使用するための必須条件ではありません。
         </p>
 
         <p>また、MyBatis にタイプハンドラーを自動検出させることもできます。</p>
@@ -1689,7 +1689,7 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
         <p>
           ObjectFactory のインターフェイスは非常にシンプルです。
           ２つある create メソッドのうち１つはデフォルトコンストラクタを扱うもので、もうひとつは引数を取るコンストラクタを扱います。<br />
-          もう１つのメソッド setProperties は ObjectFactory を設定するために使うことができます。
+          isCollection メソッドはコレクション型かどうかを判定します。setProperties メソッドは ObjectFactory を設定するために使います。
           設定ファイルの objectFactory 要素のボディで定義されているプロパティは、ObjectFactory が初期化された後に setProperties メソッドの引数として渡されます。
         </p>
 
@@ -1697,14 +1697,13 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
       <subsection name="plugins">
         <p>
           MyBatis が Mapped Statement を実行する際、いくつかのタイミングで処理をインターセプトすることができます。
-          デフォルトでは、プラグインを使って下記のメソッド呼び出しをインターセプトすることができるようになっています。
+          以下は、サポートされているインターフェースでプラグインがインターセプトできるメソッドの例です。
         </p>
         <ul>
           <li>
             Executor
-            (update, query, flushStatements, commit, rollback,
-            getTransaction, close,
-            isClosed)
+            (update, query, queryCursor, flushStatements, commit, rollback,
+            getTransaction, close, isClosed)
           </li>
           <li>
             ParameterHandler
@@ -1712,11 +1711,11 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
           </li>
           <li>
             ResultSetHandler
-            (handleResultSets, handleOutputParameters)
+            (handleResultSets, handleCursorResultSets, handleOutputParameters)
           </li>
           <li>
             StatementHandler
-            (prepare, parameterize, batch, update, query)
+            (prepare, parameterize, batch, update, query, queryCursor)
           </li>
         </ul>
         <p>
@@ -1850,9 +1849,9 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
         <ul>
           <li>
             JDBC - JDBC トランザクションマネージャーは、単純に JDBC のコミットとロールバックの機能を直接利用します。
-            この場合、トランザクションのスコープはデータソースから取得した接続に依存します。一部のドライバーとの互換性を保つため、デフォルトでは接続をクローズする前にオートコミットを有効化するようになっていますが、この処理は他のドライバにとっては不要なだけでなく負荷の高い操作となる可能性があります。バージョン 3.5.10 以降では skipSetAutoCommitOnClose に false を設定することでオートコミットの有効化処理をスキップできるようになっています。
+            この場合、トランザクションのスコープはデータソースから取得した接続に依存します。一部のドライバーとの互換性を保つため、デフォルトでは接続をクローズする前にオートコミットを有効化するようになっていますが、この処理は他のドライバにとっては不要なだけでなく負荷の高い操作となる可能性があります。バージョン 3.5.10 以降では skipSetAutoCommitOnClose に true を設定することでオートコミットの有効化処理をスキップできるようになっています。
             <source><![CDATA[<transactionManager type="JDBC">
-  <property name="skipSetAutoCommitOnClose" value="false"/>
+  <property name="skipSetAutoCommitOnClose" value="true"/>
 </transactionManager>]]></source>
           </li>
           <li>
@@ -1923,6 +1922,8 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
           </li>
           <li>password - データベース接続時のパスワード
           </li>
+          <li>autoCommit – 新しい接続のオートコミットを設定します。省略した場合はドライバーのデフォルト値が使用されます。
+          </li>
           <li>defaultTransactionIsolationLevel – デフォルトのトランザクション分離レベル
           </li>
           <li>defaultNetworkTimeout – 任意の要求に対するデータベースからの応答待機期限のデフォルト値（ミリ秒）。詳細は <code>java.sql.Connection#setNetworkTimeout()</code> の javadoc 参照。
@@ -1954,7 +1955,7 @@ SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader,properti
           </li>
           <li>poolMaximumIdleConnections – 同時にプールされるアイドル接続数の最大値です。
           </li>
-          <li>poolMaximumCheckoutTime – プールされた接続が足りなくなった場合、使用中の接続でこの時間を経過しても戻されていない接続があれば強制的に切断されます。
+          <li>poolMaximumCheckoutTime – プールされた接続が足りなくなった場合、使用中の接続でこの時間を経過しても戻されていない接続があれば、その接続は回収されて別の要求に再割り当てされます。
             デフォルト: 20000ms （20秒）
           </li>
           <li>poolTimeToWait – 接続の取得に長時間を要した場合にログを出力し、接続の再取得を試みる機会を与えるための低レベルの設定です（プールが誤って設定された場合、無限に待機状態となってしまうのを防ぐため）。
@@ -2066,7 +2067,7 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
 </databaseIdProvider>]]></source>
 
     <p>
-      プロパティが指定された場合、VendorDatabaseIdProvider は <code>DatabaseMetaData#getDatabaseProductName()</code> から返された製品名に name 属性で指定された文字列が含まれているかどうかチェックし、含まれている場合は value 属性で指定されている文字列を「現在の databaseId」として返します。指定された name が一つも含まれていない場合は "null" を返します。
+      プロパティが指定された場合、VendorDatabaseIdProvider は <code>DatabaseMetaData#getDatabaseProductName()</code> から返された製品名に name 属性で指定された文字列が含まれているかどうかチェックし、含まれている場合は value 属性で指定されている文字列を「現在の databaseId」として返します。指定された name が一つも含まれていない場合は null を返します。
       上記の例で、<code>getDatabaseProductName()</code> が "Oracle (DataDirect)" という文字列を返す場合、現在の databaseId は "oracle" となります。
     </p>
 

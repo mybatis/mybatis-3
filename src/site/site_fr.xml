@@ -21,37 +21,37 @@
 
   <body>
     <menu name="Core">
-      <item name="Introduction" href="index.html"/>
+      <item name="Introduction" href="https://mybatis.org/mybatis-3/index.html"/>
       <item name="Premiers pas" href="getting-started.html"/>
-      <item name="Configuration XML" href="configuration.html" collapse="true">
-        <item href="configuration.html#properties" name="properties" />
-        <item href="configuration.html#settings" name="settings" />
-        <item href="configuration.html#typeAliases" name="typeAliases" />
-        <item href="configuration.html#typeHandlers" name="typeHandlers" />
-        <item href="configuration.html#objectFactory" name="objectFactory" />
-        <item href="configuration.html#plugins" name="plugins" />
-        <item href="configuration.html#environments" name="environments" />
-        <item href="configuration.html#databaseIdProvider" name="databaseIdProvider" />
-        <item href="configuration.html#mappers" name="mappers" />
+      <item name="Configuration XML" href="https://mybatis.org/mybatis-3/configuration.html" collapse="true">
+        <item href="https://mybatis.org/mybatis-3/configuration.html#properties" name="properties" />
+        <item href="https://mybatis.org/mybatis-3/configuration.html#settings" name="settings" />
+        <item href="https://mybatis.org/mybatis-3/configuration.html#typeAliases" name="typeAliases" />
+        <item href="https://mybatis.org/mybatis-3/configuration.html#typeHandlers" name="typeHandlers" />
+        <item href="https://mybatis.org/mybatis-3/configuration.html#objectFactory" name="objectFactory" />
+        <item href="https://mybatis.org/mybatis-3/configuration.html#plugins" name="plugins" />
+        <item href="https://mybatis.org/mybatis-3/configuration.html#environments" name="environments" />
+        <item href="https://mybatis.org/mybatis-3/configuration.html#databaseIdProvider" name="databaseIdProvider" />
+        <item href="https://mybatis.org/mybatis-3/configuration.html#mappers" name="mappers" />
       </item>
-      <item name="Fichiers Mappers XML" href="sqlmap-xml.html" collapse="true">
-        <item href="sqlmap-xml.html#select" name="select" />
-        <item href="sqlmap-xml.html#insert_update_and_delete" name="insert, update et delete" />
-        <item href="sqlmap-xml.html#Parameters" name="Paramètres" />
-        <item href="sqlmap-xml.html#Result_Maps" name="ResultMaps" />
-        <item href="sqlmap-xml.html#Auto-mapping" name="Auto-mapping" />
-        <item href="sqlmap-xml.html#cache" name="cache" />
+      <item name="Fichiers Mappers XML" href="https://mybatis.org/mybatis-3/sqlmap-xml.html" collapse="true">
+        <item href="https://mybatis.org/mybatis-3/sqlmap-xml.html#select" name="select" />
+        <item href="https://mybatis.org/mybatis-3/sqlmap-xml.html#insert.2C_update_and_delete" name="insert, update et delete" />
+        <item href="https://mybatis.org/mybatis-3/sqlmap-xml.html#Parameters" name="Paramètres" />
+        <item href="https://mybatis.org/mybatis-3/sqlmap-xml.html#Result_Maps" name="ResultMaps" />
+        <item href="https://mybatis.org/mybatis-3/sqlmap-xml.html#Auto-mapping" name="Auto-mapping" />
+        <item href="https://mybatis.org/mybatis-3/sqlmap-xml.html#cache" name="cache" />
       </item>
-      <item name="SQL Dynamique" href="dynamic-sql.html"/>
-      <item name="API Java" href="java-api.html" collapse="true">
-        <item name="Arborescence des répertoires" href="java-api.html#directoryStructure" />
-        <item name="Sessions SQL" href="java-api.html#sqlSessions" />
+      <item name="SQL Dynamique" href="https://mybatis.org/mybatis-3/dynamic-sql.html"/>
+      <item name="API Java" href="https://mybatis.org/mybatis-3/java-api.html" collapse="true">
+        <item name="Arborescence des répertoires" href="https://mybatis.org/mybatis-3/java-api.html#Directory_Structure" />
+        <item name="Sessions SQL" href="https://mybatis.org/mybatis-3/java-api.html#SqlSessions" />
+        <item name="SqlSessionManager" href="https://mybatis.org/mybatis-3/java-api.html#SqlSessionManager" />
       </item>
-      <item name="Construction de requêtes" href="statement-builders.html" collapse="true">
-        <item name="SelectBuilder" href="statement-builders.html#SelectBuilder" />
-        <item name="SqlBuilder" href="statement-builders.html#SqlBuilder" />
-       </item>
-      <item name="Journalisation" href="logging.html"/>
+      <item name="Construction de requêtes" href="https://mybatis.org/mybatis-3/statement-builders.html" collapse="true">
+        <item name="SqlBuilder et SelectBuilder (obsolètes)" href="https://mybatis.org/mybatis-3/statement-builders.html#deprecated-builders" />
+      </item>
+      <item name="Journalisation" href="https://mybatis.org/mybatis-3/logging.html"/>
     </menu>
 
     <menu ref="reports"/>

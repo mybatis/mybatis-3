@@ -40,6 +40,7 @@ The configuration XML file contains settings for the core of the MyBatis system,
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+  <properties resource="org/mybatis/example/db.properties"/>
   <environments default="development">
     <environment id="development">
       <transactionManager type="JDBC"/>
@@ -57,7 +58,9 @@ The configuration XML file contains settings for the core of the MyBatis system,
 </configuration>
 ```
 
-While there is a lot more to the XML configuration file, the above example points out the most critical parts. Notice the XML header, required to validate the XML document. The body of the environment element contains the environment configuration for transaction management and connection pooling. The mappers element contains a list of mappers – the XML files and/or annotated Java interface classes that contain the SQL code and mapping definitions.
+Place `org/mybatis/example/db.properties` on the classpath and define `driver`, `url`, `username`, and `password` there for your database.
+
+While there is a lot more to the XML configuration file, the above example points out the most critical parts. Notice the optional XML declaration and the DOCTYPE declaration, which identifies the DTD used to validate the XML document. The body of the environment element contains the environment configuration for transaction management and connection pooling. The mappers element contains a list of mappers – the XML files and/or annotated Java interface classes that contain the SQL code and mapping definitions.
 
 ### Building SqlSessionFactory without XML
 
@@ -75,7 +78,7 @@ SqlSessionFactory sqlSessionFactory =
   new SqlSessionFactoryBuilder().build(configuration);
 ```
 
-Notice in this case the configuration is adding a mapper class. Mapper classes are Java classes that contain SQL Mapping Annotations that avoid the need for XML mapping. However, due to some limitations of Java Annotations and the complexity of some MyBatis mappings, XML mapping is still required for the most advanced mappings (e.g. Nested Join Mapping). For this reason, MyBatis will automatically look for and load a peer XML file if it exists (in this case, BlogMapper.xml would be loaded based on the classpath and name of BlogMapper.class). More on this later.
+Notice in this case the configuration is adding a mapper interface. Mapper interfaces can contain SQL mapping annotations, so an XML mapper is not always needed. MyBatis will also automatically look for and load a peer XML file if it exists (in this case, BlogMapper.xml would be loaded based on the classpath and name of BlogMapper.class). This lets you use annotations and XML mappings together. More on this later.
 
 ### Acquiring a SqlSession from SqlSessionFactory
 
@@ -113,7 +116,7 @@ In either of the examples above, the statements could have been defined by eithe
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.mybatis.example.BlogMapper">
-  <select id="selectBlog" resultType="Blog">
+  <select id="selectBlog" resultType="org.mybatis.example.Blog">
     select * from Blog where id = #{id}
   </select>
 </mapper>
@@ -186,7 +189,7 @@ Once created, the SqlSessionFactory should exist for the duration of your applic
 
 #### SqlSession
 
-Each thread should have its own instance of SqlSession. Instances of SqlSession are not to be shared and are not thread safe. Therefore the best scope is request or method scope. Never keep references to a SqlSession instance in a static field or even an instance field of a class. Never keep references to a SqlSession in any sort of managed scope, such as HttpSession of the Servlet framework. If you're using a web framework of any sort, consider the SqlSession to follow a similar scope to that of an HTTP request. In other words, upon receiving an HTTP request, you can open a SqlSession, then upon returning the response, you can close it. Closing the session is very important. You should always ensure that it's closed within a finally block. The following is the standard pattern for ensuring that SqlSessions are closed:
+Each thread should have its own instance of SqlSession. Instances of SqlSession are not to be shared and are not thread safe. Therefore the best scope is request or method scope. Never keep references to a SqlSession instance in a static field or even an instance field of a class. Never keep references to a SqlSession in any sort of managed scope, such as HttpSession of the Servlet framework. If you're using a web framework of any sort, consider the SqlSession to follow a similar scope to that of an HTTP request. In other words, upon receiving an HTTP request, you can open a SqlSession, then upon returning the response, you can close it. Closing the session is very important. Use try-with-resources to ensure that it is closed. The following is the standard pattern for ensuring that SqlSessions are closed:
 
 ```java
 try (SqlSession session = sqlSessionFactory.openSession()) {

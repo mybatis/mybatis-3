@@ -14,7 +14,7 @@ Please use [the mailing list](https://groups.google.com/group/mybatis-user) inst
 
 ## Improving documentation
 
-- Documentations are placed under [src/site](https://github.com/mybatis/mybatis-3/tree/master/src/site) directory in [the xdoc format](https://maven.apache.org/doxia/references/xdoc-format.html), so it is basically the same as creating a patch to contribute documentation changes. Please see the [Contributing code](CONTRIBUTING.md#contributing-code) section.
+- Reference guides are under [src/site](https://github.com/mybatis/mybatis-3/tree/master/src/site) in Markdown (`markdown` directories) or [XDoc](https://maven.apache.org/doxia/references/xdoc-format.html) (`xdoc` directories), including translated guides. Submit documentation changes through the same pull request process described in [Contributing code](CONTRIBUTING.md#contributing-code).
 
 To build the reference documentation, run:
 
@@ -28,7 +28,7 @@ The `site` lifecycle runs the `pre-site` version filtering step before rendering
 
 ### Formatting
 
-Mybatis-core is now being auto formatted.  Given nature of some code logic with mybatis, it is more appropriate to force a formatting structure manually for snippets such as sql statements.  To do so, add following blocks around code.
+MyBatis core is now formatted automatically. Given the nature of some MyBatis code, particularly SQL statements, it can be useful to preserve formatting in selected snippets. To do so, add the following comments around the code.
 
 - ```// @formatter:off``` to start the block of unformatted code
 - ```// @formatter:on``` to end the block of unformatted code
@@ -38,7 +38,7 @@ If comment sections need same behaviour such as javadocs, note that the entire b
 ### Copyright and License
 
 - You are the author of your contributions and will always be.
-- Everything you can find it this project is licensed under the Apache Software License 2.0
+- Everything you can find in this project is licensed under the Apache Software License 2.0
 - Every contribution you do must be licensed under the Apache Software License 2.0. Otherwise we will not be able to accept it.
 - Please make sure that all the new files you create hold the following header:
 
@@ -73,6 +73,6 @@ Here are the steps of a typical workflow.
 6. Send a [pull request](https://help.github.com/articles/using-pull-requests).
 
 For steps 1 to 3, please read [this GitHub help](https://help.github.com/articles/fork-a-repo) if you are not familiar with these operations.  
-Step 4 and 5 are basic [git](https://git-scm.com/) operations. Please see the [online documentation](https://git-scm.com/documentation) for its usage.
+Steps 4 and 5 are basic [git](https://git-scm.com/) operations. Please see the [online documentation](https://git-scm.com/documentation) for its usage.
 
 For how to write a unit test, please see the [unit test](https://github.com/mybatis/mybatis-3/wiki/Unit-Test) page.

@@ -114,13 +114,13 @@ SqlSessionFactory factory =
 | autoMappingBehavior                | 指定 MyBatis 是否以及如何自動將欄位映射至屬性/欄位。NONE 停用自動映射。PARTIAL 僅自動映射沒有巢狀結果映射定義的結果。FULL 自動映射任何複雜度的結果映射（包含巢狀或其他情況）。                                                                                                                                                                                                                                 | NONE, PARTIAL, FULL                                                                                                                        | PARTIAL                                               |
 | autoMappingUnknownColumnBehavior   | 指定當偵測到自動映射目標中未知欄位（或未知屬性型別）時的行為。<ul><li>`NONE`：不執行任何動作</li><li>`WARNING`：輸出警告日誌（`'org.apache.ibatis.session.AutoMappingUnknownColumnBehavior'` 的日誌層級必須設為 `WARN`）</li><li>`FAILING`：映射失敗（拋出 `SqlSessionException`）</li></ul>請注意，當 `autoMappingBehavior` 設為 `FULL` 時，可能會出現誤判（false-positives）。                                             | NONE, WARNING, FAILING                                                                                                                     | NONE                                                  |
 | defaultExecutorType                | 設定預設執行器。SIMPLE 執行器不具特殊行為。REUSE 執行器重複使用 PreparedStatement。BATCH 執行器重複使用陳述式並執行批次更新。                                                                                                                                                                                                                                                                                   | SIMPLE &#124; REUSE &#124; BATCH                                                                                                           | SIMPLE                                                |
-| defaultStatementTimeout            | 設定驅動程式等待資料庫回應的逾時秒數。                                                                                                                                                                                                                                                                                                                                                                           | 任何正整數                                                                                                                                 | 未設定 (null)                                         |
-| defaultFetchSize                   | 為驅動程式提供擷取資料列數（fetch size）的提示，以控制回傳結果的大小。此參數值可由個別查詢設定覆寫。                                                                                                                                                                                                                                                                                                             | 任何正整數                                                                                                                                 | 未設定 (null)                                         |
+| defaultStatementTimeout            | 設定驅動程式等待資料庫回應的逾時秒數。                                                                                                                                                                                                                                                                                                                                                                           | 大於或等於 0 的整數                                                                                                                        | 未設定 (null)                                         |
+| defaultFetchSize                   | 為驅動程式提供擷取資料列數（fetch size）的提示，以控制回傳結果的大小。此參數值可由個別查詢設定覆寫。                                                                                                                                                                                                                                                                                                             | 大於或等於 0 的整數                                                                                                                        | 未設定 (null)                                         |
 | defaultResultSetType               | 當省略個別陳述式設定時，指定預設的結果集捲動策略。（自 3.5.2 起）                                                                                                                                                                                                                                                                                                                                                | FORWARD_ONLY &#124; SCROLL_SENSITIVE &#124; SCROLL_INSENSITIVE &#124; DEFAULT（行為與「未設定」相同）                                      | 未設定 (null)                                         |
-| safeRowBoundsEnabled               | 允許在巢狀陳述式上使用 RowBounds。若允許，請設為 false。                                                                                                                                                                                                                                                                                                                                                         | true &#124; false                                                                                                                          | false                                                 |
-| safeResultHandlerEnabled           | 允許在巢狀陳述式上使用 ResultHandler。若允許，請設為 false。                                                                                                                                                                                                                                                                                                                                                     | true &#124; false                                                                                                                          | true                                                  |
+| safeRowBoundsEnabled               | 設為 true 時，若巢狀結果映射使用大於零的 RowBounds offset 或小於預設值的 limit，則會拒絕執行；若要略過此檢查，請設為 false。                                                                                                                                                                                                                                                                                       | true &#124; false                                                                                                                          | false                                                 |
+| safeResultHandlerEnabled           | 設為 true 時，禁止在未設定 `resultOrdered=true` 的巢狀結果映射中使用自訂 ResultHandler；若要略過此檢查，請設為 false。                                                                                                                                                                                                                                                                                           | true &#124; false                                                                                                                          | true                                                  |
 | mapUnderscoreToCamelCase           | 啟用從傳統資料庫欄位名稱 A_COLUMN 到傳統 Java 駝峰式屬性名稱 aColumn 的自動映射。                                                                                                                                                                                                                                                                                                                                | true &#124; false                                                                                                                          | false                                                 |
-| localCacheScope                    | MyBatis 使用本地快取（local cache）來防止循環參照並加速重複的巢狀查詢。預設值（SESSION）會在同一個 Session 期間快取所有執行的查詢。若設為 localCacheScope=STATEMENT，本地 Session 僅用於陳述式執行期間，對同一個 SqlSession 的兩次不同呼叫將不會共享資料。                                                                                                                                                 | SESSION &#124; STATEMENT                                                                                                                   | SESSION                                               |
+| localCacheScope                    | MyBatis 使用本地快取（local cache）來防止循環參照並加速重複的巢狀查詢。預設值（SESSION）讓未使用自訂 ResultHandler 的非游標查詢在工作階段期間重複使用快取結果；使用自訂 ResultHandler 的查詢不會讀取快取，游標查詢則完全略過快取。若設為 localCacheScope=STATEMENT，本地快取僅在陳述式執行期間使用，同一個 SqlSession 的不同呼叫之間不會共享快取資料。                                                                                    | SESSION &#124; STATEMENT                                                                                                                   | SESSION                                               |
 | jdbcTypeForNull                    | 當未提供參數的具體 JDBC 型別時，指定 null 值的 JDBC 型別。某些驅動程式需要指定欄位的 JDBC 型別，但其他驅動程式可使用通用值（如 NULL、VARCHAR 或 OTHER）。                                                                                                                                                                                                                                                       | JdbcType 列舉。最常見的值為：NULL、VARCHAR 與 OTHER                                                                                        | OTHER                                                 |
 | lazyLoadTriggerMethods             | 指定哪些物件方法會觸發延遲載入。                                                                                                                                                                                                                                                                                                                                                                                 | 以逗號分隔的方法名稱清單                                                                                                                   | equals,clone,hashCode,toString                        |
 | defaultScriptingLanguage           | 指定動態 SQL 產生所使用的預設指令碼語言。                                                                                                                                                                                                                                                                                                                                                                         | 型別別名或完整類別名稱。                                                                                                                   | org.apache.ibatis.scripting.xmltags.XMLLanguageDriver |
@@ -137,6 +137,7 @@ SqlSessionFactory factory =
 | defaultSqlProviderType             | 指定持有 Provider 方法的 SQL Provider 類別（自 3.5.6 起）。當 SQL Provider 註解（例如 `@SelectProvider`）省略 `type`（或 `value`）屬性時，將套用此類別。                                                                                                                                                                                                                                                        | 型別別名或完整類別名稱                                                                                                                     | 未設定                                                |
 | nullableOnForEach                  | 指定 `foreach` 標籤上 'nullable' 屬性的預設值。（自 3.5.9 起）                                                                                                                                                                                                                                                                                                                                                   | true &#124; false                                                                                                                          | false                                                 |
 | argNameBasedConstructorAutoMapping | 套用建構函式自動映射時，使用引數名稱搜尋要映射的欄位，而非依賴欄位順序。（自 3.5.10 起）                                                                                                                                                                                                                                                                                                                         | true &#124; false                                                                                                                          | false                                                 |
+| ignoreParameterMetaData | 解析型別處理器時略過參數中繼資料的取得。（自 3.6.1 起） | true &#124; false | false |
 
 以下是 settings 元素完整設定的範例：
 
@@ -163,8 +164,8 @@ SqlSessionFactory factory =
   <setting name="callSettersOnNulls" value="false"/>
   <setting name="returnInstanceForEmptyRow" value="false"/>
   <setting name="logPrefix" value="exampleLogPreFix_"/>
-  <setting name="logImpl" value="SLF4J | LOG4J | LOG4J2 | JDK_LOGGING | COMMONS_LOGGING | STDOUT_LOGGING | NO_LOGGING"/>
-  <setting name="proxyFactory" value="CGLIB | JAVASSIST"/>
+  <setting name="logImpl" value="JDK_LOGGING"/>
+  <setting name="proxyFactory" value="JAVASSIST"/>
   <setting name="vfsImpl" value="org.mybatis.example.YourselfVfsImpl"/>
   <setting name="useActualParamName" value="true"/>
   <setting name="configurationFactory" value="org.mybatis.example.ConfigurationFactory"/>
@@ -258,17 +259,17 @@ MyBatis 針對常見的 Java 型別提供了許多內建的型別別名。它們
 | 型別處理器 | Java 型別 | JDBC 型別 |
 |------------------------------|---------------------------------|----------------------------------------------------------------------------------------|
 | `BooleanTypeHandler`         | `java.lang.Boolean`, `boolean`  | 任何相容的 `BOOLEAN`                                                                   |
-| `ByteTypeHandler`            | `java.lang.Byte`, `byte`        | 任何相容的 `NUMERIC` 或 `BYTE`                                                         |
+| `ByteTypeHandler`            | `java.lang.Byte`, `byte`        | 任何相容的 `NUMERIC` 或 `TINYINT`                                                      |
 | `ShortTypeHandler`           | `java.lang.Short`, `short`      | 任何相容的 `NUMERIC` 或 `SMALLINT`                                                     |
 | `IntegerTypeHandler`         | `java.lang.Integer`, `int`      | 任何相容的 `NUMERIC` 或 `INTEGER`                                                      |
 | `LongTypeHandler`            | `java.lang.Long`, `long`        | 任何相容的 `NUMERIC` 或 `BIGINT`                                                       |
 | `FloatTypeHandler`           | `java.lang.Float`, `float`      | 任何相容的 `NUMERIC` 或 `FLOAT`                                                        |
 | `DoubleTypeHandler`          | `java.lang.Double`, `double`    | 任何相容的 `NUMERIC` 或 `DOUBLE`                                                       |
 | `BigDecimalTypeHandler`      | `java.math.BigDecimal`          | 任何相容的 `NUMERIC` 或 `DECIMAL`                                                      |
-| `StringTypeHandler`          | `java.lang.String`              | `CHAR`, `VARCHAR`                                                                      |
+| `StringTypeHandler`          | `java.lang.String`              | `CHAR`, `VARCHAR`, `LONGVARCHAR`                                                       |
 | `ClobReaderTypeHandler`      | `java.io.Reader`                | -                                                                                      |
-| `ClobTypeHandler`            | `java.lang.String`              | `CLOB`, `LONGVARCHAR`                                                                  |
-| `NStringTypeHandler`         | `java.lang.String`              | `NVARCHAR`, `NCHAR`                                                                    |
+| `ClobTypeHandler`            | `java.lang.String`              | `CLOB`                                                                                 |
+| `NStringTypeHandler`         | `java.lang.String`              | `NVARCHAR`, `NCHAR`, `LONGNVARCHAR`                                                     |
 | `NClobTypeHandler`           | `java.lang.String`              | `NCLOB`                                                                                |
 | `BlobInputStreamTypeHandler` | `java.io.InputStream`           | -                                                                                      |
 | `ByteArrayTypeHandler`       | `byte[]`                        | 任何相容的位元組串流型別                                                               |
@@ -334,7 +335,7 @@ public class ExampleTypeHandler extends BaseTypeHandler<String> {
 </typeHandlers>
 ```
 
-使用這樣的 TypeHandler 將會覆寫 Java String 屬性以及 VARCHAR 參數與結果的現有型別處理器。請注意，MyBatis 不會反思檢查資料庫中繼資料來判斷型別，因此您必須在參數與結果映射中明確指定該欄位為 VARCHAR，以便掛接正確的型別處理器。這是因為 MyBatis 在陳述式實際執行之前並不知曉資料型別。
+使用這樣的 TypeHandler 將會覆寫 Java String 屬性以及 VARCHAR 參數與結果的現有型別處理器。`ignoreParameterMetaData` 為 `false`（預設值）時，若參數映射未指定 JDBC 型別，MyBatis 可以使用 JDBC 參數中繼資料，依 JDBC 型別選擇 TypeHandler。若驅動程式未提供這項中繼資料，請在參數映射中明確指定 `jdbcType="VARCHAR"`。若結果映射未指定 `typeHandler` 與 `jdbcType`，MyBatis 可以使用結果集中繼資料選擇處理器，詳見下文。
 
 MyBatis 會藉由反思檢查其泛型型別來得知您希望此 TypeHandler 處理的 Java 型別，但您可以透過兩種方式覆寫此行為：
 
@@ -343,10 +344,10 @@ MyBatis 會藉由反思檢查其泛型型別來得知您希望此 TypeHandler �
 
 相關聯的 JDBC 型別可透過兩種方式指定：
 
-- 在 typeHandler 元素中新增 `jdbcType` 屬性（例如：`jdbcType="VARCHAR"`）。
-- 在您的 TypeHandler 類別中新增 `@MappedJdbcTypes` 註解，指定要與之關聯的 JDBC 型別清單。若已指定 `jdbcType` 屬性，此註解將會被忽略。
+- 在同一個 typeHandler 元素中同時新增 `javaType` 與 `jdbcType` 屬性（例如：`javaType="String" jdbcType="VARCHAR"`）。若省略 `javaType`，XML 的 `jdbcType` 屬性會被忽略；若有 `@MappedJdbcTypes` 註解，則會使用該註解的設定。
+- 在您的 TypeHandler 類別中新增 `@MappedJdbcTypes` 註解，指定要與之關聯的 JDBC 型別清單。只有在同一個元素中同時指定 `javaType` 與 `jdbcType` 屬性時，此註解才會被忽略。
 
-在決定於 `ResultMap` 中使用哪個 TypeHandler 時，Java 型別是已知的（來自結果型別），但 JDBC 型別是未知的。因此，MyBatis 會使用組合 `javaType=[TheJavaType], jdbcType=null` 來選擇 TypeHandler。這表示使用 `@MappedJdbcTypes` 註解會*限制* TypeHandler 的作用範圍，並使其在 `ResultMap` 中無法使用，除非明確指定。若要讓 TypeHandler 可在 `ResultMap` 中使用，請在 `@MappedJdbcTypes` 註解上設定 `includeNullJdbcType=true`。然而自 MyBatis 3.4.0 起，若僅註冊了**單一** TypeHandler 來處理某個 Java 型別，則在使用此 Java 型別的 `ResultMap` 中將預設使用該處理器（即即使未設定 `includeNullJdbcType=true` 亦同）。
+在 `ResultMap` 的結果映射中明確指定 `typeHandler`，即可直接選擇該處理器。若只指定 `jdbcType` 而未指定 `typeHandler`，MyBatis 會在解析映射時，依 Java 型別與指定的 JDBC 型別選擇處理器。若兩者皆未指定，則會在讀取結果時，依 Java 型別與結果集中繼資料提供的實際欄位 JDBC 型別選擇處理器。因此，透過 `@MappedJdbcTypes` 註冊的處理器不需設定 `includeNullJdbcType=true`，也可以用於型別相符的結果欄位。`includeNullJdbcType=true` 也會將處理器註冊至 `jdbcType=null`，但它不是在 `ResultMap` 中使用處理器的必要條件。
 
 最後，您可以讓 MyBatis 自動搜尋您的 TypeHandler：
 
@@ -479,16 +480,16 @@ public class ExampleObjectFactory extends DefaultObjectFactory {
 </objectFactory>
 ```
 
-ObjectFactory 介面非常單純。它包含兩個 create 方法，一個用於處理預設建構函式，另一個用於處理具參數的建構函式。最後，`setProperties` 方法可用於設定 ObjectFactory。在 ObjectFactory 實例初始化之後，定義於 objectFactory 元素主體內的屬性將會傳遞至 `setProperties` 方法。
+ObjectFactory 介面非常單純。它包含兩個 create 方法，一個用於處理預設建構函式，另一個用於處理具參數的建構函式。`setProperties` 方法用於設定 ObjectFactory，`isCollection` 方法用於辨識集合型別。在 ObjectFactory 實例初始化之後，定義於 objectFactory 元素主體內的屬性將會傳遞至 `setProperties` 方法。
 
 ### plugins
 
-MyBatis 允許您在已映射陳述式執行的特定切入點攔截呼叫。預設情況下，MyBatis 允許外掛模組攔截以下類別的方法呼叫：
+MyBatis 允許您在已映射陳述式執行的特定切入點攔截呼叫。以下是外掛模組可以攔截的受支援介面中的方法範例：
 
-- Executor (update, query, flushStatements, commit, rollback, getTransaction, close, isClosed)
+- Executor (update, query, queryCursor, flushStatements, commit, rollback, getTransaction, close, isClosed)
 - ParameterHandler (getParameterObject, setParameters)
-- ResultSetHandler (handleResultSets, handleOutputParameters)
-- StatementHandler (prepare, parameterize, batch, update, query)
+- ResultSetHandler (handleResultSets, handleCursorResultSets, handleOutputParameters)
+- StatementHandler (prepare, parameterize, batch, update, query, queryCursor)
 
 透過檢視各方法的完整簽名以及隨每個 MyBatis 版本提供的原始碼，可以了解這些類別方法的詳細資訊。假設您要做的不僅僅是監控呼叫，您應當深入了解所覆寫方法的行為。若您嘗試修改或覆寫特定方法的行為，很有可能會破壞 MyBatis 的核心運作。這些是低階類別與方法，因此請謹慎使用外掛模組。
 
@@ -645,6 +646,7 @@ dataSource 元素使用標準的 JDBC DataSource 介面設定 JDBC Connection �
 - `url` – 這是您資料庫實例的 JDBC URL。
 - `username` – 用於登入的資料庫使用者名稱。
 - `password` - 用於登入的資料庫密碼。
+- `autoCommit` – 設定新連線的自動提交模式。未設定時保留驅動程式的預設值。
 - `defaultTransactionIsolationLevel` – 連線的預設交易隔離層級。
 - `defaultNetworkTimeout` – 等待資料庫操作完成的預設網路逾時值（毫秒）。詳情請參閱 `java.sql.Connection#setNetworkTimeout()` 的 API 文件。
 
@@ -731,7 +733,7 @@ DB_VENDOR 實作的 databaseIdProvider 會將 `DatabaseMetaData#getDatabaseProdu
 </databaseIdProvider>
 ```
 
-當提供屬性時，DB_VENDOR databaseIdProvider 將回傳與回傳之資料庫產品名稱中找到的第一個索引鍵相對應的屬性值；若沒有相符的屬性，則回傳 "null"。在此範例中，若 `getDatabaseProductName()` 回傳 "Oracle (DataDirect)"，則 databaseId 將被設定為 "oracle"。
+當提供屬性時，DB_VENDOR databaseIdProvider 將回傳與回傳之資料庫產品名稱中找到的第一個索引鍵相對應的屬性值；若沒有相符的屬性，則回傳 null。在此範例中，若 `getDatabaseProductName()` 回傳 "Oracle (DataDirect)"，則 databaseId 將被設定為 "oracle"。
 
 您可以透過實作介面 `org.apache.ibatis.mapping.DatabaseIdProvider` 並在 mybatis-config.xml 中註冊，來建置您自己的 DatabaseIdProvider：
 

@@ -109,8 +109,8 @@ public String updatePersonSql() {
 | <ul><li>`FROM(String)`</li><li>`FROM(String...)`</li></ul>                                                                                                                                                                                                              | Starts or appends to a `FROM` clause. Can be called more than once, and parameters will be appended to the `FROM` clause. Parameters are usually a table name and an alias, or anything acceptable to the driver.                                                                                                    |
 | <ul><li>`JOIN(String)`</li><li>`JOIN(String...)`</li><li>`INNER_JOIN(String)`</li><li>`INNER_JOIN(String...)`</li><li>`LEFT_OUTER_JOIN(String)`</li><li>`LEFT_OUTER_JOIN(String...)`</li><li>`RIGHT_OUTER_JOIN(String)`</li><li>`RIGHT_OUTER_JOIN(String...)`</li><li>`OUTER_JOIN(String)`</li><li>`OUTER_JOIN(String...)`</li></ul> | Adds a new `JOIN` clause of the appropriate type, depending on the method called. The parameter can include a standard join consisting of the columns and the conditions to join on.                                                                    |
 | <ul><li>`WHERE(String)`</li><li>`WHERE(String...)`</li></ul>                                                                                                                                                                                                            | Appends a new `WHERE` clause condition, concatenated by `AND`. Can be called multiple times, which causes it to concatenate the new conditions each time with `AND`. Use `OR()` to split with an `OR`.                                                                                                               |
-| `OR()`                                                                                                                                                                                                                                                                  | Splits the current `WHERE` clause conditions with an `OR`. Can be called more than once, but calling more than once in a row will generate erratic `SQL`.                                                                                                                                                            |
-| `AND()`                                                                                                                                                                                                                                                                 | Splits the current `WHERE` clause conditions with an `AND`. Can be called more than once, but calling more than once in a row will generate erratic `SQL`. Because `WHERE` and `HAVING` both automatically concatenate with `AND`, this is a very uncommon method to use and is only really included for completeness. |
+| `OR()`                                                                                                                                                                                                                                                                  | Splits the most recently used `WHERE` or `HAVING` conditions with an `OR`. Can be called more than once, but calling more than once in a row will generate erratic `SQL`.                                                                                                                                                            |
+| `AND()`                                                                                                                                                                                                                                                                 | Splits the most recently used `WHERE` or `HAVING` conditions with an `AND`. Can be called more than once, but calling more than once in a row will generate erratic `SQL`. Because `WHERE` and `HAVING` both automatically concatenate with `AND`, this is a very uncommon method to use and is only really included for completeness. |
 | <ul><li>`GROUP_BY(String)`</li><li>`GROUP_BY(String...)`</li></ul>                                                                                                                                                                                                      | Appends new `GROUP BY` clause elements, concatenated by a comma. Can be called multiple times, which causes it to concatenate the new conditions each time with a comma.                                                                                                                                             |
 | <ul><li>`HAVING(String)`</li><li>`HAVING(String...)`</li></ul>                                                                                                                                                                                                          | Appends a new `HAVING` clause condition, concatenated by AND. Can be called multiple times, which causes it to concatenate the new conditions each time with `AND`. Use `OR()` to split with an `OR`.                                                                                                                |
 | <ul><li>`ORDER_BY(String)`</li><li>`ORDER_BY(String...)`</li></ul>                                                                                                                                                                                                      | Appends new `ORDER BY` clause elements, concatenated by a comma. Can be called multiple times, which causes it to concatenate the new conditions each time with a comma.                                                                                                                                             |
@@ -202,6 +202,34 @@ public String selectPersonsWithFetchFirstSql() {
 }
 ```
 
+Since version 3.5.15, `applyIf(boolean, Consumer<SQL>)` and `applyIf(BooleanSupplier, Consumer<SQL>)` add SQL clauses only when the condition is true. `applyForEach(Iterable<E>, ForEachConsumer<SQL, E>)` calls its consumer for each element, passing the SQL builder, the element, and its zero-based index. These methods return the builder for chaining.
+
+```java
+public String selectPersonsSql(boolean activeOnly) {
+  return new SQL()
+    .SELECT("ID", "NAME")
+    .FROM("PERSON")
+    .applyIf(activeOnly, sql -> sql.WHERE("ACTIVE = 1"))
+    .toString();
+}
+
+// Mapper interface
+@InsertProvider(type = PersonSqlProvider.class, method = "insertPersonsSql")
+void insertPersons(@Param("persons") List<Person> persons);
+
+// PersonSqlProvider
+public String insertPersonsSql(@Param("persons") List<Person> persons) {
+  return new SQL()
+    .INSERT_INTO("PERSON")
+    .INTO_COLUMNS("ID", "NAME")
+    .applyForEach(persons, (sql, person, index) ->
+      sql.INTO_VALUES("#{persons[" + index + "].id}", "#{persons[" + index + "].name}").ADD_ROW())
+    .toString();
+}
+```
+
+<a id="deprecated-builders"></a>
+
 ### SqlBuilder and SelectBuilder (DEPRECATED)
 
 Before version 3.2 we took a bit of a different approach, by utilizing a ThreadLocal variable to mask some of the language limitations that make Java DSLs a bit cumbersome. However, this approach is now deprecated, as modern frameworks have warmed people to the idea of using builder-type patterns and anonymous inner classes for such things. Therefore the SelectBuilder and SqlBuilder classes have been deprecated.
@@ -210,8 +238,8 @@ The following methods apply to only the deprecated SqlBuilder and SelectBuilder 
 
 | Method                | Description                                                                                                                                                                                                                                                                                                                                                |
 |-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `BEGIN()` / `RESET()` | These methods clear the ThreadLocal state of the SelectBuilder class, and prepare it for a new statement to be built. `BEGIN()` reads best when starting a new statement. `RESET()` reads best when clearing a statement in the middle of execution for some reason (perhaps if the logic demands a completely different statement under some conditions). |
-| `SQL()`               | This returns the generated SQL and resets the `SelectBuilder` state (as if `BEGIN()` or `RESET()` were called). Thus, this method can only be called ONCE!                                                                                                                                                                                                 |
+| `BEGIN()` / `RESET()` | These methods reset the current thread's state in the imported `SelectBuilder` or `SqlBuilder` class; each class maintains its own state. This prepares that class for a new statement. `BEGIN()` reads best when starting a new statement. `RESET()` reads best when clearing a statement in the middle of execution for some reason (perhaps if the logic demands a completely different statement under some conditions). |
+| `SQL()`               | Returns the generated SQL and resets the current thread's state in the imported builder class. Call `SQL()` once per statement; begin building another statement before calling it again.                                                                                                                                                                                                 |
 
 
 The SelectBuilder and SqlBuilder classes are not magical, but it's important to know how they work. SelectBuilder and SqlBuilder use a combination of Static Imports and a ThreadLocal variable to enable a clean syntax that can be easily interlaced with conditionals. To use them, you statically import the methods from the classes like this (one or the other, not both):
