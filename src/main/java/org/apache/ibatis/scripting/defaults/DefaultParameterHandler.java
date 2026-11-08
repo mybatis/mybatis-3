@@ -162,13 +162,14 @@ public class DefaultParameterHandler implements ParameterHandler {
               typeHandler = ObjectTypeHandler.INSTANCE;
             }
           } else if (typeHandler == null) {
+            final Class<?> valueClass = value.getClass();
             if (propertyGenericType == null) {
-              propertyGenericType = value.getClass();
+              propertyGenericType = valueClass;
             }
             typeHandler = typeHandlerRegistry.getTypeHandler(propertyGenericType, actualJdbcType, null);
-            if (typeHandler == null && !value.getClass().equals(propertyGenericType)) {
+            if (typeHandler == null && !valueClass.equals(propertyGenericType)) {
               // The declared type may be too generic (e.g. Object), so try the runtime type
-              typeHandler = typeHandlerRegistry.getTypeHandler(value.getClass(), actualJdbcType, null);
+              typeHandler = typeHandlerRegistry.getTypeHandler(valueClass, actualJdbcType, null);
             }
           }
           if (typeHandler == null) {
