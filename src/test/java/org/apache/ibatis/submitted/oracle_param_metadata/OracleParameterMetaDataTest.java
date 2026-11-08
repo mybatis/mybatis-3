@@ -56,10 +56,10 @@ class OracleParameterMetaDataTest {
     // IN list with two or more binds, it throws NullPointerException instead.
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       Mapper mapper = sqlSession.getMapper(Mapper.class);
-      List<User> users = mapper.selectByIdsWithLimit(List.of(1, 2, 3), 2);
+      List<User> users = mapper.selectByIdsWithLimit(List.of(1, 3), 10);
       assertEquals(2, users.size());
       assertEquals("User1", users.get(0).getName());
-      assertEquals("User2", users.get(1).getName());
+      assertEquals("User3", users.get(1).getName());
     }
   }
 
