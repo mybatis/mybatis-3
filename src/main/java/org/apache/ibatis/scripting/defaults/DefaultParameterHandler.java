@@ -198,7 +198,9 @@ public class DefaultParameterHandler implements ParameterHandler {
         paramMetaData = ps.getParameterMetaData();
       }
       return paramMetaData == NULL_PARAM_METADATA ? null : JdbcType.forCode(paramMetaData.getParameterType(paramIndex));
-    } catch (SQLException e) {
+    } catch (SQLException | RuntimeException e) {
+      // Some drivers throw an unchecked exception (e.g. Oracle throws NullPointerException
+      // for an untyped bind that follows an IN list) instead of SQLException.
       if (paramMetaData == null) {
         paramMetaData = NULL_PARAM_METADATA;
       }
