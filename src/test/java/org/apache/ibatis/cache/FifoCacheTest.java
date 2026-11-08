@@ -72,4 +72,17 @@ class FifoCacheTest {
     assertNotNull(cache.getObject(0));
   }
 
+  @Test
+  void shouldNotEvictOnOverwriteOfExistingKey() {
+    FifoCache cache = new FifoCache(new PerpetualCache("default"));
+    cache.setSize(5);
+    for (int i = 0; i < 5; i++) {
+      cache.putObject(i, i);
+    }
+    cache.putObject(4, "updated");
+    assertEquals(0, cache.getObject(0));
+    assertEquals("updated", cache.getObject(4));
+    assertEquals(5, cache.getSize());
+  }
+
 }
