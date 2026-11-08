@@ -5,7 +5,7 @@ author: Clinton Begin, Eduardo Macarron
 
 ## Instalación
 
-Para usar MyBatis sólo tienes que incluir el fichero [mybatis-x.x.x.jar](https://github.com/mybatis/mybatis-3/releases) en el classpath.
+Para usar MyBatis sólo tienes que incluir el fichero [mybatis-@project.version@.jar](https://github.com/mybatis/mybatis-3/releases) en el classpath.
 
 Si usas Maven añade esta dependencia en tu pom.xml:
 
@@ -13,7 +13,7 @@ Si usas Maven añade esta dependencia en tu pom.xml:
 <dependency>
   <groupId>org.mybatis</groupId>
   <artifactId>mybatis</artifactId>
-  <version>x.x.x</version>
+  <version>@project.version@</version>
 </dependency>
 ```
 

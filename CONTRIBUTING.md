@@ -16,6 +16,14 @@ Please use [the mailing list](https://groups.google.com/group/mybatis-user) inst
 
 - Reference guides are under [src/site](https://github.com/mybatis/mybatis-3/tree/master/src/site) in Markdown (`markdown` directories) or [XDoc](https://maven.apache.org/doxia/references/xdoc-format.html) (`xdoc` directories), including translated guides. Submit documentation changes through the same pull request process described in [Contributing code](CONTRIBUTING.md#contributing-code).
 
+To build the reference documentation, run:
+
+```shell
+./mvnw clean site -DgenerateReports=false
+```
+
+The `site` lifecycle runs the `pre-site` version filtering step before rendering the pages in `target/site`. The `clean` goal removes stale copied sources after documentation files are renamed or deleted.
+
 ## Contributing code
 
 ### Formatting
