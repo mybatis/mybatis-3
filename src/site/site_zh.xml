@@ -46,6 +46,7 @@
       <item name="Java API" href="java-api.html" collapse="true">
         <item name="目录结构" href="java-api.html#directoryStructure" />
         <item name="SqlSession" href="java-api.html#sqlSessions" />
+        <item name="SqlSessionManager" href="java-api.html#sqlSessionManager" />
       </item>
       <item name="SQL 语句构建器" href="statement-builders.html" collapse="true" />
       <item name="日志" href="logging.html"/>
