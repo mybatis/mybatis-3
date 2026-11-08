@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -108,7 +109,7 @@ public class ParamNameResolver {
       useParamMap = true;
     }
     if (names.size() == 1) {
-      Type soleParamType = actualParamTypes[0];
+      Type soleParamType = actualParamTypes[names.firstKey()];
       if (soleParamType instanceof GenericArrayType) {
         typeMap.put("array", soleParamType);
       } else {
@@ -186,9 +187,11 @@ public class ParamNameResolver {
 
     if (type == null && unindexed.startsWith(GENERIC_NAME_PREFIX)) {
       try {
-        Integer paramIndex = Integer.valueOf(unindexed.substring(GENERIC_NAME_PREFIX.length())) - 1;
-        unindexed = names.get(paramIndex);
-        if (unindexed != null) {
+        int paramIndex = Integer.parseInt(unindexed.substring(GENERIC_NAME_PREFIX.length())) - 1;
+        // 'paramN' is positional; it is not necessarily the same as the parameter index
+        // when the method has special parameters (i.e. RowBounds or ResultHandler).
+        if (paramIndex >= 0 && paramIndex < names.size()) {
+          unindexed = new ArrayList<>(names.values()).get(paramIndex);
           type = typeMap.get(unindexed);
         }
       } catch (NumberFormatException e) {
