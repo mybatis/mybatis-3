@@ -96,7 +96,6 @@ ps.setInt(1,id);]]></source>
   parameterType="int"
   parameterMap="deprecated"
   resultType="hashmap"
-  resultMap="personResultMap"
   flushCache="false"
   useCache="true"
   timeout="10"
@@ -170,13 +169,13 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td><code>resultSetType</code></td>
-              <td>FORWARD_ONLY|SCROLL_SENSITIVE|SCROLL_INSENSITIVE|DEFAULT(same as unset)중 하나를 선택할 수 있다.
-        디폴트는 셋팅하지 않는 것이고 드라이버에 따라 다소 지원되지 않을 수 있다.</td>
+              <td>FORWARD_ONLY|SCROLL_SENSITIVE|SCROLL_INSENSITIVE|DEFAULT 중 하나를 선택할 수 있다.
+        생략하면 설정된 <code>defaultResultSetType</code>을 사용하고, DEFAULT를 지정하면 JDBC 드라이버의 기본값을 사용한다.</td>
             </tr>
             <tr>
               <td><code>databaseId</code></td>
               <td>설정된 databaseIdProvider가 있는 경우 마이바티스는 <code>databaseId</code> 속성이 없는 모든 구문을 로드하거나 일치하는 <code>databaseId</code>와 함께 로드될 것이다.
-              같은 구문에서 <code>databaseId</code>가 있거나 없는 경우 모두 있다면 뒤에 나온 것이 무시된다.
+              같은 구문에 현재 데이터베이스와 일치하는 <code>databaseId</code>가 지정된 버전과 지정되지 않은 버전이 모두 있다면, <code>databaseId</code>가 없는 버전을 무시한다.
               </td>
             </tr>
             <tr>
@@ -203,7 +202,8 @@ ps.setInt(1,id);]]></source>
         </table>
       </subsection>
 
-      <subsection name="insert, update and delete" id="insert_update_and_delete">
+      <subsection name="insert, update and delete">
+        <a name="insert_update_and_delete"/>
         <p>데이터를 변경하는 구문인 insert, update, delete는 매우 간단하다.</p>
 
         <source><![CDATA[<insert
@@ -293,7 +293,7 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td><code>databaseId</code></td>
               <td>설정된 databaseIdProvider가 있는 경우 마이바티스는 <code>databaseId</code> 속성이 없는 모든 구문을 로드하거나 일치하는 <code>databaseId</code>와 함께 로드될 것이다.
-              같은 구문에서 <code>databaseId</code>가 있거나 없는 경우 모두 있다면 뒤에 나온 것이 무시된다.
+              같은 구문에 현재 데이터베이스와 일치하는 <code>databaseId</code>가 지정된 버전과 지정되지 않은 버전이 모두 있다면, <code>databaseId</code>가 없는 버전을 무시한다.
               </td>
             </tr>
           </tbody>
@@ -386,7 +386,7 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td><code>resultType</code></td>
               <td>결과의 타입.
-        마이바티스는 대개 이 타입을 알아낼 수 있지만 확실히 하기 위해 명시해도 문제가 되지는 않는다.
+        마이바티스는 <code>selectKey</code>의 결과 타입을 추론하지 않으므로 명시해야 한다.
         마이바티스는 String을 포함하여 키로 사용될 수 있는 간단한 타입을 허용한다.</td>
             </tr>
             <tr>
@@ -460,7 +460,7 @@ ps.setInt(1,id);]]></source>
     Parameters는 마이바티스에서 매우 중요한 엘리먼트이다.
     대략 90%정도 간단한 경우 이러한 형태로 설정할 것이다.</p>
 
-        <source><![CDATA[<select id="selectUsers" resultType="User">
+        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="User">
   select id, username, password
   from users
   where id = #{id}
@@ -513,7 +513,7 @@ ps.setInt(1,id);]]></source>
         <p>마이바티스는 structs와 같은 향상된 데이터 타입을 지원하지만 파라미터를 등록할 때 타입명을 구문에 전달해야 한다.
     예를들면,</p>
 
-        <source><![CDATA[#{middleInitial, mode=OUT, jdbcType=STRUCT, jdbcTypeName=MY_TYPE, resultMap=departmentResultMap}]]></source>
+        <source><![CDATA[#{middleInitial, mode=OUT, jdbcType=STRUCT, jdbcTypeName=MY_TYPE}]]></source>
 
         <p>이런 강력한 옵션들에도 불구하고 대부분은 프로퍼티명만 명시하거나 null 가능한 칼럼을 위해 jdbcType 정도만 명시할 것이다.</p>
 
@@ -552,7 +552,7 @@ User findByEmail(@Param("email") String email);
           다음과 같이 작성할 수 있다:
           <source><![CDATA[
 @Select("select * from user where ${column} = #{value}")
-User findByColumn(@Param("column") String column, @Param("value") String value);
+User findByColumn(@Param("column") String column, @Param("value") Object value);
 ]]></source>
           여기서 <code>${column}</code>은 지정한 문자열로 직접 대체되고, <code>#{value}</code>는 "prepared" 될 것이므로
           아래와 같이 사용할 수 있다:
@@ -665,7 +665,7 @@ public class User {
         <source><![CDATA[<resultMap id="userResultMap" type="User">
   <id property="id" column="user_id" />
   <result property="username" column="user_name"/>
-  <result property="password" column="hashed_password"/>
+  <result property="hashedPassword" column="hashed_password"/>
 </resultMap>]]></source>
 
         <p>구문에서는 resultMap속성에 이를 지정하여 참조한다.
@@ -882,10 +882,7 @@ public class User {
             </tr>
             <tr>
               <td><code>jdbcType</code></td>
-              <td>지원되는 타입 목록에서 설명하는 JDBC 타입.
-        JDBC타입은 insert, update 또는 delete 하는 null 입력이 가능한 칼럼에서만 필요하다.
-        JDBC의 요구사항이지 마이바티스의 요구사항이 아니다.
-        JDBC로 직접 코딩을 하다보면 null이 가능한 값에 이 타입을 지정할 필요가 있을 것이다.</td>
+              <td>결과 칼럼의 JDBC 타입을 지정한다. 마이바티스가 이 매핑에 사용할 TypeHandler를 선택할 때 Java 타입과 함께 필요할 수 있다.</td>
             </tr>
             <tr>
               <td><code>typeHandler</code></td>
@@ -940,6 +937,22 @@ public class User {
             <td><code>NULL</code></td>
             <td><code>CURSOR</code></td>
             <td><code>ARRAY</code></td>
+          </tr>
+          <tr>
+            <td><code>STRUCT</code></td>
+            <td><code>JAVA_OBJECT</code></td>
+            <td><code>DISTINCT</code></td>
+            <td><code>REF</code></td>
+            <td><code>DATALINK</code></td>
+            <td><code>ROWID</code></td>
+          </tr>
+          <tr>
+            <td><code>LONGNVARCHAR</code></td>
+            <td><code>SQLXML</code></td>
+            <td><code>DATETIMEOFFSET</code></td>
+            <td><code>TIME_WITH_TIMEZONE</code></td>
+            <td><code>TIMESTAMP_WITH_TIMEZONE</code></td>
+            <td></td>
           </tr>
         </table>
 
@@ -1012,10 +1025,7 @@ public class User {
             </tr>
             <tr>
               <td><code>jdbcType</code></td>
-              <td>지원되는 타입 목록에서 설명하는 JDBC 타입.
-        JDBC타입은 insert, update 또는 delete 하는 null 입력이 가능한 칼럼에서만 필요하다.
-        JDBC의 요구사항이지 마이바티스의 요구사항이 아니다.
-        JDBC로 직접 코딩을 하다보면 null 이 가능한 값에 이 타입을 지정할 필요가 있을 것이다.</td>
+              <td>결과 칼럼의 JDBC 타입을 지정한다. 마이바티스가 이 매핑에 사용할 TypeHandler를 선택할 때 Java 타입과 함께 필요할 수 있다.</td>
             </tr>
             <tr>
               <td><code>typeHandler</code></td>
@@ -1099,7 +1109,7 @@ public class UserRole {
       r.role as role_role
     from user u
       left join user_role ur on u.id = ur.user_id
-      inner join role r on r.id = ur.role_id
+      left join role r on r.id = ur.role_id
     order by u.id, r.id
 </select>
 ]]></source>
@@ -1211,10 +1221,7 @@ When using this functionality, it is preferable for the entire mapping hierarchy
             </tr>
             <tr>
               <td><code>jdbcType</code></td>
-              <td>지원되는 타입 목록에서 설명하는 JDBC 타입.
-        JDBC타입은 insert, update 또는 delete 하는 null 입력이 가능한 칼럼에서만 필요하다.
-        JDBC의 요구사항이지 마이바티스의 요구사항이 아니다.
-        JDBC로 직접 코딩을 하다보면 null이 가능한 값에 이 타입을 지정할 필요가 있을 것이다.</td>
+              <td>결과 칼럼의 JDBC 타입을 지정한다. 마이바티스가 이 매핑에 사용할 TypeHandler를 선택할 때 Java 타입과 함께 필요할 수 있다.</td>
             </tr>
             <tr>
               <td><code>typeHandler</code></td>
@@ -1471,7 +1478,7 @@ Here is the statement and result map.</p>
 </resultMap>
 
 <select id="selectBlog" resultMap="blogResult">
-  select b.id, b.name, cursor(
+  select b.id, b.title, cursor(
     select a.id, a.username from author a where b.author_id = a.id
   ) author from blog b
 </select>]]></source>
@@ -1501,7 +1508,7 @@ Its value <code>CURSOR</code> indicates that the value of the column <code>autho
               <td><code>foreignColumn</code></td>
               <td>
                 Identifies the name of the columns that contains the foreign keys which values will be matched against the
-                values of the columns specified in the <code>column</code> attibute of the parent type.
+                values of the columns specified in the <code>column</code> attribute of the parent type.
               </td>
             </tr>
             <tr>
@@ -1675,7 +1682,7 @@ Just like <code>&lt;association&gt;</code>, you just need to specify <code>jdbcT
 </resultMap>
 
 <select id="selectBlog" resultMap="blogResult">
-  select b.id, b.name, cursor(
+  select b.id, b.title, cursor(
     select p.id, p.subject, p.body from post p where p.blog_id = b.id
   ) posts from blog b
 </select>]]></source>
@@ -1695,7 +1702,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         <p>A name must be given to each result set by adding a
         <code>resultSets</code> attribute to the mapped statement with a list of names separated by commas.</p>
 
-        <source><![CDATA[<select id="selectBlog" resultSets="blogs,posts" resultMap="blogResult">
+        <source><![CDATA[<select id="selectBlog" resultSets="blogs,posts" resultMap="blogResult" statementType="CALLABLE">
   {call getBlogsAndPosts(#{id,jdbcType=INTEGER,mode=IN})}
 </select>]]></source>
 
@@ -1786,17 +1793,17 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
   <result property="model" column="model"/>
   <result property="color" column="color"/>
   <discriminator javaType="int" column="vehicle_type">
-    <case value="1" resultType="carResult">
+    <case value="1" resultType="Car">
       <result property="doorCount" column="door_count" />
     </case>
-    <case value="2" resultType="truckResult">
+    <case value="2" resultType="Truck">
       <result property="boxSize" column="box_size" />
       <result property="extendedCab" column="extended_cab" />
     </case>
-    <case value="3" resultType="vanResult">
+    <case value="3" resultType="Van">
       <result property="powerSlidingDoor" column="power_sliding_door" />
     </case>
-    <case value="4" resultType="suvResult">
+    <case value="4" resultType="SUV">
       <result property="allWheelDrive" column="all_wheel_drive" />
     </case>
   </discriminator>
@@ -1844,7 +1851,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 </select>]]></source>
 
         <source><![CDATA[<resultMap id="userResultMap" type="User">
-  <result property="password" column="hashed_password"/>
+  <result property="hashedPassword" column="hashed_password"/>
 </resultMap>]]></source>
 
         <p>
@@ -1899,7 +1906,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         </p>
 
         <source><![CDATA[<resultMap id="userResultMap" type="User" autoMapping="false">
-  <result property="password" column="hashed_password"/>
+  <result property="hashedPassword" column="hashed_password"/>
 </resultMap>]]></source>
 
       </subsection>
@@ -1916,7 +1923,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         <p>하나의 간단한 구문에 다음과 같은 순서로 영향을 준다.</p>
 
         <ul>
-          <li>매핑 구문 파일내 select 구문의 모든 결과가 캐시 될 것이다.</li>
+          <li><code>cacheEnabled</code>가 true이고 구문의 <code>useCache</code>가 true이며 사용자 정의 ResultHandler를 사용하지 않으면, 매핑 파일의 select 구문 결과를 2차 캐시에 저장할 수 있다. Cursor 조회는 이 캐시를 사용하지 않는다.</li>
           <li>매핑 구문 파일내 insert, update 그리고 delete 구문은 캐시를 지울(flush) 것이다.</li>
           <li>캐시는 Least Recently Used (LRU) 알고리즘을 사용할 것이다.</li>
           <li>캐시는 스케줄링 기반으로 시간순서대로 지워지지는 않는다. (예를들면. no Flush Interval)</li>

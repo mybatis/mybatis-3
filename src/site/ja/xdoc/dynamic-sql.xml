@@ -39,7 +39,7 @@
     <li>trim (where, set)</li>
     <li>foreach</li>
   </ul>
-  <subsection name="if" id="if">
+  <subsection name="if">
   <p>動的 SQL で最も良く行うのが、次のように条件に応じて where 句に検索条件を追加する処理でしょう。</p>
   <source><![CDATA[<select id="findActiveBlogWithTitleLike"
      resultType="Blog">
@@ -65,7 +65,8 @@
   </if>
 </select>]]></source>
   </subsection>
-  <subsection name="choose, when, otherwise" id="chooseWhenOtherwise">
+  <subsection name="choose, when, otherwise">
+    <a name="chooseWhenOtherwise"/>
   <p>全ての条件を適用する代わりに、多くの選択肢の中から一つを選んで適用したいという場合があります。</p>
   <p>引き続き上の例を使って、タイトルが指定されたらタイトルのみを条件として検索し、著者が指定されたら著者のみを条件として検索するようにしてみましょう。どちらも指定されなかった場合は注目のブログのみを返すようにしてみましょう（ランダムに選ばれた無意味なリストではなく、管理者が戦略的に選んだリストを返したいという要件があるのでしょう）。</p>
   <source><![CDATA[<select id="findActiveBlogLike"
@@ -84,7 +85,8 @@
   </choose>
 </select>]]></source>
   </subsection>
-  <subsection name="trim, where, set" id="trimWhereSet">
+  <subsection name="trim, where, set">
+    <a name="trimWhereSet"/>
   <p>ここまでの例題は動的 SQL の厄介な問題点を都合よく避けていました。もう一度 if の例に戻って、今度は "ACTIVE = 1" も動的な条件に変更してみましょう。</p>
   <source><![CDATA[<select id="findActiveBlogLike"
      resultType="Blog">
@@ -212,12 +214,12 @@ AND title like 'someTitle']]></source>
   SqlSource createSqlSource(Configuration configuration, String script, Class<?> parameterType);
 }]]></source>
     <p>作成した言語ドライバーをデフォルトとして使用する場合は、mybatis-config.xml に次のような設定を追加します（typeAlias の使用は必須ではありません）。</p>
-    <source><![CDATA[<typeAliases>
-  <typeAlias type="org.sample.MyLanguageDriver" alias="myLanguage"/>
-</typeAliases>
-<settings>
+    <source><![CDATA[<settings>
   <setting name="defaultScriptingLanguage" value="myLanguage"/>
 </settings>
+<typeAliases>
+  <typeAlias type="org.sample.MyLanguageDriver" alias="myLanguage"/>
+</typeAliases>
 ]]></source>
     <p><code>lang</code> 属性を指定することで、特定のステートメントの言語ドライバーのみを変更することもできます。</p>
     <source><![CDATA[<select id="selectBlog" lang="myLanguage">

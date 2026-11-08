@@ -26,10 +26,12 @@
   </properties>
 
   <body>
-  <section name="Java API" id="javaApi">
+  <section name="Java API">
+    <a name="javaApi"/>
   <p>Ahora que ya conoces cómo configurar MyBatis y crear mapeos estás listo para lo mejor. El API Java es donde obtendrás los mejores frutos de tus esfuerzos. Como verás, comparado con JDBC, MyBatis simplifica enormemente tu código y lo mantiene limpio, de fácil comprensión y mantenimiento. MyBatis 3 incorpora muchas mejoras significativas para hacer que el trabajo con SQL Maps sea aun mejor.</p>
 
-  <subsection name="Directory Structure" id="directoryStructure">
+  <subsection name="Directory Structure">
+    <a name="directoryStructure"/>
   <p>Antes de zambullirnos en el propio API Java , es importante comprender las mejores prácticas relativas a la estructura de directorios. MyBatis es muy flexible, y puedes hacer casi cualquier cosa con tus ficheros. Pero como en cualquier otro framework, hay una forma recomendable.</p>
   <p>Veamos una estructura de directorios típica:</p>
   <pre>/my_application
@@ -62,31 +64,40 @@
   <p>Los ejemplos restantes en esta sección asumen que estás utilizando esta estructura de directorios.</p>
   </subsection>
 
-  <subsection name="SqlSessions" id="sqlSessions">
+  <subsection name="SqlSessions">
+    <a name="sqlSessions"/>
   <p>El interfaz principal para trabajar con MyBatis es el SqlSession. A través de este interfaz puedes ejecutar comandos, obtener mappers y gestionar transacciones. Hablaremos más sobre el propio SqlSession en breve, pero primero veamos cómo obtener una instancia de SqlSession. Las SqlSessions se crean por una instancia de SqlSessionFactory. La SqlSessionFactory contiene métodos para crear instancias de SqlSessions de distintas formas. La SqlSessionFactory en si misma se crea por la SqlSessionFactoryBuilder que puede crear una SqlSessionFactory a partir de XML, anotaciones o un objeto Configuration creado por código.</p>
   <p><span class="label important">NOTE</span> When using MyBatis with a dependency injection framework like Spring or Guice, SqlSessions are created and injected by the DI framework so you don't need to use the SqlSessionFactoryBuilder or SqlSessionFactory and can go directly to the SqlSession section. Please refer to the MyBatis-Spring or MyBatis-Guice manuals for further info.</p>
   <h4>SqlSessionFactoryBuilder</h4>
-  <p>El SqlSessionFactoryBuilder tiene cinco métodos build(), cada cual permite construir una SqlSessionFactory desde un origen distinto.</p>
+  <p>SqlSessionFactoryBuilder tiene nueve sobrecargas de build(): cuatro reciben un InputStream, cuatro reciben un Reader y una recibe un objeto Configuration.</p>
   <source>SqlSessionFactory build(InputStream inputStream)
 SqlSessionFactory build(InputStream inputStream, String environment)
 SqlSessionFactory build(InputStream inputStream, Properties properties)
 SqlSessionFactory build(InputStream inputStream, String env, Properties props)
+SqlSessionFactory build(Reader reader)
+SqlSessionFactory build(Reader reader, String environment)
+SqlSessionFactory build(Reader reader, Properties properties)
+SqlSessionFactory build(Reader reader, String env, Properties props)
 SqlSessionFactory build(Configuration config)</source>
 
-  <p>Los primeros cuatro métodos son los más comunes, dado que reciben una instancia de InputStream que referencia a un documento XML, o más específicamente, al fichero SqlMapConfig.xml comentado anteriormente. Los parámetros opcionales son environment y properties. Environment determina qué entorno cargar, incluyendo el datasource y el gestor de transacciones. Por ejemplo:</p>
+  <p>Los primeros ocho métodos leen un documento XML, como el fichero mybatis-config.xml mencionado anteriormente, desde un InputStream o un Reader. Los parámetros opcionales son environment y properties. Environment determina qué entorno cargar, incluyendo el datasource y el gestor de transacciones. Por ejemplo:</p>
 
   <source><![CDATA[<environments default="development">
   <environment id="development">
     <transactionManager type="JDBC">
         ...
+    </transactionManager>
     <dataSource type="POOLED">
         ...
+    </dataSource>
   </environment>
   <environment id="production">
     <transactionManager type="MANAGED">
         ...
+    </transactionManager>
     <dataSource type="JNDI">
         ...
+    </dataSource>
   </environment>
 </environments>]]></source>
   <p>Si llamas al método build que recibe el parámetro environment, entonces MyBatis usará la configuración de dicho entorno. Por supuesto, si especificas un entorno inválido, recibirás un error. Si llamas a alguno de los métodos que no reciben el parámetro environment, entonces se utilizará el entorno por defecto (que es el especificado como default=”development” en el ejemplo anterior).</p>
@@ -103,14 +114,14 @@ SqlSessionFactory build(Configuration config)</source>
   <p>Por lo tanto la prioridad mayor es la de las propiedades pasadas como parámetro, seguidas por las especificadas en el atributo resource/url y finalmente las propiedades especificadas en el cuerpo del elemento properties.</p>
   <hr/>
 
-  <p>Por tanto, para resumir, los primeros cuatro métodos son casi iguales pero te permiten opcionalmente especificar el environment y/o las propiedades. Aquí hay un ejemplo de cómo se construye un SqlSessionFactory desde un fichero mybatis-config.xml.</p>
+  <p>En resumen, los primeros ocho métodos se distinguen por el tipo de entrada y por los parámetros opcionales environment y properties. Aquí hay un ejemplo de cómo se construye un SqlSessionFactory desde un fichero mybatis-config.xml.</p>
 
   <source>String <strong>resource</strong> = "org/mybatis/builder/mybatis-config.xml";
 InputStream <strong>inputStream</strong> = Resources.getResourceAsStream(resource);
 SqlSessionFactoryBuilder <strong>builder</strong> = new SqlSessionFactoryBuilder();
 SqlSessionFactory <strong>factory</strong> = builder.build(inputStream);</source>
 
-  <p>Observa que estamos usando la clase de utilidad Resources, que está ubicada en el paquete org.mybatis.io. La clase Resources, tal y como su nombre indica, te ayuda a cargar recursos desde el classpath, el sistema de ficheros o desde una web o URL. Con un vistazo rápido al código fuente en tu IDE descubrirás un conjunto bastante obvio de métodos. Rápidamente:</p>
+  <p>Observa que estamos usando la clase de utilidad Resources, que está ubicada en el paquete org.apache.ibatis.io. La clase Resources, tal y como su nombre indica, te ayuda a cargar recursos desde el classpath, el sistema de ficheros o desde una web o URL. Con un vistazo rápido al código fuente en tu IDE descubrirás un conjunto bastante obvio de métodos. Rápidamente:</p>
   <source>URL getResourceURL(String resource)
 URL getResourceURL(ClassLoader loader, String resource)
 InputStream getResourceAsStream(String resource)
@@ -235,7 +246,7 @@ try {
   <p><code>SqlSessionManager</code> resulta especialmente útil cuando se necesita gestionar sesiones por hilo sin utilizar un framework de inyección de dependencias. Si se utiliza Spring o Guice, se debe seguir usando <code>MyBatis-Spring</code> o <code>MyBatis-Guice</code> para gestionar las sesiones.</p>
 
   <h4>SqlSessionFactory</h4>
-  <p>SqlSessionFactory tiene seis métodos que se usan para crear instancias de SqlSession. En general, las decisiones que deberás tomar cuando tengas qué elegir de entre alguno de estos métodos son:</p>
+  <p>SqlSessionFactory tiene ocho métodos que se usan para crear instancias de SqlSession. En general, las decisiones que deberás tomar cuando tengas qué elegir de entre alguno de estos métodos son:</p>
   <ul>
     <li><strong>Transaction</strong>: ¿Quieres usar un ámbito transaccional para esta sesión o utilizar auto-commit (lo cual equivale a no usar transacción en la mayoría de las bases de datos y/o JDBC drivers)?</li>
     <li><strong>Connection</strong>: ¿Quieres que MyBatis obtenga una conexión de un datasource o quieres proporcionar tu propia conexión?</li>
@@ -252,12 +263,12 @@ SqlSession openSession(ExecutorType execType, boolean autoCommit)
 SqlSession openSession(ExecutorType execType, Connection connection)
 Configuration getConfiguration();</source>
 
-  <p>El método openSession() por defecto que recibe parámetros crea una SqlSession con las siguientes características:</p>
+  <p>El método openSession() por defecto, que no recibe parámetros, crea una SqlSession con las siguientes características:</p>
   <ul>
-    <li>Se arranca una transacción (NO auto-commit)</li>
-    <li>Se obtiene una conexión de una instancia de DataSource configurada en el environment activo.</li>
+    <li>MyBatis solicita desactivar auto-commit; el gestor de transacciones configurado determina el control efectivo de la transacción.</li>
+    <li>La conexión se obtiene cuando se necesita de la instancia de DataSource configurada en el environment activo.</li>
     <li>El nivel de aislamiento transaccional será el que la base de datos tenga establecido por defecto.</li>
-    <li>No se reusaran PreparedStatements y no se realizarán actualizaciones batch.</li>
+    <li>La reutilización de PreparedStatements y las actualizaciones por lotes dependen de <code>defaultExecutorType</code>. Su valor por defecto, <code>SIMPLE</code>, no realiza ninguna de las dos.</li>
   </ul>
   <p>La mayoría de los métodos son auto explicativos. Para habilitar el auto-commit, pasa el valor “true” al parámetro opcional autoCommit. Para proporcionar tu propia conexión pasa una instancia de conexión al parámetro conexión. Ten en cuenta que no hay método para proporcionar tanto la conexión como el auto-commit porque MyBatis utilizará las opciones que esté usando actualmente la conexión suministrada. MyBatis usa una enumeration para indicar los niveles de aislamiento denominado TransactionIsolationLevel, pero funcionan como se espera de ellos y tiene los 5 niveles soportados por JDBC (NONE, READ_UNCOMMITTED, READ_COMMITTED, REPEATABLE_READ, SERIALIZABLE).</p>
   <p>El único parámetro que puede ser nuevo para ti es el ExecutorType. Esta enumeración define tres valores:</p>
@@ -299,12 +310,13 @@ int delete(String statement)]]></source>
    }
 }]]></source>
 
-  <p>Finalmente hay tres versiones avanzadas de los métodos select que te permiten restringir el rango de filas devueltas, o proporcionar lógica de tratamiento de resultados personalizada, normalmente para grandes cantidades de datos.</p>
+  <p>Finalmente hay seis versiones avanzadas de los métodos select que te permiten restringir el rango de filas devueltas, o proporcionar lógica de tratamiento de resultados personalizada, normalmente para grandes cantidades de datos.</p>
   <source><![CDATA[<E> List<E> selectList (String statement, Object parameter, RowBounds rowBounds)
 <T> Cursor<T> selectCursor(String statement, Object parameter, RowBounds rowBounds)
 <K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowbounds)
-void select (String statement, Object parameter, ResultHandler<T> handler)
-void select (String statement, Object parameter, RowBounds rowBounds, ResultHandler<T> handler)]]></source>
+void select(String statement, ResultHandler handler)
+void select(String statement, Object parameter, ResultHandler handler)
+void select(String statement, Object parameter, RowBounds rowBounds, ResultHandler handler)]]></source>
 
   <p>El parámetro RowBounds hace que MyBatis salte los registros especificados y que limite los resultados devueltos a cierto número. La clase RowBounds tiene un constructor que recibe ambos el offset y el limit, y es inmutable.</p>
   <source>int offset = 100;
@@ -320,7 +332,7 @@ public interface ResultHandler<T> {
   void handleResult(ResultContext<? extends T> context);
 }]]></source>
 
-  <p>El parámetro ResultContext te da acceso al objeto resultado en sí mismo, un contador del número de objetos creados y un método booleano stop() que te permite indicar a MyBatis que pare la carga de datos.</p>
+  <p>El parámetro ResultContext te da acceso al objeto resultado, al número de objetos creados y al método stop(), que permite indicar a MyBatis que detenga la carga de resultados.</p>
 
   <p>Using a ResultHandler has two limitations that you should be aware of:</p>
 
@@ -334,7 +346,7 @@ public interface ResultHandler<T> {
   <source><![CDATA[List<BatchResult> flushStatements()]]></source>
 
   <h5 id="transaction-control-methods">Métodos de control de transacción</h5>
-  <p>El parámetro ResultContext te da acceso al objeto resultado en sí mismo, un contador del número de objetos creados y un método booleano stop() que te permite indicar a MyBatis que pare la carga de datos.</p>
+  <p>Hay cuatro métodos para controlar la transacción. En modo auto-commit o con un gestor de transacciones externo, no ejecutan un commit o rollback JDBC, pero sí limpian la caché local y ejecutan o descartan las sentencias pendientes por lotes. Con el gestor de transacciones JDBC, también controlan la transacción de la base de datos:</p>
   <source>void commit()
 void commit(boolean force)
 void rollback()
@@ -343,10 +355,10 @@ void rollback(boolean force)</source>
   <p><span class="label important">NOTA</span> MyBatis-Spring y MyBatis-Guice proporcionan gestión de transacción declarativa. Por tanto si estás usando MyBatis con Spring o Guice consulta sus manuales específicos.</p>
 
   <h5>Local Cache</h5>
-  <p>MyBatis utliza dos cachés: la caché local y la caché de segundo nivel.</p>
-  <p>Cada vez que se crea una sesión MyBatis crea una cache local y la asocia a dicha sesión. Cualquier query que se ejecute en la sesión será cacheada de forma que si en el futuro se vuelve a lanzar la misma query con los mismos parámetros de entrada los datos se obtendrán de la caché y no se accederá a la base de datos. La caché local se vacía cuando se ejecuta cupdate, commit, rollback y close.</p>
-  <p>Por defecto la cache local se utiliza durante toda la duración de la sesión. Esta cache es necesaria para resolver dependencias circulares y para acelerar consultas anidadas repetidas asi que no puede desactivarse, pero puede configurarse para que se utilize sólo durante la duración de la ejecución de una sentencia infomando el parámetro de configuración localCacheScope=STATEMENT.</p>
-  <p>Cuando localCacheScope está informado a SESSION (valor por defecto) MyBatis devuelve referencias a objetos objetos almacenados en la caché. Cualquier modificación de un objeto (listas etc.) influye en el contenido de la caché y en los valores que serán retornados posteriormente durante la existencia de la sessión. Por lo tanto, como mejor práctica, evita modificaciones sobre los objetos devueltos por MyBatis.</p>
+  <p>MyBatis utiliza dos cachés: la caché local y la caché de segundo nivel.</p>
+  <p>Cada vez que se crea una sesión, MyBatis crea una caché local y la asocia a dicha sesión. Las consultas ordinarias ejecutadas en la sesión se almacenan en esta caché, de forma que si se repite la misma consulta con los mismos parámetros, los datos se obtienen de la caché sin acceder a la base de datos. Las consultas con un ResultHandler personalizado no leen de la caché local; las consultas con Cursor la omiten por completo. La caché local se vacía al ejecutar update, commit, rollback o close.</p>
+  <p>Por defecto, la caché local se utiliza durante toda la sesión. Esta caché es necesaria para resolver referencias circulares y acelerar consultas anidadas repetidas, así que no puede desactivarse por completo. Sin embargo, puede configurarse para que se utilice solo durante la ejecución de una sentencia mediante localCacheScope=STATEMENT.</p>
+  <p>Cuando localCacheScope está configurado como SESSION (valor por defecto), MyBatis devuelve referencias a los objetos almacenados en la caché. Cualquier modificación de un objeto o una lista influye en el contenido de la caché y en los valores que se devolverán posteriormente durante la sesión. Por lo tanto, evita modificar los objetos devueltos por MyBatis.</p>
   <p>Puedes borrar el contenido de la caché local en el momento que desees invocando:</p>
   <source>void clearCache()</source>
 
@@ -377,7 +389,7 @@ void rollback(boolean force)</source>
   Map<Integer, Author> selectAuthorsAsMap();
   // insert("insertAuthor", author)
   int insertAuthor(Author author);
-  // updateAuthor("updateAuthor", author)
+  // update("updateAuthor", author)
   int updateAuthor(Author author);
   // delete("deleteAuthor",5)
   int deleteAuthor(int id);
@@ -386,7 +398,7 @@ void rollback(boolean force)</source>
   <p>Además, el tipo devuelto debe ser igual que el result type del mapped statement. Todos los tipos habituales se soportan, incluyendo primitivas, mapas, POJOs y JavaBeans.</p>
   <p><span class="label important">NOTA</span> Los mappers no necesitan implementar ninguna interfaz o extender ninguna clase. Sólo es necesario que la firma de método pueda usarse para identificar unívocamente el mapped statement correspondiente.</p>
   <p><span class="label important">NOTA</span> Los mappers pueden extender otras interfaces. Asegúrate que tienes tus statements en los namespaces adecuados en tu fichero XML. Además, la única limitación es que no puedes tener el mismo método, con la misma firma, en dos interfaces de la jerarquía (una mala idea en cualquier caso).</p>
-  <p>Puedes pasar más de un parámetro a un método de un mapper. Si lo haces, se usará como nombre el literal "param" seguido de su posición en la lista de parámetros, por ejemplo:  #{param1}, #{param2} etc. Si quieres cambiar su nombre (solo en caso de parámetros múltiples) puedes usar la notación @Param(“paramName”).</p>
+  <p>Puedes pasar más de un parámetro a un método de un mapper. Si lo haces, se usará como nombre el literal "param" seguido de su posición en la lista de parámetros, por ejemplo: #{param1}, #{param2} etc. También puedes usar la anotación @Param("paramName") para dar nombre a un parámetro, incluso cuando sea el único.</p>
   <p>También puedes pasar una instancia de RowBounds al método para limitar los resultados.</p>
 
   <h5>Anotaciones de mappers</h5>
@@ -418,9 +430,9 @@ void rollback(boolean force)</source>
       <tr>
         <td><code>@CacheNamespaceRef</code></td>
         <td><code>Class</code></td>
-        <td><code>&lt;cacheRef&gt;</code></td>
+        <td><code>&lt;cache-ref&gt;</code></td>
         <td>
-          Referencia una cache de otro namespace. Note that caches declared in an XML mapper file are considered a separate namespace, even if they share the same FQCN. Atributos: <code>value</code> and <code>name</code>.
+          Referencia la caché de un namespace. Las sentencias definidas mediante anotaciones no usan automáticamente la caché declarada en el mapper XML asociado, aunque compartan el mismo namespace. Para usar esa caché, hay que referenciarla con esta anotación. Atributos: <code>value</code> y <code>name</code>.
           If you use this annotation, you should be specified either <code>value</code> or <code>name</code> attribute.
           For the <code>value</code> attribute specify a java type indicating the namespace(the namespace name become a FQCN of specified java type),
           and for the <code>name</code> attribute(this attribute is available since 3.4.2) specify a name indicating the namespace.
@@ -441,7 +453,7 @@ void rollback(boolean force)</source>
             <li><code>&lt;idArg&gt;</code></li>
           </ul>
         </td>
-        <td>Un argumento que es parte de un  ConstructorArgs.  Atributos:  id, column, javaType, jdbcType, typeHandler, select and resultMap.  El atributo id es un valor booleano que identifica la propiedad que será usada en las comparaciones, parecido al elemento XML &lt;idArg&gt;. Since 3.5.4, it can be used as repeatable annotation.</td>
+        <td>Un argumento que forma parte de ConstructorArgs. Atributos: id, column, javaType, jdbcType, typeHandler, select, resultMap, name y columnPrefix. El atributo id es un valor booleano que identifica la propiedad que se usará en las comparaciones, como el elemento XML &lt;idArg&gt;. Desde 3.5.4 puede repetirse.</td>
       </tr>
       <tr>
         <td><code>@TypeDiscriminator</code></td>
@@ -453,7 +465,13 @@ void rollback(boolean force)</source>
         <td><code>@Case</code></td>
         <td>N/A</td>
         <td><code>&lt;case&gt;</code></td>
-        <td>Un caso concreto y su mapeo correspondiente. Atributos: value, type, results.  El atributo results es un array de Results, por tanto esta anotación Case es similar a un ResultMap, que se especifica mediante la anotación Results a continuación.</td>
+        <td>Un caso concreto y su mapeo correspondiente. Atributos: value, type, results y constructArgs. results es un array de anotaciones Result y constructArgs es un array de anotaciones Arg.</td>
+      </tr>
+      <tr>
+        <td><code>@NamedResultMap</code></td>
+        <td><code>Type</code></td>
+        <td><code>&lt;resultMap&gt;</code></td>
+        <td>Define en un tipo, normalmente una interfaz mapper, un mapa de resultados reutilizable por varias sentencias. id y javaType son obligatorios; constructorArguments (array de Arg), propertyMappings (array de Result) y typeDiscriminator son opcionales. Debe indicarse al menos un tipo de mapeo.</td>
       </tr>
       <tr>
         <td><code>@Results</code></td>
@@ -480,8 +498,7 @@ void rollback(boolean force)</source>
         Un mapeo a una propiedad que contiene un tipo complejo. Atributos: select, que contiene el nombre completamente cualificado de un mapped statement (o un método de mapper) que puede cargar la instancia del tipo indicado.
         <code>fetchType</code>, que sobrescribe el parámetro global de configuración <code>lazyLoadingEnabled</code> para este mapeo.
         <code>resultMap</code>(available since 3.5.5), which is the fully qualified name of a result map that map to a single container object from select result.
-        <code>columnPrefix</code>(available since 3.5.5), which is column prefix for grouping select columns at nested result map.
-        Nota: Habrás visto que el mapeo de tipo join no se soporta mediante el API de anotaciones. Esto es debido a las limitaciones de las anotaciones en Java que no permiten referencias circulares.</td>
+        <code>columnPrefix</code>(available since 3.5.5), which is column prefix for grouping select columns at nested result map.</td>
       </tr>
       <tr>
         <td><code>@Many</code></td>
@@ -490,14 +507,13 @@ void rollback(boolean force)</source>
         <td>Un mapeo a una propiedad que contiene una colección de tipos complejos. Atributos: select, que contiene el nombre completamente cualificado de un mapped statement (o un método de mapper) que puede cargar la instancia del tipo indicado.
         <code>fetchType</code>, que sobrescribe el parámetro global de configuración <code>lazyLoadingEnabled</code> para este mapeo.
         <code>resultMap</code>(available since 3.5.5), which is the fully qualified name of a result map that map to collection object from select result.
-        <code>columnPrefix</code>(available since 3.5.5), which is column prefix for grouping select columns at nested result map.
-        Nota: Habrás visto que el mapeo de tipo join no se soporta mediante el API de anotaciones. Esto es debido a las limitaciones de las anotaciones en Java que no permiten referencias circulares.</td>
+        <code>columnPrefix</code>(available since 3.5.5), which is column prefix for grouping select columns at nested result map.</td>
       </tr>
       <tr>
         <td><code>@MapKey</code></td>
         <td><code>Method</code></td>
         <td> </td>
-        <td>Se usa en métodos cuyo tipo de retorno es Map. Se usa para convertir una Lista de objetos de resultado a un Map basándose en una propiedad de dichos objetos.</td>
+        <td>Se usa en métodos cuyo tipo de retorno es Map. Convierte una lista de resultados en un Map basado en una propiedad de esos objetos. El atributo value indica la propiedad que se usará como clave.</td>
       </tr>
       <tr>
         <td><code>@Options</code></td>
@@ -539,7 +555,7 @@ void rollback(boolean force)</source>
           Cada una de estas anotaciones representa el SQL que debe ejecutarse. Cada una de ellas recibe un array de strings (o un solo string).
           Si se pasa un array de strings, todos ellos se concatenarán introduciendo un espacio en blanco entre ellos.
           Esto ayuda a evitar el problema “falta un espacio en blanco” al construir SQL en código Java. Sin embargo, también puedes concatenarlos en un solo string si lo prefieres.
-          Atributos: value, que es el array de String para formar una única sentencia SQL.
+          Atributos: value, que es el array de String para formar una única sentencia SQL. @Select también dispone de affectData para marcar un SELECT que modifica datos a efectos del control de transacciones.
           The <code>databaseId</code>(Available since 3.5.5), in case there is a configured <code>DatabaseIdProvider</code>,
           the MyBatis use a statement with no <code>databaseId</code> attribute or with a <code>databaseId</code>
           that matches the current one. If found with and without the <code>databaseId</code> the latter will be discarded.
@@ -566,7 +582,7 @@ void rollback(boolean force)</source>
         <td>Estas anotaciones SQL alternativas te permiten especificar un nombre de clases y un método que devolverán la SQL que debe ejecutarse (Since 3.4.6, you can specify the <code>CharSequence</code> instead of <code>String</code> as a method return type).
           Cuando se ejecute el método MyBatis instanciará la clase y ejecutará el método especificados en el provider. You can pass objects that passed to arguments of a mapper method, "Mapper interface type", "Mapper method" and "Database ID"
           via the <code>ProviderContext</code>(available since MyBatis 3.4.5 or later) as method argument.(In MyBatis 3.4 or later, it's allow multiple parameters)
-          Atributos: value, type y method.
+          Atributos: value, type, method y databaseId. @SelectProvider también dispone de affectData para marcar un SELECT que modifica datos a efectos del control de transacciones.
           El atributo value y type es el nombre completamente cualificado de una clase
           (The <code>type</code> attribute is alias for <code>value</code>, you must be specify either one.
           But both attributes can be omit when specify the <code>defaultSqlProviderType</code> as global configuration).
@@ -584,7 +600,7 @@ void rollback(boolean force)</source>
         <td><code>@Param</code></td>
         <td><code>Parameter</code></td>
         <td>N/A</td>
-        <td>Si tu mapper recibe parámetros múltiples, esta anotación puede aplicarse a cada parámetro para proporcionarle un nombre. En caso contrario, los parámetros múltiples se nombrarán según su posición (sin incluir el parámetro RowBounds), prefijados con "param". Por ejemplo:  #{param1}, #{param2} etc. es el defecto.  Con @Param(“persona”), el parámetro se llamará #{persona}.</td>
+        <td>Esta anotación da nombre a un parámetro, incluso cuando el método recibe uno solo. Si hay varios parámetros sin anotación, también pueden referenciarse como #{param1}, #{param2}, etc.; RowBounds no se cuenta. Con @Param("persona"), el parámetro puede referenciarse como #{persona}.</td>
       </tr>
       <tr>
         <td><code>@SelectKey</code></td>
@@ -593,8 +609,7 @@ void rollback(boolean force)</source>
         <td>
           Esta anotación es igual que la &lt;selectKey&gt; para métodos anotados con @Insert, @InsertProvider, @Update o @UpdateProvider.
           Se ignora en otros métodos. Si especificas la anotación @SelectKey, entonces MyBatis ignorará todas las propiedades de generación de claves proporcionadas por la anotación @Options, o mediante propiedades de configuración.
-          Atributos: statement un array de strings que contienen la SQL a ejecutar, keyProperty que es la propiedad del objeto parámetro que se actualizará con el Nuevo valor,
-          before que debe valer true o false para indicar si la sentencia SQL debe ejecutarse antes o después de la insert, resultType que es el tipo de la propiedad keyProperty, y statementType=PREPARED.
+          Atributos: statement, un array de strings que contiene la SQL a ejecutar; keyProperty, la propiedad que recibirá el nuevo valor; keyColumn, los nombres de las columnas que proporcionan la clave (separados por comas si hay varios); before, que indica si la sentencia se ejecuta antes o después de la inserción o actualización; resultType, el tipo Java de la clave; y statementType, que puede ser STATEMENT, PREPARED (valor por defecto) o CALLABLE.
           The <code>databaseId</code>(Available since 3.5.5), in case there is a configured <code>DatabaseIdProvider</code>,
           the MyBatis will use a statement with no <code>databaseId</code> attribute or with a <code>databaseId</code>
           that matches the current one. If found with and without the <code>databaseId</code> the latter will be discarded.
@@ -604,7 +619,13 @@ void rollback(boolean force)</source>
         <td><code>@ResultMap</code></td>
         <td><code>Method</code></td>
         <td>N/A</td>
-        <td>Esta anotación se usa para proporcionar el id de un elemento &lt;resultMap&gt; en un mapper XML a una anotación @Select o @SelectProvider. Esto permite a las selects anotadas reusar resultmaps definidas en XML. Esta anotación sobrescribe las anotaciones @Result o @ConstructorArgs en caso de que se hayan especificado en la select anotada.</td>
+        <td>Esta anotación se usa para proporcionar el id de un elemento &lt;resultMap&gt; en un mapper XML a una anotación @Select o @SelectProvider. Esto permite a las selects anotadas reusar resultmaps definidas en XML. Esta anotación sobrescribe las anotaciones @Results o @ConstructorArgs en caso de que se hayan especificado en la select anotada.</td>
+      </tr>
+      <tr>
+        <td><code>@ResultOrdered</code></td>
+        <td><code>Method</code></td>
+        <td>Atributo resultOrdered de &lt;select&gt;</td>
+        <td>Indica que el conjunto de resultados está ordenado. Es necesario al construir objetos con colecciones en sus constructores. Su atributo booleano value tiene como valor por defecto true.</td>
       </tr>
       <tr>
         <td><code>@ResultType</code></td>

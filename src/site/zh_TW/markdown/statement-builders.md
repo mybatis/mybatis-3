@@ -109,8 +109,8 @@ public String updatePersonSql() {
 | <ul><li>`FROM(String)`</li><li>`FROM(String...)`</li></ul> | 開始或附加至 `FROM` 子句。可以呼叫多次，參數將會附加至 `FROM` 子句。參數通常是資料表名稱與別名，或是驅動程式所接受的任何內容。 |
 | <ul><li>`JOIN(String)`</li><li>`JOIN(String...)`</li><li>`INNER_JOIN(String)`</li><li>`INNER_JOIN(String...)`</li><li>`LEFT_OUTER_JOIN(String)`</li><li>`LEFT_OUTER_JOIN(String...)`</li><li>`RIGHT_OUTER_JOIN(String)`</li><li>`RIGHT_OUTER_JOIN(String...)`</li><li>`OUTER_JOIN(String)`</li><li>`OUTER_JOIN(String...)`</li></ul> | 根據呼叫的方法，加入適當型別的新 `JOIN` 子句。參數可以包含由要聯結的欄位與條件所組成的標準 join。 |
 | <ul><li>`WHERE(String)`</li><li>`WHERE(String...)`</li></ul> | 附加新的 `WHERE` 子句條件，以 `AND` 串接。可以呼叫多次，每次都會使用 `AND` 串接新條件。使用 `OR()` 以 `OR` 分隔。 |
-| `OR()` | 使用 `OR` 分隔目前的 `WHERE` 子句條件。可以呼叫多次，但連續多次呼叫會產生不穩定的 `SQL`。 |
-| `AND()` | 使用 `AND` 分隔目前的 `WHERE` 子句條件。可以呼叫多次，但連續多次呼叫會產生不穩定的 `SQL`。由於 `WHERE` 與 `HAVING` 都會自動以 `AND` 串接，因此這是一個非常不常用的方法，僅為了完整性而包含在內。 |
+| `OR()` | 使用 `OR` 分隔最近加入條件的 `WHERE` 或 `HAVING` 子句。可以呼叫多次，但連續多次呼叫會產生不穩定的 `SQL`。 |
+| `AND()` | 使用 `AND` 分隔最近加入條件的 `WHERE` 或 `HAVING` 子句。可以呼叫多次，但連續多次呼叫會產生不穩定的 `SQL`。由於 `WHERE` 與 `HAVING` 都會自動以 `AND` 串接，因此這是一個非常不常用的方法，僅為了完整性而包含在內。 |
 | <ul><li>`GROUP_BY(String)`</li><li>`GROUP_BY(String...)`</li></ul> | 附加新的 `GROUP BY` 子句元素，以逗號串接。可以呼叫多次，每次都會使用逗號串接新條件。 |
 | <ul><li>`HAVING(String)`</li><li>`HAVING(String...)`</li></ul> | 附加新的 `HAVING` 子句條件，以 `AND` 串接。可以呼叫多次，每次都會使用 `AND` 串接新條件。使用 `OR()` 以 `OR` 分隔。 |
 | <ul><li>`ORDER_BY(String)`</li><li>`ORDER_BY(String...)`</li></ul> | 附加新的 `ORDER BY` 子句元素，以逗號串接。可以呼叫多次，每次都會使用逗號串接新條件。 |
@@ -202,6 +202,32 @@ public String selectPersonsWithFetchFirstSql() {
 }
 ```
 
+自版本 3.5.15 起，`applyIf(boolean, Consumer<SQL>)` 與 `applyIf(BooleanSupplier, Consumer<SQL>)` 只會在條件為 `true` 時加入 SQL 子句。`applyForEach(Iterable<E>, ForEachConsumer<SQL, E>)` 會對每個元素呼叫一次 consumer，並傳入 SQL builder、元素及從零開始的索引。這些方法都會回傳 builder，方便串接呼叫。
+
+```java
+public String selectPersonsSql(boolean activeOnly) {
+  return new SQL()
+    .SELECT("ID", "NAME")
+    .FROM("PERSON")
+    .applyIf(activeOnly, sql -> sql.WHERE("ACTIVE = 1"))
+    .toString();
+}
+
+// Mapper interface
+@InsertProvider(type = PersonSqlProvider.class, method = "insertPersonsSql")
+void insertPersons(@Param("persons") List<Person> persons);
+
+// PersonSqlProvider
+public String insertPersonsSql(@Param("persons") List<Person> persons) {
+  return new SQL()
+    .INSERT_INTO("PERSON")
+    .INTO_COLUMNS("ID", "NAME")
+    .applyForEach(persons, (sql, person, index) ->
+      sql.INTO_VALUES("#{persons[" + index + "].id}", "#{persons[" + index + "].name}").ADD_ROW())
+    .toString();
+}
+```
+
 ### SqlBuilder 與 SelectBuilder（已廢棄）
 
 在 3.2 版本之前，我們採用了稍有不同的做法，利用 ThreadLocal 變數來掩蓋一些使 Java DSL 顯得繁瑣的語言限制。然而，這種做法現在已被廢棄，因為現代框架已經讓人們習慣為此類事情使用 builder 模式與匿名內部類別。因此，SelectBuilder 與 SqlBuilder 類別已被廢棄。
@@ -210,8 +236,8 @@ public String selectPersonsWithFetchFirstSql() {
 
 | 方法 | 說明 |
 |-----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `BEGIN()` / `RESET()` | 這些方法會清除 `SelectBuilder` 類別的 `ThreadLocal` 狀態，並為建構新的陳述式做好準備。在開始新的陳述式時，`BEGIN()` 的可讀性最佳。當因為某些原因在執行過程中清除陳述式時（例如在某些條件下邏輯需要完全不同的陳述式），`RESET()` 的可讀性最佳。 |
-| `SQL()` | 這會回傳產生的 SQL 並重設 `SelectBuilder` 狀態（如同呼叫了 `BEGIN()` 或 `RESET()`）。因此，此方法只能被呼叫一次！ |
+| `BEGIN()` / `RESET()` | 這些方法會重設目前執行緒中匯入的 `SelectBuilder` 或 `SqlBuilder` 類別狀態；兩個類別各自維護獨立的狀態，以便開始建構新的陳述式。在開始新的陳述式時，`BEGIN()` 的可讀性最佳。當因為某些原因在執行過程中清除陳述式時（例如在某些條件下邏輯需要完全不同的陳述式），`RESET()` 的可讀性最佳。 |
+| `SQL()` | 回傳產生的 SQL，並重設目前執行緒中匯入的 builder 類別狀態。每個陳述式呼叫一次 `SQL()`；開始建構下一個陳述式後，仍可再次呼叫。 |
 
 
 SelectBuilder 與 SqlBuilder 類別並不神奇，但了解它們的工作原理很重要。SelectBuilder 與 SqlBuilder 結合使用靜態匯入（Static Imports）與 ThreadLocal 變數，以實現可輕鬆與條件判斷交錯的簡潔語法。要使用它們，您可以從類別中靜態匯入方法，如下所示（二選一，不可同時使用）：

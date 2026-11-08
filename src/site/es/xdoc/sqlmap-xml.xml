@@ -109,7 +109,6 @@ ps.setInt(1,id);]]></source>
   parameterType="int"
   parameterMap="deprecated"
   resultType="hashmap"
-  resultMap="personResultMap"
   flushCache="false"
   useCache="true"
   timeout="10"
@@ -133,7 +132,7 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td><code>parameterType</code></td>
               <td>El nombre completamente cualificado de la clase o el alias del parámetro que se pasará al statement.
-              Este atributo es opcional porque MyBatis puede calcular el TypeHandler a utlizar a partir del parametro actual usado en la invocación al statement.
+              Este atributo es opcional porque MyBatis puede calcular el TypeHandler a utilizar a partir del parametro actual usado en la invocación al statement.
               Por defecto: no informado.</td>
             </tr>
             <tr>
@@ -182,14 +181,13 @@ ps.setInt(1,id);]]></source>
             </tr>
             <tr>
               <td><code>resultSetType</code></td>
-              <td>Puede valer FORWARD_ONLY|SCROLL_SENSITIVE|SCROLL_INSENSITIVE|DEFAULT(same as unset).  Por defecto: no informado (depende del driver de base de datos).
+              <td>Puede valer FORWARD_ONLY|SCROLL_SENSITIVE|SCROLL_INSENSITIVE|DEFAULT. Si no se indica, se utiliza el valor configurado de <code>defaultResultSetType</code>; DEFAULT utiliza el valor predeterminado del controlador JDBC.
               </td>
             </tr>
             <tr>
               <td><code>databaseId</code></td>
               <td>Si hay un DatabaseIdProvider configurado. MyBatis cargará todos los statements sin el atributo <code>databaseId</code>
-              o aquellos con un <code>databaseId</code> que coincide con el actual. Si se encuentra un statement con y sin
-              <code>databaseId</code> el último se descartará.
+              o aquellos con un <code>databaseId</code> que coincide con el actual. Si hay dos versiones del mismo statement, una con un <code>databaseId</code> coincidente y otra sin él, se descartará la versión sin <code>databaseId</code>.
               </td>
             </tr>
             <tr>
@@ -216,7 +214,8 @@ ps.setInt(1,id);]]></source>
         </table>
       </subsection>
 
-      <subsection name="insert, update and delete" id="insert_update_and_delete">
+      <subsection name="insert, update and delete">
+        <a name="insert_update_and_delete"/>
         <p>Los insert, update y delete statements son muy similares en su implementación:</p>
 
         <source><![CDATA[<insert
@@ -259,7 +258,7 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td><code>parameterType</code></td>
               <td>El nombre completamente cualificado de la clase o el alias del parámetro que se pasará al statement.
-              Este atributo es opcional porque MyBatis puede calcular el TypeHandler a utlizar a partir del parametro actual usado en la invocación al statement.
+              Este atributo es opcional porque MyBatis puede calcular el TypeHandler a utilizar a partir del parametro actual usado en la invocación al statement.
               Por defecto: no informado.</td>
             </tr>
             <tr>
@@ -267,7 +266,7 @@ ps.setInt(1,id);]]></source>
                 <strike><code>parameterMap</code></strike>
               </td>
               <td>
-                <strike>Método deprecado de referirse a un parameterMap externo. Usa mapeos inline y el atributo paramterType.</strike>
+                <strike>Método deprecado de referirse a un parameterMap externo. Usa mapeos inline y el atributo parameterType.</strike>
               </td>
             </tr>
             <tr>
@@ -303,8 +302,7 @@ ps.setInt(1,id);]]></source>
             <tr>
               <td><code>databaseId</code></td>
               <td>Si hay un DatabaseIdProvider configurado. MyBatis cargará todos los statements sin el atributo <code>databaseId</code>
-              o aquellos con un <code>databaseId</code> que coincide con el actual. Si se encuentra un statement con y sin
-              <code>databaseId</code> el último se descartará.
+              o aquellos con un <code>databaseId</code> que coincide con el actual. Si hay dos versiones del mismo statement, una con un <code>databaseId</code> coincidente y otra sin él, se descartará la versión sin <code>databaseId</code>.
               </td>
             </tr>
           </tbody>
@@ -401,7 +399,7 @@ Por ejemplo, si la columna id de la tabla Author del ejemplo siguiente fuera aut
             </tr>
             <tr>
               <td><code>resultType</code></td>
-              <td>El tipo de retorno. MyBatis puede adivinarlo pero no está de más añadirlo para asegurarse. MyBatis permite usar cualquier tipo simple, incluyendo Strings.
+              <td>El tipo de retorno. Es necesario especificarlo porque MyBatis no infiere el tipo de resultado de <code>selectKey</code>. MyBatis permite usar cualquier tipo simple, incluyendo Strings.
               </td>
             </tr>
             <tr>
@@ -475,7 +473,7 @@ Por ejemplo, si la columna id de la tabla Author del ejemplo siguiente fuera aut
         <p>En todos los statements anteriores se han mostrado ejemplos de parámetros simples. Los parámetros son elementos muy potentes en MyBatis. En los casos simples, probablemente el 90% de los casos, no hay mucho que decir sobre ellos, por ejemplo:
         </p>
 
-        <source><![CDATA[<select id="selectUsers" resultType="User">
+        <source><![CDATA[<select id="selectUsers" parameterType="int" resultType="User">
   select id, username, password
   from users
   where id = #{id}
@@ -519,15 +517,15 @@ Por ejemplo, si la columna id de la tabla Author del ejemplo siguiente fuera aut
 
         <source><![CDATA[#{height,javaType=double,jdbcType=NUMERIC,numericScale=2}]]></source>
 
-        <p>Finalmente, el atributo mode te permite especificar parámetros IN, OUT o INOUT. Si un parámetro es OUT o INOUT, el valor actual de las propiedades del objeto pasado como parámetro será modificado. Si el mode=OUT (o INOUT) y el jdbcType=CURSOR (ej. Oracle REFCURSOR), debes especificar un resultMap para mapear el RestultSet al tipo del parámetro. Ten en cuenta que el atributo javaType es opcional en este caso, dado que se establecerá automáticamente al valor ResultSet en caso de no haberse especificado si el jdbcType es CURSOR.
+        <p>Finalmente, el atributo mode te permite especificar parámetros IN, OUT o INOUT. Si un parámetro es OUT o INOUT, el valor actual de las propiedades del objeto pasado como parámetro será modificado. Si el mode=OUT (o INOUT) y el jdbcType=CURSOR (ej. Oracle REFCURSOR), debes especificar un resultMap para mapear el ResultSet al tipo del parámetro. Ten en cuenta que el atributo javaType es opcional en este caso, dado que se establecerá automáticamente al valor ResultSet en caso de no haberse especificado si el jdbcType es CURSOR.
         </p>
 
         <source><![CDATA[#{department, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=departmentResultMap}]]></source>
 
-        <p>MyBatis también soporta tipos de datos avanzados como los structs, pero en este caso debes indicar in el statement el jdbcTypeName en la declaración del parámetro de tipo OUT.
+        <p>MyBatis también soporta tipos de datos avanzados como los structs, pero en este caso debes indicar en el statement el jdbcTypeName en la declaración del parámetro de tipo OUT.
         </p>
 
-        <source><![CDATA[#{middleInitial, mode=OUT, jdbcType=STRUCT, jdbcTypeName=MY_TYPE, resultMap=departmentResultMap}]]></source>
+        <source><![CDATA[#{middleInitial, mode=OUT, jdbcType=STRUCT, jdbcTypeName=MY_TYPE}]]></source>
 
         <p>A pesar de estas potentes opciones, la mayoría de las veces simplemente debes especificar el nombre de la propiedad y MyBatis adivinará lo demás. A lo sumo, deberás especificar los jdbcTypes para las columnas que admiten nulos.
         </p>
@@ -568,7 +566,7 @@ User findByEmail(@Param("email") String email);
           you can just write:
           <source><![CDATA[
 @Select("select * from user where ${column} = #{value}")
-User findByColumn(@Param("column") String column, @Param("value") String value);
+User findByColumn(@Param("column") String column, @Param("value") Object value);
 ]]></source>
           in which the <code>${column}</code> will be substituted directly and the <code>#{value}</code> will be "prepared".
           Thus you can just do the same work by:
@@ -590,7 +588,7 @@ User userOfEmail = userMapper.findByColumn("email", "noone@nowhere.com");
 
       <subsection name="Result Maps">
         <p>
-          El elemento resultMap es el elemento más importante y potente de MyBatis. Te permite eliminar el 90% del código que requiere el JDBC para obtener datos de ResultSets, y en algunos casos incluso te permite hacer cosas que no están siquiera soportadas en JDBC. En realidad, escribir un código equivalente para realizar algo similar a un mapeo para un statement complejo podría requerir cientos de líneas de código. El diseño de los ResultMaps es tal, que los statemets simples no requieren un ResultMap explícito, y los statements más complejos requieren sólo la información imprescindible para describir relaciones.
+          El elemento resultMap es el elemento más importante y potente de MyBatis. Te permite eliminar el 90% del código que requiere el JDBC para obtener datos de ResultSets, y en algunos casos incluso te permite hacer cosas que no están siquiera soportadas en JDBC. En realidad, escribir un código equivalente para realizar algo similar a un mapeo para un statement complejo podría requerir cientos de líneas de código. El diseño de los ResultMaps es tal, que los statements simples no requieren un ResultMap explícito, y los statements más complejos requieren sólo la información imprescindible para describir relaciones.
         </p>
 
         <p>Ya has visto algunos ejemplos de un statement sencillo que no requiere un ResultMap explícito. Por ejemplo:
@@ -678,7 +676,7 @@ public class User {
         <source><![CDATA[<resultMap id="userResultMap" type="User">
   <id property="id" column="user_id" />
   <result property="username" column="user_name"/>
-  <result property="password" column="hashed_password"/>
+  <result property="hashedPassword" column="hashed_password"/>
 </resultMap>]]></source>
 
         <p>
@@ -889,7 +887,7 @@ public class User {
             </tr>
             <tr>
               <td><code>jdbcType</code></td>
-              <td>Un tipo JDBC de los tipos soportados que se muestran a continuación. El tipo JDBC solo se requiere para columnas que admiten nulos en insert, update o delete. Esto es un requerimiento de JDBC no de MyBatis. Incluso si usas JDBC directamente debes especificar el tipo – pero solo para los valores que pueden ser nulos.
+              <td>El tipo JDBC de la columna de resultado. Indícalo cuando MyBatis lo necesite, junto con el tipo Java, para elegir un TypeHandler para este mapeo.
               </td>
             </tr>
             <tr>
@@ -944,6 +942,22 @@ public class User {
             <td><code>NULL</code></td>
             <td><code>CURSOR</code></td>
             <td><code>ARRAY</code></td>
+          </tr>
+          <tr>
+            <td><code>STRUCT</code></td>
+            <td><code>JAVA_OBJECT</code></td>
+            <td><code>DISTINCT</code></td>
+            <td><code>REF</code></td>
+            <td><code>DATALINK</code></td>
+            <td><code>ROWID</code></td>
+          </tr>
+          <tr>
+            <td><code>LONGNVARCHAR</code></td>
+            <td><code>SQLXML</code></td>
+            <td><code>DATETIMEOFFSET</code></td>
+            <td><code>TIME_WITH_TIMEZONE</code></td>
+            <td><code>TIMESTAMP_WITH_TIMEZONE</code></td>
+            <td></td>
           </tr>
         </table>
 
@@ -1011,7 +1025,7 @@ public class User {
             </tr>
             <tr>
               <td><code>jdbcType</code></td>
-              <td>Un tipo JDBC de los tipos soportados que se muestran a continuación. El tipo JDBC solo se requiere para columnas que admiten nulos en insert, update o delete. Esto es un requerimiento de JDBC no de MyBatis. Incluso si usas JDBC directamente debes especificar el tipo – pero solo para los valores que pueden ser nulos.
+              <td>El tipo JDBC de la columna de resultado. Indícalo cuando MyBatis lo necesite, junto con el tipo Java, para elegir un TypeHandler para este mapeo.
               </td>
             </tr>
             <tr>
@@ -1090,7 +1104,7 @@ public class UserRole {
       r.role as role_role
     from user u
       left join user_role ur on u.id = ur.user_id
-      inner join role r on r.id = ur.role_id
+      left join role r on r.id = ur.role_id
     order by u.id, r.id
 </select>
 ]]></source>
@@ -1200,7 +1214,7 @@ When using this functionality, it is preferable for the entire mapping hierarchy
             </tr>
             <tr>
               <td><code>jdbcType</code></td>
-              <td>Un tipo JDBC de los tipos soportados que se muestran a continuación. El tipo JDBC solo se requiere para columnas que admiten nulos en insert, update o delete. Esto es un requerimiento de JDBC no de MyBatis. Incluso si usas JDBC directamente debes especificar el tipo – pero solo para los valores que pueden ser nulos.
+              <td>El tipo JDBC de la columna de resultado. Indícalo cuando MyBatis lo necesite, junto con el tipo Java, para elegir un TypeHandler para este mapeo.
               </td>
             </tr>
             <tr>
@@ -1444,7 +1458,7 @@ Here is the statement and result map.</p>
 </resultMap>
 
 <select id="selectBlog" resultMap="blogResult">
-  select b.id, b.name, cursor(
+  select b.id, b.title, cursor(
     select a.id, a.username from author a where b.author_id = a.id
   ) author from blog b
 </select>]]></source>
@@ -1643,7 +1657,7 @@ Just like <code>&lt;association&gt;</code>, you just need to specify <code>jdbcT
 </resultMap>
 
 <select id="selectBlog" resultMap="blogResult">
-  select b.id, b.name, cursor(
+  select b.id, b.title, cursor(
     select p.id, p.subject, p.body from post p where p.blog_id = b.id
   ) posts from blog b
 </select>]]></source>
@@ -1663,7 +1677,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         <p>Se debe proporcionar un nombre a cada resultset informando el atributo
         <code>resultSets</code> del mapped statement con una lista de nombres separados por comas.</p>
 
-        <source><![CDATA[<select id="selectBlog" resultSets="blogs,posts" resultMap="blogResult">
+        <source><![CDATA[<select id="selectBlog" resultSets="blogs,posts" resultMap="blogResult" statementType="CALLABLE">
   {call getBlogsAndPosts(#{id,jdbcType=INTEGER,mode=IN})}
 </select>]]></source>
 
@@ -1742,17 +1756,17 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
   <result property="model" column="model"/>
   <result property="color" column="color"/>
   <discriminator javaType="int" column="vehicle_type">
-    <case value="1" resultType="carResult">
+    <case value="1" resultType="Car">
       <result property="doorCount" column="door_count" />
     </case>
-    <case value="2" resultType="truckResult">
+    <case value="2" resultType="Truck">
       <result property="boxSize" column="box_size" />
       <result property="extendedCab" column="extended_cab" />
     </case>
-    <case value="3" resultType="vanResult">
+    <case value="3" resultType="Van">
       <result property="powerSlidingDoor" column="power_sliding_door" />
     </case>
-    <case value="4" resultType="suvResult">
+    <case value="4" resultType="SUV">
       <result property="allWheelDrive" column="all_wheel_drive" />
     </case>
   </discriminator>
@@ -1798,7 +1812,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 </select>]]></source>
 
         <source><![CDATA[<resultMap id="userResultMap" type="User">
-  <result property="password" column="hashed_password"/>
+  <result property="hashedPassword" column="hashed_password"/>
 </resultMap>]]></source>
 
         <p>
@@ -1852,7 +1866,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         </p>
 
         <source><![CDATA[<resultMap id="userResultMap" type="User" autoMapping="false">
-  <result property="password" column="hashed_password"/>
+  <result property="hashedPassword" column="hashed_password"/>
 </resultMap>]]></source>
 
 
@@ -1872,9 +1886,9 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
         </p>
 
         <ul>
-          <li>Todos los resultados de las sentencias select en el mapped statement se cachearán.</li>
+          <li>Si <code>cacheEnabled</code> es true, los resultados de las sentencias select del fichero de mapeo pueden almacenarse en la caché de segundo nivel cuando <code>useCache</code> es true y no se utiliza un ResultHandler personalizado. Las consultas con Cursor no utilizan esta caché.</li>
           <li>Todas las sentencias insert, update y delete del mapped statement vaciarán la caché.</li>
-          <li>La caché usarán un algoritmo de reemplazo tipo Least Recently Used (LRU).</li>
+          <li>La caché usará un algoritmo de reemplazo tipo Least Recently Used (LRU).</li>
           <li>La caché no se vaciará por tiempo (ej. no Flush Interval).</li>
           <li>La caché guardará 1024 referencias a listas u objetos (según lo que devuelva el statement).</li>
           <li>La caché puede tratarse como una cache de tipo lectura/escritura, lo cual significa que los objetos obtenidos no se comparten y pueden modificarse con seguridad por el llamante sin interferir en otras potenciales modificaciones realizadas por otros llamantes o hilos.</li>
@@ -1928,7 +1942,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}]]></source>
 
         <p>
           <span class="label important">NOTA</span> La caché de segundo nivel es transaccional. Esto significa que solo es actualizada cuando
-          una sessión acaba con commit o cuando acaba con rollback pero no se ha ejecutado ninguna sentencia insert/delete/update
+          una sesión acaba con commit o cuando acaba con rollback pero no se ha ejecutado ninguna sentencia insert/delete/update
           con el parámetro flushCache=true.
         </p>
 

@@ -21,7 +21,6 @@ Mapper XML 映射檔只有少數幾個頂級元素（按照它們應當定義的
 
 接下來的小節將依序詳細介紹這些元素，首先從陳述式本身開始。
 
-<a id="select"></a>
 ### select
 
 select 陳述式是您在 MyBatis 中最常用的元素之一。將資料存入資料庫中，直到將其查詢出來之前價值都不大，因此大多數應用程式查詢資料的頻率遠高於修改資料。對於每一次 insert、update 或 delete，通常都會有許多次 select。這是 MyBatis 的核心原則之一，也是在查詢與結果映射上投入如此多關注與努力的原因。對於簡單的情況，select 元素非常直觀。例如：
@@ -59,7 +58,6 @@ select 元素具備更多屬性，允許您微調每個陳述式的行為細節�
   parameterType="int"
   parameterMap="deprecated"
   resultType="hashmap"
-  resultMap="personResultMap"
   flushCache="false"
   useCache="true"
   timeout="10"
@@ -72,7 +70,7 @@ select 元素具備更多屬性，允許您微調每個陳述式的行為細節�
 |---|---|
 | `id` | 此命名空間中的唯一識別碼，可用於參照此陳述式。 |
 | `parameterType` | 將傳遞至此陳述式之參數的完整類別名稱或別名。此屬性為選填，因為 MyBatis 可以根據傳遞給陳述式的實際參數自動推算要使用的 TypeHandler。預設為 `unset`。 |
-| <strike>`parameterMap`</strike> | <strike>這是參照外部 `parameterMap` 的已廢棄方式。請改用行內參數映射與 `parameterType` 屬性。</strike> |
+| ~~`parameterMap`~~ | ~~這是參照外部 `parameterMap` 的已廢棄方式。請改用行內參數映射與 `parameterType` 屬性。~~ |
 | `resultType` | 預期從此陳述式回傳的完整類別名稱或別名。請注意，如果回傳的是集合，這應該是集合所包含的型別，而不是集合本身的型別。請使用 `resultType` 或 `resultMap` 其中之一，不可兩者同時使用。 |
 | `resultMap` | 對外部 `resultMap` 的具名參照。Result Map 是 MyBatis 最強大的功能；只要對其有深入了解，許多複雜的映射案例都能迎刃而解。請使用 `resultMap` 或 `resultType` 其中之一，不可兩者同時使用。 |
 | `flushCache` | 將其設為 `true` 會導致每次呼叫此陳述式時同時清除本地快取與二級快取。預設值：select 陳述式為 `false`。 |
@@ -80,7 +78,7 @@ select 元素具備更多屬性，允許您微調每個陳述式的行為細節�
 | `timeout` | 設定驅動程式在拋出例外之前，等待資料庫回應請求的最大秒數。預設為 `unset`（取決於驅動程式）。 |
 | `fetchSize` | 這是給驅動程式的提示，嘗試讓驅動程式以每次回傳等同於此設定數量的列批次載入資料。預設為 `unset`（取決於驅動程式）。 |
 | `statementType` | 可為 `STATEMENT`、`PREPARED` 或 `CALLABLE` 其中之一。這會使 MyBatis 分別使用 `Statement`、`PreparedStatement` 或 `CallableStatement`。預設值：`PREPARED`。 |
-| `resultSetType` | 可為 `FORWARD_ONLY`&#124;`SCROLL_SENSITIVE`&#124;`SCROLL_INSENSITIVE`&#124;`DEFAULT`（同 unset）其中之一。預設為 `unset`（取決於驅動程式）。 |
+| `resultSetType` | 可為 `FORWARD_ONLY`&#124;`SCROLL_SENSITIVE`&#124;`SCROLL_INSENSITIVE`&#124;`DEFAULT` 其中之一。未指定時使用設定的 `defaultResultSetType`；`DEFAULT` 則使用 JDBC 驅動程式的預設值。 |
 | `databaseId` | 若已設定 databaseIdProvider，MyBatis 將載入所有沒有 `databaseId` 屬性或其 `databaseId` 與目前資料庫相符的陳述式。若同時找到帶有與不帶有 `databaseId` 的相同陳述式，後者將被捨棄。 |
 | `resultOrdered` | 僅適用於巢狀結果 select 陳述式：若設為 `true`，則假定巢狀結果已妥善分組或排序，當回傳新的主結果列時，絕不會再出現對前一結果列的參照。這能讓巢狀結果以更節省記憶體的方式填入。預設值：`false`。 |
 | `resultSets` | 僅適用於多個結果集的情況。它列出此陳述式將回傳的結果集清單，並為每個結果集指定名稱。名稱之間以逗號分隔。 |
@@ -210,7 +208,7 @@ select 元素具備更多屬性，允許您微調每個陳述式的行為細節�
 |---|---|
 | `keyProperty` | `selectKey` 陳述式的結果應設定至的目標屬性。若預期會有多個產生的欄位，可為以逗號分隔的屬性名稱清單。 |
 | `keyColumn` | 回傳結果集中與屬性相符的欄位名稱。若預期會有多個產生的欄位，可為以逗號分隔的欄位名稱清單。 |
-| `resultType` | 結果的型別。MyBatis 通常可以推算出來，但明確指定也無妨。MyBatis 允許將任何簡單型別作為索引鍵，包含字串（String）。若您預期有多個產生的欄位，可以使用包含預期屬性的物件或 Map。 |
+| `resultType` | 結果的型別。`selectKey` 的結果型別無法由 MyBatis 自動推斷，必須明確指定。MyBatis 允許將任何簡單型別作為索引鍵，包含字串（String）。若您預期有多個產生的欄位，可以使用包含預期屬性的物件或 Map。 |
 | `order` | 可設為 `BEFORE` 或 `AFTER`。若設為 `BEFORE`，它將先選取索引鍵，設定 `keyProperty`，然後執行 insert 陳述式。若設為 `AFTER`，它會先執行 insert 陳述式，然後再執行 `selectKey` 陳述式——這在像 Oracle 這樣通常在 insert 陳述式內部嵌入序列呼叫的資料庫中非常普遍。 |
 | `statementType` | 與前面相同，MyBatis 支援 `STATEMENT`、`PREPARED` 與 `CALLABLE` 陳述式型別，分別映射至 `Statement`、`PreparedStatement` 與 `CallableStatement`。 |
 [selectKey Attributes]
@@ -226,7 +224,6 @@ select 元素具備更多屬性，允許您微調每個陳述式的行為細節�
 </select>
 ```
 
-<a id="sql"></a>
 ### sql
 
 此元素可用於定義可重複使用的 SQL 程式碼片段，並將其包含在其他陳述式中。它可以在靜態載入階段進行參數化。不同的 include 實例可以傳入不同的屬性值。例如：
@@ -275,7 +272,7 @@ select 元素具備更多屬性，允許您微調每個陳述式的行為細節�
 在前面的所有陳述式中，您都看到了簡單參數的範例。參數是 MyBatis 中非常強大的元素。對於簡單的情況（大概佔 90% 的使用情境），它們並不複雜，例如：
 
 ```xml
-<select id="selectUsers" resultType="User">
+<select id="selectUsers" parameterType="int" resultType="User">
   select id, username, password
   from users
   where id = #{id}
@@ -328,7 +325,7 @@ select 元素具備更多屬性，允許您微調每個陳述式的行為細節�
 MyBatis 也支援諸如結構體（structs）等更進階的資料型別，但在註冊輸出參數時，您必須告知陳述式該型別名稱。例如（同樣地，在實務中請勿像這樣換行）：
 
 ```
-#{middleInitial, mode=OUT, jdbcType=STRUCT, jdbcTypeName=MY_TYPE, resultMap=departmentResultMap}
+#{middleInitial, mode=OUT, jdbcType=STRUCT, jdbcTypeName=MY_TYPE}
 ```
 
 儘管有這些強大的選項，但在大多數情況下，您只需指定屬性名稱，MyBatis 就會自動處理其餘細節。最多，您只需為可為 Null 的欄位指定 `jdbcType`。
@@ -369,7 +366,7 @@ User findByEmail(@Param("email") String email);
 
 ```java
 @Select("select * from user where ${column} = #{value}")
-User findByColumn(@Param("column") String column, @Param("value") String value);
+User findByColumn(@Param("column") String column, @Param("value") Object value);
 ```
 
 其中 `${column}` 將被直接替換，而 `#{value}` 將被預編譯處理。因此，您可以透過以下方式完成相同的工作：
@@ -474,7 +471,7 @@ public class User {
 <resultMap id="userResultMap" type="User">
   <id property="id" column="user_id" />
   <result property="username" column="user_name"/>
-  <result property="password" column="hashed_password"/>
+  <result property="hashedPassword" column="hashed_password"/>
 </resultMap>
 ```
 
@@ -616,7 +613,7 @@ MyBatis 誕生時秉持著一個理念：資料庫並不總是如您所想或所
 | `property` | 將欄位結果映射至的欄位（field）或屬性（property）。若給定名稱存在對應的 JavaBeans 屬性，則會優先使用。否則，MyBatis 將尋找給定名稱的欄位。在這兩種情況下，您都可以使用一般的點標記法進行複雜的屬性導覽。例如，您可以映射至簡單的屬性如：`username`，或較複雜的屬性如：`address.street.number`。 |
 | `column` | 資料庫中的欄位名稱，或別名欄位標籤。這與通常傳遞給 `resultSet.getString(columnName)` 的字串相同。 |
 | `javaType` | 完整限定的 Java 類別名稱或型別別名（內建型別別名清單請參見前面的表格）。若映射至 JavaBean，MyBatis 通常可以推斷型別。但是，如果您映射至 HashMap，則應明確指定 javaType 以確保預期行為。 |
-| `jdbcType` | 下表所列支援型別中的 JDBC 型別。在 insert、update 或 delete 時，只有允許為 Null 的欄位才需要 JDBC 型別。這是 JDBC 的要求，而非 MyBatis 的要求。因此，即使您直接撰寫 JDBC 程式碼，也需要指定此型別——但僅限於允許 Null 的值。 |
+| `jdbcType` | 結果欄位的 JDBC 型別。當 MyBatis 需要結合 Java 型別為此映射選擇型別處理器（TypeHandler）時，請指定此值。 |
 | `typeHandler` | 我們之前在文件中討論過預設型別處理器。使用此屬性，您可以在每個映射的基礎上覆寫預設型別處理器。其值可以是 TypeHandler 實作的完整限定類別名稱，也可以是型別別名。 |
 [Id and Result Attributes]
 
@@ -631,8 +628,9 @@ MyBatis 誕生時秉持著一個理念：資料庫並不總是如您所想或所
 | `SMALLINT` | `DOUBLE`  | `LONGVARCHAR` | `VARBINARY`     | `CLOB`    | `NCHAR`     |
 | `INTEGER`  | `NUMERIC` | `DATE`        | `LONGVARBINARY` | `BOOLEAN` | `NCLOB`     |
 | `BIGINT`   | `DECIMAL` | `TIME`        | `NULL`          | `CURSOR`  | `ARRAY`     |
+| `STRUCT`   | `JAVA_OBJECT` | `DISTINCT` | `REF` | `DATALINK` | `ROWID` |
+| `LONGNVARCHAR` | `SQLXML` | `DATETIMEOFFSET` | `TIME_WITH_TIMEZONE` | `TIMESTAMP_WITH_TIMEZONE` | |
 
-<a id="constructor"></a>
 #### constructor
 
 雖然屬性（properties）適用於大多數資料傳輸物件（DTO）類別，並可能涵蓋大部分的領域模型，但在某些情況下，您可能希望使用不可變類別（immutable classes）。通常包含鮮少或從不變更的參照或查閱資料的表格非常適合不可變類別。建構函式注入允許您在類別實例化時設定值，而無需公開 public 方法。MyBatis 也支援 private 屬性與 private JavaBean 屬性來達成此目的，但有些人更偏好建構函式注入。*constructor* 元素實現了這項功能。
@@ -678,7 +676,7 @@ public class User {
 |---|---|
 | `column` | 資料庫中的欄位名稱，或別名欄位標籤。這與通常傳遞給 `resultSet.getString(columnName)` 的字串相同。 |
 | `javaType` | 完整限定的 Java 類別名稱或型別別名（內建型別別名清單請參見前面的表格）。若映射至 JavaBean，MyBatis 通常可以推斷型別。但是，如果您映射至 HashMap，則應明確指定 javaType 以確保預期行為。 |
-| `jdbcType` | 下表所列支援型別中的 JDBC 型別。在 insert、update 或 delete 時，只有允許為 Null 的欄位才需要 JDBC 型別。這是 JDBC 的要求，而非 MyBatis 的要求。因此，即使您直接撰寫 JDBC 程式碼，也需要指定此型別——但僅限於允許 Null 的值。 |
+| `jdbcType` | 結果欄位的 JDBC 型別。當 MyBatis 需要結合 Java 型別為此映射選擇型別處理器（TypeHandler）時，請指定此值。 |
 | `typeHandler` | 我們之前在文件中討論過預設型別處理器。使用此屬性，您可以在每個映射的基礎上覆寫預設型別處理器。其值可以是 TypeHandler 實作的完整限定類別名稱，也可以是型別別名。 |
 | `select` | 另一個映射陳述式的 ID，用來載入此屬性映射所需的複雜型別。從 column 屬性指定之欄位擷取的值將作為參數傳遞給目標 select 陳述式。詳情請參見 association 元素。 |
 | `resultMap` | 這是 ResultMap 的 ID，可以將此引數的巢狀結果映射至適當的物件圖（object graph）。這是不呼叫另一個 select 陳述式的替代方案。它允許您將多個資料表聯結在一起成為單一 `ResultSet`。這樣的 `ResultSet` 將包含重複的資料群組，需要對其進行解構並正確映射至巢狀物件圖。為了促成這點，MyBatis 允許您將多個 result map 串聯（chain）在一起，以處理巢狀結果。詳情請參見後續的 association 元素。 |
@@ -741,7 +739,7 @@ public class UserRole {
       r.role as role_role
     from user u
       left join user_role ur on u.id = ur.user_id
-      inner join role r on r.id = ur.role_id
+      left join role r on r.id = ur.role_id
     order by u.id, r.id
 </select>
 ```
@@ -770,7 +768,6 @@ User{username=Peter, roles=[Users, Maintainers, Approvers]}
 值得注意的是，混合映射的支援有限，即屬性映射與巢狀建構函式映射混合使用很可能會失敗。
 當使用此功能時，建議整個映射階層都使用不可變的建構函式映射。
 
-<a id="association"></a>
 #### association
 
 ```xml
@@ -793,7 +790,7 @@ association 的不同之處在於您需要告知 MyBatis 如何載入該關聯�
 |---|---|
 | `property` | 將欄位結果映射至的欄位或屬性。若給定名稱存在對應的 JavaBeans 屬性，則會優先使用。否則，MyBatis 將尋找給定名稱的欄位。在這兩種情況下，您都可以使用一般的點標記法進行複雜的屬性導覽。例如，您可以映射至簡單的屬性如：`username`，或較複雜的屬性如：`address.street.number`。 |
 | `javaType` | 完整限定的 Java 類別名稱或型別別名（內建型別別名清單請參見前面的表格）。若映射至 JavaBean，MyBatis 通常可以推斷型別。但是，如果您映射至 `HashMap`，則應明確指定 javaType 以確保預期行為。 |
-| `jdbcType` | 下表所列支援型別中的 JDBC 型別。在 insert、update 或 delete 時，只有允許為 Null 的欄位才需要 JDBC 型別。這是 JDBC 的要求，而非 MyBatis 的要求。因此，即使您直接撰寫 JDBC 程式碼，也需要指定此型別——但僅限於允許 Null 的值。 |
+| `jdbcType` | 結果欄位的 JDBC 型別。當 MyBatis 需要結合 Java 型別為此映射選擇型別處理器（TypeHandler）時，請指定此值。 |
 | `typeHandler` | 我們之前在文件中討論過預設型別處理器。使用此屬性，您可以在每個映射的基礎上覆寫預設型別處理器。其值可以是 TypeHandler 實作的完整限定類別名稱，也可以是型別別名。 |
 
 <a id="nested-select-for-association"></a>
@@ -969,7 +966,7 @@ association 的不同之處在於您需要告知 MyBatis 如何載入該關聯�
 </resultMap>
 
 <select id="selectBlog" resultMap="blogResult">
-  select b.id, b.name, cursor(
+  select b.id, b.title, cursor(
     select a.id, a.username from author a where b.author_id = a.id
   ) author from blog b
 </select>
@@ -1025,7 +1022,6 @@ SELECT * FROM AUTHOR WHERE ID = #{id}
 
 您在上面已經看到了如何處理「擁有一個」形式的關聯。但是「擁有多個」（has many）呢？這就是下一節的主題。
 
-<a id="collection"></a>
 #### collection
 
 ```xml
@@ -1151,7 +1147,7 @@ private List<Post> posts;
 </resultMap>
 
 <select id="selectBlog" resultMap="blogResult">
-  select b.id, b.name, cursor(
+  select b.id, b.title, cursor(
     select p.id, p.subject, p.body from post p where p.blog_id = b.id
   ) posts from blog b
 </select>
@@ -1171,7 +1167,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}
 必須在映射陳述式中新增 `resultSets` 屬性，並提供以逗號分隔的名稱清單，為每個結果集指定名稱。
 
 ```xml
-<select id="selectBlog" resultSets="blogs,posts" resultMap="blogResult">
+<select id="selectBlog" resultSets="blogs,posts" resultMap="blogResult" statementType="CALLABLE">
   {call getBlogsAndPosts(#{id,jdbcType=INTEGER,mode=IN})}
 </select>
 ```
@@ -1296,7 +1292,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}
 
 ```xml
 <resultMap id="userResultMap" type="User">
-  <result property="password" column="hashed_password"/>
+  <result property="hashedPassword" column="hashed_password"/>
 </resultMap>
 ```
 
@@ -1335,7 +1331,7 @@ SELECT * FROM POST WHERE BLOG_ID = #{id}
 
 ```xml
 <resultMap id="userResultMap" type="User" autoMapping="false">
-  <result property="password" column="hashed_password"/>
+  <result property="hashedPassword" column="hashed_password"/>
 </resultMap>
 ```
 
@@ -1352,7 +1348,7 @@ MyBatis 包含強大的交易性查詢快取功能，具有極高的可設定性
 
 字面上就這麼簡單。這一行簡單陳述式的效果如下：
 
-- 映射陳述式檔案中所有 select 陳述式的結果都將被快取。
+- 啟用 `cacheEnabled` 且陳述式的 `useCache` 為 true 時，映射陳述式檔案中的一般 select 查詢可使用二級快取；使用自訂 ResultHandler 的查詢不會寫入快取，游標查詢則完全略過快取。
 - 映射陳述式檔案中所有的 insert、update 與 delete 陳述式都會清除快取。
 - 快取將使用最近最少使用（LRU, Least Recently Used）演算法進行收回（eviction）。
 - 快取不會依據任何時間排程進行清除（即沒有 Flush Interval）。
@@ -1443,7 +1439,6 @@ public interface InitializingObject {
 
 既然那是預設值，您顯然永遠不應該明確地以這種方式設定陳述式。相反地，只有在您想變更預設行為時，才設定 flushCache 與 useCache 屬性。例如，在某些情況下，您可能希望將特定 select 陳述式的結果排除在快取之外，或者您可能希望 select 陳述式清除快取。類似地，您可能有一些 update 陳述式在執行時不需要清除快取。
 
-<a id="cache-ref"></a>
 #### cache-ref
 
 回想上一節，只有特定命名空間的快取才會被相同命名空間內的陳述式使用或清除。有時您可能希望在命名空間之間共享相同的快取設定與實例。在這種情況下，您可以使用 cache-ref 元素來參照另一個快取。

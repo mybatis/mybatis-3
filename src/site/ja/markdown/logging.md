@@ -15,7 +15,7 @@ MyBatis は、内部の Log Factory を通してログ情報を出力します�
 
 実際に使用されるのは、MyBatis 内部の Log Factory が検出した実装になります。MyBatis の Log Factory は上に挙げた順番でロギング実装を検索し、最初に見つけた実装を使用します。上記の実装が検出できなかった場合、ログは出力されません。
 
-アプリケーションサーバーでは、出荷時のクラスパスに Commons Logging が含まれていることがよくあります（Tomcat や WebSphere は良い例でしょう）。重要なのは、このような環境では MyBatis は Commons Logging を使用するということです。これはつまり、独自の Commons Logging 実装を使う WebSphere のような環境では、あなたが追加した Log4J の設定は無視されるということを意味しています。この現象が厄介なのは、MyBatis が Log4J の設定を無視しているように見えるということです（実は、このような環境では MyBatis が Commons Loggin を使用するため、Log4J の設定が無視されているのです）。クラスパスに Commons Logging を含む環境で動作するアプリケーションでも、mybatis-config.xml に設定を追加することで別のロギング実装を使用することができます。
+アプリケーションサーバーでは、出荷時のクラスパスに Commons Logging が含まれていることがよくあります（Tomcat や WebSphere は良い例でしょう）。重要なのは、このような環境では MyBatis は Commons Logging を使用するということです。これはつまり、独自の Commons Logging 実装を使う WebSphere のような環境では、あなたが追加した Log4J の設定は無視されるということを意味しています。この現象が厄介なのは、MyBatis が Log4J の設定を無視しているように見えるということです（実は、このような環境では MyBatis が Commons Logging を使用するため、Log4J の設定が無視されているのです）。クラスパスに Commons Logging を含む環境で動作するアプリケーションでも、mybatis-config.xml に設定を追加することで別のロギング実装を使用することができます。
 
 ```xml
 <configuration>
@@ -40,7 +40,7 @@ org.apache.ibatis.logging.LogFactory.useCommonsLogging();
 org.apache.ibatis.logging.LogFactory.useStdOutLogging();
 ```
 
-これらのメソッドは、他の MyBatis のメソッドより前に呼び出す必要があります。また、要求された実装が実行時のクラスパスに含まれている場合にのみ切り替えることが可能です。例えば、Log4J2 に切り替えようとして、実行時に Log4J2 が見つからない場合、MyBatis は切り替えの要求を無視して通常のアルゴリズムでロギング実装を検索します。
+これらのメソッドは、他の MyBatis のメソッドより前に呼び出す必要があります。要求したロギング実装は実行時のクラスパスで利用できなければなりません。例えば、Log4J2 が利用できない状態で選択すると、MyBatis は `LogException` をスローします。他のロギング実装の自動検出は、明示的に選択せずに MyBatis のロギングを初期化した場合にのみ行われます。
 
 SLF4J, Apache Commons Logging, Apache Log4J, JDK Logging API についての詳細はこのドキュメントの範囲外となりますが、後述の設定例は参考になると思います。これらのフレームワークについての詳しい情報は、以下の各サイトを参照してください。
 
@@ -164,7 +164,7 @@ Mapper インターフェイスを使っていない場合、例えば次のよ�
 
 お気づきのように、Mapper インターフェイスと XML のどちらを使っている場合でも、設定方法に違いはありません。
 
-<span class="label important">NOTE</span> SLF4J or Log4j 2 をお使いの場合、MyBatis のログは `MYBATIS` というマーカーで出力されます。
+<span class="label important">NOTE</span> Log4j 2 では `MYBATIS` マーカーが使われます。SLF4J でもロガーが location-aware API をサポートする場合はこのマーカーが使われますが、フォールバックの SLF4J ロガーではマーカーは使われません。
 
 上記の `logback.xml` の残りの部分はアペンダーの設定になっていますが、このドキュメントでは説明しません。[Logback](https://logback.qos.ch/) のサイトを参照してください。あるいは、設定値を変更してみてどのような結果になるか試してみるのも良いでしょう。
 

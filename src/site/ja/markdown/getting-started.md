@@ -40,6 +40,7 @@ XML 形式の設定ファイルの詳細については後ほど改めて説明�
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+  <properties resource="org/mybatis/example/db.properties"/>
   <environments default="development">
     <environment id="development">
       <transactionManager type="JDBC"/>
@@ -57,10 +58,12 @@ XML 形式の設定ファイルの詳細については後ほど改めて説明�
 </configuration>
 ```
 
+`org/mybatis/example/db.properties` をクラスパスに配置し、データベースに合わせて `driver`、`url`、`username`、`password` を定義してください。
+
 XML 形式の設定ファイルについて説明すべきことは他にもたくさんありますが、最も重要な設定は上記のサンプルに含まれています。<br />
-まず、XML ドキュメントのバリデーションを行うために必要となる XML ヘッダがあります。<br />
+まず、省略可能な XML 宣言と、XML 文書の検証に使用する DTD を指定する DOCTYPE 宣言があります。<br />
 environment 要素には、トランザクション管理やコネクションプーリングといった環境依存の設定が含まれています。<br />
-mappers 要素には Mapper のリストが含まれています。Mapper とは、SQL 文とマッピングの定義を含む XML ファイルです。
+mappers 要素には Mapper のリストが含まれています。Mapper は、SQL 文とマッピングの定義を含む XML ファイルやアノテーション付き Java インターフェイスです。
 
 ## XML を使わずに SqlSessionFactory を生成する
 
@@ -77,7 +80,7 @@ SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(confi
 ```
 
 今回は、Configuration のインスタンスに Mapper クラスを追加していることに気づいたでしょうか。<br />
-Mapper クラスには、XML を使わずに SQL マッピングを定義するためのアノテーションが含まれています。 ただし、Java アノテーションの制約と MyBatis のマッピング機能の複雑さのため、高度なマッピングを定義する際に XML 形式の Mapper が必要となる場合があります（ネストされた結合クエリの結果をマッピングする場合など）。<br />
+Mapper クラスには、XML を使わずに SQL マッピングを定義するためのアノテーションが含まれています。 ネストされた結合クエリの結果もアノテーションでマッピングできますが、複雑なマッピングでは XML 形式の Mapper のほうが読みやすい場合があります。<br />
 このため、MyBatis は対になる XML ファイルを探して自動的に読み込むようになっています（この例では、BlogMapper.class のクラスパスと名前を元に BlogMapper.xml という XML ファイルが読み込まれます）。 この動作については、後ほど詳しく説明します。
 
 ## SqlSessionFactory から SqlSession を取得する
@@ -118,7 +121,7 @@ SqlSession や Mapper クラスによって何が行われているのか、そ�
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.mybatis.example.BlogMapper">
-  <select id="selectBlog" resultType="Blog">
+  <select id="selectBlog" resultType="org.mybatis.example.Blog">
     select * from Blog where id = #{id}
   </select>
 </mapper>
@@ -159,7 +162,7 @@ Blog blog = mapper.selectBlog(101);
 
 ---
 
-BloggerMapper のような Mapper クラスなら、実は XML を使う必要はありません。 代わりに、Java アノテーションを使って下記のように Mapped Statement を記述することができます。
+BlogMapper のような Mapper クラスなら、実は XML を使う必要はありません。 代わりに、Java アノテーションを使って下記のように Mapped Statement を記述することができます。
 
 ```java
 package org.mybatis.example;
@@ -195,7 +198,7 @@ Dependency Injection フレームワークを使うと、スレッドセーフ�
 
 #### SqlSession
 
-各スレッドは、独立した SqlSession のインスタンスを使うべきです。 SqlSession のインスタンスは共有されることを前提としていないため、スレッドセーフではありません。 当然、最適なスコープはメソッドスコープになります。 SqlSession のインスタンスへの参照を static なフィールドや、インスタンスフィールドにも格納してはいけません。 Servlet フレームワークの HttpSession のようなマネージドスコープに SqlSession への参照を保持するのもダメです。 もし何らかの Web フレームワークを使っているのであれば、SqlSession のスコープが HTTP リクエストと同調するようにしておくべきです。 つまり、HTTP リクエストを受け取ったら SqlSession をオープンし、レスポンスを返すときにクローズすれば良いのです。 セッションをクローズすることはとても重要です。 間違いがないよう、常に finally ブロックの中でセッションをクローズするようにした方が良いでしょう。 SqlSession を確実にクローズするための一般的なパターンは下記のようなものです。
+各スレッドは、独立した SqlSession のインスタンスを使うべきです。 SqlSession のインスタンスは共有されることを前提としていないため、スレッドセーフではありません。 当然、最適なスコープはメソッドスコープになります。 SqlSession のインスタンスへの参照を static なフィールドや、インスタンスフィールドにも格納してはいけません。 Servlet フレームワークの HttpSession のようなマネージドスコープに SqlSession への参照を保持するのもダメです。 もし何らかの Web フレームワークを使っているのであれば、SqlSession のスコープが HTTP リクエストと同調するようにしておくべきです。 つまり、HTTP リクエストを受け取ったら SqlSession をオープンし、レスポンスを返すときにクローズすれば良いのです。 セッションをクローズすることはとても重要です。 確実にクローズするため、try-with-resources を使用してください。 SqlSession を確実にクローズするための一般的なパターンは下記のようなものです。
 
 ```java
 try (SqlSession session = sqlSessionFactory.openSession()) {
