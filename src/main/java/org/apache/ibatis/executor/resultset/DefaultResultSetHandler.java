@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -857,7 +857,13 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   }
 
   private Optional<Constructor<?>> findConstructorForAutomapping(final Class<?> resultType, ResultSetWrapper rsw) {
-    Constructor<?>[] constructors = resultType.getDeclaredConstructors();
+    // Compiler-generated constructors must not compete with source ones.
+    // Kotlin adds one with mask and marker parameters for default arguments.
+    Constructor<?>[] constructors = Arrays.stream(resultType.getDeclaredConstructors())
+        .filter(constructor -> !constructor.isSynthetic()).toArray(Constructor<?>[]::new);
+    if (constructors.length == 0) {
+      return Optional.empty();
+    }
     if (constructors.length == 1) {
       return Optional.of(constructors[0]);
     }
