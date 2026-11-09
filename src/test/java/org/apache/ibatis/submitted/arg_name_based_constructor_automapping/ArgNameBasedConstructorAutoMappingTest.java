@@ -205,7 +205,7 @@ class ArgNameBasedConstructorAutoMappingTest {
     return new ByteBuddy().subclass(User.class, ConstructorStrategy.Default.NO_CONSTRUCTORS);
   }
 
-  // javac 11+ emits no synthetic constructors, so ByteBuddy builds the one Kotlin default arguments produce.
+  // Mimics the shape of Kotlin's default-argument constructor: source parameters, an int mask, and a marker.
   private static Class<? extends User> addSyntheticConstructor(DynamicType.Builder<User> builder) throws Exception {
     return builder.defineConstructor(Visibility.PUBLIC, SyntheticState.SYNTHETIC)
         .withParameters(Integer.class, String.class, int.class, Object.class)

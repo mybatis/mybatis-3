@@ -857,6 +857,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   }
 
   private Optional<Constructor<?>> findConstructorForAutomapping(final Class<?> resultType, ResultSetWrapper rsw) {
+    // Compiler-generated constructors must not compete with source ones.
+    // Kotlin adds one with mask and marker parameters for default arguments.
     Constructor<?>[] constructors = Arrays.stream(resultType.getDeclaredConstructors())
         .filter(constructor -> !constructor.isSynthetic()).toArray(Constructor<?>[]::new);
     if (constructors.length == 0) {

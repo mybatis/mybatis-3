@@ -315,7 +315,7 @@ class ResultMappingConstructorResolverTest {
         resultType, identifier);
   }
 
-  // javac 11+ no longer emits the accessor constructor javac 8 added for a private one, so ByteBuddy builds it.
+  // ByteBuddy builds the synthetic constructor so the fixture does not depend on compiler behavior.
   private static Class<?> defineTypeWithDeclaredAndSyntheticConstructorOfSameArity() throws Exception {
     return new ByteBuddy().subclass(Object.class, ConstructorStrategy.Default.NO_CONSTRUCTORS)
         .defineConstructor(Visibility.PRIVATE).withParameters(long.class, String.class)
