@@ -154,6 +154,14 @@ public class ForEachSqlNode implements SqlNode {
     }
 
     @Override
+    public void bind(String name, Object value) {
+      super.bind(name, value);
+      if (!((item != null && item.equals(name)) || (index != null && index.equals(name)))) {
+        delegate.bind(name, value);
+      }
+    }
+
+    @Override
     public String getSql() {
       return delegate.getSql();
     }
