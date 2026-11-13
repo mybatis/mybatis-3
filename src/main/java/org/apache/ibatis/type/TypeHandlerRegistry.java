@@ -213,17 +213,6 @@ public final class TypeHandlerRegistry {
     return allTypeHandlersMap.get(handlerType);
   }
 
-  /** Retains the typed Class-based entry point alongside reflective Type resolution. */
-  @SuppressWarnings("unchecked")
-  public <T> TypeHandler<T> getTypeHandler(Class<T> type) {
-    return (TypeHandler<T>) getTypeHandler((Type) type, null);
-  }
-
-  @SuppressWarnings("unchecked")
-  public <T> TypeHandler<T> getTypeHandler(Class<T> type, JdbcType jdbcType) {
-    return (TypeHandler<T>) getTypeHandler((Type) type, jdbcType);
-  }
-
   public TypeHandler<?> getTypeHandler(Type type) {
     return getTypeHandler(type, null);
   }
