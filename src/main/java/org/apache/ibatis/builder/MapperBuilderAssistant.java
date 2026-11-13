@@ -339,7 +339,13 @@ public class MapperBuilderAssistant extends BaseBuilder {
       Class<? extends TypeHandler<?>> typeHandler, List<ResultFlag> flags, String resultSet, String foreignColumn,
       boolean lazy) {
     Entry<Type, Class<?>> setterType = resolveSetterType(resultType, property, javaType);
-    TypeHandler<?> typeHandlerInstance = resolveTypeHandler(setterType.getKey(), jdbcType, typeHandler);
+    TypeHandler<?> typeHandlerInstance;
+    try {
+      typeHandlerInstance = resolveTypeHandler(setterType.getKey(), jdbcType, typeHandler);
+    } catch (RuntimeException exception) {
+      throw new BuilderException("Could not resolve type handler for result property '" + property + "' of type '"
+          + setterType.getKey().getTypeName() + "'", exception);
+    }
     List<ResultMapping> composites;
     if ((nestedSelect == null || nestedSelect.isEmpty()) && (foreignColumn == null || foreignColumn.isEmpty())) {
       composites = List.of();

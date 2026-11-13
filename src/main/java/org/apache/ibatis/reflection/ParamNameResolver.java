@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -72,7 +72,11 @@ public class ParamNameResolver {
     final Class<?>[] paramTypes = method.getParameterTypes();
     final Annotation[][] paramAnnotations = method.getParameterAnnotations();
     final SortedMap<Integer, String> map = new TreeMap<>();
-    Type[] actualParamTypes = TypeParameterResolver.resolveParamTypes(method, mapperClass);
+    Type[] actualParamTypes = method.getGenericParameterTypes();
+    for (int index = 0; index < actualParamTypes.length; index++) {
+      actualParamTypes[index] = TypeDescriptor.resolveMemberType(actualParamTypes[index], mapperClass,
+          method.getDeclaringClass());
+    }
     int paramCount = paramAnnotations.length;
     // get names from @Param annotations
     for (int paramIndex = 0; paramIndex < paramCount; paramIndex++) {

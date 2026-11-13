@@ -50,6 +50,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.io.ResolverUtil;
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.reflection.TypeDescriptor;
 import org.apache.ibatis.reflection.TypeParameterResolver;
 import org.apache.ibatis.session.Configuration;
 import org.gaul.modernizer_maven_annotations.SuppressModernizer;
@@ -212,6 +213,17 @@ public final class TypeHandlerRegistry {
     return allTypeHandlersMap.get(handlerType);
   }
 
+  /** Retains the typed Class-based entry point alongside reflective Type resolution. */
+  @SuppressWarnings("unchecked")
+  public <T> TypeHandler<T> getTypeHandler(Class<T> type) {
+    return (TypeHandler<T>) getTypeHandler((Type) type, null);
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T> TypeHandler<T> getTypeHandler(Class<T> type, JdbcType jdbcType) {
+    return (TypeHandler<T>) getTypeHandler((Type) type, jdbcType);
+  }
+
   public TypeHandler<?> getTypeHandler(Type type) {
     return getTypeHandler(type, null);
   }
@@ -233,18 +245,24 @@ public final class TypeHandlerRegistry {
 
   public TypeHandler<?> getTypeHandler(Type type, JdbcType jdbcType, Class<? extends TypeHandler<?>> typeHandlerClass) {
     TypeHandler<?> typeHandler = getTypeHandler(type, jdbcType);
-    if (typeHandler != null && (typeHandlerClass == null || typeHandler.getClass().equals(typeHandlerClass))) {
+    if (typeHandler != null && (typeHandlerClass == null || typeHandler.getClass().equals(typeHandlerClass))
+        && (type instanceof Class<?> || typeHandlerClass == null || !hasTypeConstructor(typeHandlerClass))) {
       return typeHandler;
     }
     if (typeHandlerClass == null) {
       typeHandler = getSmartHandler(type, jdbcType);
     } else {
       typeHandler = getMappingTypeHandler(typeHandlerClass);
-      if (typeHandler == null) {
+      if (typeHandler == null || hasTypeConstructor(typeHandlerClass)) {
         typeHandler = getInstance(type, typeHandlerClass);
       }
     }
     return typeHandler;
+  }
+
+  private boolean hasTypeConstructor(Class<?> handlerClass) {
+    return Arrays.stream(handlerClass.getConstructors()).anyMatch(constructor -> constructor.getParameterCount() == 1
+        && (constructor.getParameterTypes()[0] == Type.class || constructor.getParameterTypes()[0] == Class.class));
   }
 
   public TypeHandler<?> getTypeHandler(Type type, JdbcType jdbcType) {
@@ -521,13 +539,15 @@ public final class TypeHandlerRegistry {
       if (javaType != null) {
         try {
           c = handlerClass.getConstructor(Type.class);
+          TypeDescriptor.requireResolved(javaType, "type handler " + handlerClass.getName());
           return (TypeHandler<T>) c.newInstance(javaType);
         } catch (NoSuchMethodException ignored) {
         }
-        if (javaType instanceof Class) {
+        if (javaType instanceof Class || javaType instanceof ParameterizedType
+            || javaType instanceof java.lang.reflect.GenericArrayType) {
           try {
             c = handlerClass.getConstructor(Class.class);
-            return (TypeHandler<T>) c.newInstance(javaType);
+            return (TypeHandler<T>) c.newInstance(TypeDescriptor.rawType(javaType));
           } catch (NoSuchMethodException ignored) {
           }
         }

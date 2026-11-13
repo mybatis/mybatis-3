@@ -376,6 +376,24 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
 
 `EnumTypeHandler` and `EnumOrdinalTypeHandler` are generic TypeHandlers. We will learn about them in the following section.
 
+### Parameterized types in TypeHandlers
+
+A handler constructor may receive `java.lang.reflect.Type` to access complete generic arguments.
+For example, the same `JsonTypeHandler(Type type)` can handle both `List<String>` and
+`Map<String, List<Role>>`. Result-property mappings resolve this type from the target member,
+including concrete bindings inherited from generic parent classes.
+
+For SQL parameters carried in maps, specify the complete type in the parameter reference:
+
+```java
+#{parameters.p1,javaType=java.util.Map<java.lang.String,java.util.List<com.example.Role>>,typeHandler=com.example.JsonTypeHandler}
+```
+
+Nested type arguments, wildcard bounds, and generic arrays are preserved. Unbound type variables
+are rejected when constructing a Type-aware handler, with the unresolved variable in the error.
+Handlers with a `Class` constructor continue to receive the raw class, and no-argument handlers
+continue to use their no-argument constructor.
+
 ### Handling Enums
 
 If you want to map an `Enum`, you'll need to use either `EnumTypeHandler` or `EnumOrdinalTypeHandler`.
