@@ -17,6 +17,7 @@ package org.apache.ibatis.builder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.mapping.BoundSql;
+import org.apache.ibatis.reflection.Reflector;
 import org.apache.ibatis.scripting.defaults.RawSqlSource;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.BaseTypeHandler;
@@ -47,19 +49,23 @@ class GenericParameterMappingTest {
       this.type = type;
     }
 
+    @Override
     public void setNonNullParameter(PreparedStatement ps, int index, Object value, JdbcType jdbcType)
         throws SQLException {
       ps.setObject(index, value);
     }
 
+    @Override
     public Object getNullableResult(ResultSet rs, String name) throws SQLException {
       return rs.getObject(name);
     }
 
+    @Override
     public Object getNullableResult(ResultSet rs, int index) throws SQLException {
       return rs.getObject(index);
     }
 
+    @Override
     public Object getNullableResult(CallableStatement cs, int index) throws SQLException {
       return cs.getObject(index);
     }
@@ -97,17 +103,70 @@ class GenericParameterMappingTest {
     }.getRawType();
     Type integers = new TypeReference<List<Integer>>() {
     }.getRawType();
-    registry.register(List.class, JdbcType.VARCHAR, new GenericHandler(strings));
+    registry.register((Type) List.class, JdbcType.VARCHAR, new GenericHandler(strings));
     GenericHandler handler = (GenericHandler) registry.getTypeHandler(integers, JdbcType.VARCHAR, GenericHandler.class);
     assertEquals(integers, handler.type);
   }
 
   @Test
+  void reusesRegisteredNoArgHandlersForExplicitMappings() {
+    TypeHandlerRegistry registry = new TypeHandlerRegistry();
+    NoArgHandler handler = new NoArgHandler();
+    registry.register((Type) List.class, JdbcType.VARCHAR, handler);
+    Type type = new TypeReference<List<String>>() {
+    }.getRawType();
+    assertSame(handler, registry.getTypeHandler(type, JdbcType.VARCHAR, NoArgHandler.class));
+    assertSame(handler, registry.getTypeHandler(type, JdbcType.VARCHAR, null));
+  }
+
+  @Test
+  void reusesRegisteredClassHandlersForRawTypes() {
+    TypeHandlerRegistry registry = new TypeHandlerRegistry();
+    ClassHandler handler = new ClassHandler(List.class);
+    registry.register((Type) List.class, JdbcType.VARCHAR, handler);
+    assertSame(handler, registry.getTypeHandler(List.class, JdbcType.VARCHAR, ClassHandler.class));
+    Type type = new TypeReference<List<String>>() {
+    }.getRawType();
+    assertEquals(List.class, ((ClassHandler) registry.getTypeHandler(type, JdbcType.VARCHAR, ClassHandler.class)).type);
+  }
+
+  @Test
+  void appliesRawClassFallbackToAutomaticallyMatchedHandlers() {
+    TypeHandlerRegistry registry = new TypeHandlerRegistry();
+    Type type = new TypeReference<List<String>>() {
+    }.getRawType();
+    registry.register(type, ClassHandler.class);
+    assertEquals(List.class, ((ClassHandler) registry.getTypeHandler(type, JdbcType.VARCHAR)).type);
+  }
+
+  @Test
+  void rejectsUnboundVariablesForAutomaticallyMatchedHandlers() throws Exception {
+    TypeHandlerRegistry registry = new TypeHandlerRegistry();
+    registry.register(new TypeReference<List<String>>() {
+    }.getRawType(), GenericHandler.class);
+    Type unresolved = Unbound.class.getDeclaredField("values").getGenericType();
+    TypeException failure = assertThrows(TypeException.class,
+        () -> registry.getTypeHandler(unresolved, JdbcType.VARCHAR));
+    assertTrue(failure.getMessage().contains("T"));
+    assertTrue(failure.getMessage().contains(GenericHandler.class.getName()));
+  }
+
+  @Test
+  void prefersTypeConstructorForBothExplicitAndAutomaticMappings() {
+    TypeHandlerRegistry registry = new TypeHandlerRegistry();
+    Type type = new TypeReference<List<String>>() {
+    }.getRawType();
+    assertEquals(type, ((DualConstructorHandler) registry.getInstance(type, DualConstructorHandler.class)).type);
+    registry.register(type, DualConstructorHandler.class);
+    assertEquals(type, ((DualConstructorHandler) registry.getTypeHandler(type, JdbcType.VARCHAR)).type);
+  }
+
+  @Test
   void preservesBoundVariablesAndRejectsUnboundVariablesForResultProperties() {
-    org.apache.ibatis.reflection.Reflector bound = new org.apache.ibatis.reflection.Reflector(Bound.class);
+    Reflector bound = new Reflector(Bound.class);
     assertEquals(new TypeReference<List<String>>() {
     }.getRawType(), bound.getGenericSetterType("values").getKey());
-    org.apache.ibatis.reflection.Reflector unbound = new org.apache.ibatis.reflection.Reflector(Unbound.class);
+    Reflector unbound = new Reflector(Unbound.class);
     Type unresolved = unbound.getGenericSetterType("values").getKey();
     assertThrows(TypeException.class, () -> new TypeHandlerRegistry().getInstance(unresolved, GenericHandler.class));
     MapperBuilderAssistant assistant = new MapperBuilderAssistant(new Configuration(), "generic-test");
@@ -127,6 +186,16 @@ class GenericParameterMappingTest {
 
   public static class ClassHandler extends GenericHandler {
     public ClassHandler(Class<?> type) {
+      super(type);
+    }
+  }
+
+  public static class DualConstructorHandler extends GenericHandler {
+    public DualConstructorHandler(Type type) {
+      super(type);
+    }
+
+    public DualConstructorHandler(Class<?> type) {
       super(type);
     }
   }

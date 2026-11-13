@@ -30,10 +30,12 @@ import org.apache.ibatis.parsing.TokenHandler;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.ParamNameResolver;
-import org.apache.ibatis.reflection.TypeDescriptor;
+import org.apache.ibatis.reflection.TypeParameterResolver;
+import org.apache.ibatis.reflection.TypeParser;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.TypeException;
 import org.apache.ibatis.type.TypeHandler;
 
 public class ParameterMappingTokenHandler extends BaseBuilder implements TokenHandler {
@@ -103,7 +105,7 @@ public class ParameterMappingTokenHandler extends BaseBuilder implements TokenHa
     if (typeHandler == null || typeHandlerAlias != null) {
       try {
         typeHandler = resolveTypeHandler(genericType, jdbcType, typeHandlerAlias);
-      } catch (RuntimeException exception) {
+      } catch (TypeException exception) {
         throw new BuilderException("Could not resolve type handler for parameter '" + property + "' of type '"
             + genericType.getTypeName() + "'", exception);
       }
@@ -150,8 +152,8 @@ public class ParameterMappingTokenHandler extends BaseBuilder implements TokenHa
     String description = propertiesMap.remove("javaType");
     if (description != null) {
       genericType = description.indexOf('<') < 0 ? resolveClass(description)
-          : TypeDescriptor.parse(description, this::resolveClass);
-      return TypeDescriptor.rawType(genericType);
+          : TypeParser.parse(description, this::resolveClass);
+      return TypeParameterResolver.rawType(genericType);
     }
     if (metaParameters.hasGetter(propertyTokenizer.getName())) { // issue #448 get type from additional params
       return metaParameters.getGetterType(property);

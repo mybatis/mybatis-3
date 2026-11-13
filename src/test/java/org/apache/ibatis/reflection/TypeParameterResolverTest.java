@@ -16,6 +16,7 @@
 package org.apache.ibatis.reflection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.Serializable;
@@ -39,12 +40,79 @@ import org.apache.ibatis.reflection.typeparam.Level0Mapper;
 import org.apache.ibatis.reflection.typeparam.Level0Mapper.Level0InnerMapper;
 import org.apache.ibatis.reflection.typeparam.Level1Mapper;
 import org.apache.ibatis.reflection.typeparam.Level2Mapper;
+import org.apache.ibatis.type.TypeException;
 import org.apache.ibatis.type.TypeReference;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 class TypeParameterResolverTest {
+
+  @Test
+  void resolvesOwnerAndInnerTypeVariablesTogether() throws Exception {
+    Type context = new TypeReference<BindingOwner<String>.Child<Integer>>() {
+    }.getRawType();
+    Type declaration = BindingOwner.Child.class.getDeclaredField("values").getGenericType();
+    assertEquals(new TypeReference<Map<String, Integer>>() {
+    }.getRawType(), TypeParameterResolver.resolveMemberType(declaration, context, BindingOwner.Child.class));
+  }
+
+  @Test
+  void resolvesInheritedWildcardsAndGenericArrays() throws Exception {
+    Type declaration = GenericMember.class.getDeclaredField("values").getGenericType();
+    assertEquals(new TypeReference<List<? extends String[]>>() {
+    }.getRawType(), TypeParameterResolver.resolveMemberType(declaration, ConcreteMember.class, GenericMember.class));
+  }
+
+  @Test
+  void resolvesInheritedInterfaceParameters() throws Exception {
+    Method method = GenericContract.class.getDeclaredMethod("accept", Object.class);
+    assertEquals(String.class, TypeParameterResolver.resolveMemberType(method.getGenericParameterTypes()[0],
+        ConcreteContract.class, GenericContract.class));
+  }
+
+  @Test
+  <T> void retainsUnboundVariablesForRawAndParameterizedContexts() throws Exception {
+    Type declaration = GenericMember.class.getDeclaredField("values").getGenericType();
+    assertEquals(declaration,
+        TypeParameterResolver.resolveMemberType(declaration, GenericMember.class, GenericMember.class));
+    Type context = new TypeReference<GenericMember<T>>() {
+    }.getRawType();
+    assertEquals(new TypeReference<List<? extends T[]>>() {
+    }.getRawType(), TypeParameterResolver.resolveMemberType(declaration, context, GenericMember.class));
+  }
+
+  @Test
+  void reportsUnresolvedVariableAndItsLocation() throws Exception {
+    Type type = GenericMember.class.getDeclaredField("values").getGenericType();
+    TypeException exception = assertThrows(TypeException.class,
+        () -> TypeParameterResolver.requireResolved(type, "GenericMember.values"));
+    assertTrue(exception.getMessage().contains("T"));
+    assertTrue(exception.getMessage().contains("GenericMember.values"));
+  }
+
+  static class BindingOwner<T> {
+    class Child<U> {
+      Map<T, U> values;
+    }
+  }
+
+  static class GenericMember<T> {
+    List<? extends T[]> values;
+  }
+
+  static class MiddleMember<U> extends GenericMember<U> {
+  }
+
+  static class ConcreteMember extends MiddleMember<String> {
+  }
+
+  interface GenericContract<T> {
+    void accept(T value);
+  }
+
+  interface ConcreteContract extends GenericContract<String> {
+  }
 
   @Test
   void returnLv0SimpleClass() throws Exception {

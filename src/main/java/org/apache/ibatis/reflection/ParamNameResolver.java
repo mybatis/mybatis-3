@@ -74,7 +74,7 @@ public class ParamNameResolver {
     final SortedMap<Integer, String> map = new TreeMap<>();
     Type[] actualParamTypes = method.getGenericParameterTypes();
     for (int index = 0; index < actualParamTypes.length; index++) {
-      actualParamTypes[index] = TypeDescriptor.resolveMemberType(actualParamTypes[index], mapperClass,
+      actualParamTypes[index] = TypeParameterResolver.resolveMemberType(actualParamTypes[index], mapperClass,
           method.getDeclaringClass());
     }
     int paramCount = paramAnnotations.length;

@@ -52,6 +52,7 @@ import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.TypeException;
 import org.apache.ibatis.type.TypeHandler;
 
 /**
@@ -342,7 +343,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
     TypeHandler<?> typeHandlerInstance;
     try {
       typeHandlerInstance = resolveTypeHandler(setterType.getKey(), jdbcType, typeHandler);
-    } catch (RuntimeException exception) {
+    } catch (TypeException exception) {
       throw new BuilderException("Could not resolve type handler for result property '" + property + "' of type '"
           + setterType.getKey().getTypeName() + "'", exception);
     }

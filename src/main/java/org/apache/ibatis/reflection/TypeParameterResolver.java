@@ -24,7 +24,11 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+
+import org.apache.ibatis.type.TypeException;
 
 /**
  * @author Iwao AVE!
@@ -117,13 +121,12 @@ public class TypeParameterResolver {
 
   private static Type resolveGenericArrayType(GenericArrayType genericArrayType, Type srcType,
       Class<?> declaringClass) {
-    Type componentType = genericArrayType.getGenericComponentType();
-    Type resolvedComponentType = resolveType(componentType, srcType, declaringClass);
-    if (resolvedComponentType instanceof Class) {
-      return Array.newInstance((Class<?>) resolvedComponentType, 0).getClass();
-    } else {
-      return new GenericArrayTypeImpl(resolvedComponentType);
-    }
+    return arrayType(resolveType(genericArrayType.getGenericComponentType(), srcType, declaringClass));
+  }
+
+  static Type arrayType(Type componentType) {
+    return componentType instanceof Class<?> ? Array.newInstance((Class<?>) componentType, 0).getClass()
+        : new GenericArrayTypeImpl(componentType);
   }
 
   private static ParameterizedType resolveParameterizedType(ParameterizedType parameterizedType, Type srcType,
@@ -233,6 +236,127 @@ public class TypeParameterResolver {
     }
     return noChange ? parentType
         : new ParameterizedTypeImpl((Class<?>) parentType.getRawType(), parentType.getOwnerType(), newParentArgs);
+  }
+
+  /** Returns the erased class of a resolved reflective type. */
+  public static Class<?> rawType(Type type) {
+    if (type instanceof Class<?>) {
+      return (Class<?>) type;
+    }
+    if (type instanceof ParameterizedType) {
+      return (Class<?>) ((ParameterizedType) type).getRawType();
+    }
+    if (type instanceof GenericArrayType) {
+      return Array.newInstance(rawType(((GenericArrayType) type).getGenericComponentType()), 0).getClass();
+    }
+    if (type instanceof WildcardType) {
+      return rawType(((WildcardType) type).getUpperBounds()[0]);
+    }
+    throw new TypeException("Unresolved Java type: " + type.getTypeName());
+  }
+
+  /** Rejects unbound variables while preserving wildcard bounds and generic array components. */
+  public static void requireResolved(Type type, String location) {
+    if (type instanceof TypeVariable<?>) {
+      throw new TypeException("Unresolved type variable '" + type.getTypeName() + "' in " + location);
+    }
+    if (type instanceof ParameterizedType) {
+      ParameterizedType parameterized = (ParameterizedType) type;
+      if (parameterized.getOwnerType() != null) {
+        requireResolved(parameterized.getOwnerType(), location);
+      }
+      for (Type argument : parameterized.getActualTypeArguments()) {
+        requireResolved(argument, location);
+      }
+    } else if (type instanceof GenericArrayType) {
+      requireResolved(((GenericArrayType) type).getGenericComponentType(), location);
+    } else if (type instanceof WildcardType) {
+      for (Type bound : ((WildcardType) type).getUpperBounds()) {
+        requireResolved(bound, location);
+      }
+      for (Type bound : ((WildcardType) type).getLowerBounds()) {
+        requireResolved(bound, location);
+      }
+    }
+  }
+
+  /**
+   * Resolves a member declaration against its owning type, including inherited and enclosing type arguments. Unbound
+   * variables are retained so Type-aware handlers can report them instead of receiving an erased bound.
+   *
+   * @param declaration
+   *          the member's declared generic type
+   * @param context
+   *          the owning Class or ParameterizedType
+   * @param declaringClass
+   *          the class or interface that declares the member
+   *
+   * @return the member type with concrete bindings substituted
+   */
+  public static Type resolveMemberType(Type declaration, Type context, Class<?> declaringClass) {
+    if (declaration instanceof Class<?>) {
+      return declaration;
+    }
+    Map<TypeVariable<?>, Type> bindings = new HashMap<>();
+    collectBindings(context, bindings);
+    Class<?> raw = rawType(context);
+    if (raw == declaringClass) {
+      return substitute(declaration, bindings);
+    }
+    Type parent = raw.getGenericSuperclass();
+    if (parent != null && declaringClass.isAssignableFrom(rawType(parent))) {
+      return resolveMemberType(declaration, substitute(parent, bindings), declaringClass);
+    }
+    for (Type candidate : raw.getGenericInterfaces()) {
+      if (declaringClass.isAssignableFrom(rawType(candidate))) {
+        return resolveMemberType(declaration, substitute(candidate, bindings), declaringClass);
+      }
+    }
+    return declaration;
+  }
+
+  private static void collectBindings(Type context, Map<TypeVariable<?>, Type> bindings) {
+    if (context instanceof ParameterizedType) {
+      ParameterizedType parameterized = (ParameterizedType) context;
+      if (parameterized.getOwnerType() != null) {
+        collectBindings(parameterized.getOwnerType(), bindings);
+      }
+      TypeVariable<?>[] variables = rawType(context).getTypeParameters();
+      Type[] arguments = parameterized.getActualTypeArguments();
+      for (int index = 0; index < variables.length; index++) {
+        bindings.put(variables[index], substitute(arguments[index], bindings));
+      }
+    }
+  }
+
+  private static Type substitute(Type type, Map<TypeVariable<?>, Type> bindings) {
+    if (type instanceof TypeVariable<?>) {
+      return bindings.getOrDefault(type, type);
+    }
+    if (type instanceof ParameterizedType) {
+      ParameterizedType parameterized = (ParameterizedType) type;
+      Type owner = parameterized.getOwnerType();
+      return new ParameterizedTypeImpl((Class<?>) parameterized.getRawType(),
+          owner == null ? null : substitute(owner, bindings),
+          substitute(parameterized.getActualTypeArguments(), bindings));
+    }
+    if (type instanceof GenericArrayType) {
+      return arrayType(substitute(((GenericArrayType) type).getGenericComponentType(), bindings));
+    }
+    if (type instanceof WildcardType) {
+      WildcardType wildcard = (WildcardType) type;
+      return new WildcardTypeImpl(substitute(wildcard.getLowerBounds(), bindings),
+          substitute(wildcard.getUpperBounds(), bindings));
+    }
+    return type;
+  }
+
+  private static Type[] substitute(Type[] types, Map<TypeVariable<?>, Type> bindings) {
+    Type[] result = new Type[types.length];
+    for (int index = 0; index < types.length; index++) {
+      result[index] = substitute(types[index], bindings);
+    }
+    return result;
   }
 
   private TypeParameterResolver() {

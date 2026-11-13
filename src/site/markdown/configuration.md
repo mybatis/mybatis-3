@@ -392,7 +392,8 @@ For SQL parameters carried in maps, specify the complete type in the parameter r
 Nested type arguments, wildcard bounds, and generic arrays are preserved. Unbound type variables
 are rejected when constructing a Type-aware handler, with the unresolved variable in the error.
 Handlers with a `Class` constructor continue to receive the raw class, and no-argument handlers
-continue to use their no-argument constructor.
+continue to use their no-argument constructor. When both `Type` and `Class` constructors exist,
+`Type` takes precedence for explicit mappings and automatically selected handlers.
 
 ### Handling Enums
 
