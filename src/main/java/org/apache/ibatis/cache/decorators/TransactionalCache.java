@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.apache.ibatis.cache.decorators;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -92,11 +93,18 @@ public class TransactionalCache implements Cache {
   }
 
   public void commit() {
-    if (clearOnCommit) {
-      delegate.clear();
+    try {
+      if (clearOnCommit) {
+        delegate.clear();
+      }
+      flushPendingEntries();
+    } catch (RuntimeException | Error e) {
+      // the flush is abandoned: release the locks still owned here, reset() then discards the pending entries
+      unlockUnflushedMissedEntries(e);
+      throw e;
+    } finally {
+      reset();
     }
-    flushPendingEntries();
-    reset();
   }
 
   public void rollback() {
@@ -112,11 +120,30 @@ public class TransactionalCache implements Cache {
 
   private void flushPendingEntries() {
     for (Map.Entry<Object, Object> entry : entriesToAddOnCommit.entrySet()) {
+      // the delegate releases the lock of a key even when the put fails, so it is not ours to release anymore
+      entriesMissedInCache.remove(entry.getKey());
       delegate.putObject(entry.getKey(), entry.getValue());
     }
+    // only entries without a buffered value are left: they stay locked until they are handed to the delegate
+    for (Iterator<Object> iterator = entriesMissedInCache.iterator(); iterator.hasNext();) {
+      Object entry = iterator.next();
+      iterator.remove();
+      delegate.putObject(entry, null);
+    }
+  }
+
+  /** Releases the locks of the missed entries that were not handed to the delegate yet, i.e. still owned here. */
+  private void unlockUnflushedMissedEntries(Throwable originalFailure) {
     for (Object entry : entriesMissedInCache) {
-      if (!entriesToAddOnCommit.containsKey(entry)) {
-        delegate.putObject(entry, null);
+      try {
+        delegate.removeObject(entry);
+      } catch (RuntimeException | Error cleanupFailure) {
+        log.warn("Unexpected exception while notifying a failed commit to the cache adapter. "
+            + "Consider upgrading your cache adapter to the latest version. Cause: " + cleanupFailure);
+        // a failing cleanup must neither hide the original failure nor stop the release of the remaining locks
+        if (cleanupFailure != originalFailure) {
+          originalFailure.addSuppressed(cleanupFailure);
+        }
       }
     }
   }
