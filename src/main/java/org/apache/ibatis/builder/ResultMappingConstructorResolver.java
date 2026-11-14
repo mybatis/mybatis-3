@@ -17,6 +17,7 @@ package org.apache.ibatis.builder;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -137,7 +138,9 @@ public class ResultMappingConstructorResolver {
     // only rebuild (auto-type) if required (any types are unidentified)
     final boolean autoTypeRequired = constructorResultMappings.stream().map(ResultMapping::getJavaType)
         .anyMatch(mappingType -> mappingType == null || Object.class.equals(mappingType));
-    final List<ResultMapping> resultMappings = autoTypeRequired
+    final boolean genericTypesPresent = matchingConstructorInfo.argsByIndex.stream()
+        .anyMatch(arg -> !(arg.genericType instanceof Class<?>));
+    final List<ResultMapping> resultMappings = autoTypeRequired || genericTypesPresent
         ? autoTypeConstructorMappings(matchingConstructorInfo, constructorResultMappings, allMappingsHavePropertyNames)
         : constructorResultMappings;
 
@@ -255,8 +258,16 @@ public class ResultMappingConstructorResolver {
           : matchingConstructorInfo.getArgByOriginalIndex(i);
 
       final TypeHandler<?> originalTypeHandler = originalMapping.getTypeHandler();
-      final TypeHandler<?> typeHandler = originalTypeHandler == null
-          || originalTypeHandler instanceof UnknownTypeHandler ? null : originalTypeHandler;
+      TypeHandler<?> typeHandler = originalTypeHandler == null || originalTypeHandler instanceof UnknownTypeHandler
+          ? null : originalTypeHandler;
+
+      if (!(matchingArg.genericType instanceof Class<?>) && needsGenericType(typeHandler)) {
+        @SuppressWarnings("unchecked")
+        Class<? extends TypeHandler<?>> handlerClass = typeHandler == null ? null
+            : (Class<? extends TypeHandler<?>>) typeHandler.getClass();
+        typeHandler = configuration.getTypeHandlerRegistry().getTypeHandler(matchingArg.genericType,
+            originalMapping.getJdbcType(), handlerClass);
+      }
 
       // given that we selected a new java type, overwrite the currently
       // selected type handler so it can get retrieved again from the registry
@@ -265,6 +276,19 @@ public class ResultMappingConstructorResolver {
     }
 
     return adjustedAutoTypeResultMappings;
+  }
+
+  private boolean needsGenericType(TypeHandler<?> handler) {
+    if (handler == null) {
+      return true;
+    }
+    try {
+      handler.getClass().getConstructor(Type.class);
+      return true;
+    } catch (NoSuchMethodException ignored) {
+      // Preserve configured instances of handlers that do not consume reflective types.
+      return false;
+    }
   }
 
   private static void sortConstructorMappings(ConstructorMetaInfo matchingConstructorInfo,
@@ -311,11 +335,12 @@ public class ResultMappingConstructorResolver {
 
     private List<ConstructorArg> fromConstructor(Constructor<?> constructor) {
       final Class<?>[] parameterTypes = constructor.getParameterTypes();
+      final Type[] genericTypes = constructor.getGenericParameterTypes();
       final List<String> argNames = getArgNames(constructor);
 
       final List<ConstructorArg> constructorArgs = new ArrayList<>(argNames.size());
       for (int i = 0; i < argNames.size(); i++) {
-        constructorArgs.add(new ConstructorArg(parameterTypes[i], argNames.get(i)));
+        constructorArgs.add(new ConstructorArg(parameterTypes[i], genericTypes[i], argNames.get(i)));
       }
 
       return constructorArgs;
@@ -359,10 +384,12 @@ public class ResultMappingConstructorResolver {
 
   static class ConstructorArg {
     private final Class<?> type;
+    private final Type genericType;
     private final String name;
 
-    private ConstructorArg(Class<?> type, String name) {
+    private ConstructorArg(Class<?> type, Type genericType, String name) {
       this.type = type;
+      this.genericType = genericType;
       this.name = name;
     }
 

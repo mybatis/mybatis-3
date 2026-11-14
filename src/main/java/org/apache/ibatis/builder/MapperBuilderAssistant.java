@@ -52,6 +52,7 @@ import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.TypeException;
 import org.apache.ibatis.type.TypeHandler;
 
 /**
@@ -339,7 +340,13 @@ public class MapperBuilderAssistant extends BaseBuilder {
       Class<? extends TypeHandler<?>> typeHandler, List<ResultFlag> flags, String resultSet, String foreignColumn,
       boolean lazy) {
     Entry<Type, Class<?>> setterType = resolveSetterType(resultType, property, javaType);
-    TypeHandler<?> typeHandlerInstance = resolveTypeHandler(setterType.getKey(), jdbcType, typeHandler);
+    TypeHandler<?> typeHandlerInstance;
+    try {
+      typeHandlerInstance = resolveTypeHandler(setterType.getKey(), jdbcType, typeHandler);
+    } catch (TypeException exception) {
+      throw new BuilderException("Could not resolve type handler for result property '" + property + "' of type '"
+          + setterType.getKey().getTypeName() + "'", exception);
+    }
     List<ResultMapping> composites;
     if ((nestedSelect == null || nestedSelect.isEmpty()) && (foreignColumn == null || foreignColumn.isEmpty())) {
       composites = List.of();

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,13 +16,16 @@
 package org.apache.ibatis.reflection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.TypeVariable;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.RowBounds;
 import org.junit.jupiter.api.Test;
 
 class ParamNameResolverTest {
@@ -34,6 +37,37 @@ class ParamNameResolverTest {
     void m3(Integer[] p) {}
   }
   // @formatter:on
+
+  interface GenericMapper {
+    <T> void save(@Param("value") T value);
+
+    void page(RowBounds bounds, @Param("values") List<String> values);
+
+    void arrays(@Param("values") List<String>[] values);
+  }
+
+  @Test
+  void retainsUnboundVariablesWithoutBreakingParameterNaming() throws Exception {
+    ParamNameResolver resolver = new ParamNameResolver(new Configuration(),
+        GenericMapper.class.getMethod("save", Object.class), GenericMapper.class);
+    assertInstanceOf(TypeVariable.class, resolver.getType("value"));
+  }
+
+  @Test
+  void collectionAliasesUseTheOnlyNonSpecialParameter() throws Exception {
+    ParamNameResolver resolver = new ParamNameResolver(new Configuration(),
+        GenericMapper.class.getMethod("page", RowBounds.class, List.class), GenericMapper.class);
+    assertEquals(resolver.getType("values"), resolver.getType("collection"));
+  }
+
+  @Test
+  void resolvesIndexedGenericArrayParameters() throws Exception {
+    Method method = GenericMapper.class.getMethod("arrays", List[].class);
+    ParamNameResolver resolver = new ParamNameResolver(new Configuration(), method, GenericMapper.class);
+    ParameterizedType element = (ParameterizedType) resolver.getType("values[0]");
+    assertEquals(List.class, element.getRawType());
+    assertEquals(String.class, element.getActualTypeArguments()[0]);
+  }
 
   @Test
   void testGetTypeSimple() throws Exception {

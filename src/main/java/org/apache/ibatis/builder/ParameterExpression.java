@@ -125,11 +125,32 @@ public class ParameterExpression extends HashMap<String, String> {
       }
       String name = trimmedStr(expression, left, right);
       left = right + 1;
-      right = skipUntil(expression, left, ",");
+      right = "javaType".equals(name) ? typeEnd(expression, left) : skipUntil(expression, left, ",");
       String value = trimmedStr(expression, left, right);
       put(name, value);
       option(expression, right + 1);
     }
+  }
+
+  private int typeEnd(String expression, int start) {
+    int depth = 0;
+    for (int index = start; index < expression.length(); index++) {
+      char character = expression.charAt(index);
+      if (character == '<') {
+        depth++;
+      } else if (character == '>') {
+        depth--;
+      } else if (character == ',' && depth == 0) {
+        return index;
+      }
+      if (depth < 0) {
+        throw new BuilderException("Unbalanced Java type in parameter expression: " + expression);
+      }
+    }
+    if (depth != 0) {
+      throw new BuilderException("Unbalanced Java type in parameter expression: " + expression);
+    }
+    return expression.length();
   }
 
   private String trimmedStr(String str, int start, int end) {
