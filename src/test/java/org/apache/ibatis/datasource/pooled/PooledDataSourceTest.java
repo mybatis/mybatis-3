@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ package org.apache.ibatis.datasource.pooled;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.Connection;
@@ -65,21 +65,13 @@ class PooledDataSourceTest {
   }
 
   @Test
-  void PoppedConnectionShouldBeNotEqualToClosedConnection() throws Exception {
+  void poppedConnectionShouldBeNotSameAsClosedConnection() throws Exception {
     Connection connectionToClose = dataSource.getConnection();
-    CountDownLatch latch = new CountDownLatch(1);
-
-    new Thread(() -> {
-      try {
-        latch.await();
-        assertNotEquals(connectionToClose, dataSource.getConnection());
-      } catch (Exception e) {
-        throw new RuntimeException(e);
-      }
-    }).start();
-
     connectionToClose.close();
-    latch.countDown();
+
+    try (Connection poppedConnection = dataSource.getConnection()) {
+      assertNotSame(connectionToClose, poppedConnection);
+    }
   }
 
   @Test
