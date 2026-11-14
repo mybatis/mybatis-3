@@ -68,7 +68,12 @@ public class BatchExecutor extends BaseExecutor {
     } else {
       Connection connection = getConnection(ms.getStatementLog());
       stmt = handler.prepare(connection, transaction.getTimeout());
-      handler.parameterize(stmt); // fix Issues 322
+      try {
+        handler.parameterize(stmt); // fix Issues 322
+      } catch (Throwable t) {
+        closeStatement(stmt);
+        throw t;
+      }
       currentSql = sql;
       currentStatement = ms;
       statementList.add(stmt);
@@ -104,10 +109,15 @@ public class BatchExecutor extends BaseExecutor {
     StatementHandler handler = configuration.newStatementHandler(wrapper, ms, parameter, rowBounds, null, boundSql);
     Connection connection = getConnection(ms.getStatementLog());
     Statement stmt = handler.prepare(connection, transaction.getTimeout());
-    handler.parameterize(stmt);
-    Cursor<E> cursor = handler.queryCursor(stmt);
-    stmt.closeOnCompletion();
-    return cursor;
+    try {
+      handler.parameterize(stmt);
+      Cursor<E> cursor = handler.queryCursor(stmt);
+      stmt.closeOnCompletion();
+      return cursor;
+    } catch (Throwable t) {
+      closeStatement(stmt);
+      throw t;
+    }
   }
 
   @Override
