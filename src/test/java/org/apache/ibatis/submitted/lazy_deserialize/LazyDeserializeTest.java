@@ -25,6 +25,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.executor.ExecutorException;
@@ -88,6 +89,26 @@ class LazyDeserializeTest {
       final LazyObjectFoo deserializedFoo = this.deserializeFoo(serializedFoo);
       ExecutorException e = assertThrows(ExecutorException.class, () -> deserializedFoo.getLazyObjectBar());
       assertTrue(e.getMessage().contains("Cannot get Configuration as configuration factory was not set."));
+    }
+  }
+
+  @Test
+  void loadLazyDeserializeRejectsNonSelectStatement() throws Exception {
+    factory.getConfiguration().setConfigurationFactory(this.getClass());
+    final byte[] serializedFoo;
+    try (SqlSession session = factory.openSession()) {
+      serializedFoo = this.serializeFoo(session.getMapper(Mapper.class).loadFoo(FOO_ID));
+    }
+    // Point the unloaded property at the delete statement. Both ids have the same length, so the serialized lengths
+    // stay valid.
+    final byte[] tamperedFoo = new String(serializedFoo, StandardCharsets.ISO_8859_1)
+        .replace("Mapper.loadBar", "Mapper.dropFoo").getBytes(StandardCharsets.ISO_8859_1);
+    final LazyObjectFoo deserializedFoo = this.deserializeFoo(tamperedFoo);
+
+    ExecutorException e = assertThrows(ExecutorException.class, () -> deserializedFoo.getLazyObjectBar());
+    assertTrue(e.getMessage().contains("is not a select statement"));
+    try (SqlSession session = factory.openSession()) {
+      assertNotNull(session.getMapper(Mapper.class).loadFoo(FOO_ID));
     }
   }
 
