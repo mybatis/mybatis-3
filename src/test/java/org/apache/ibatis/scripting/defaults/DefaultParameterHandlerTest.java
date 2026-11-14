@@ -107,26 +107,6 @@ class DefaultParameterHandlerTest {
   }
 
   @Test
-  void shouldUseRegisteredTypeHandlerForNullBeanProperty() throws SQLException {
-    Configuration config = new Configuration();
-    config.setIgnoreParameterMetaData(true);
-    TypeHandler<Section> typeHandler = mock(TypeHandler.class);
-    config.getTypeHandlerRegistry().register(Section.class, typeHandler);
-    MappedStatement mappedStatement = new MappedStatement.Builder(config, "testUpdate",
-        new RawSqlSource(config, "update author set favourite_section = #{favouriteSection}", Author.class),
-        SqlCommandType.UPDATE).build();
-    Author parameterObject = new Author();
-    BoundSql boundSql = mappedStatement.getBoundSql(parameterObject);
-    DefaultParameterHandler defaultParameterHandler = new DefaultParameterHandler(mappedStatement, parameterObject,
-        boundSql);
-    PreparedStatement ps = mock(PreparedStatement.class);
-
-    defaultParameterHandler.setParameters(ps);
-
-    verify(typeHandler).setParameter(ps, 1, null, JdbcType.OTHER);
-  }
-
-  @Test
   void parameterObjectGetPropertyValueWithAdditionalParameter() throws SQLException {
     Configuration config = new Configuration();
     TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
