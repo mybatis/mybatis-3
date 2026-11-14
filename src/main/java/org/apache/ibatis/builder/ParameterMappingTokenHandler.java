@@ -151,7 +151,7 @@ public class ParameterMappingTokenHandler extends BaseBuilder implements TokenHa
       PropertyTokenizer propertyTokenizer, JdbcType jdbcType) {
     String description = propertiesMap.remove("javaType");
     if (description != null) {
-      genericType = description.indexOf('<') < 0 ? resolveClass(description)
+      genericType = description.indexOf('<') < 0 && !description.endsWith("[]") ? resolveClass(description)
           : TypeParser.parse(description, this::resolveClass);
       return TypeParameterResolver.rawType(genericType);
     }

@@ -17,6 +17,7 @@ package org.apache.ibatis.reflection;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.function.Function;
@@ -34,7 +35,7 @@ public final class TypeParser {
 
   public static Type parse(String description, Function<String, Class<?>> classResolver) {
     Parser parser = new Parser(description, classResolver);
-    Type type = parser.type();
+    Type type = parser.type(false);
     parser.whitespace();
     if (parser.position != description.length()) {
       throw parser.invalid();
@@ -52,9 +53,12 @@ public final class TypeParser {
       this.classResolver = classResolver;
     }
 
-    private Type type() {
+    private Type type(boolean allowWildcard) {
       Type result;
       if (take("?")) {
+        if (!allowWildcard) {
+          throw invalid();
+        }
         result = wildcard();
       } else {
         Class<?> raw = resolveClass(name());
@@ -65,6 +69,9 @@ public final class TypeParser {
         }
       }
       while (take("[]")) {
+        if (result instanceof WildcardType) {
+          throw invalid();
+        }
         result = TypeParameterResolver.arrayType(result);
       }
       return result;
@@ -72,12 +79,20 @@ public final class TypeParser {
 
     private Type wildcard() {
       if (keyword("extends")) {
-        return new TypeParameterResolver.WildcardTypeImpl(new Type[0], new Type[] { type() });
+        return new TypeParameterResolver.WildcardTypeImpl(new Type[0], new Type[] { bound() });
       }
       if (keyword("super")) {
-        return new TypeParameterResolver.WildcardTypeImpl(new Type[] { type() }, new Type[] { Object.class });
+        return new TypeParameterResolver.WildcardTypeImpl(new Type[] { bound() }, new Type[] { Object.class });
       }
       return new TypeParameterResolver.WildcardTypeImpl(new Type[0], new Type[] { Object.class });
+    }
+
+    private Type bound() {
+      Type bound = type(false);
+      if (bound instanceof Class<?> && ((Class<?>) bound).isPrimitive()) {
+        throw invalid();
+      }
+      return bound;
     }
 
     private Class<?> resolveClass(String name) {
@@ -92,7 +107,7 @@ public final class TypeParser {
       }
       ArrayList<Type> arguments = new ArrayList<>();
       do {
-        Type argument = type();
+        Type argument = type(true);
         if (argument instanceof Class<?> && ((Class<?>) argument).isPrimitive()) {
           throw invalid();
         }

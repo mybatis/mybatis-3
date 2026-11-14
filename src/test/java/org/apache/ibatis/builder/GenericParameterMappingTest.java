@@ -17,6 +17,7 @@ package org.apache.ibatis.builder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -175,6 +176,98 @@ class GenericParameterMappingTest {
             null, GenericHandler.class, List.of(), null, null, false));
     assertTrue(failure.getMessage().contains("values"));
     assertTrue(failure.getMessage().contains("T"));
+  }
+
+  @Test
+  void preservesNestedAndIndexedPropertyBindings() {
+    Configuration configuration = new Configuration();
+    for (String property : List.of("box.values", "boxes[0].values", "wildcards[0].values", "array[0].values",
+        "byName[key].values")) {
+      BoundSql bound = new RawSqlSource(configuration,
+          "select #{" + property + ",typeHandler=" + GenericHandler.class.getName() + "}", Root.class)
+              .getBoundSql(null);
+      assertEquals(new TypeReference<List<String>>() {
+      }.getRawType(), ((GenericHandler) bound.getParameterMappings().get(0).getTypeHandler()).type);
+      MapperBuilderAssistant assistant = new MapperBuilderAssistant(configuration, "nested");
+      assertEquals(new TypeReference<List<String>>() {
+      }.getRawType(),
+          ((GenericHandler) assistant.buildResultMapping(Root.class, property, "payload", null, JdbcType.VARCHAR, null,
+              null, null, null, GenericHandler.class, List.of(), null, null, false).getTypeHandler()).type);
+    }
+  }
+
+  @Test
+  void explicitHandlerDoesNotConstructAnUnrelatedAutomaticHandler() throws Exception {
+    TypeHandlerRegistry registry = new TypeHandlerRegistry();
+    registry.register(new TypeReference<List<String>>() {
+    }.getRawType(), GenericHandler.class);
+    Type unresolved = Unbound.class.getDeclaredField("values").getGenericType();
+    assertInstanceOf(NoArgHandler.class, registry.getTypeHandler(unresolved, JdbcType.VARCHAR, NoArgHandler.class));
+  }
+
+  @Test
+  void preservesExactRegisteredInstancesAndCachesExplicitHandlersSeparately() {
+    TypeHandlerRegistry registry = new TypeHandlerRegistry();
+    Type type = new TypeReference<List<String>>() {
+    }.getRawType();
+    GenericHandler configured = new GenericHandler(type);
+    registry.register(type, JdbcType.VARCHAR, configured);
+    assertSame(configured, registry.getTypeHandler(type, JdbcType.VARCHAR, GenericHandler.class));
+    Object other = registry.getTypeHandler(type, JdbcType.VARCHAR, ClassHandler.class);
+    assertInstanceOf(ClassHandler.class, other);
+    assertSame(other, registry.getTypeHandler(type, JdbcType.VARCHAR, ClassHandler.class));
+    assertSame(configured, registry.getTypeHandler(type, JdbcType.VARCHAR, GenericHandler.class));
+    Type second = new TypeReference<List<Integer>>() {
+    }.getRawType();
+    Object first = registry.getTypeHandler(second, JdbcType.VARCHAR, GenericHandler.class);
+    assertSame(first, registry.getTypeHandler(second, JdbcType.VARCHAR, GenericHandler.class));
+    assertEquals(second, ((GenericHandler) first).type);
+  }
+
+  @Test
+  void automaticRawRegistrationsReceiveFullTypes() {
+    TypeHandlerRegistry registry = new TypeHandlerRegistry();
+    registry.register(List.class, GenericHandler.class);
+    for (Type type : List.of(new TypeReference<List<String>>() {
+    }.getRawType(), new TypeReference<List<Integer>>() {
+    }.getRawType())) {
+      GenericHandler handler = (GenericHandler) registry.getTypeHandler(type, JdbcType.VARCHAR);
+      assertEquals(type, handler.type);
+      assertSame(handler, registry.getTypeHandler(type, JdbcType.VARCHAR));
+    }
+  }
+
+  @Test
+  void rawFallbackDoesNotReuseAnInstanceForOtherTypeArguments() {
+    TypeHandlerRegistry registry = new TypeHandlerRegistry();
+    Type strings = new TypeReference<List<String>>() {
+    }.getRawType();
+    Type integers = new TypeReference<List<Integer>>() {
+    }.getRawType();
+    registry.register(strings, JdbcType.VARCHAR, new GenericHandler(strings));
+    assertNull(registry.getTypeHandler(integers, JdbcType.VARCHAR));
+  }
+
+  @Test
+  void acceptsJavaArraySyntaxAndLegacyAliasesInParameterMappings() {
+    Map<String, Type> types = Map.of("java.lang.String[]", String[].class, "int[]", int[].class, "[Ljava.lang.String;",
+        String[].class, "string", String.class, "int", Integer.class, "java.util.List<java.lang.String>[]",
+        new TypeReference<List<String>[]>() {
+        }.getRawType());
+    types.forEach((description, type) -> {
+      BoundSql bound = new RawSqlSource(new Configuration(),
+          "select #{value,javaType=" + description + ",typeHandler=" + GenericHandler.class.getName() + "}", Map.class)
+              .getBoundSql(null);
+      assertEquals(type, ((GenericHandler) bound.getParameterMappings().get(0).getTypeHandler()).type);
+    });
+  }
+
+  public static class Root {
+    public Unbound<String> box;
+    public List<Unbound<String>> boxes;
+    public List<? extends Unbound<String>> wildcards;
+    public Unbound<String>[] array;
+    public Map<String, Unbound<String>> byName;
   }
 
   public static class Unbound<T> {

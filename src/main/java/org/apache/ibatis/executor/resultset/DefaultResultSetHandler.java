@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package org.apache.ibatis.executor.resultset;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -60,6 +61,7 @@ import org.apache.ibatis.mapping.ResultMapping;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.ReflectorFactory;
+import org.apache.ibatis.reflection.TypeParameterResolver;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.session.AutoMappingBehavior;
 import org.apache.ibatis.session.Configuration;
@@ -880,12 +882,14 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   }
 
   private boolean findUsableConstructorByArgTypes(final Constructor<?> constructor, final List<JdbcType> jdbcTypes) {
-    final Class<?>[] parameterTypes = constructor.getParameterTypes();
+    final Type[] parameterTypes = constructor.getGenericParameterTypes();
     if (parameterTypes.length != jdbcTypes.size()) {
       return false;
     }
     for (int i = 0; i < parameterTypes.length; i++) {
-      if (!typeHandlerRegistry.hasTypeHandler(parameterTypes[i], jdbcTypes.get(i))) {
+      if (!typeHandlerRegistry.hasTypeHandler(parameterTypes[i], jdbcTypes.get(i))
+          && !(parameterTypes[i] instanceof TypeVariable<?> && typeHandlerRegistry
+              .hasTypeHandler(TypeParameterResolver.rawType(parameterTypes[i]), jdbcTypes.get(i)))) {
         return false;
       }
     }
@@ -910,6 +914,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   private boolean applyColumnOrderBasedConstructorAutomapping(ResultSetWrapper rsw, List<Class<?>> constructorArgTypes,
       List<Object> constructorArgs, Constructor<?> constructor, boolean foundValues) throws SQLException {
     Class<?>[] parameterTypes = constructor.getParameterTypes();
+    Type[] genericParameterTypes = constructor.getGenericParameterTypes();
 
     if (parameterTypes.length > rsw.getClassNames().size()) {
       throw new ExecutorException(MessageFormat.format(
@@ -920,7 +925,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     for (int i = 0; i < parameterTypes.length; i++) {
       Class<?> parameterType = parameterTypes[i];
       String columnName = rsw.getColumnNames().get(i);
-      TypeHandler<?> typeHandler = rsw.getTypeHandler(parameterType, columnName);
+      TypeHandler<?> typeHandler = rsw.getTypeHandler(genericParameterTypes[i], columnName);
       Object value = typeHandler.getResult(rsw.getResultSet(), columnName);
       constructorArgTypes.add(parameterType);
       constructorArgs.add(value);
@@ -941,7 +946,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       for (String columnName : rsw.getColumnNames()) {
         if (columnMatchesParam(columnName, paramName, columnPrefix)) {
           Class<?> paramType = param.getType();
-          TypeHandler<?> typeHandler = rsw.getTypeHandler(paramType, columnName);
+          TypeHandler<?> typeHandler = rsw.getTypeHandler(param.getParameterizedType(), columnName);
           Object value = typeHandler.getResult(rsw.getResultSet(), columnName);
           constructorArgTypes.add(paramType);
           constructorArgs.add(value);

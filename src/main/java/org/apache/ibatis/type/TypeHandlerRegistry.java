@@ -63,6 +63,7 @@ public final class TypeHandlerRegistry {
 
   private final Map<JdbcType, TypeHandler<?>> jdbcTypeHandlerMap = new EnumMap<>(JdbcType.class);
   private final Map<Type, Map<JdbcType, TypeHandler<?>>> typeHandlerMap = new ConcurrentHashMap<>();
+  private final Map<Type, Map<Class<?>, TypeHandler<?>>> explicitTypeHandlers = new ConcurrentHashMap<>();
   private final ConcurrentHashMap<Type, Constructor<?>> smartHandlers = new ConcurrentHashMap<>();
   private final Map<Class<?>, TypeHandler<?>> allTypeHandlersMap = new HashMap<>();
 
@@ -233,22 +234,36 @@ public final class TypeHandlerRegistry {
   }
 
   public TypeHandler<?> getTypeHandler(Type type, JdbcType jdbcType, Class<? extends TypeHandler<?>> typeHandlerClass) {
-    TypeHandler<?> typeHandler = getTypeHandler(type, jdbcType);
     if (typeHandlerClass == null) {
-      return typeHandler;
+      return getTypeHandler(type, jdbcType);
     }
-    boolean requiresTypeArgument = getTypeConstructor(typeHandlerClass) != null;
-    if (typeHandler != null && typeHandler.getClass().equals(typeHandlerClass)
-        && (type instanceof Class<?> || !requiresTypeArgument)) {
-      return typeHandler;
+    TypeHandler<?> registered = findHandler(type == null ? null : typeHandlerMap.get(type), jdbcType);
+    if (registered != null && registered.getClass().equals(typeHandlerClass)) {
+      return registered;
     }
-    if (!requiresTypeArgument) {
-      typeHandler = getMappingTypeHandler(typeHandlerClass);
-      if (typeHandler != null) {
-        return typeHandler;
+    if (getTypeConstructor(typeHandlerClass) == null) {
+      registered = getMappingTypeHandler(typeHandlerClass);
+      if (registered != null) {
+        return registered;
       }
     }
-    return getInstance(type, typeHandlerClass);
+    if (type == null) {
+      return getInstance(null, typeHandlerClass);
+    }
+    // Constructors depend on the Java type, not the JDBC type. Explicit registrations above take precedence.
+    return explicitTypeHandlers.computeIfAbsent(type, key -> new ConcurrentHashMap<>())
+        .computeIfAbsent(typeHandlerClass, key -> getInstance(type, key));
+  }
+
+  private TypeHandler<?> findHandler(Map<JdbcType, TypeHandler<?>> handlers, JdbcType jdbcType) {
+    if (handlers == null || handlers == NULL_TYPE_HANDLER_MAP) {
+      return null;
+    }
+    TypeHandler<?> handler = handlers.get(jdbcType);
+    if (handler == null) {
+      handler = handlers.get(null);
+    }
+    return handler == null ? pickSoleHandler(handlers) : handler;
   }
 
   private Constructor<?> getTypeConstructor(Class<?> handlerClass) {
@@ -280,21 +295,20 @@ public final class TypeHandlerRegistry {
       return handler;
     }
 
-    if (jdbcHandlerMap != null) {
-      handler = jdbcHandlerMap.get(jdbcType);
-      if (handler == null) {
-        handler = jdbcHandlerMap.get(null);
-      }
-      if (handler == null) {
-        // #591
-        handler = pickSoleHandler(jdbcHandlerMap);
-      }
-    }
+    handler = findHandler(jdbcHandlerMap, jdbcType);
     if (handler == null) {
       handler = getSmartHandler(type, jdbcType);
     }
     if (handler == null && type instanceof ParameterizedType) {
-      handler = getTypeHandler((Class<?>) ((ParameterizedType) type).getRawType(), jdbcType);
+      handler = getTypeHandler(((ParameterizedType) type).getRawType(), jdbcType);
+      if (handler != null && !(handler instanceof ConflictedTypeHandler)) {
+        Constructor<?> constructor = getTypeConstructor(handler.getClass());
+        if (constructor != null && constructor.getParameterTypes()[0] == Type.class) {
+          // A registered instance may carry configuration for a different parameterization.
+          // Register the handler class to enable automatic construction for other full types.
+          handler = null;
+        }
+      }
     }
     return handler;
   }
@@ -309,7 +323,8 @@ public final class TypeHandlerRegistry {
         break;
       }
       if (registeredType instanceof Class) {
-        if (type instanceof Class && ((Class<?>) registeredType).isAssignableFrom((Class<?>) type)) {
+        if ((type instanceof Class<?> || type instanceof ParameterizedType || type instanceof GenericArrayType)
+            && ((Class<?>) registeredType).isAssignableFrom(TypeParameterResolver.rawType(type))) {
           candidate = entry.getValue();
         }
       } else if (registeredType instanceof ParameterizedType) {

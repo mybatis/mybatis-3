@@ -16,6 +16,7 @@
 package org.apache.ibatis.executor.resultset;
 
 import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -29,6 +30,7 @@ import java.util.Set;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.ResultMap;
+import org.apache.ibatis.reflection.TypeParameterResolver;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.ObjectTypeHandler;
@@ -107,7 +109,10 @@ public class ResultSetWrapper {
       }
 
       Class<?> javaType = resolveClass(classNames.get(index));
-      if (!(k instanceof Class && ((Class<?>) k).isAssignableFrom(javaType))) {
+      // Legacy scalar mappings may have an unbound declaration without a Type-aware handler.
+      Type fallbackType = k instanceof TypeVariable<?> ? TypeParameterResolver.rawType(k) : k;
+      if (!(fallbackType instanceof Class && javaType != null
+          && ((Class<?>) fallbackType).isAssignableFrom(javaType))) {
         // Clearly incompatible
         return null;
       }

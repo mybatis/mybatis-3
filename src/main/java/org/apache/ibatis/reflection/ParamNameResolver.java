@@ -112,11 +112,12 @@ public class ParamNameResolver {
       useParamMap = true;
     }
     if (names.size() == 1) {
-      Type soleParamType = actualParamTypes[0];
+      int soleParamIndex = names.firstKey();
+      Type soleParamType = actualParamTypes[soleParamIndex];
       if (soleParamType instanceof GenericArrayType) {
         typeMap.put("array", soleParamType);
       } else {
-        Class<?> soleParamClass = null;
+        Class<?> soleParamClass = paramTypes[soleParamIndex];
         if (soleParamType instanceof ParameterizedType) {
           soleParamClass = (Class<?>) ((ParameterizedType) soleParamType).getRawType();
         } else if (soleParamType instanceof Class) {
@@ -204,6 +205,8 @@ public class ParamNameResolver {
       if (type instanceof ParameterizedType) {
         Type[] typeArgs = ((ParameterizedType) type).getActualTypeArguments();
         return typeArgs[0];
+      } else if (type instanceof GenericArrayType) {
+        return ((GenericArrayType) type).getGenericComponentType();
       } else if (type instanceof Class && ((Class<?>) type).isArray()) {
         return ((Class<?>) type).getComponentType();
       }

@@ -381,7 +381,8 @@ public class GenericTypeHandler<E extends MyObject> extends BaseTypeHandler<E> {
 A handler constructor may receive `java.lang.reflect.Type` to access complete generic arguments.
 For example, the same `JsonTypeHandler(Type type)` can handle both `List<String>` and
 `Map<String, List<Role>>`. Result-property mappings resolve this type from the target member,
-including concrete bindings inherited from generic parent classes.
+including concrete bindings inherited from generic parent classes and nested properties.
+Constructor mappings, including records, retain the generic types declared on constructor parameters.
 
 For SQL parameters carried in maps, specify the complete type in the parameter reference:
 
@@ -394,6 +395,15 @@ are rejected when constructing a Type-aware handler, with the unresolved variabl
 Handlers with a `Class` constructor continue to receive the raw class, and no-argument handlers
 continue to use their no-argument constructor. When both `Type` and `Class` constructors exist,
 `Type` takes precedence for explicit mappings and automatically selected handlers.
+
+Register a handler class (for example, for `List.class`) to construct handlers automatically for
+multiple parameterizations. Each construction receives the full requested type. A Type-aware
+instance registered for `List<String>` is not reused for `List<Integer>`; exact registrations retain
+their configured instances. Explicit handler mappings take precedence over automatic selection,
+and constructed explicit handlers are cached by the complete Java type and handler class.
+
+Java array expressions such as `java.lang.String[]` are accepted alongside existing type aliases
+and JVM array names. Invalid wildcard bounds and wildcard array components are rejected during parsing.
 
 ### Handling Enums
 

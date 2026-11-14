@@ -63,7 +63,8 @@ class TypeParserTest {
   @ParameterizedTest
   @ValueSource(strings = { "java.util.List<>", "java.util.List<java.lang.String, java.lang.Integer>",
       "java.util.Map<java.lang.String>", "java.util.List<java.lang.String>>", "java.util.List<java.lang.String",
-      "java.util.List<int>" })
+      "java.util.List<int>", "java.util.List<? extends int>", "java.util.List<? super ?>", "java.util.List<?[]>", "?",
+      "? extends java.lang.Number" })
   void rejectsMalformedTypesAndWrongArity(String description) {
     assertThrows(TypeException.class, () -> TypeParser.parse(description, this::resolve));
   }

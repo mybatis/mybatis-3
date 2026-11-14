@@ -238,7 +238,7 @@ public class TypeParameterResolver {
         : new ParameterizedTypeImpl((Class<?>) parentType.getRawType(), parentType.getOwnerType(), newParentArgs);
   }
 
-  /** Returns the erased class of a resolved reflective type. */
+  /** Returns the erased class of a reflective type; use requireResolved before passing it to a Type-aware handler. */
   public static Class<?> rawType(Type type) {
     if (type instanceof Class<?>) {
       return (Class<?>) type;
@@ -251,6 +251,9 @@ public class TypeParameterResolver {
     }
     if (type instanceof WildcardType) {
       return rawType(((WildcardType) type).getUpperBounds()[0]);
+    }
+    if (type instanceof TypeVariable<?>) {
+      return rawType(((TypeVariable<?>) type).getBounds()[0]);
     }
     throw new TypeException("Unresolved Java type: " + type.getTypeName());
   }
