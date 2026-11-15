@@ -17,6 +17,7 @@ package org.apache.ibatis.submitted.null_conversion_type_handler;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 public interface WorkerMapper {
 
@@ -25,6 +26,16 @@ public interface WorkerMapper {
       values (#{id}, #{name}, #{bloodType})
       """)
   void insert(Worker user);
+
+  @Update("""
+      <script>
+      update worker set blood_type = #{bloodType}
+      <where>
+        <if test="id != null">id = #{id}</if>
+      </where>
+      </script>
+      """)
+  void updateBloodTypeDynamic(Worker user);
 
   @Select("select blood_type from worker where id = #{id}")
   Integer selectBloodTypeValue(Integer id);

@@ -108,6 +108,9 @@ public class DefaultParameterHandler implements ParameterHandler {
           TypeHandler typeHandler = parameterMapping.getTypeHandler();
           if (parameterMapping.hasValue()) {
             value = parameterMapping.getValue();
+            if (value == null && typeHandler == null) {
+              typeHandler = typeHandlerRegistry.getTypeHandler(parameterMapping.getJavaType(), actualJdbcType);
+            }
           } else if (boundSql.hasAdditionalParameter(propertyName)) { // issue #448 ask first for additional params
             value = boundSql.getAdditionalParameter(propertyName);
           } else if (parameterObject == null) {
