@@ -190,6 +190,20 @@ AND title like 'someTitle']]></source>
   WHERE title LIKE #{pattern}
 </select>]]></source>
   </subsection>
+  <subsection name="静的メソッド・静的フィールドの呼び出し">
+  <p>動的 SQL の要素は OGNL 式をベースにしているため、<code>test</code> 属性（<code>if</code> や <code>when</code> など）や <code>bind</code> 要素の <code>value</code> 属性のように、OGNL 式が評価される場所であれば、静的メソッドの呼び出しや静的フィールドの参照を直接記述することができます。</p>
+  <ul>
+    <li>静的メソッドの呼び出し: <code>@完全修飾クラス名@メソッド名(引数)</code></li>
+    <li>静的フィールドの参照: <code>@完全修飾クラス名@フィールド名</code></li>
+  </ul>
+  <p>例えば、文字列が空かどうかを判定する場合は次のように記述します。</p>
+  <source><![CDATA[<if test="@org.apache.commons.lang3.StringUtils@isEmpty(username)">
+  AND username IS NULL
+</if>]]></source>
+  <p>静的フィールドを参照する場合は次のようになります。</p>
+  <source><![CDATA[<bind name="pi" value="@java.lang.Math@PI" />]]></source>
+  <p>これは OGNL の言語仕様による機能です。詳細な文法については <a href="https://commons.apache.org/proper/commons-ognl/language-guide.html">OGNL Language Guide</a> を参照してください。</p>
+  </subsection>
   <subsection name="複数データベースのサポート">
   <p>databaseIdProvider が設定されている場合、条件式で "_databaseId" 変数が利用可能となります。この変数を使うと、実行時のデータベースに応じてステートメントを使い分けることができます。oracle と db2 で異なる select 文を発行する例を次に挙げておきます。</p>
   <source><![CDATA[<insert id="insert">
