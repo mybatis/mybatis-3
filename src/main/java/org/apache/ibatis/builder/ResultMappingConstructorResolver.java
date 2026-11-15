@@ -273,21 +273,10 @@ public class ResultMappingConstructorResolver {
     if (handler instanceof UnknownTypeHandler) {
       handler = null;
     }
-    if (type instanceof Class<?> || handler != null && !mapping.isTypeHandlerResolved()) {
+    if (handler != null && !mapping.isTypeHandlerResolved()) {
       return handler;
     }
-    if (handler != null) {
-      try {
-        handler.getClass().getConstructor(Type.class);
-      } catch (NoSuchMethodException ignored) {
-        // Preserve configured instances of handlers that do not consume reflective types.
-        return handler;
-      }
-    }
-    @SuppressWarnings("unchecked")
-    Class<? extends TypeHandler<?>> handlerClass = handler == null ? null
-        : (Class<? extends TypeHandler<?>>) handler.getClass();
-    return configuration.getTypeHandlerRegistry().getTypeHandler(type, mapping.getJdbcType(), handlerClass);
+    return configuration.getTypeHandlerRegistry().resolveGenericTypeHandler(type, mapping.getJdbcType(), handler);
   }
 
   private static void sortConstructorMappings(ConstructorMetaInfo matchingConstructorInfo,

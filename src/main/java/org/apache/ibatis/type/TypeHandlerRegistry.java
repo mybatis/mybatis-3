@@ -256,6 +256,27 @@ public final class TypeHandlerRegistry {
         .computeIfAbsent(typeHandlerClass, key -> getInstance(type, key, constructor));
   }
 
+  /**
+   * Resolves a framework-selected handler after a mapping's generic type becomes available. Raw-class mappings and
+   * handlers without a Type constructor retain their existing instances. Callers should retain user-supplied instances
+   * instead of passing them through this method.
+   */
+  public TypeHandler<?> resolveGenericTypeHandler(Type type, JdbcType jdbcType, TypeHandler<?> handler) {
+    if (type instanceof Class<?>) {
+      return handler;
+    }
+    if (handler == null) {
+      return getTypeHandler(type, jdbcType);
+    }
+    Constructor<?> constructor = getTypeConstructor(handler.getClass());
+    if (constructor == null || constructor.getParameterTypes()[0] != Type.class) {
+      return handler;
+    }
+    @SuppressWarnings("unchecked")
+    Class<? extends TypeHandler<?>> handlerClass = (Class<? extends TypeHandler<?>>) handler.getClass();
+    return getTypeHandler(type, jdbcType, handlerClass);
+  }
+
   private TypeHandler<?> findHandler(Map<JdbcType, TypeHandler<?>> handlers, JdbcType jdbcType) {
     if (handlers == null || handlers == NULL_TYPE_HANDLER_MAP) {
       return null;

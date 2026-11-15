@@ -340,6 +340,19 @@ class GenericParameterMappingTest {
         ConstructorRow.class, "row").resolveWithConstructor().get(0).getTypeHandler());
   }
 
+  @Test
+  void constructorRefinementRetainsFrameworkHandlersWithoutTypeConstructors() {
+    Configuration configuration = new Configuration();
+    for (Class<? extends GenericHandler> handlerClass : List.of(ClassHandler.class, NoArgHandler.class)) {
+      ResultMapping original = new MapperBuilderAssistant(configuration, "constructor").buildResultMapping(
+          ConstructorRow.class, "values", "payload", List.class, JdbcType.VARCHAR, null, null, null, null, handlerClass,
+          List.of(ResultFlag.CONSTRUCTOR), null, null, false);
+      ResultMapping resolved = new ResultMappingConstructorResolver(configuration, new ArrayList<>(List.of(original)),
+          ConstructorRow.class, "row").resolveWithConstructor().get(0);
+      assertSame(original.getTypeHandler(), resolved.getTypeHandler());
+    }
+  }
+
   public interface NumberMapper {
     <T extends Number> void save(@Param("value") T value);
   }

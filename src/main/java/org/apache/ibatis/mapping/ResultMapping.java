@@ -54,7 +54,7 @@ public class ResultMapping {
     public Builder(Configuration configuration, String property, String column, TypeHandler<?> typeHandler) {
       this(configuration, property);
       resultMapping.column = column;
-      resultMapping.typeHandler = typeHandler;
+      setTypeHandler(typeHandler, false);
     }
 
     public Builder(Configuration configuration, String property, String column, Class<?> javaType) {
@@ -137,9 +137,7 @@ public class ResultMapping {
     }
 
     public Builder typeHandler(TypeHandler<?> typeHandler) {
-      resultMapping.typeHandler = typeHandler;
-      resultMapping.typeHandlerResolved = false;
-      return this;
+      return setTypeHandler(typeHandler, false);
     }
 
     /**
@@ -147,8 +145,12 @@ public class ResultMapping {
      * re-resolved when the constructor's complete generic type becomes available.
      */
     public Builder resolvedTypeHandler(TypeHandler<?> typeHandler) {
+      return setTypeHandler(typeHandler, true);
+    }
+
+    private Builder setTypeHandler(TypeHandler<?> typeHandler, boolean resolved) {
       resultMapping.typeHandler = typeHandler;
-      resultMapping.typeHandlerResolved = true;
+      resultMapping.typeHandlerResolved = resolved;
       return this;
     }
 
