@@ -18,6 +18,7 @@ package org.apache.ibatis.builder;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.lang.reflect.WildcardType;
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.Map;
@@ -167,15 +168,10 @@ public class ParameterMappingTokenHandler extends BaseBuilder implements TokenHa
     }
     if (paramNameResolver != null && ParamMap.class.equals(parameterType)) {
       Type actualParamType = paramNameResolver.getType(property);
-      if (actualParamType instanceof TypeVariable<?> || actualParamType instanceof GenericArrayType) {
-        genericType = actualParamType;
-        return Object.class;
-      }
-      if (actualParamType instanceof Type) {
-        MetaClass metaClass = MetaClass.forClass(actualParamType, configuration.getReflectorFactory());
-        String multiParamsPropertyName;
+      if (actualParamType != null) {
         if (propertyTokenizer.hasNext()) {
-          multiParamsPropertyName = propertyTokenizer.getChildren();
+          MetaClass metaClass = MetaClass.forClass(navigableType(actualParamType), configuration.getReflectorFactory());
+          String multiParamsPropertyName = propertyTokenizer.getChildren();
           if (metaClass.hasGetter(multiParamsPropertyName)) {
             Entry<Type, Class<?>> getterType = metaClass.getGenericGetterType(multiParamsPropertyName);
             genericType = getterType.getKey();
@@ -197,6 +193,16 @@ public class ParameterMappingTokenHandler extends BaseBuilder implements TokenHa
       return getterType.getValue();
     }
     return Object.class;
+  }
+
+  private Type navigableType(Type type) {
+    if (type instanceof TypeVariable<?>) {
+      return navigableType(((TypeVariable<?>) type).getBounds()[0]);
+    }
+    if (type instanceof WildcardType) {
+      return navigableType(((WildcardType) type).getUpperBounds()[0]);
+    }
+    return type instanceof GenericArrayType ? TypeParameterResolver.rawType(type) : type;
   }
 
   private Map<String, String> parseParameterMapping(String content) {

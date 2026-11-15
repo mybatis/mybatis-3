@@ -286,6 +286,58 @@ class GenericParameterMappingTest {
   }
 
   @Test
+  void resolvesNestedPropertiesThroughParameterBounds() throws Exception {
+    Configuration configuration = new Configuration();
+    configuration.getTypeAliasRegistry().registerAlias("genericHandler", GenericHandler.class);
+    ParamNameResolver names = new ParamNameResolver(configuration, BoundedMapper.class.getMethod("save", Bound.class),
+        BoundedMapper.class);
+    List<ParameterMapping> mappings = new ArrayList<>();
+    new ParameterMappingTokenHandler(mappings, configuration, ParamMap.class, Map.of(), names)
+        .handleToken("request.values,typeHandler=genericHandler");
+    assertEquals(new TypeReference<List<String>>() {
+    }.getRawType(), ((GenericHandler) mappings.get(0).getTypeHandler()).type);
+  }
+
+  @Test
+  void automaticallyResolvesHandlersForUnboundParameterBounds() throws Exception {
+    for (boolean instance : List.of(false, true)) {
+      Configuration configuration = new Configuration();
+      ClassHandler supplied = new ClassHandler(Number.class);
+      if (instance) {
+        configuration.getTypeHandlerRegistry().register((Type) Number.class, JdbcType.VARCHAR, supplied);
+      } else {
+        configuration.getTypeHandlerRegistry().register(Number.class, ClassHandler.class);
+      }
+      ParamNameResolver names = new ParamNameResolver(configuration, NumberMapper.class.getMethod("save", Number.class),
+          NumberMapper.class);
+      List<ParameterMapping> mappings = new ArrayList<>();
+      new ParameterMappingTokenHandler(mappings, configuration, ParamMap.class, Map.of(), names)
+          .handleToken("value,jdbcType=VARCHAR");
+      ClassHandler handler = assertInstanceOf(ClassHandler.class, mappings.get(0).getTypeHandler());
+      assertEquals(Number.class, handler.type);
+      if (instance) {
+        assertSame(supplied, handler);
+      }
+    }
+  }
+
+  @Test
+  void rejectsUnboundParameterWhenAutomaticallySelectingTypeAwareHandler() throws Exception {
+    Configuration configuration = new Configuration();
+    configuration.getTypeHandlerRegistry().register(Number.class, GenericHandler.class);
+    ParamNameResolver names = new ParamNameResolver(configuration, NumberMapper.class.getMethod("save", Number.class),
+        NumberMapper.class);
+    BuilderException failure = assertThrows(BuilderException.class,
+        () -> new ParameterMappingTokenHandler(new ArrayList<>(), configuration, ParamMap.class, Map.of(), names)
+            .handleToken("value,jdbcType=VARCHAR"));
+    assertTrue(failure.getCause().getMessage().contains("Unresolved type variable 'T'"));
+  }
+
+  public interface BoundedMapper {
+    <U extends Bound, T extends U> void save(@Param("request") T request);
+  }
+
+  @Test
   void explicitSubclassMappingsReuseInheritedInstancesRegardlessOfLookupOrder() {
     for (boolean implicitFirst : List.of(false, true)) {
       TypeHandlerRegistry registry = new TypeHandlerRegistry();

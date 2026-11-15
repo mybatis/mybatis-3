@@ -22,6 +22,8 @@ import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.lang.reflect.WildcardType;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Time;
@@ -316,12 +318,13 @@ public final class TypeHandlerRegistry {
     if (handler == null) {
       handler = getSmartHandler(type, jdbcType);
     }
-    return handler == null && type instanceof ParameterizedType ? getRawTypeHandler((ParameterizedType) type, jdbcType)
-        : handler;
+    return handler == null
+        && (type instanceof ParameterizedType || type instanceof TypeVariable<?> || type instanceof WildcardType)
+            ? getRawTypeHandler(type, jdbcType) : handler;
   }
 
-  private TypeHandler<?> getRawTypeHandler(ParameterizedType type, JdbcType jdbcType) {
-    TypeHandler<?> handler = getTypeHandler(type.getRawType(), jdbcType);
+  private TypeHandler<?> getRawTypeHandler(Type type, JdbcType jdbcType) {
+    TypeHandler<?> handler = getTypeHandler(TypeParameterResolver.rawType(type), jdbcType);
     if (handler == null || handler instanceof ConflictedTypeHandler) {
       return handler;
     }
@@ -341,7 +344,8 @@ public final class TypeHandlerRegistry {
         break;
       }
       if (registeredType instanceof Class) {
-        if ((type instanceof Class<?> || type instanceof ParameterizedType || type instanceof GenericArrayType)
+        if ((type instanceof Class<?> || type instanceof ParameterizedType || type instanceof GenericArrayType
+            || type instanceof TypeVariable<?> || type instanceof WildcardType)
             && ((Class<?>) registeredType).isAssignableFrom(TypeParameterResolver.rawType(type))) {
           candidate = entry.getValue();
         }
