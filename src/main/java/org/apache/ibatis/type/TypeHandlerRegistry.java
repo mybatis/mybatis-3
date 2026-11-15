@@ -241,7 +241,8 @@ public final class TypeHandlerRegistry {
     if (registered != null && registered.getClass().equals(typeHandlerClass)) {
       return registered;
     }
-    if (getTypeConstructor(typeHandlerClass) == null) {
+    Constructor<?> constructor = getTypeConstructor(typeHandlerClass);
+    if (constructor == null) {
       registered = getMappingTypeHandler(typeHandlerClass);
       if (registered != null) {
         return registered;
@@ -252,7 +253,7 @@ public final class TypeHandlerRegistry {
     }
     // Constructors depend on the Java type, not the JDBC type. Explicit registrations above take precedence.
     return explicitTypeHandlers.computeIfAbsent(type, key -> new ConcurrentHashMap<>())
-        .computeIfAbsent(typeHandlerClass, key -> getInstance(type, key));
+        .computeIfAbsent(typeHandlerClass, key -> getInstance(type, key, constructor));
   }
 
   private TypeHandler<?> findHandler(Map<JdbcType, TypeHandler<?>> handlers, JdbcType jdbcType) {
@@ -285,32 +286,28 @@ public final class TypeHandlerRegistry {
       return getTypeHandler(jdbcType);
     }
 
-    TypeHandler<?> handler = null;
     Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = getJdbcHandlerMap(type);
-
     if (Object.class.equals(type)) {
-      if (jdbcHandlerMap != null) {
-        handler = jdbcHandlerMap.get(jdbcType);
-      }
-      return handler;
+      return jdbcHandlerMap == null ? null : jdbcHandlerMap.get(jdbcType);
     }
 
-    handler = findHandler(jdbcHandlerMap, jdbcType);
+    TypeHandler<?> handler = findHandler(jdbcHandlerMap, jdbcType);
     if (handler == null) {
       handler = getSmartHandler(type, jdbcType);
     }
-    if (handler == null && type instanceof ParameterizedType) {
-      handler = getTypeHandler(((ParameterizedType) type).getRawType(), jdbcType);
-      if (handler != null && !(handler instanceof ConflictedTypeHandler)) {
-        Constructor<?> constructor = getTypeConstructor(handler.getClass());
-        if (constructor != null && constructor.getParameterTypes()[0] == Type.class) {
-          // A registered instance may carry configuration for a different parameterization.
-          // Register the handler class to enable automatic construction for other full types.
-          handler = null;
-        }
-      }
+    return handler == null && type instanceof ParameterizedType ? getRawTypeHandler((ParameterizedType) type, jdbcType)
+        : handler;
+  }
+
+  private TypeHandler<?> getRawTypeHandler(ParameterizedType type, JdbcType jdbcType) {
+    TypeHandler<?> handler = getTypeHandler(type.getRawType(), jdbcType);
+    if (handler == null || handler instanceof ConflictedTypeHandler) {
+      return handler;
     }
-    return handler;
+    Constructor<?> constructor = getTypeConstructor(handler.getClass());
+    // A Type-aware instance may carry configuration for a different parameterization.
+    // Register the handler class to enable automatic construction for other full types.
+    return constructor != null && constructor.getParameterTypes()[0] == Type.class ? null : handler;
   }
 
   private TypeHandler<?> getSmartHandler(Type type, JdbcType jdbcType) {
@@ -351,7 +348,7 @@ public final class TypeHandlerRegistry {
       return null;
     }
 
-    TypeHandler<?> typeHandler = getInstance(type, candidate.getDeclaringClass());
+    TypeHandler<?> typeHandler = getInstance(type, candidate.getDeclaringClass(), candidate);
     register(type, jdbcType, typeHandler);
     return typeHandler;
   }
@@ -536,20 +533,21 @@ public final class TypeHandlerRegistry {
 
   // Construct a handler (used also from Builders)
 
-  @SuppressWarnings("unchecked")
   public <T> TypeHandler<T> getInstance(Type javaType, Class<?> handlerClass) {
+    return getInstance(javaType, handlerClass, javaType == null ? null : getTypeConstructor(handlerClass));
+  }
+
+  @SuppressWarnings("unchecked")
+  private <T> TypeHandler<T> getInstance(Type javaType, Class<?> handlerClass, Constructor<?> constructor) {
     try {
-      if (javaType != null) {
-        Constructor<?> constructor = getTypeConstructor(handlerClass);
-        if (constructor != null) {
-          if (constructor.getParameterTypes()[0] == Type.class) {
-            TypeParameterResolver.requireResolved(javaType, "type handler " + handlerClass.getName());
-            return (TypeHandler<T>) constructor.newInstance(javaType);
-          }
-          if (javaType instanceof Class<?> || javaType instanceof ParameterizedType
-              || javaType instanceof GenericArrayType) {
-            return (TypeHandler<T>) constructor.newInstance(TypeParameterResolver.rawType(javaType));
-          }
+      if (javaType != null && constructor != null) {
+        if (constructor.getParameterTypes()[0] == Type.class) {
+          TypeParameterResolver.requireResolved(javaType, "type handler " + handlerClass.getName());
+          return (TypeHandler<T>) constructor.newInstance(javaType);
+        }
+        if (javaType instanceof Class<?> || javaType instanceof ParameterizedType
+            || javaType instanceof GenericArrayType) {
+          return (TypeHandler<T>) constructor.newInstance(TypeParameterResolver.rawType(javaType));
         }
       }
       try {

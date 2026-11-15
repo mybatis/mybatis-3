@@ -135,13 +135,13 @@ public class ResultMappingConstructorResolver {
       }
     }
 
-    // only rebuild (auto-type) if required (any types are unidentified)
+    // Rebuild when the constructor supplies missing or generic type information.
     final boolean autoTypeRequired = constructorResultMappings.stream().map(ResultMapping::getJavaType)
         .anyMatch(mappingType -> mappingType == null || Object.class.equals(mappingType));
     final boolean genericTypesPresent = matchingConstructorInfo.argsByIndex.stream()
         .anyMatch(arg -> !(arg.genericType instanceof Class<?>));
     final List<ResultMapping> resultMappings = autoTypeRequired || genericTypesPresent
-        ? autoTypeConstructorMappings(matchingConstructorInfo, constructorResultMappings, allMappingsHavePropertyNames)
+        ? resolveConstructorMappings(matchingConstructorInfo, constructorResultMappings, allMappingsHavePropertyNames)
         : constructorResultMappings;
 
     if (allMappingsHavePropertyNames) {
@@ -248,47 +248,43 @@ public class ResultMappingConstructorResolver {
     return matchingConstructorInfo;
   }
 
-  private List<ResultMapping> autoTypeConstructorMappings(ConstructorMetaInfo matchingConstructorInfo,
+  private List<ResultMapping> resolveConstructorMappings(ConstructorMetaInfo matchingConstructorInfo,
       List<ResultMapping> resultMappings, boolean allMappingsHavePropertyNames) {
-    final List<ResultMapping> adjustedAutoTypeResultMappings = new ArrayList<>(constructorResultMappings.size());
+    final List<ResultMapping> resolvedMappings = new ArrayList<>(constructorResultMappings.size());
     for (int i = 0; i < resultMappings.size(); i++) {
       final ResultMapping originalMapping = resultMappings.get(i);
       final ConstructorArg matchingArg = allMappingsHavePropertyNames
           ? matchingConstructorInfo.getArgByPropertyName(originalMapping.getProperty())
           : matchingConstructorInfo.getArgByOriginalIndex(i);
 
-      final TypeHandler<?> originalTypeHandler = originalMapping.getTypeHandler();
-      TypeHandler<?> typeHandler = originalTypeHandler == null || originalTypeHandler instanceof UnknownTypeHandler
-          ? null : originalTypeHandler;
-
-      if (!(matchingArg.genericType instanceof Class<?>) && needsGenericType(typeHandler)) {
-        @SuppressWarnings("unchecked")
-        Class<? extends TypeHandler<?>> handlerClass = typeHandler == null ? null
-            : (Class<? extends TypeHandler<?>>) typeHandler.getClass();
-        typeHandler = configuration.getTypeHandlerRegistry().getTypeHandler(matchingArg.genericType,
-            originalMapping.getJdbcType(), handlerClass);
-      }
-
-      // given that we selected a new java type, overwrite the currently
-      // selected type handler so it can get retrieved again from the registry
-      adjustedAutoTypeResultMappings.add(
+      TypeHandler<?> typeHandler = resolveConstructorTypeHandler(originalMapping, matchingArg.genericType);
+      resolvedMappings.add(
           new ResultMapping.Builder(originalMapping).javaType(matchingArg.getType()).typeHandler(typeHandler).build());
     }
 
-    return adjustedAutoTypeResultMappings;
+    return resolvedMappings;
   }
 
-  private boolean needsGenericType(TypeHandler<?> handler) {
-    if (handler == null) {
-      return true;
+  private TypeHandler<?> resolveConstructorTypeHandler(ResultMapping mapping, Type type) {
+    TypeHandler<?> handler = mapping.getTypeHandler();
+    if (handler instanceof UnknownTypeHandler) {
+      handler = null;
     }
-    try {
-      handler.getClass().getConstructor(Type.class);
-      return true;
-    } catch (NoSuchMethodException ignored) {
-      // Preserve configured instances of handlers that do not consume reflective types.
-      return false;
+    if (type instanceof Class<?>) {
+      return handler;
     }
+    if (handler != null) {
+      try {
+        handler.getClass().getConstructor(Type.class);
+      } catch (NoSuchMethodException ignored) {
+        // Preserve configured instances of handlers that do not consume reflective types.
+        return handler;
+      }
+    }
+    @SuppressWarnings("unchecked")
+    Class<? extends TypeHandler<?>> handlerClass = handler == null ? null
+        : (Class<? extends TypeHandler<?>>) handler.getClass();
+    return configuration.getTypeHandlerRegistry().getTypeHandler(type, mapping.getJdbcType(), handlerClass);
   }
 
   private static void sortConstructorMappings(ConstructorMetaInfo matchingConstructorInfo,

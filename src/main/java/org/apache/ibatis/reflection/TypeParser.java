@@ -17,7 +17,6 @@ package org.apache.ibatis.reflection;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.function.Function;
@@ -35,7 +34,7 @@ public final class TypeParser {
 
   public static Type parse(String description, Function<String, Class<?>> classResolver) {
     Parser parser = new Parser(description, classResolver);
-    Type type = parser.type(false);
+    Type type = parser.type();
     parser.whitespace();
     if (parser.position != description.length()) {
       throw parser.invalid();
@@ -53,46 +52,39 @@ public final class TypeParser {
       this.classResolver = classResolver;
     }
 
-    private Type type(boolean allowWildcard) {
-      Type result;
-      if (take("?")) {
-        if (!allowWildcard) {
-          throw invalid();
-        }
-        result = wildcard();
-      } else {
-        Class<?> raw = resolveClass(name());
-        result = parameterize(raw, raw.getDeclaringClass());
-        while (take("$")) {
-          raw = classResolver.apply(raw.getName() + "$" + name());
-          result = parameterize(raw, result);
-        }
+    private Type type() {
+      Class<?> raw = resolveClass(name());
+      Type result = parameterize(raw, raw.getDeclaringClass());
+      while (take("$")) {
+        raw = classResolver.apply(raw.getName() + "$" + name());
+        result = parameterize(raw, result);
       }
       while (take("[]")) {
-        if (result instanceof WildcardType) {
-          throw invalid();
-        }
         result = TypeParameterResolver.arrayType(result);
       }
       return result;
     }
 
+    private Type typeArgument() {
+      return take("?") ? wildcard() : referenceType();
+    }
+
     private Type wildcard() {
       if (keyword("extends")) {
-        return new TypeParameterResolver.WildcardTypeImpl(new Type[0], new Type[] { bound() });
+        return new TypeParameterResolver.WildcardTypeImpl(new Type[0], new Type[] { referenceType() });
       }
       if (keyword("super")) {
-        return new TypeParameterResolver.WildcardTypeImpl(new Type[] { bound() }, new Type[] { Object.class });
+        return new TypeParameterResolver.WildcardTypeImpl(new Type[] { referenceType() }, new Type[] { Object.class });
       }
       return new TypeParameterResolver.WildcardTypeImpl(new Type[0], new Type[] { Object.class });
     }
 
-    private Type bound() {
-      Type bound = type(false);
-      if (bound instanceof Class<?> && ((Class<?>) bound).isPrimitive()) {
+    private Type referenceType() {
+      Type type = type();
+      if (type instanceof Class<?> && ((Class<?>) type).isPrimitive()) {
         throw invalid();
       }
-      return bound;
+      return type;
     }
 
     private Class<?> resolveClass(String name) {
@@ -107,11 +99,7 @@ public final class TypeParser {
       }
       ArrayList<Type> arguments = new ArrayList<>();
       do {
-        Type argument = type(true);
-        if (argument instanceof Class<?> && ((Class<?>) argument).isPrimitive()) {
-          throw invalid();
-        }
-        arguments.add(argument);
+        arguments.add(typeArgument());
       } while (take(","));
       if (!take(">") || arguments.size() != raw.getTypeParameters().length) {
         throw invalid();

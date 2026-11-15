@@ -377,12 +377,12 @@ public class TypeParameterResolver {
       super();
       this.rawType = rawType;
       this.ownerType = ownerType;
-      this.actualTypeArguments = actualTypeArguments;
+      this.actualTypeArguments = actualTypeArguments.clone();
     }
 
     @Override
     public Type[] getActualTypeArguments() {
-      return actualTypeArguments;
+      return actualTypeArguments.clone();
     }
 
     @Override
@@ -441,18 +441,18 @@ public class TypeParameterResolver {
 
     WildcardTypeImpl(Type[] lowerBounds, Type[] upperBounds) {
       super();
-      this.lowerBounds = lowerBounds;
-      this.upperBounds = upperBounds;
+      this.lowerBounds = lowerBounds.clone();
+      this.upperBounds = upperBounds.clone();
     }
 
     @Override
     public Type[] getLowerBounds() {
-      return lowerBounds;
+      return lowerBounds.clone();
     }
 
     @Override
     public Type[] getUpperBounds() {
-      return upperBounds;
+      return upperBounds.clone();
     }
 
     @Override
