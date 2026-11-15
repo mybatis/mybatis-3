@@ -121,7 +121,7 @@ public class DefaultParameterHandler implements ParameterHandler {
             } else {
               paramMetaObject = getParamMetaObject();
               value = paramMetaObject.getValue(propertyName);
-              if (typeHandler == null && value != null) {
+              if (typeHandler == null) {
                 if (paramNameResolver != null && ParamMap.class.equals(parameterClass)) {
                   Type actualParamType = paramNameResolver.getType(propertyName);
                   if (actualParamType instanceof Class) {
