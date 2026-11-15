@@ -17,12 +17,16 @@ package org.apache.ibatis.type;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.InputStream;
 import java.sql.Blob;
+import java.sql.SQLException;
 
+import org.apache.ibatis.executor.result.ResultMapException;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
@@ -48,6 +52,7 @@ class BlobTypeHandlerTest extends BaseTypeHandlerTest {
     when(blob.length()).thenReturn(3L);
     when(blob.getBytes(1, 3)).thenReturn(new byte[] { 1, 2, 3 });
     assertArrayEquals(new byte[] { 1, 2, 3 }, TYPE_HANDLER.getResult(rs, "column"));
+    verify(blob).free();
   }
 
   @Override
@@ -64,6 +69,7 @@ class BlobTypeHandlerTest extends BaseTypeHandlerTest {
     when(blob.length()).thenReturn(3L);
     when(blob.getBytes(1, 3)).thenReturn(new byte[] { 1, 2, 3 });
     assertArrayEquals(new byte[] { 1, 2, 3 }, TYPE_HANDLER.getResult(rs, 1));
+    verify(blob).free();
   }
 
   @Override
@@ -80,6 +86,7 @@ class BlobTypeHandlerTest extends BaseTypeHandlerTest {
     when(blob.length()).thenReturn(3L);
     when(blob.getBytes(1, 3)).thenReturn(new byte[] { 1, 2, 3 });
     assertArrayEquals(new byte[] { 1, 2, 3 }, TYPE_HANDLER.getResult(cs, 1));
+    verify(blob).free();
   }
 
   @Override
@@ -87,6 +94,17 @@ class BlobTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultNullFromCallableStatement() throws Exception {
     when(cs.getBlob(1)).thenReturn(null);
     assertNull(TYPE_HANDLER.getResult(cs, 1));
+  }
+
+  @Test
+  public void shouldFreeBlobWhenCopyFails() throws Exception {
+    SQLException copyFailure = new SQLException("copy failed");
+    when(rs.getBlob("column")).thenReturn(blob);
+    when(blob.length()).thenReturn(3L);
+    when(blob.getBytes(1, 3)).thenThrow(copyFailure);
+    ResultMapException e = assertThrows(ResultMapException.class, () -> TYPE_HANDLER.getResult(rs, "column"));
+    assertSame(copyFailure, e.getCause());
+    verify(blob).free();
   }
 
 }
