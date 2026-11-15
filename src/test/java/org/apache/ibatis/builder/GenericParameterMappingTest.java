@@ -27,11 +27,18 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.mapping.BoundSql;
+import org.apache.ibatis.mapping.ParameterMapping;
+import org.apache.ibatis.mapping.ResultFlag;
+import org.apache.ibatis.mapping.ResultMapping;
+import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.reflection.Reflector;
 import org.apache.ibatis.scripting.defaults.RawSqlSource;
 import org.apache.ibatis.session.Configuration;
@@ -260,6 +267,94 @@ class GenericParameterMappingTest {
               .getBoundSql(null);
       assertEquals(type, ((GenericHandler) bound.getParameterMappings().get(0).getTypeHandler()).type);
     });
+  }
+
+  @Test
+  void preservesErasureForClassHandlersOnUnboundParametersAndProperties() throws Exception {
+    Configuration configuration = new Configuration();
+    configuration.getTypeAliasRegistry().registerAlias("classHandler", ClassHandler.class);
+    ParamNameResolver names = new ParamNameResolver(configuration, NumberMapper.class.getMethod("save", Number.class),
+        NumberMapper.class);
+    List<ParameterMapping> mappings = new ArrayList<>();
+    new ParameterMappingTokenHandler(mappings, configuration, ParamMap.class, Map.of(), names)
+        .handleToken("value,typeHandler=classHandler");
+    assertEquals(Number.class, ((ClassHandler) mappings.get(0).getTypeHandler()).type);
+    ResultMapping result = new MapperBuilderAssistant(configuration, "bounded").buildResultMapping(NumberBean.class,
+        "value", "value", null, JdbcType.NUMERIC, null, null, null, null, ClassHandler.class, List.of(), null, null,
+        false);
+    assertEquals(Number.class, ((ClassHandler) result.getTypeHandler()).type);
+  }
+
+  @Test
+  void explicitSubclassMappingsReuseInheritedInstancesRegardlessOfLookupOrder() {
+    for (boolean implicitFirst : List.of(false, true)) {
+      TypeHandlerRegistry registry = new TypeHandlerRegistry();
+      ClassHandler configured = new ClassHandler(Parent.class);
+      registry.register((Type) Parent.class, JdbcType.VARCHAR, configured);
+      if (implicitFirst) {
+        assertSame(configured, registry.getTypeHandler(Child.class, JdbcType.VARCHAR));
+      }
+      assertSame(configured, registry.getTypeHandler(Child.class, JdbcType.VARCHAR, ClassHandler.class));
+      assertSame(configured, registry.getTypeHandler(Child.class, JdbcType.VARCHAR));
+      assertSame(configured, registry.getTypeHandler(Child.class, JdbcType.VARCHAR, ClassHandler.class));
+    }
+  }
+
+  @Test
+  void constructorMappingsPreserveSuppliedTypeAwareInstances() {
+    Configuration configuration = new Configuration();
+    GenericHandler configured = new GenericHandler(new TypeReference<List<String>>() {
+    }.getRawType());
+    List<ResultMapping> originals = List.of(
+        new ResultMapping.Builder(configuration, "values", "payload", List.class).typeHandler(configured)
+            .flags(List.of(ResultFlag.CONSTRUCTOR)).build(),
+        new ResultMapping.Builder(configuration, "values", "payload", configured).javaType(List.class)
+            .flags(List.of(ResultFlag.CONSTRUCTOR)).build());
+    for (ResultMapping original : originals) {
+      ResultMapping copied = new ResultMapping.Builder(original).build();
+      for (ResultMapping mapping : List.of(original, copied)) {
+        ResultMapping resolved = new ResultMappingConstructorResolver(configuration, new ArrayList<>(List.of(mapping)),
+            ConstructorRow.class, "row").resolveWithConstructor().get(0);
+        assertSame(configured, resolved.getTypeHandler());
+      }
+    }
+  }
+
+  @Test
+  void copiedFrameworkMappingsStillResolveConstructorTypeArguments() {
+    Configuration configuration = new Configuration();
+    ResultMapping original = new MapperBuilderAssistant(configuration, "constructor").buildResultMapping(
+        ConstructorRow.class, "values", "payload", List.class, JdbcType.VARCHAR, null, null, null, null,
+        GenericHandler.class, List.of(ResultFlag.CONSTRUCTOR), null, null, false);
+    ResultMapping copied = new ResultMapping.Builder(original).build();
+    for (ResultMapping mapping : List.of(original, copied)) {
+      ResultMapping resolved = new ResultMappingConstructorResolver(configuration, new ArrayList<>(List.of(mapping)),
+          ConstructorRow.class, "row").resolveWithConstructor().get(0);
+      assertEquals(new TypeReference<List<String>>() {
+      }.getRawType(), ((GenericHandler) resolved.getTypeHandler()).type);
+    }
+    GenericHandler supplied = new GenericHandler(new TypeReference<List<String>>() {
+    }.getRawType());
+    ResultMapping overridden = new ResultMapping.Builder(copied).typeHandler(supplied).build();
+    assertSame(supplied, new ResultMappingConstructorResolver(configuration, new ArrayList<>(List.of(overridden)),
+        ConstructorRow.class, "row").resolveWithConstructor().get(0).getTypeHandler());
+  }
+
+  public interface NumberMapper {
+    <T extends Number> void save(@Param("value") T value);
+  }
+
+  public static class NumberBean<T extends Number> {
+    public T value;
+  }
+
+  public record ConstructorRow(List<String> values) {
+  }
+
+  public static class Parent {
+  }
+
+  public static class Child extends Parent {
   }
 
   public static class Root {

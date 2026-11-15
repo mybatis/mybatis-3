@@ -356,9 +356,9 @@ public class MapperBuilderAssistant extends BaseBuilder {
     return new ResultMapping.Builder(configuration, property, column, setterType.getValue()).jdbcType(jdbcType)
         .nestedQueryId(applyCurrentNamespace(nestedSelect, true))
         .nestedResultMapId(applyCurrentNamespace(nestedResultMap, true)).resultSet(resultSet)
-        .typeHandler(typeHandlerInstance).flags(flags == null ? new ArrayList<>() : flags).composites(composites)
-        .notNullColumns(parseMultipleColumnNames(notNullColumn)).columnPrefix(columnPrefix).foreignColumn(foreignColumn)
-        .lazy(lazy).build();
+        .resolvedTypeHandler(typeHandlerInstance).flags(flags == null ? new ArrayList<>() : flags)
+        .composites(composites).notNullColumns(parseMultipleColumnNames(notNullColumn)).columnPrefix(columnPrefix)
+        .foreignColumn(foreignColumn).lazy(lazy).build();
   }
 
   /**

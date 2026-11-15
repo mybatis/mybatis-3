@@ -237,7 +237,7 @@ public final class TypeHandlerRegistry {
     if (typeHandlerClass == null) {
       return getTypeHandler(type, jdbcType);
     }
-    TypeHandler<?> registered = findHandler(type == null ? null : typeHandlerMap.get(type), jdbcType);
+    TypeHandler<?> registered = findHandler(type == null ? null : getJdbcHandlerMap(type), jdbcType);
     if (registered != null && registered.getClass().equals(typeHandlerClass)) {
       return registered;
     }
@@ -545,10 +545,7 @@ public final class TypeHandlerRegistry {
           TypeParameterResolver.requireResolved(javaType, "type handler " + handlerClass.getName());
           return (TypeHandler<T>) constructor.newInstance(javaType);
         }
-        if (javaType instanceof Class<?> || javaType instanceof ParameterizedType
-            || javaType instanceof GenericArrayType) {
-          return (TypeHandler<T>) constructor.newInstance(TypeParameterResolver.rawType(javaType));
-        }
+        return (TypeHandler<T>) constructor.newInstance(TypeParameterResolver.rawType(javaType));
       }
       try {
         return (TypeHandler<T>) handlerClass.getConstructor().newInstance();

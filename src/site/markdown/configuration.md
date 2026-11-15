@@ -401,6 +401,9 @@ multiple parameterizations. Each construction receives the full requested type. 
 instance registered for `List<String>` is not reused for `List<Integer>`; exact registrations retain
 their configured instances. Explicit handler mappings take precedence over automatic selection,
 and constructed explicit handlers are cached by the complete Java type and handler class.
+Instances supplied directly through `ResultMapping.Builder` are retained, including for constructor
+mappings. Class-based handlers continue to receive the erased bound of type variables; only
+Type-aware constructors require those variables to be fully resolved.
 
 Java array expressions such as `java.lang.String[]` are accepted alongside existing type aliases
 and JVM array names. Invalid wildcard bounds and wildcard array components are rejected during parsing.

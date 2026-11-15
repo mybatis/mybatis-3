@@ -258,8 +258,11 @@ public class ResultMappingConstructorResolver {
           : matchingConstructorInfo.getArgByOriginalIndex(i);
 
       TypeHandler<?> typeHandler = resolveConstructorTypeHandler(originalMapping, matchingArg.genericType);
-      resolvedMappings.add(
-          new ResultMapping.Builder(originalMapping).javaType(matchingArg.getType()).typeHandler(typeHandler).build());
+      ResultMapping.Builder builder = new ResultMapping.Builder(originalMapping).javaType(matchingArg.getType());
+      if (typeHandler != originalMapping.getTypeHandler()) {
+        builder.resolvedTypeHandler(typeHandler);
+      }
+      resolvedMappings.add(builder.build());
     }
 
     return resolvedMappings;
@@ -270,7 +273,7 @@ public class ResultMappingConstructorResolver {
     if (handler instanceof UnknownTypeHandler) {
       handler = null;
     }
-    if (type instanceof Class<?>) {
+    if (type instanceof Class<?> || handler != null && !mapping.isTypeHandlerResolved()) {
       return handler;
     }
     if (handler != null) {
