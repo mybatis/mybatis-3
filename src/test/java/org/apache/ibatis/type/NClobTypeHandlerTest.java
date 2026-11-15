@@ -17,12 +17,16 @@ package org.apache.ibatis.type;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.Reader;
 import java.sql.NClob;
+import java.sql.SQLException;
 
+import org.apache.ibatis.executor.result.ResultMapException;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
@@ -48,6 +52,7 @@ class NClobTypeHandlerTest extends BaseTypeHandlerTest {
     when(nclob.length()).thenReturn(3L);
     when(nclob.getSubString(1, 3)).thenReturn("Hello");
     assertEquals("Hello", TYPE_HANDLER.getResult(rs, "column"));
+    verify(nclob).free();
   }
 
   @Override
@@ -64,6 +69,7 @@ class NClobTypeHandlerTest extends BaseTypeHandlerTest {
     when(nclob.length()).thenReturn(3L);
     when(nclob.getSubString(1, 3)).thenReturn("Hello");
     assertEquals("Hello", TYPE_HANDLER.getResult(rs, 1));
+    verify(nclob).free();
   }
 
   @Override
@@ -80,6 +86,7 @@ class NClobTypeHandlerTest extends BaseTypeHandlerTest {
     when(nclob.length()).thenReturn(3L);
     when(nclob.getSubString(1, 3)).thenReturn("Hello");
     assertEquals("Hello", TYPE_HANDLER.getResult(cs, 1));
+    verify(nclob).free();
   }
 
   @Override
@@ -87,6 +94,17 @@ class NClobTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultNullFromCallableStatement() throws Exception {
     when(cs.getNClob(1)).thenReturn(null);
     assertNull(TYPE_HANDLER.getResult(cs, 1));
+  }
+
+  @Test
+  public void shouldFreeNClobWhenCopyFails() throws Exception {
+    SQLException copyFailure = new SQLException("copy failed");
+    when(rs.getNClob("column")).thenReturn(nclob);
+    when(nclob.length()).thenReturn(3L);
+    when(nclob.getSubString(1, 3)).thenThrow(copyFailure);
+    ResultMapException e = assertThrows(ResultMapException.class, () -> TYPE_HANDLER.getResult(rs, "column"));
+    assertSame(copyFailure, e.getCause());
+    verify(nclob).free();
   }
 
 }
