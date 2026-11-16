@@ -46,6 +46,7 @@ import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
+import org.xml.sax.InputSource;
 
 /**
  * @author Clinton Begin
@@ -69,8 +70,7 @@ public class XMLMapperBuilder extends BaseBuilder {
   @Deprecated
   public XMLMapperBuilder(Reader reader, Configuration configuration, String resource,
       Map<String, XNode> sqlFragments) {
-    this(new XPathParser(reader, true, configuration.getVariables(), new XMLMapperEntityResolver()), configuration,
-        resource, sqlFragments);
+    this(new InputSource(reader), configuration, resource, sqlFragments);
   }
 
   public XMLMapperBuilder(InputStream inputStream, Configuration configuration, String resource,
@@ -87,15 +87,16 @@ public class XMLMapperBuilder extends BaseBuilder {
 
   public XMLMapperBuilder(InputStream inputStream, Configuration configuration, String resource,
       Map<String, XNode> sqlFragments) {
-    this(new XPathParser(inputStream, true, configuration.getVariables(), new XMLMapperEntityResolver()), configuration,
-        resource, sqlFragments);
+    this(new InputSource(inputStream), configuration, resource, sqlFragments);
   }
 
-  private XMLMapperBuilder(XPathParser parser, Configuration configuration, String resource,
+  private XMLMapperBuilder(InputSource inputSource, Configuration configuration, String resource,
       Map<String, XNode> sqlFragments) {
     super(configuration);
     this.builderAssistant = new MapperBuilderAssistant(configuration, resource);
-    this.parser = parser;
+    // Resource descriptions are not necessarily URIs; do not change the base URI used to resolve entities.
+    inputSource.setPublicId(resource);
+    this.parser = new XPathParser(inputSource, true, configuration.getVariables(), new XMLMapperEntityResolver());
     this.sqlFragments = sqlFragments;
     this.resource = resource;
   }
