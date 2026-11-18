@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.transaction.jdbc;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -27,8 +28,26 @@ import javax.sql.DataSource;
 import org.apache.ibatis.session.TransactionIsolationLevel;
 import org.apache.ibatis.transaction.Transaction;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class JdbcTransactionFactoryTest {
+
+  @ParameterizedTest
+  @CsvSource({ "true, false, false", "false, false, true", "true, true, true", "false, true, true" })
+  void skipSetAutoCommitOnCloseWithExistingConnection(boolean skipSetAutoCommitOnClose, boolean initialAutoCommit,
+      boolean expectedAutoCommit) throws Exception {
+    TestConnection connection = new TestConnection(initialAutoCommit);
+    JdbcTransactionFactory factory = new JdbcTransactionFactory();
+    Properties properties = new Properties();
+    properties.setProperty("skipSetAutoCommitOnClose", Boolean.toString(skipSetAutoCommitOnClose));
+    factory.setProperties(properties);
+
+    Transaction transaction = factory.newTransaction(connection);
+    transaction.close();
+
+    assertEquals(expectedAutoCommit, connection.getAutoCommit());
+  }
 
   @Test
   void nullProperties() throws Exception {
