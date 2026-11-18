@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -67,7 +67,14 @@ public class BlockingCache implements Cache {
   @Override
   public Object getObject(Object key) {
     acquireLock(key);
-    Object value = delegate.getObject(key);
+    Object value;
+    try {
+      value = delegate.getObject(key);
+    } catch (RuntimeException | Error e) {
+      // the delegate read failed, so nothing will fill the entry: do not keep the lock held and hide the failure
+      releaseLock(key);
+      throw e;
+    }
     if (value != null) {
       releaseLock(key);
     }
