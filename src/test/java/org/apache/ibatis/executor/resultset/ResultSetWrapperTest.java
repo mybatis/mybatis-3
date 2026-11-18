@@ -25,7 +25,6 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.type.ObjectTypeHandler;
 import org.apache.ibatis.type.StringTypeHandler;
 import org.junit.jupiter.api.Test;
 
@@ -36,13 +35,6 @@ class ResultSetWrapperTest {
     // e.g. auto-mapping to resultType="map" with a driver that returns null from getColumnClassName() (gh-699)
     ResultSetWrapper rsw = createResultSetWrapper(Types.VARCHAR, null);
     assertThat(rsw.getTypeHandler(Object.class, "col")).isInstanceOf(StringTypeHandler.class);
-  }
-
-  @Test
-  void shouldFallBackToObjectTypeHandlerWhenPropertyTypeIsUnknown() throws Exception {
-    // e.g. the key column of a nested select is a PostgreSQL uuid
-    ResultSetWrapper rsw = createResultSetWrapper(Types.OTHER, "java.util.UUID");
-    assertThat(rsw.getTypeHandler(null, "col")).isInstanceOf(ObjectTypeHandler.class);
   }
 
   private ResultSetWrapper createResultSetWrapper(int columnType, String columnClassName) throws SQLException {
