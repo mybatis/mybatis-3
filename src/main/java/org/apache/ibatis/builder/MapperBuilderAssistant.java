@@ -340,6 +340,9 @@ public class MapperBuilderAssistant extends BaseBuilder {
       boolean lazy) {
     Entry<Type, Class<?>> setterType = resolveSetterType(resultType, property, javaType);
     TypeHandler<?> typeHandlerInstance = resolveTypeHandler(setterType.getKey(), jdbcType, typeHandler);
+    if (typeHandlerInstance == null && javaType != null && jdbcType == null && typeHandler == null) {
+      typeHandlerInstance = configuration.getTypeHandlerRegistry().getTypeHandler(javaType);
+    }
     List<ResultMapping> composites;
     if ((nestedSelect == null || nestedSelect.isEmpty()) && (foreignColumn == null || foreignColumn.isEmpty())) {
       composites = List.of();
