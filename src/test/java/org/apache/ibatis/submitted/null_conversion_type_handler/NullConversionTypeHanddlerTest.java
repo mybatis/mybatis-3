@@ -57,6 +57,22 @@ class NullConversionTypeHanddlerTest {
   }
 
   @Test
+  void shouldConvertNullOnDynamicUpdate() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      WorkerMapper mapper = sqlSession.getMapper(WorkerMapper.class);
+      Worker worker = new Worker();
+      worker.setId(3);
+      worker.setName("Worker3");
+      worker.setBloodType(BloodType.A);
+      mapper.insert(worker);
+      worker.setBloodType(null);
+      mapper.updateBloodTypeDynamic(worker);
+      // verify
+      assertEquals(99, mapper.selectBloodTypeValue(3));
+    }
+  }
+
+  @Test
   void shouldConvertNullOnSelect() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       WorkerMapper mapper = sqlSession.getMapper(WorkerMapper.class);
