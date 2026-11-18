@@ -107,7 +107,8 @@ public class ResultSetWrapper {
       }
 
       Class<?> javaType = resolveClass(classNames.get(index));
-      if (!(k instanceof Class && ((Class<?>) k).isAssignableFrom(javaType))) {
+      // continue to registry to fetch handler when jdbcType = other
+      if (k != null && !(k instanceof Class && ((Class<?>) k).isAssignableFrom(javaType))) {
         // Clearly incompatible
         return null;
       }
