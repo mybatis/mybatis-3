@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,8 +15,11 @@
  */
 package org.apache.ibatis.reflection;
 
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.lang.reflect.WildcardType;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -42,8 +45,8 @@ public class MetaClass {
   }
 
   public MetaClass metaClassForProperty(String name) {
-    Class<?> propType = reflector.getGetterType(name);
-    return MetaClass.forClass(propType, reflectorFactory);
+    Entry<Type, Class<?>> propertyType = reflector.getGenericGetterType(name);
+    return metaClassForType(propertyType);
   }
 
   public String findProperty(String name) {
@@ -103,29 +106,44 @@ public class MetaClass {
   }
 
   private MetaClass metaClassForProperty(PropertyTokenizer prop) {
-    Class<?> propType = getGetterType(prop).getValue();
-    return MetaClass.forClass(propType, reflectorFactory);
+    return metaClassForType(getGetterType(prop));
+  }
+
+  private MetaClass metaClassForType(Entry<Type, Class<?>> propertyType) {
+    Type type = navigableType(propertyType.getKey());
+    return MetaClass.forClass(type instanceof ParameterizedType ? type : propertyType.getValue(), reflectorFactory);
   }
 
   private Entry<Type, Class<?>> getGetterType(PropertyTokenizer prop) {
-    // Resolve the type inside a Collection Object
-    // https://github.com/mybatis/old-google-code-issues/issues/506
     Entry<Type, Class<?>> pair = reflector.getGenericGetterType(prop.getName());
-    if (prop.getIndex() != null && Collection.class.isAssignableFrom(pair.getValue())) {
-      Type returnType = pair.getKey();
-      if (returnType instanceof ParameterizedType) {
-        Type[] actualTypeArguments = ((ParameterizedType) returnType).getActualTypeArguments();
-        if (actualTypeArguments != null && actualTypeArguments.length == 1) {
-          returnType = actualTypeArguments[0];
-          if (returnType instanceof Class) {
-            return Map.entry(returnType, (Class<?>) returnType);
-          } else if (returnType instanceof ParameterizedType) {
-            return Map.entry(returnType, (Class<?>) ((ParameterizedType) returnType).getRawType());
-          }
-        }
-      }
+    if (prop.getIndex() == null) {
+      return pair;
     }
-    return pair;
+    Type type = navigableType(pair.getKey());
+    Type element;
+    if (type instanceof GenericArrayType) {
+      element = ((GenericArrayType) type).getGenericComponentType();
+    } else if (type instanceof Class<?> && ((Class<?>) type).isArray()) {
+      element = ((Class<?>) type).getComponentType();
+    } else if (type instanceof ParameterizedType && Collection.class.isAssignableFrom(pair.getValue())) {
+      element = TypeParameterResolver.resolveMemberType(Collection.class.getTypeParameters()[0], type,
+          Collection.class);
+    } else if (type instanceof ParameterizedType && Map.class.isAssignableFrom(pair.getValue())) {
+      element = TypeParameterResolver.resolveMemberType(Map.class.getTypeParameters()[1], type, Map.class);
+    } else {
+      return pair;
+    }
+    return Map.entry(element, TypeParameterResolver.rawType(navigableType(element)));
+  }
+
+  private Type navigableType(Type type) {
+    if (type instanceof WildcardType) {
+      return navigableType(((WildcardType) type).getUpperBounds()[0]);
+    }
+    if (type instanceof TypeVariable<?>) {
+      return navigableType(((TypeVariable<?>) type).getBounds()[0]);
+    }
+    return type;
   }
 
   public boolean hasSetter(String name) {

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,10 @@
  */
 package org.apache.ibatis.builder;
 
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.lang.reflect.WildcardType;
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.Map;
@@ -28,9 +31,12 @@ import org.apache.ibatis.parsing.TokenHandler;
 import org.apache.ibatis.reflection.MetaClass;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.ParamNameResolver;
+import org.apache.ibatis.reflection.TypeParameterResolver;
+import org.apache.ibatis.reflection.TypeParser;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.TypeException;
 import org.apache.ibatis.type.TypeHandler;
 
 public class ParameterMappingTokenHandler extends BaseBuilder implements TokenHandler {
@@ -98,7 +104,12 @@ public class ParameterMappingTokenHandler extends BaseBuilder implements TokenHa
       genericType = javaType;
     }
     if (typeHandler == null || typeHandlerAlias != null) {
-      typeHandler = resolveTypeHandler(genericType, jdbcType, typeHandlerAlias);
+      try {
+        typeHandler = resolveTypeHandler(genericType, jdbcType, typeHandlerAlias);
+      } catch (TypeException exception) {
+        throw new BuilderException("Could not resolve type handler for parameter '" + property + "' of type '"
+            + genericType.getTypeName() + "'", exception);
+      }
     }
     builder.typeHandler(typeHandler);
 
@@ -139,9 +150,11 @@ public class ParameterMappingTokenHandler extends BaseBuilder implements TokenHa
 
   private Class<?> figureOutJavaType(Map<String, String> propertiesMap, String property,
       PropertyTokenizer propertyTokenizer, JdbcType jdbcType) {
-    Class<?> javaType = resolveClass(propertiesMap.remove("javaType"));
-    if (javaType != null) {
-      return javaType;
+    String description = propertiesMap.remove("javaType");
+    if (description != null) {
+      genericType = description.indexOf('<') < 0 && !description.endsWith("[]") ? resolveClass(description)
+          : TypeParser.parse(description, this::resolveClass);
+      return TypeParameterResolver.rawType(genericType);
     }
     if (metaParameters.hasGetter(propertyTokenizer.getName())) { // issue #448 get type from additional params
       return metaParameters.getGetterType(property);
@@ -155,11 +168,10 @@ public class ParameterMappingTokenHandler extends BaseBuilder implements TokenHa
     }
     if (paramNameResolver != null && ParamMap.class.equals(parameterType)) {
       Type actualParamType = paramNameResolver.getType(property);
-      if (actualParamType instanceof Type) {
-        MetaClass metaClass = MetaClass.forClass(actualParamType, configuration.getReflectorFactory());
-        String multiParamsPropertyName;
+      if (actualParamType != null) {
         if (propertyTokenizer.hasNext()) {
-          multiParamsPropertyName = propertyTokenizer.getChildren();
+          MetaClass metaClass = MetaClass.forClass(navigableType(actualParamType), configuration.getReflectorFactory());
+          String multiParamsPropertyName = propertyTokenizer.getChildren();
           if (metaClass.hasGetter(multiParamsPropertyName)) {
             Entry<Type, Class<?>> getterType = metaClass.getGenericGetterType(multiParamsPropertyName);
             genericType = getterType.getKey();
@@ -181,6 +193,16 @@ public class ParameterMappingTokenHandler extends BaseBuilder implements TokenHa
       return getterType.getValue();
     }
     return Object.class;
+  }
+
+  private Type navigableType(Type type) {
+    if (type instanceof TypeVariable<?>) {
+      return navigableType(((TypeVariable<?>) type).getBounds()[0]);
+    }
+    if (type instanceof WildcardType) {
+      return navigableType(((WildcardType) type).getUpperBounds()[0]);
+    }
+    return type instanceof GenericArrayType ? TypeParameterResolver.rawType(type) : type;
   }
 
   private Map<String, String> parseParameterMapping(String content) {

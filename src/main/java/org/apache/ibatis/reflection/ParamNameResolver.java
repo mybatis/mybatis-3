@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -72,7 +72,11 @@ public class ParamNameResolver {
     final Class<?>[] paramTypes = method.getParameterTypes();
     final Annotation[][] paramAnnotations = method.getParameterAnnotations();
     final SortedMap<Integer, String> map = new TreeMap<>();
-    Type[] actualParamTypes = TypeParameterResolver.resolveParamTypes(method, mapperClass);
+    Type[] actualParamTypes = method.getGenericParameterTypes();
+    for (int index = 0; index < actualParamTypes.length; index++) {
+      actualParamTypes[index] = TypeParameterResolver.resolveMemberType(actualParamTypes[index], mapperClass,
+          method.getDeclaringClass());
+    }
     int paramCount = paramAnnotations.length;
     // get names from @Param annotations
     for (int paramIndex = 0; paramIndex < paramCount; paramIndex++) {
@@ -108,11 +112,12 @@ public class ParamNameResolver {
       useParamMap = true;
     }
     if (names.size() == 1) {
-      Type soleParamType = actualParamTypes[0];
+      int soleParamIndex = names.firstKey();
+      Type soleParamType = actualParamTypes[soleParamIndex];
       if (soleParamType instanceof GenericArrayType) {
         typeMap.put("array", soleParamType);
       } else {
-        Class<?> soleParamClass = null;
+        Class<?> soleParamClass = paramTypes[soleParamIndex];
         if (soleParamType instanceof ParameterizedType) {
           soleParamClass = (Class<?>) ((ParameterizedType) soleParamType).getRawType();
         } else if (soleParamType instanceof Class) {
@@ -200,6 +205,8 @@ public class ParamNameResolver {
       if (type instanceof ParameterizedType) {
         Type[] typeArgs = ((ParameterizedType) type).getActualTypeArguments();
         return typeArgs[0];
+      } else if (type instanceof GenericArrayType) {
+        return ((GenericArrayType) type).getGenericComponentType();
       } else if (type instanceof Class && ((Class<?>) type).isArray()) {
         return ((Class<?>) type).getComponentType();
       }

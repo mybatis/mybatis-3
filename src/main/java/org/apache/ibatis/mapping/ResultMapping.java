@@ -34,6 +34,7 @@ public class ResultMapping {
   private Class<?> javaType;
   private JdbcType jdbcType;
   private TypeHandler<?> typeHandler;
+  private boolean typeHandlerResolved;
   private String nestedResultMapId;
   private String nestedQueryId;
   private Set<String> notNullColumns;
@@ -53,7 +54,7 @@ public class ResultMapping {
     public Builder(Configuration configuration, String property, String column, TypeHandler<?> typeHandler) {
       this(configuration, property);
       resultMapping.column = column;
-      resultMapping.typeHandler = typeHandler;
+      setTypeHandler(typeHandler, false);
     }
 
     public Builder(Configuration configuration, String property, String column, Class<?> javaType) {
@@ -80,6 +81,7 @@ public class ResultMapping {
       resultMapping.javaType = otherMapping.javaType;
       resultMapping.jdbcType = otherMapping.jdbcType;
       resultMapping.typeHandler = otherMapping.typeHandler;
+      resultMapping.typeHandlerResolved = otherMapping.typeHandlerResolved;
       resultMapping.nestedResultMapId = otherMapping.nestedResultMapId;
       resultMapping.nestedQueryId = otherMapping.nestedQueryId;
       resultMapping.notNullColumns = otherMapping.notNullColumns;
@@ -135,7 +137,20 @@ public class ResultMapping {
     }
 
     public Builder typeHandler(TypeHandler<?> typeHandler) {
+      return setTypeHandler(typeHandler, false);
+    }
+
+    /**
+     * Sets a handler selected from mapping type information. Unlike a supplied instance, this handler may be
+     * re-resolved when the constructor's complete generic type becomes available.
+     */
+    public Builder resolvedTypeHandler(TypeHandler<?> typeHandler) {
+      return setTypeHandler(typeHandler, true);
+    }
+
+    private Builder setTypeHandler(TypeHandler<?> typeHandler, boolean resolved) {
       resultMapping.typeHandler = typeHandler;
+      resultMapping.typeHandlerResolved = resolved;
       return this;
     }
 
@@ -208,6 +223,11 @@ public class ResultMapping {
 
   public TypeHandler<?> getTypeHandler() {
     return typeHandler;
+  }
+
+  /** Returns whether the handler was resolved from type information rather than supplied as an instance. */
+  public boolean isTypeHandlerResolved() {
+    return typeHandlerResolved;
   }
 
   public String getNestedResultMapId() {

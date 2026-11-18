@@ -151,7 +151,7 @@ public class Reflector {
         name, method.getDeclaringClass().getName())) : new MethodInvoker(method);
     getMethods.put(name, invoker);
     Type returnType = TypeParameterResolver.resolveReturnType(method, type);
-    getTypes.put(name, Map.entry(returnType, typeToClass(returnType)));
+    getTypes.put(name, propertyType(method.getGenericReturnType(), method.getDeclaringClass(), returnType));
   }
 
   private void addSetMethods(Method[] methods) {
@@ -211,7 +211,8 @@ public class Reflector {
             setter2.getDeclaringClass().getName(), paramType1.getName(), paramType2.getName()));
     setMethods.put(property, invoker);
     Type[] paramTypes = TypeParameterResolver.resolveParamTypes(setter1, type);
-    setTypes.put(property, Map.entry(paramTypes[0], typeToClass(paramTypes[0])));
+    setTypes.put(property,
+        propertyType(setter1.getGenericParameterTypes()[0], setter1.getDeclaringClass(), paramTypes[0]));
     return null;
   }
 
@@ -219,7 +220,13 @@ public class Reflector {
     MethodInvoker invoker = new MethodInvoker(method);
     setMethods.put(name, invoker);
     Type[] paramTypes = TypeParameterResolver.resolveParamTypes(method, type);
-    setTypes.put(name, Map.entry(paramTypes[0], typeToClass(paramTypes[0])));
+    setTypes.put(name, propertyType(method.getGenericParameterTypes()[0], method.getDeclaringClass(), paramTypes[0]));
+  }
+
+  private Entry<Type, Class<?>> propertyType(Type declaration, Class<?> declaringClass, Type legacyType) {
+    // Retain unbound variables for Type-aware handlers, without changing legacy property/overload selection.
+    return Map.entry(TypeParameterResolver.resolveMemberType(declaration, type, declaringClass),
+        typeToClass(legacyType));
   }
 
   private Class<?> typeToClass(Type src) {
@@ -264,7 +271,7 @@ public class Reflector {
     if (isValidPropertyName(field.getName())) {
       setMethods.put(field.getName(), new SetFieldInvoker(field));
       Type fieldType = TypeParameterResolver.resolveFieldType(field, type);
-      setTypes.put(field.getName(), Map.entry(fieldType, typeToClass(fieldType)));
+      setTypes.put(field.getName(), propertyType(field.getGenericType(), field.getDeclaringClass(), fieldType));
     }
   }
 
@@ -272,7 +279,7 @@ public class Reflector {
     if (isValidPropertyName(field.getName())) {
       getMethods.put(field.getName(), new GetFieldInvoker(field));
       Type fieldType = TypeParameterResolver.resolveFieldType(field, type);
-      getTypes.put(field.getName(), Map.entry(fieldType, typeToClass(fieldType)));
+      getTypes.put(field.getName(), propertyType(field.getGenericType(), field.getDeclaringClass(), fieldType));
     }
   }
 
