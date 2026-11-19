@@ -107,8 +107,7 @@ public class ResultSetWrapper {
       }
 
       Class<?> javaType = resolveClass(classNames.get(index));
-      if (!Object.class.equals(k)
-          && !(k instanceof Class && javaType != null && ((Class<?>) k).isAssignableFrom(javaType))) {
+      if (javaType != null && !(k instanceof Class && ((Class<?>) k).isAssignableFrom(javaType))) {
         // Clearly incompatible
         return null;
       }
