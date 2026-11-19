@@ -16,11 +16,14 @@
 package org.apache.ibatis.parsing;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.io.StringReader;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
@@ -32,9 +35,34 @@ import org.apache.ibatis.io.Resources;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXParseException;
 
 class XPathParserTest {
   private final String resource = "nodelet_test.xml";
+
+  @Test
+  void constructorWithInputSourceValidationVariablesEntityResolver() throws IOException {
+    try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
+      InputSource inputSource = new InputSource(inputStream);
+      inputSource.setPublicId(resource);
+      testEvalMethod(new XPathParser(inputSource, false, null, null));
+    }
+  }
+
+  @Test
+  void shouldPreserveInputSourceIdentifiersOnParseError() {
+    InputSource inputSource = new InputSource(new StringReader("<broken>"));
+    inputSource.setPublicId("broken.xml");
+    inputSource.setSystemId("file:/mappers/broken.xml");
+
+    BuilderException error = assertThrows(BuilderException.class,
+        () -> new XPathParser(inputSource, false, null, null));
+    SAXParseException cause = assertInstanceOf(SAXParseException.class, error.getCause());
+    assertEquals("broken.xml", cause.getPublicId());
+    assertEquals("file:/mappers/broken.xml", cause.getSystemId());
+    assertEquals(1, cause.getLineNumber());
+    assertEquals(9, cause.getColumnNumber());
+  }
 
   // InputStream Source
   @Test

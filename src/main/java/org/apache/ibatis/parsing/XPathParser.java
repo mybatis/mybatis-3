@@ -113,18 +113,20 @@ public class XPathParser {
   }
 
   public XPathParser(String xml, boolean validation, Properties variables, EntityResolver entityResolver) {
-    commonConstructor(validation, variables, entityResolver);
-    this.document = createDocument(new InputSource(new StringReader(xml)));
+    this(new InputSource(new StringReader(xml)), validation, variables, entityResolver);
   }
 
   public XPathParser(Reader reader, boolean validation, Properties variables, EntityResolver entityResolver) {
-    commonConstructor(validation, variables, entityResolver);
-    this.document = createDocument(new InputSource(reader));
+    this(new InputSource(reader), validation, variables, entityResolver);
   }
 
   public XPathParser(InputStream inputStream, boolean validation, Properties variables, EntityResolver entityResolver) {
+    this(new InputSource(inputStream), validation, variables, entityResolver);
+  }
+
+  public XPathParser(InputSource inputSource, boolean validation, Properties variables, EntityResolver entityResolver) {
     commonConstructor(validation, variables, entityResolver);
-    this.document = createDocument(new InputSource(inputStream));
+    this.document = createDocument(inputSource);
   }
 
   public XPathParser(Document document, boolean validation, Properties variables, EntityResolver entityResolver) {
