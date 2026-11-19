@@ -228,7 +228,8 @@ public class TypeParameterResolver {
           }
         }
       } else {
-        newParentArgs[i] = parentTypeArgs[i];
+        newParentArgs[i] = resolveType(parentTypeArgs[i], srcType, srcClass);
+        noChange &= parentTypeArgs[i].equals(newParentArgs[i]);
       }
     }
     return noChange ? parentType
