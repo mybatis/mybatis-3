@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -44,6 +44,7 @@ public class JdbcTransaction implements Transaction {
   protected TransactionIsolationLevel level;
   protected boolean autoCommit;
   protected boolean skipSetAutoCommitOnClose;
+  private Integer originalIsolationLevel;
 
   public JdbcTransaction(DataSource ds, TransactionIsolationLevel desiredLevel, boolean desiredAutoCommit) {
     this(ds, desiredLevel, desiredAutoCommit, false);
@@ -93,6 +94,7 @@ public class JdbcTransaction implements Transaction {
   public void close() throws SQLException {
     if (connection != null) {
       resetAutoCommit();
+      resetTransactionIsolation();
       if (log.isDebugEnabled()) {
         log.debug("Closing JDBC Connection [" + connection + "]");
       }
@@ -138,13 +140,39 @@ public class JdbcTransaction implements Transaction {
     }
   }
 
+  protected void resetTransactionIsolation() {
+    if (originalIsolationLevel == null) {
+      return;
+    }
+    try {
+      // The connection may be returned to a pool, so do not hand the requested level to its next user.
+      // Changing the level inside a transaction is implementation-defined (Derby commits it), so this is
+      // skipped when skipSetAutoCommitOnClose left a transaction open.
+      if (connection.getAutoCommit()) {
+        if (log.isDebugEnabled()) {
+          log.debug("Resetting transaction isolation to " + originalIsolationLevel + " on JDBC Connection ["
+              + connection + "]");
+        }
+        connection.setTransactionIsolation(originalIsolationLevel);
+      }
+    } catch (SQLException e) {
+      if (log.isDebugEnabled()) {
+        log.debug("Error resetting transaction isolation before closing the connection.  Cause: " + e);
+      }
+    }
+  }
+
   protected void openConnection() throws SQLException {
     if (log.isDebugEnabled()) {
       log.debug("Opening JDBC Connection");
     }
     connection = dataSource.getConnection();
     if (level != null) {
+      int currentLevel = connection.getTransactionIsolation();
       connection.setTransactionIsolation(level.getLevel());
+      if (currentLevel != level.getLevel()) {
+        originalIsolationLevel = currentLevel;
+      }
     }
     setDesiredAutoCommit(autoCommit);
   }
