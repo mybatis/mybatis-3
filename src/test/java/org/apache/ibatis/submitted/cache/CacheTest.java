@@ -19,6 +19,11 @@ import static com.googlecode.catchexception.apis.BDDCatchException.caughtExcepti
 import static com.googlecode.catchexception.apis.BDDCatchException.when;
 import static org.assertj.core.api.BDDAssertions.then;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
+
 import java.io.Reader;
 import java.lang.reflect.Field;
 
@@ -36,6 +41,7 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.LoggerFactory;
 
 // issue #524
 class CacheTest {
@@ -228,6 +234,51 @@ class CacheTest {
     try (SqlSession sqlSession4 = sqlSessionFactory.openSession(true)) {
       PersonMapper pm = sqlSession4.getMapper(PersonMapper.class);
       Assertions.assertEquals(3, pm.findWithFlushCache().size());
+    }
+  }
+
+  @Test
+  void shouldNotCacheSelectWithFlushCache() {
+    Cache cache = sqlSessionFactory.getConfiguration().getCache(PersonMapper.class.getName());
+    Logger logger = (Logger) LoggerFactory.getLogger(cache.getId());
+    Level previousLevel = logger.getLevel();
+    ListAppender<ILoggingEvent> appender = new ListAppender<>();
+    appender.start();
+    logger.addAppender(appender);
+    logger.setLevel(Level.DEBUG);
+    try {
+      for (int i = 0; i < 2; i++) {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+          PersonMapper mapper = sqlSession.getMapper(PersonMapper.class);
+          then(mapper.findWithFlushCache()).extracting(Person::getId).containsExactlyInAnyOrder(1, 2);
+          sqlSession.commit();
+        }
+      }
+      Assertions.assertAll(() -> Assertions.assertEquals(0, cache.getSize()), () -> then(appender.list)
+          .filteredOn(event -> event.getFormattedMessage().startsWith("Cache Hit Ratio")).isEmpty());
+    } finally {
+      logger.detachAppender(appender);
+      logger.setLevel(previousLevel);
+      appender.stop();
+    }
+  }
+
+  @Test
+  void shouldPreserveCacheWhenFlushingSelectIsRolledBack() {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(true)) {
+      Assertions.assertEquals(2, sqlSession.getMapper(PersonMapper.class).findAll().size());
+    }
+    try (SqlSession sqlSession = sqlSessionFactory.openSession(true)) {
+      sqlSession.getMapper(PersonMapper.class).createWithoutFlushCache(new Person(3, "hello", "world"));
+    }
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      then(sqlSession.getMapper(PersonMapper.class).findWithFlushCache()).extracting(Person::getId)
+          .containsExactlyInAnyOrder(1, 2, 3);
+      sqlSession.rollback(true);
+    }
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      then(sqlSession.getMapper(PersonMapper.class).findAll()).extracting(Person::getId).containsExactlyInAnyOrder(1,
+          2);
     }
   }
 
