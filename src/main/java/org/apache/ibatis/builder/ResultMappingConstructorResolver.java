@@ -17,6 +17,7 @@ package org.apache.ibatis.builder;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -134,11 +135,13 @@ public class ResultMappingConstructorResolver {
       }
     }
 
-    // only rebuild (auto-type) if required (any types are unidentified)
+    // Rebuild when the constructor supplies missing or generic type information.
     final boolean autoTypeRequired = constructorResultMappings.stream().map(ResultMapping::getJavaType)
         .anyMatch(mappingType -> mappingType == null || Object.class.equals(mappingType));
-    final List<ResultMapping> resultMappings = autoTypeRequired
-        ? autoTypeConstructorMappings(matchingConstructorInfo, constructorResultMappings, allMappingsHavePropertyNames)
+    final boolean genericTypesPresent = matchingConstructorInfo.argsByIndex.stream()
+        .anyMatch(arg -> !(arg.genericType instanceof Class<?>));
+    final List<ResultMapping> resultMappings = autoTypeRequired || genericTypesPresent
+        ? resolveConstructorMappings(matchingConstructorInfo, constructorResultMappings, allMappingsHavePropertyNames)
         : constructorResultMappings;
 
     if (allMappingsHavePropertyNames) {
@@ -245,26 +248,35 @@ public class ResultMappingConstructorResolver {
     return matchingConstructorInfo;
   }
 
-  private List<ResultMapping> autoTypeConstructorMappings(ConstructorMetaInfo matchingConstructorInfo,
+  private List<ResultMapping> resolveConstructorMappings(ConstructorMetaInfo matchingConstructorInfo,
       List<ResultMapping> resultMappings, boolean allMappingsHavePropertyNames) {
-    final List<ResultMapping> adjustedAutoTypeResultMappings = new ArrayList<>(constructorResultMappings.size());
+    final List<ResultMapping> resolvedMappings = new ArrayList<>(constructorResultMappings.size());
     for (int i = 0; i < resultMappings.size(); i++) {
       final ResultMapping originalMapping = resultMappings.get(i);
       final ConstructorArg matchingArg = allMappingsHavePropertyNames
           ? matchingConstructorInfo.getArgByPropertyName(originalMapping.getProperty())
           : matchingConstructorInfo.getArgByOriginalIndex(i);
 
-      final TypeHandler<?> originalTypeHandler = originalMapping.getTypeHandler();
-      final TypeHandler<?> typeHandler = originalTypeHandler == null
-          || originalTypeHandler instanceof UnknownTypeHandler ? null : originalTypeHandler;
-
-      // given that we selected a new java type, overwrite the currently
-      // selected type handler so it can get retrieved again from the registry
-      adjustedAutoTypeResultMappings.add(
-          new ResultMapping.Builder(originalMapping).javaType(matchingArg.getType()).typeHandler(typeHandler).build());
+      TypeHandler<?> typeHandler = resolveConstructorTypeHandler(originalMapping, matchingArg.genericType);
+      ResultMapping.Builder builder = new ResultMapping.Builder(originalMapping).javaType(matchingArg.getType());
+      if (typeHandler != originalMapping.getTypeHandler()) {
+        builder.resolvedTypeHandler(typeHandler);
+      }
+      resolvedMappings.add(builder.build());
     }
 
-    return adjustedAutoTypeResultMappings;
+    return resolvedMappings;
+  }
+
+  private TypeHandler<?> resolveConstructorTypeHandler(ResultMapping mapping, Type type) {
+    TypeHandler<?> handler = mapping.getTypeHandler();
+    if (handler instanceof UnknownTypeHandler) {
+      handler = null;
+    }
+    if (handler != null && !mapping.isTypeHandlerResolved()) {
+      return handler;
+    }
+    return configuration.getTypeHandlerRegistry().resolveGenericTypeHandler(type, mapping.getJdbcType(), handler);
   }
 
   private static void sortConstructorMappings(ConstructorMetaInfo matchingConstructorInfo,
@@ -311,11 +323,12 @@ public class ResultMappingConstructorResolver {
 
     private List<ConstructorArg> fromConstructor(Constructor<?> constructor) {
       final Class<?>[] parameterTypes = constructor.getParameterTypes();
+      final Type[] genericTypes = constructor.getGenericParameterTypes();
       final List<String> argNames = getArgNames(constructor);
 
       final List<ConstructorArg> constructorArgs = new ArrayList<>(argNames.size());
       for (int i = 0; i < argNames.size(); i++) {
-        constructorArgs.add(new ConstructorArg(parameterTypes[i], argNames.get(i)));
+        constructorArgs.add(new ConstructorArg(parameterTypes[i], genericTypes[i], argNames.get(i)));
       }
 
       return constructorArgs;
@@ -359,10 +372,12 @@ public class ResultMappingConstructorResolver {
 
   static class ConstructorArg {
     private final Class<?> type;
+    private final Type genericType;
     private final String name;
 
-    private ConstructorArg(Class<?> type, String name) {
+    private ConstructorArg(Class<?> type, Type genericType, String name) {
       this.type = type;
+      this.genericType = genericType;
       this.name = name;
     }
 
