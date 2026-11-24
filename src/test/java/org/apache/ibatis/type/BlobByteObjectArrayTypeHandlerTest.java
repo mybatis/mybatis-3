@@ -17,6 +17,7 @@ package org.apache.ibatis.type;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayInputStream;
@@ -57,6 +58,7 @@ class BlobByteObjectArrayTypeHandlerTest extends BaseTypeHandlerTest {
     when(blob.length()).thenReturn((long) byteArray.length);
     when(blob.getBytes(1, 2)).thenReturn(byteArray);
     assertThat(TYPE_HANDLER.getResult(rs, "column")).isEqualTo(new Byte[] { 1, 2 });
+    verify(blob).free();
 
   }
 
@@ -75,6 +77,7 @@ class BlobByteObjectArrayTypeHandlerTest extends BaseTypeHandlerTest {
     when(blob.length()).thenReturn((long) byteArray.length);
     when(blob.getBytes(1, 2)).thenReturn(byteArray);
     assertThat(TYPE_HANDLER.getResult(rs, 1)).isEqualTo(new Byte[] { 1, 2 });
+    verify(blob).free();
   }
 
   @Override
@@ -92,6 +95,7 @@ class BlobByteObjectArrayTypeHandlerTest extends BaseTypeHandlerTest {
     when(blob.length()).thenReturn((long) byteArray.length);
     when(blob.getBytes(1, 2)).thenReturn(byteArray);
     assertThat(TYPE_HANDLER.getResult(cs, 1)).isEqualTo(new Byte[] { 1, 2 });
+    verify(blob).free();
   }
 
   @Override
