@@ -19,9 +19,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doThrow;
 
 import java.io.Reader;
 import java.sql.NClob;
+import java.sql.SQLFeatureNotSupportedException;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -90,6 +92,15 @@ class NClobTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultNullFromCallableStatement() throws Exception {
     when(cs.getNClob(1)).thenReturn(null);
     assertNull(TYPE_HANDLER.getResult(cs, 1));
+  }
+
+  @Test
+  void shouldIgnoreUnsupportedFree() throws Exception {
+    when(rs.getNClob("column")).thenReturn(nclob);
+    when(nclob.length()).thenReturn(3L);
+    when(nclob.getSubString(1, 3)).thenReturn("Hello");
+    doThrow(new SQLFeatureNotSupportedException()).when(nclob).free();
+    assertEquals("Hello", TYPE_HANDLER.getResult(rs, "column"));
   }
 
 }
