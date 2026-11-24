@@ -18,8 +18,8 @@ package org.apache.ibatis.type;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 
 import java.io.Reader;
 import java.sql.NClob;
@@ -50,7 +50,7 @@ class NClobTypeHandlerTest extends BaseTypeHandlerTest {
     when(nclob.length()).thenReturn(3L);
     when(nclob.getSubString(1, 3)).thenReturn("Hello");
     assertEquals("Hello", TYPE_HANDLER.getResult(rs, "column"));
-    verify(clob).free();
+    verify(nclob).free();
   }
 
   @Override
@@ -67,7 +67,7 @@ class NClobTypeHandlerTest extends BaseTypeHandlerTest {
     when(nclob.length()).thenReturn(3L);
     when(nclob.getSubString(1, 3)).thenReturn("Hello");
     assertEquals("Hello", TYPE_HANDLER.getResult(rs, 1));
-    verify(clob).free();
+    verify(nclob).free();
   }
 
   @Override
@@ -84,7 +84,7 @@ class NClobTypeHandlerTest extends BaseTypeHandlerTest {
     when(nclob.length()).thenReturn(3L);
     when(nclob.getSubString(1, 3)).thenReturn("Hello");
     assertEquals("Hello", TYPE_HANDLER.getResult(cs, 1));
-    verify(clob).free();
+    verify(nclob).free();
   }
 
   @Override
