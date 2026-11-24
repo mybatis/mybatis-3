@@ -25,8 +25,6 @@ import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.SQLFeatureNotSupportedException;
 
-import static org.mockito.Mockito.doThrow;
-
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
