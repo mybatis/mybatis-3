@@ -48,6 +48,7 @@ class NClobTypeHandlerTest extends BaseTypeHandlerTest {
     when(nclob.length()).thenReturn(3L);
     when(nclob.getSubString(1, 3)).thenReturn("Hello");
     assertEquals("Hello", TYPE_HANDLER.getResult(rs, "column"));
+    verify(clob).free();
   }
 
   @Override
@@ -64,6 +65,7 @@ class NClobTypeHandlerTest extends BaseTypeHandlerTest {
     when(nclob.length()).thenReturn(3L);
     when(nclob.getSubString(1, 3)).thenReturn("Hello");
     assertEquals("Hello", TYPE_HANDLER.getResult(rs, 1));
+    verify(clob).free();
   }
 
   @Override
@@ -80,6 +82,7 @@ class NClobTypeHandlerTest extends BaseTypeHandlerTest {
     when(nclob.length()).thenReturn(3L);
     when(nclob.getSubString(1, 3)).thenReturn("Hello");
     assertEquals("Hello", TYPE_HANDLER.getResult(cs, 1));
+    verify(clob).free();
   }
 
   @Override
