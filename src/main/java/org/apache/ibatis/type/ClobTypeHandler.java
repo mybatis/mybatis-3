@@ -21,6 +21,7 @@ import java.sql.Clob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 
 /**
  * @author Clinton Begin
@@ -57,10 +58,30 @@ public class ClobTypeHandler extends BaseTypeHandler<String> {
     if (clob == null) {
       return null;
     }
+    String value;
     try {
-      return clob.getSubString(1, (int) clob.length());
-    } finally {
+      value = clob.getSubString(1, (int) clob.length());
+    } catch (SQLException | RuntimeException e) {
+      freeAfterFailure(clob, e);
+      throw e;
+    }
+    free(clob);
+    return value;
+  }
+
+  private void free(Clob clob) throws SQLException {
+    try {
       clob.free();
+    } catch (SQLFeatureNotSupportedException ignored) {
+      // Some JDBC drivers do not support freeing LOBs.
+    }
+  }
+
+  private void freeAfterFailure(Clob clob, Throwable failure) {
+    try {
+      free(clob);
+    } catch (SQLException e) {
+      failure.addSuppressed(e);
     }
   }
 
