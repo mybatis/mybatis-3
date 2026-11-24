@@ -19,9 +19,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doThrow;
 
 import java.io.ByteArrayInputStream;
 import java.sql.Blob;
+import java.sql.SQLFeatureNotSupportedException;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -103,6 +105,15 @@ class BlobByteObjectArrayTypeHandlerTest extends BaseTypeHandlerTest {
   public void shouldGetResultNullFromCallableStatement() throws Exception {
     when(cs.getBlob(1)).thenReturn(null);
     assertThat(TYPE_HANDLER.getResult(cs, 1)).isNull();
+  }
+
+  @Test
+  void shouldIgnoreUnsupportedFree() throws Exception {
+    when(rs.getBlob("column")).thenReturn(blob);
+    when(blob.length()).thenReturn(2L);
+    when(blob.getBytes(1, 2)).thenReturn(new byte[] { 1, 2 });
+    doThrow(new SQLFeatureNotSupportedException()).when(blob).free();
+    assertThat(TYPE_HANDLER.getResult(rs, "column")).isEqualTo(new Byte[] { 1, 2 });
   }
 
 }
