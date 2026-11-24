@@ -21,6 +21,7 @@ import java.sql.NClob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 
 /**
  * @author Clinton Begin
@@ -57,10 +58,30 @@ public class NClobTypeHandler extends BaseTypeHandler<String> {
     if (nclob == null) {
       return null;
     }
+    String value;
     try {
-      return nclob.getSubString(1, (int) nclob.length());
-    } finally {
+      value = nclob.getSubString(1, (int) nclob.length());
+    } catch (SQLException | RuntimeException e) {
+      freeAfterFailure(nclob, e);
+      throw e;
+    }
+    free(nclob);
+    return value;
+  }
+
+  private void free(NClob nclob) throws SQLException {
+    try {
       nclob.free();
+    } catch (SQLFeatureNotSupportedException ignored) {
+      // Some JDBC drivers do not support freeing LOBs.
+    }
+  }
+
+  private void freeAfterFailure(NClob nclob, Throwable failure) {
+    try {
+      free(nclob);
+    } catch (SQLException e) {
+      failure.addSuppressed(e);
     }
   }
 
