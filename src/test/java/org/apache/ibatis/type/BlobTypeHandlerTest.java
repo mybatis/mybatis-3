@@ -28,6 +28,7 @@ import java.sql.Blob;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 
+import org.apache.ibatis.executor.result.ResultMapException;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
@@ -113,8 +114,8 @@ class BlobTypeHandlerTest extends BaseTypeHandlerTest {
     when(blob.getBytes(1, 3)).thenReturn(new byte[] { 1, 2, 3 });
     SQLException freeFailure = new SQLException("free failed");
     doThrow(freeFailure).when(blob).free();
-    SQLException actual = assertThrows(SQLException.class, () -> TYPE_HANDLER.getResult(rs, "column"));
-    assertSame(freeFailure, actual);
+    ResultMapException actual = assertThrows(ResultMapException.class, () -> TYPE_HANDLER.getResult(rs, "column"));
+    assertSame(freeFailure, actual.getCause());
   }
 
   @Test
@@ -125,9 +126,9 @@ class BlobTypeHandlerTest extends BaseTypeHandlerTest {
     when(blob.getBytes(1, 3)).thenThrow(readFailure);
     SQLException freeFailure = new SQLException("free failed");
     doThrow(freeFailure).when(blob).free();
-    SQLException actual = assertThrows(SQLException.class, () -> TYPE_HANDLER.getResult(rs, "column"));
-    assertSame(readFailure, actual);
-    assertSame(freeFailure, actual.getSuppressed()[0]);
+    ResultMapException actual = assertThrows(ResultMapException.class, () -> TYPE_HANDLER.getResult(rs, "column"));
+    assertSame(readFailure, actual.getCause());
+    assertSame(freeFailure, actual.getCause().getSuppressed()[0]);
   }
 
 }
