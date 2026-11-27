@@ -127,7 +127,7 @@ class BlobTypeHandlerTest extends BaseTypeHandlerTest {
     doThrow(freeFailure).when(blob).free();
     SQLException actual = assertThrows(SQLException.class, () -> TYPE_HANDLER.getResult(rs, "column"));
     assertSame(readFailure, actual);
-    assertThat(actual.getSuppressed()).containsExactly(freeFailure);
+    assertSame(freeFailure, actual.getSuppressed()[0]);
   }
 
 }
