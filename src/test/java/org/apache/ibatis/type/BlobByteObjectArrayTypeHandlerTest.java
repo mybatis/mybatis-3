@@ -19,10 +19,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
 
 import java.io.ByteArrayInputStream;
 import java.sql.Blob;
+import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 
 import org.junit.jupiter.api.Test;
@@ -114,6 +117,30 @@ class BlobByteObjectArrayTypeHandlerTest extends BaseTypeHandlerTest {
     when(blob.getBytes(1, 2)).thenReturn(new byte[] { 1, 2 });
     doThrow(new SQLFeatureNotSupportedException()).when(blob).free();
     assertThat(TYPE_HANDLER.getResult(rs, "column")).isEqualTo(new Byte[] { 1, 2 });
+  }
+
+  @Test
+  void shouldPropagateFreeFailureAfterSuccessfulRead() throws Exception {
+    when(rs.getBlob("column")).thenReturn(blob);
+    when(blob.length()).thenReturn(2L);
+    when(blob.getBytes(1, 2)).thenReturn(new byte[] { 1, 2 });
+    SQLException freeFailure = new SQLException("free failed");
+    doThrow(freeFailure).when(blob).free();
+    SQLException actual = assertThrows(SQLException.class, () -> TYPE_HANDLER.getResult(rs, "column"));
+    assertSame(freeFailure, actual);
+  }
+
+  @Test
+  void shouldPreserveReadFailureWhenFreeAlsoFails() throws Exception {
+    when(rs.getBlob("column")).thenReturn(blob);
+    when(blob.length()).thenReturn(2L);
+    SQLException readFailure = new SQLException("read failed");
+    when(blob.getBytes(1, 2)).thenThrow(readFailure);
+    SQLException freeFailure = new SQLException("free failed");
+    doThrow(freeFailure).when(blob).free();
+    SQLException actual = assertThrows(SQLException.class, () -> TYPE_HANDLER.getResult(rs, "column"));
+    assertSame(readFailure, actual);
+    assertThat(actual.getSuppressed()).containsExactly(freeFailure);
   }
 
 }
