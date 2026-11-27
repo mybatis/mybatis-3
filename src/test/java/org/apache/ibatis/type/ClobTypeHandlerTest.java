@@ -19,10 +19,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
 
 import java.io.Reader;
 import java.sql.Clob;
+import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 
 import org.junit.jupiter.api.Test;
@@ -101,6 +105,30 @@ class ClobTypeHandlerTest extends BaseTypeHandlerTest {
     when(clob.getSubString(1, 3)).thenReturn("Hello");
     doThrow(new SQLFeatureNotSupportedException()).when(clob).free();
     assertEquals("Hello", TYPE_HANDLER.getResult(rs, "column"));
+  }
+
+  @Test
+  void shouldPropagateFreeFailureAfterSuccessfulRead() throws Exception {
+    when(rs.getClob("column")).thenReturn(clob);
+    when(clob.length()).thenReturn(3L);
+    when(clob.getSubString(1, 3)).thenReturn("Hello");
+    SQLException freeFailure = new SQLException("free failed");
+    doThrow(freeFailure).when(clob).free();
+    SQLException actual = assertThrows(SQLException.class, () -> TYPE_HANDLER.getResult(rs, "column"));
+    assertSame(freeFailure, actual);
+  }
+
+  @Test
+  void shouldPreserveReadFailureWhenFreeAlsoFails() throws Exception {
+    when(rs.getClob("column")).thenReturn(clob);
+    when(clob.length()).thenReturn(3L);
+    SQLException readFailure = new SQLException("read failed");
+    when(clob.getSubString(1, 3)).thenThrow(readFailure);
+    SQLException freeFailure = new SQLException("free failed");
+    doThrow(freeFailure).when(clob).free();
+    SQLException actual = assertThrows(SQLException.class, () -> TYPE_HANDLER.getResult(rs, "column"));
+    assertSame(readFailure, actual);
+    assertThat(actual.getSuppressed()).containsExactly(freeFailure);
   }
 
 }
