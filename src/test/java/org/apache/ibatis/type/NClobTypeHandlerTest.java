@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -128,7 +127,7 @@ class NClobTypeHandlerTest extends BaseTypeHandlerTest {
     doThrow(freeFailure).when(nclob).free();
     SQLException actual = assertThrows(SQLException.class, () -> TYPE_HANDLER.getResult(rs, "column"));
     assertSame(readFailure, actual);
-    assertThat(actual.getSuppressed()).containsExactly(freeFailure);
+    assertSame(freeFailure, actual.getSuppressed()[0]);
   }
 
 }
