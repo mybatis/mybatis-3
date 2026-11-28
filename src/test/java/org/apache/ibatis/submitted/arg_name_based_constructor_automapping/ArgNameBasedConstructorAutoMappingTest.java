@@ -17,13 +17,30 @@ package org.apache.ibatis.submitted.arg_name_based_constructor_automapping;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.Reader;
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.description.modifier.SyntheticState;
+import net.bytebuddy.description.modifier.Visibility;
+import net.bytebuddy.dynamic.DynamicType;
+import net.bytebuddy.dynamic.scaffold.subclass.ConstructorStrategy;
+import net.bytebuddy.implementation.MethodCall;
 
 import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.builder.StaticSqlSource;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.executor.ExecutorException;
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.ResultMap;
+import org.apache.ibatis.mapping.SqlCommandType;
+import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -135,5 +152,68 @@ class ArgNameBasedConstructorAutoMappingTest {
       assertEquals("User1!", task.getAssignee().getName());
       assertEquals(99, task.getAssignee().getTeam());
     }
+  }
+
+  @Test
+  void shouldUseTheOnlyNonSyntheticConstructorWhenCompilerAddedASyntheticOne() throws Exception {
+    Class<? extends User> userType = defineUserWithDeclaredAndSyntheticConstructors();
+    assertTrue(Arrays.stream(userType.getDeclaredConstructors()).anyMatch(Constructor::isSynthetic));
+
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      User user = sqlSession.selectOne(addSelectUserStatement(userType));
+      assertEquals(Integer.valueOf(1), user.getId());
+      assertEquals("User1!", user.getName());
+    }
+  }
+
+  @Test
+  void shouldReportNoConstructorFoundWhenEveryConstructorIsSynthetic() throws Exception {
+    Class<? extends User> userType = defineUserWithOnlySyntheticConstructor();
+    assertTrue(Arrays.stream(userType.getDeclaredConstructors()).anyMatch(Constructor::isSynthetic));
+
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      String statementId = addSelectUserStatement(userType);
+      PersistenceException e = assertThrows(PersistenceException.class, () -> sqlSession.selectOne(statementId));
+      ExecutorException ex = (ExecutorException) e.getCause();
+      assertEquals("No constructor found in " + userType.getName() + " matching [java.lang.String, java.lang.Integer]",
+          ex.getMessage());
+    }
+  }
+
+  private static String addSelectUserStatement(Class<? extends User> userType) {
+    Configuration configuration = sqlSessionFactory.getConfiguration();
+    String statementId = "select" + userType.getSimpleName();
+    ResultMap resultMap = new ResultMap.Builder(configuration, statementId + "Result", userType, new ArrayList<>())
+        .build();
+    configuration.addMappedStatement(new MappedStatement.Builder(configuration, statementId,
+        new StaticSqlSource(configuration, "select name, id from users where id = 1"), SqlCommandType.SELECT)
+            .resultMaps(List.of(resultMap)).build());
+    return statementId;
+  }
+
+  private static Class<? extends User> defineUserWithDeclaredAndSyntheticConstructors() throws Exception {
+    return addSyntheticConstructor(
+        subclassUser().defineConstructor(Visibility.PUBLIC).withParameter(Integer.class, "id")
+            .withParameter(String.class, "name").intercept(MethodCall.invoke(userConstructor()).withAllArguments()));
+  }
+
+  private static Class<? extends User> defineUserWithOnlySyntheticConstructor() throws Exception {
+    return addSyntheticConstructor(subclassUser());
+  }
+
+  private static DynamicType.Builder<User> subclassUser() {
+    return new ByteBuddy().subclass(User.class, ConstructorStrategy.Default.NO_CONSTRUCTORS);
+  }
+
+  // Mimics the shape of Kotlin's default-argument constructor: source parameters, an int mask, and a marker.
+  private static Class<? extends User> addSyntheticConstructor(DynamicType.Builder<User> builder) throws Exception {
+    return builder.defineConstructor(Visibility.PUBLIC, SyntheticState.SYNTHETIC)
+        .withParameters(Integer.class, String.class, int.class, Object.class)
+        .intercept(MethodCall.invoke(userConstructor()).withArgument(0, 1)).make().load(User.class.getClassLoader())
+        .getLoaded();
+  }
+
+  private static Constructor<User> userConstructor() throws NoSuchMethodException {
+    return User.class.getConstructor(Integer.class, String.class);
   }
 }

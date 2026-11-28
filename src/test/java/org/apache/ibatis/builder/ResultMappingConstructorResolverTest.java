@@ -19,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
+import java.lang.reflect.Constructor;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,6 +28,12 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.description.modifier.SyntheticState;
+import net.bytebuddy.description.modifier.Visibility;
+import net.bytebuddy.dynamic.scaffold.subclass.ConstructorStrategy;
+import net.bytebuddy.implementation.MethodCall;
 
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.mapping.ResultMapping;
@@ -178,6 +185,22 @@ class ResultMappingConstructorResolverTest {
   }
 
   @Test
+  void testResolvesTypesFromTheOnlyNonSyntheticConstructorWhenCompilerAddedASyntheticOne() throws Exception {
+    Class<?> resultType = defineTypeWithDeclaredAndSyntheticConstructorOfSameArity();
+    assertThat(resultType.getDeclaredConstructors()).anyMatch(Constructor::isSynthetic);
+    ResultMapping mappingA = createConstructorMappingFor(Object.class, null, "a");
+    ResultMapping mappingB = createConstructorMappingFor(Object.class, null, "b");
+    ResultMapping mappingC = createConstructorMappingFor(Object.class, null, "c");
+
+    final ResultMappingConstructorResolver resolver = createResolverFor(resultType, TEST_ID, mappingA, mappingB,
+        mappingC);
+    final List<ResultMapping> mappingList = resolver.resolveWithConstructor();
+
+    assertThat(mappingList).extracting(ResultMapping::getJavaType).containsExactly(long.class, String.class,
+        String.class);
+  }
+
+  @Test
   void testThrowExceptionWithPartialPropertyNameSpecified() {
     ResultMapping mappingA = createConstructorMappingFor(Object.class, "a", "a");
     ResultMapping mappingB = createConstructorMappingFor(Object.class, null, "b");
@@ -302,6 +325,19 @@ class ResultMappingConstructorResolverTest {
       ResultMapping... mappings) {
     return new ResultMappingConstructorResolver(configuration, mappings == null ? List.of() : Arrays.asList(mappings),
         resultType, identifier);
+  }
+
+  // ByteBuddy builds the synthetic constructor so the fixture does not depend on compiler behavior.
+  private static Class<?> defineTypeWithDeclaredAndSyntheticConstructorOfSameArity() throws Exception {
+    return new ByteBuddy().subclass(Object.class, ConstructorStrategy.Default.NO_CONSTRUCTORS)
+        .defineConstructor(Visibility.PRIVATE).withParameters(long.class, String.class)
+        .intercept(MethodCall.invoke(Object.class.getConstructor())).defineConstructor(Visibility.PUBLIC)
+        .withParameters(long.class, String.class, String.class)
+        .intercept(MethodCall.invoke(Object.class.getConstructor()))
+        .defineConstructor(Visibility.PUBLIC, SyntheticState.SYNTHETIC)
+        .withParameters(long.class, String.class, Object.class)
+        .intercept(MethodCall.invoke(Object.class.getConstructor())).make()
+        .load(ResultMappingConstructorResolverTest.class.getClassLoader()).getLoaded();
   }
 
   private ResultMapping createConstructorMappingFor(Class<?> javaType, String property, String column) {

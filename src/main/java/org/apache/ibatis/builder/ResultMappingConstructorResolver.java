@@ -163,7 +163,9 @@ public class ResultMappingConstructorResolver {
   }
 
   List<ConstructorMetaInfo> retrieveConstructorCandidates(int withLength) {
-    return Arrays.stream(resultType.getDeclaredConstructors())
+    // Compiler-generated constructors must not compete with source ones.
+    // Kotlin adds one with mask and marker parameters for default arguments.
+    return Arrays.stream(resultType.getDeclaredConstructors()).filter(constructor -> !constructor.isSynthetic())
         .filter(constructor -> constructor.getParameterTypes().length == withLength).map(ConstructorMetaInfo::new)
         .collect(Collectors.toList());
   }
