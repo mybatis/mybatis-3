@@ -39,6 +39,7 @@ import org.apache.ibatis.scripting.xmltags.SetSqlNode;
 import org.apache.ibatis.scripting.xmltags.SqlNode;
 import org.apache.ibatis.scripting.xmltags.StaticTextSqlNode;
 import org.apache.ibatis.scripting.xmltags.TextSqlNode;
+import org.apache.ibatis.scripting.xmltags.VarDeclSqlNode;
 import org.apache.ibatis.scripting.xmltags.WhereSqlNode;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -356,6 +357,30 @@ class DynamicSqlSourceTest extends BaseDataTest {
     assertEquals(2, boundSql.getParameterMappings().size());
     assertEquals("b.id", boundSql.getParameterMappings().get(0).getProperty());
     assertEquals("b.id", boundSql.getParameterMappings().get(1).getProperty());
+  }
+
+  @Test
+  void shouldPropagateBindFromWhereSqlNode() {
+    DynamicSqlSource source = new DynamicSqlSource(new Configuration(),
+        mixedContents(
+            new WhereSqlNode(new Configuration(),
+                mixedContents(new VarDeclSqlNode("orderColumn", "'created_at'"), new TextSqlNode("id = #{id}"))),
+            new TextSqlNode("ORDER BY ${orderColumn}")));
+    BoundSql boundSql = source.getBoundSql(Map.of("id", 1));
+    assertEquals("WHERE id = ? ORDER BY created_at", boundSql.getSql());
+  }
+
+  @Test
+  void shouldPropagateBindFromForEachSqlNodeWithoutLeakingLoopVariables() {
+    DynamicSqlSource source = new DynamicSqlSource(new Configuration(),
+        mixedContents(
+            new ForEachSqlNode(new Configuration(), mixedContents(new VarDeclSqlNode("orderColumn", "'created_at'")),
+                "values", null, "index", "item", null, null, null),
+            new TextSqlNode("ORDER BY ${orderColumn}")));
+    BoundSql boundSql = source.getBoundSql(Map.of("values", List.of("value")));
+    assertEquals("ORDER BY created_at", boundSql.getSql());
+    Assertions.assertFalse(boundSql.hasAdditionalParameter("item"));
+    Assertions.assertFalse(boundSql.hasAdditionalParameter("index"));
   }
 
   private DynamicSqlSource createDynamicSqlSource(SqlNode... contents) throws IOException, SQLException {
