@@ -220,6 +220,27 @@ The `bind` element lets you create a variable out of an OGNL expression and bind
 </select>
 ```
 
+### Calling static methods and fields
+
+Because the Dynamic SQL elements are built on OGNL expressions, you can call static methods and reference static fields anywhere an OGNL expression is evaluated, for example in a `test` attribute (`if`, `when`) or in the `value` attribute of `bind`.
+
+- Calling a static method: `@fully.qualified.ClassName@methodName(args)`
+- Referencing a static field: `@fully.qualified.ClassName@fieldName`
+
+For example:
+
+```xml
+<if test="@org.apache.commons.lang3.StringUtils@isEmpty(username)">
+  AND username IS NULL
+</if>
+```
+
+```xml
+<bind name="pi" value="@java.lang.Math@PI" />
+```
+
+This is part of the OGNL expression language itself. See the [OGNL Language Guide](https://commons.apache.org/proper/commons-ognl/language-guide.html) for the full syntax.
+
 ### Multi-db vendor support
 
 If a databaseIdProvider was configured a "_databaseId" variable is available for dynamic code, so you can build different statements depending on database vendor. Have a look at the following example:
