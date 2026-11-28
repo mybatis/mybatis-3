@@ -89,6 +89,19 @@ class BlockingCacheTest {
   }
 
   @Test
+  void shouldNotCacheSelectWithFlushCache() {
+    for (int i = 0; i < 2; i++) {
+      try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+        PersonMapper mapper = sqlSession.getMapper(PersonMapper.class);
+        Assertions.assertThat(mapper.findWithFlushCache()).hasSize(2);
+        sqlSession.commit();
+      }
+    }
+    Assertions.assertThat(sqlSessionFactory.getConfiguration().getCache(PersonMapper.class.getName()).getSize())
+        .isZero();
+  }
+
+  @Test
   void ensureLockIsReleasedOnRollback() {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       PersonMapper mapper = sqlSession.getMapper(PersonMapper.class);
