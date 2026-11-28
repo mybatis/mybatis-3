@@ -21,14 +21,14 @@ MyBatis 是一款优秀的持久层框架，它支持自定义 SQL、存储过�
 
 您可以阅读 MyBatis 文档的其他语言版本：
 
-<ul class="i18n">
-          <li class="en"><a href="../index.html">English</a></li>
-          <li class="es"><a href="../es/index.html">Español</a></li>
+<ul>
+          <li><a href="../index.html">English</a></li>
+          <li><a href="../es/index.html">Español</a></li>
           <!--      <li class="fr"><a href="./fr/index.html">Français</a></li> -->
-          <li class="ja"><a href="../ja/index.html">日本語</a></li>
-          <li class="ko"><a href="../ko/index.html">한국어</a></li>
-          <li class="zh"><a href="../zh_CN/index.html">简体中文</a></li>
-          <li class="zh_tw"><a href="../zh_TW/index.html">繁體中文</a></li>
+          <li><a href="../ja/index.html">日本語</a></li>
+          <li><a href="../ko/index.html">한국어</a></li>
+          <li><a href="../zh_CN/index.html">简体中文</a></li>
+          <li><a href="../zh_TW/index.html">繁體中文</a></li>
 </ul>
 
 想用你的母语来了解 MyBatis 吗？那就将文档翻译成你的母语并提供给我们吧！
