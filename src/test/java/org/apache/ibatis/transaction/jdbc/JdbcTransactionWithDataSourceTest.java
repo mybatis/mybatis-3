@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.apache.ibatis.transaction.jdbc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -30,6 +31,7 @@ import javax.sql.DataSource;
 import org.apache.ibatis.session.TransactionIsolationLevel;
 import org.apache.ibatis.transaction.Transaction;
 import org.junit.jupiter.api.Test;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 
 /**
@@ -165,6 +167,23 @@ class JdbcTransactionWithDataSourceTest extends JdbcTransactionBase {
 
     verify(connection).close();
     verify(connection, never()).setAutoCommit(true);
+  }
+
+  @Test
+  void shouldRestoreTransactionIsolationOnClose() throws SQLException {
+    when(dataSource.getConnection()).thenReturn(connection);
+    when(desiredAutoCommit.getAsBoolean()).thenReturn(true);
+    when(connection.getAutoCommit()).thenReturn(true);
+    when(connection.getTransactionIsolation()).thenReturn(Connection.TRANSACTION_READ_COMMITTED);
+
+    buildTransaction();
+    transaction.getConnection();
+    transaction.close();
+
+    InOrder inOrder = inOrder(connection);
+    inOrder.verify(connection).setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
+    inOrder.verify(connection).setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+    inOrder.verify(connection).close();
   }
 
   @Test
