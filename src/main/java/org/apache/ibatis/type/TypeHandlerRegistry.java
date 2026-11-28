@@ -523,12 +523,17 @@ public final class TypeHandlerRegistry {
           c = handlerClass.getConstructor(Type.class);
           return (TypeHandler<T>) c.newInstance(javaType);
         } catch (NoSuchMethodException ignored) {
+          // A handler may only accept the raw class.
         }
-        if (javaType instanceof Class) {
+        // gh-3917 A parameterized property such as Map<String, Object> is not a Class.
+        // Pass its raw type to a Class constructor, as 3.5.x did.
+        Class<?> classArgument = rawClass(javaType);
+        if (classArgument != null) {
           try {
             c = handlerClass.getConstructor(Class.class);
-            return (TypeHandler<T>) c.newInstance(javaType);
+            return (TypeHandler<T>) c.newInstance(classArgument);
           } catch (NoSuchMethodException ignored) {
+            // Fall through to the no-arg constructor.
           }
         }
       }
@@ -541,6 +546,19 @@ public final class TypeHandlerRegistry {
     } catch (ReflectiveOperationException e) {
       throw new TypeException("Failed to invoke constructor for handler " + handlerClass, e);
     }
+  }
+
+  private static Class<?> rawClass(Type javaType) {
+    if (javaType instanceof Class) {
+      return (Class<?>) javaType;
+    }
+    if (javaType instanceof ParameterizedType) {
+      Type rawType = ((ParameterizedType) javaType).getRawType();
+      if (rawType instanceof Class) {
+        return (Class<?>) rawType;
+      }
+    }
+    return null;
   }
 
   // scan
