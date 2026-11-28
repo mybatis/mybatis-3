@@ -392,7 +392,15 @@ public class PooledDataSource implements DataSource {
 
     lock.lock();
     try {
-      state.activeConnections.remove(conn);
+      // Use identity comparison (==) instead of equals() to remove the connection.
+      // PooledConnection.equals() compares by realConnection.hashCode(), which means
+      // two different PooledConnection objects wrapping the same realConnection are
+      // considered equal. After an overdue connection claim, the old (invalidated)
+      // PooledConnection and the new PooledConnection share the same realConnection,
+      // so remove(conn) with equals() would incorrectly remove the new one.
+      // See https://github.com/mybatis/mybatis-3/issues/3524
+      state.activeConnections.removeIf(c -> c == conn);
+
       if (conn.isValid()) {
         if (state.idleConnections.size() < poolMaximumIdleConnections
             && conn.getConnectionTypeCode() == expectedConnectionTypeCode) {
@@ -462,7 +470,10 @@ public class PooledDataSource implements DataSource {
             state.claimedOverdueConnectionCount++;
             state.accumulatedCheckoutTimeOfOverdueConnections += longestCheckoutTime;
             state.accumulatedCheckoutTime += longestCheckoutTime;
-            state.activeConnections.remove(oldestActiveConnection);
+            // Remove by index instead of by equals() to avoid issues with
+            // PooledConnection.equals() matching by realConnection.hashCode().
+            // See https://github.com/mybatis/mybatis-3/issues/3524
+            state.activeConnections.remove(0);
             if (!oldestActiveConnection.getRealConnection().getAutoCommit()) {
               try {
                 oldestActiveConnection.getRealConnection().rollback();
