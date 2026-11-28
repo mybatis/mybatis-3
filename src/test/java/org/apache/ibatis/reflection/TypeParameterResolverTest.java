@@ -33,18 +33,80 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.reflection.typeparam.Calculator;
 import org.apache.ibatis.reflection.typeparam.Calculator.SubCalculator;
 import org.apache.ibatis.reflection.typeparam.Level0Mapper;
 import org.apache.ibatis.reflection.typeparam.Level0Mapper.Level0InnerMapper;
 import org.apache.ibatis.reflection.typeparam.Level1Mapper;
 import org.apache.ibatis.reflection.typeparam.Level2Mapper;
+import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.TypeReference;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 class TypeParameterResolverTest {
+
+  @Test
+  void shouldResolveNestedTypeArgumentsAcrossInterfaces() throws Exception {
+    Type expected = new TypeReference<List<String>>() {
+    }.getRawType();
+    Method method = NestedTypeMapper.class.getMethod("select", Object.class);
+    assertEquals(expected, TypeParameterResolver.resolveReturnType(method, StringListMapper.class));
+    assertEquals(expected, TypeParameterResolver.resolveParamTypes(method, StringListMapper.class)[0]);
+    assertEquals(expected,
+        TypeParameterResolver.resolveClassTypeParams(NestedTypeMapper.class, StringListMapper.class)[0]);
+  }
+
+  @Test
+  void shouldResolveNestedTypeArgumentsAcrossSuperclasses() throws Exception {
+    Field field = NestedTypeHolder.class.getField("value");
+    Type expected = new TypeReference<Map<String, List<? extends Integer>>>() {
+    }.getRawType();
+    assertEquals(expected, TypeParameterResolver.resolveFieldType(field, IntegerMapHolder.class));
+  }
+
+  @Test
+  void shouldResolveArrayTypeArgumentsAcrossSuperclasses() throws Exception {
+    Field field = NestedTypeHolder.class.getField("value");
+    assertEquals(String[].class, TypeParameterResolver.resolveFieldType(field, StringArrayHolder.class));
+  }
+
+  @Test
+  void shouldInferResultTypeThroughNestedGenericMapperInheritance() {
+    Configuration configuration = new Configuration();
+    configuration.addMapper(StringListMapper.class);
+    String statementId = StringListMapper.class.getName() + ".select";
+    assertEquals(String.class, configuration.getMappedStatement(statementId).getResultMaps().get(0).getType());
+  }
+
+  interface NestedTypeMapper<T> {
+    @Select("select 'value'")
+    T select(T value);
+  }
+
+  interface ListMapper<T> extends NestedTypeMapper<List<T>> {
+  }
+
+  interface StringListMapper extends ListMapper<String> {
+  }
+
+  static class NestedTypeHolder<T> {
+    public T value;
+  }
+
+  static class MapHolder<T> extends NestedTypeHolder<Map<String, List<? extends T>>> {
+  }
+
+  static class IntegerMapHolder extends MapHolder<Integer> {
+  }
+
+  static class ArrayHolder<T> extends NestedTypeHolder<T[]> {
+  }
+
+  static class StringArrayHolder extends ArrayHolder<String> {
+  }
 
   @Test
   void returnLv0SimpleClass() throws Exception {
