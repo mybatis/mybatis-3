@@ -88,6 +88,8 @@ import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.scripting.LanguageDriverRegistry;
 import org.apache.ibatis.scripting.defaults.RawLanguageDriver;
+import org.apache.ibatis.scripting.xmltags.ExpressionParser;
+import org.apache.ibatis.scripting.xmltags.OgnlExpressionParser;
 import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
@@ -155,6 +157,8 @@ public class Configuration {
   protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry(this);
   protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
   protected final LanguageDriverRegistry languageRegistry = new LanguageDriverRegistry();
+  // Unless something happens to OGNL, we have no reason to make this configurable.
+  protected final ExpressionParser expressionParser = new OgnlExpressionParser(this);
 
   protected final Map<String, MappedStatement> mappedStatements = new StrictMap<MappedStatement>(
       "Mapped Statements collection")
@@ -460,6 +464,10 @@ public class Configuration {
       proxyFactory = new JavassistProxyFactory();
     }
     this.proxyFactory = proxyFactory;
+  }
+
+  public ExpressionParser getExpressionParser() {
+    return expressionParser;
   }
 
   public boolean isAggressiveLazyLoading() {
