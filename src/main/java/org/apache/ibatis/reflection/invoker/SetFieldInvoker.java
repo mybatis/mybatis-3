@@ -15,36 +15,69 @@
  */
 package org.apache.ibatis.reflection.invoker;
 
-import java.lang.reflect.Field;
-
+import org.apache.ibatis.reflection.ReflectionUtil;
 import org.apache.ibatis.reflection.Reflector;
+
+import java.lang.invoke.VarHandle;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 /**
  * @author Clinton Begin
  */
 public class SetFieldInvoker implements Invoker {
+  private final VarHandle varHandle;
   private final Field field;
+  private final boolean isStatic;
+  private final Class<?> type;
 
   public SetFieldInvoker(Field field) {
-    this.field = field;
+    this.type = field.getType();
+    this.isStatic = Modifier.isStatic(field.getModifiers());
+    boolean isFinal = Modifier.isFinal(field.getModifiers());
+
+    Class<?> fieldClass = field.getDeclaringClass();
+    if (isFinal || ReflectionUtil.jdk8Class(fieldClass)) {
+      // JDK internal class (e.g., java.lang.Integer) → use reflection with Field
+      this.field = field;
+      this.varHandle = null;
+      // Use trySetAccessible() which handles both static and instance fields safely
+      field.trySetAccessible();
+    } else {
+      // User's business class → use VarHandle for better performance
+      this.field = null;
+      try {
+        this.varHandle = ReflectionUtil.getMethodHandlesLookup(fieldClass).unreflectVarHandle(field);
+      } catch (IllegalAccessException e) {
+        throw new RuntimeException(e);
+      }
+    }
   }
 
   @Override
   public Object invoke(Object target, Object[] args) throws IllegalAccessException {
-    try {
-      field.set(target, args[0]);
-    } catch (IllegalAccessException e) {
-      if (!Reflector.canControlMemberAccessible()) {
-        throw e;
+    if (varHandle != null) {
+      if (isStatic) {
+        varHandle.set(args[0]);
+      } else {
+        varHandle.set(target, args[0]);
       }
-      field.setAccessible(true);
-      field.set(target, args[0]);
+    } else {
+      try {
+        field.set(target, args[0]);
+      } catch (IllegalAccessException e) {
+        if (!Reflector.canControlMemberAccessible()) {
+          throw e;
+        }
+        field.setAccessible(true);
+        field.set(target, args[0]);
+      }
     }
     return null;
   }
 
   @Override
   public Class<?> getType() {
-    return field.getType();
+    return type;
   }
 }
