@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2025 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
@@ -202,6 +203,10 @@ public class ResultLoaderMap {
           throw new ExecutorException(
               "Cannot lazy load property [" + this.property + "] of deserialized object [" + userObject.getClass()
                   + "] because configuration does not contain statement [" + this.mappedStatement + "]");
+        }
+        if (ms.getSqlCommandType() != SqlCommandType.SELECT) {
+          throw new ExecutorException("Cannot lazy load property [" + this.property + "] of deserialized object ["
+              + userObject.getClass() + "] because statement [" + this.mappedStatement + "] is not a select statement");
         }
 
         this.metaResultObject = config.newMetaObject(userObject);
