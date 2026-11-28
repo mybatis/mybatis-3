@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2024 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package org.apache.ibatis.transaction.jdbc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -25,6 +26,16 @@ import org.apache.ibatis.session.TransactionIsolationLevel;
 import org.junit.jupiter.api.Test;
 
 class JdbcTransactionTest {
+  @Test
+  void existingConnectionResetsAutoCommitByDefault() throws Exception {
+    TestConnection connection = new TestConnection(false);
+    JdbcTransaction transaction = new JdbcTransaction(connection);
+
+    transaction.close();
+
+    assertTrue(connection.getAutoCommit());
+  }
+
   @Test
   void setAutoCommitOnClose() throws Exception {
     testAutoCommit(true, false, true, false);
