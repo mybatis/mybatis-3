@@ -23,6 +23,7 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cache.impl.PerpetualCache;
 import org.apache.ibatis.cursor.Cursor;
@@ -221,7 +222,7 @@ public abstract class BaseExecutor implements Executor {
           value = null;
         } else {
           ParamNameResolver paramNameResolver = ms.getParamNameResolver();
-          if (paramNameResolver != null
+          if (paramNameResolver != null && !(parameterObject instanceof ParamMap)
               && typeHandlerRegistry.hasTypeHandler(paramNameResolver.getType(paramNameResolver.getNames()[0]))
               || typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
             value = parameterObject;
