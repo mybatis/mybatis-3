@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,8 +15,9 @@
  */
 package org.apache.ibatis.cache.decorators;
 
-import java.util.Deque;
-import java.util.LinkedList;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import org.apache.ibatis.cache.Cache;
 
@@ -28,12 +29,12 @@ import org.apache.ibatis.cache.Cache;
 public class FifoCache implements Cache {
 
   private final Cache delegate;
-  private final Deque<Object> keyList;
+  private final Set<Object> keyList;
   private int size;
 
   public FifoCache(Cache delegate) {
     this.delegate = delegate;
-    this.keyList = new LinkedList<>();
+    this.keyList = new LinkedHashSet<>();
     this.size = 1024;
   }
 
@@ -75,9 +76,11 @@ public class FifoCache implements Cache {
   }
 
   private void cycleKeyList(Object key) {
-    keyList.addLast(key);
-    if (keyList.size() > size) {
-      Object oldestKey = keyList.removeFirst();
+    // an existing key is not a new entry, so it must not trigger an eviction
+    if (keyList.add(key) && keyList.size() > size) {
+      Iterator<Object> iterator = keyList.iterator();
+      Object oldestKey = iterator.next();
+      iterator.remove();
       delegate.removeObject(oldestKey);
     }
   }
