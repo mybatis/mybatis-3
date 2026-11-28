@@ -5,7 +5,7 @@ author: Clinton Begin, Iwao AVE!
 
 ## Installation
 
-MyBatis を使うためには、ダウンロードした [mybatis-x.x.x.jar](https://github.com/mybatis/mybatis-3/releases) をクラスパスに追加する必要があります。
+MyBatis を使うためには、ダウンロードした [mybatis-@project.version@.jar](https://github.com/mybatis/mybatis-3/releases) をクラスパスに追加する必要があります。
 
 Maven を利用している場合は pom.xml に下記の依存性を追加するだけで OK です。
 
@@ -13,7 +13,7 @@ Maven を利用している場合は pom.xml に下記の依存性を追加す�
 <dependency>
   <groupId>org.mybatis</groupId>
   <artifactId>mybatis</artifactId>
-  <version>x.x.x</version>
+  <version>@project.version@</version>
 </dependency>
 ```
 
