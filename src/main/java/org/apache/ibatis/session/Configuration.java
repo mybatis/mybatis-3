@@ -849,6 +849,10 @@ public class Configuration {
     mappedStatements.put(ms.getId(), ms);
   }
 
+  public void removeMappedStatement(String id) {
+    mappedStatements.remove(id);
+  }
+
   public Collection<String> getMappedStatementNames() {
     buildAllStatements();
     return mappedStatements.keySet();
