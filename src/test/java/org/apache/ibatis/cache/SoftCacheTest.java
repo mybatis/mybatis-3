@@ -1,5 +1,5 @@
 /*
- *    Copyright 2009-2023 the original author or authors.
+ *    Copyright 2009-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,9 +15,13 @@
  */
 package org.apache.ibatis.cache;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.lang.ref.Reference;
 
 import org.apache.ibatis.cache.decorators.SerializedCache;
 import org.apache.ibatis.cache.decorators.SoftCache;
@@ -52,6 +56,36 @@ class SoftCacheTest {
       Object value = cache.getObject(i);
       assertTrue(value == null || value.equals(i));
     }
+  }
+
+  @Test
+  void shouldRetainReplacementWhenOldReferenceIsEnqueued() {
+    Cache delegate = new PerpetualCache("default");
+    SoftCache cache = new SoftCache(delegate);
+    cache.putObject("key", new Object());
+    Reference<?> oldReference = (Reference<?>) delegate.getObject("key");
+    Object replacement = new Object();
+    cache.putObject("key", replacement);
+
+    oldReference.clear();
+    assertTrue(oldReference.enqueue());
+
+    assertEquals(1, cache.getSize());
+    assertSame(replacement, cache.getObject("key"));
+  }
+
+  @Test
+  void shouldRemoveCurrentReferenceWhenEnqueued() {
+    Cache delegate = new PerpetualCache("default");
+    SoftCache cache = new SoftCache(delegate);
+    cache.putObject("key", new Object());
+    Reference<?> reference = (Reference<?>) delegate.getObject("key");
+
+    reference.clear();
+    assertTrue(reference.enqueue());
+
+    assertEquals(0, cache.getSize());
+    assertNull(cache.getObject("key"));
   }
 
   @Test
