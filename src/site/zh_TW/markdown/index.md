@@ -25,14 +25,14 @@ MyBatis 是一款頂級的持久層框架，支援自訂 SQL、預存程序以�
 
 使用者可以閱讀下列其他語言版本的 MyBatis 文件：
 
-<ul class="i18n">
-          <li class="en"><a href="../index.html">English</a></li>
-          <li class="es"><a href="../es/index.html">Español</a></li>
+<ul>
+          <li><a href="../index.html">English</a></li>
+          <li><a href="../es/index.html">Español</a></li>
 <!--      <li class="fr"><a href="../fr/index.html">Français</a></li> -->
-          <li class="ja"><a href="../ja/index.html">日本語</a></li>
-          <li class="ko"><a href="../ko/index.html">한국어</a></li>
-          <li class="zh"><a href="../zh_CN/index.html">简体中文</a></li>
-          <li class="zh_tw"><a href="./getting-started.html">繁體中文</a></li>
+          <li><a href="../ja/index.html">日本語</a></li>
+          <li><a href="../ko/index.html">한국어</a></li>
+          <li><a href="../zh_CN/index.html">简体中文</a></li>
+          <li><a href="./getting-started.html">繁體中文</a></li>
 </ul>
 
 想要用您的母語閱讀 MyBatis 文件嗎？請提出 Issue 並附上您母語文件的修正補丁（Patch）！
